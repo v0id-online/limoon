@@ -45,6 +45,8 @@ M.auto_indent = true
 
 --- Whether or not to auto-enclose selected text when typing a punctuation character, taking
 -- `textadept.editing.auto_pairs` into account.
+-- While a snippet is active, only auto-paired punctuation characters can auto-enclose
+-- placeholders.
 -- The default value is `false`.
 M.auto_enclose = false
 
@@ -545,6 +547,7 @@ end)
 events.connect(events.KEYPRESS, function(key)
 	if not M.auto_enclose or buffer.selection_empty or not key:find('^%p$') then return end
 	if ui.command_entry.active then return end
+	if textadept.snippets.active and not M.auto_pairs[key] then return end -- likely placeholder
 	M.enclose(key, M.auto_pairs[key] or key, true)
 	return true -- prevent typing
 end, 1)

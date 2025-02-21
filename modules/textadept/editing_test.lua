@@ -752,6 +752,15 @@ test('editing.auto_enclose should consider auto-pairs when wrapping', function()
 	test.assert_equal(buffer:get_text(), '(' .. word .. ')')
 end)
 
+test('editing.auto_enclose should not enclose snippet placeholders', function()
+	local _<close> = test.mock(textadept.editing, 'auto_enclose', true)
+	textadept.snippets.insert('${1:index} ${2:word}')
+
+	test.type('-1\t"\t')
+
+	test.assert_equal(buffer:get_text(), '-1 "word"')
+end)
+
 --- Gives Scintilla a chance to process any cursor/selection changes and emit SCN_UPDATEUI.
 local function process_selection_update()
 	ui.update()
