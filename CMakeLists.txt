@@ -362,8 +362,12 @@ if(NOT (WIN32 OR APPLE))
 	install(FILES core/images/textadept.svg
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 	# Note: can use file(ARCHIVE_CREATE) in CMake 3.18.
+	set(textadept_tgz textadept_${version}.tgz)
+	if(CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch")
+		set(textadept_tgz textadept_${version}.arm.tgz)
+	endif()
 	add_custom_target(archive
-		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/textadept_${version}.tgz textadept
+		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${textadept_tgz} textadept
 		WORKING_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR})
 elseif(WIN32)
 	set(ta_dir ${CMAKE_INSTALL_PREFIX}/textadept)
