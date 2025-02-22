@@ -42,7 +42,7 @@ jobs:
           else
             version=`grep -m1 _RELEASE core/init.lua | grep -o "[0-9.]\+[^']*" | tr ' ' '_'`
           fi
-          echo "version=$version">> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
   build:
     strategy:

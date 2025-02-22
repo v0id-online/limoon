@@ -8,8 +8,6 @@ if(APPLE)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET 11 CACHE STRING "")
 endif()
 
-set(ta ${CMAKE_SOURCE_DIR})
-
 project(textadept LANGUAGES C CXX)
 
 # Determine available platforms.
@@ -309,7 +307,7 @@ endif()
 # Version information.
 file(STRINGS core/init.lua version_line REGEX "^_RELEASE")
 string(REGEX MATCH "[1-9][^']+" version ${version_line})
-if(NOT DEFINED NIGHTLY)
+if(NOT NIGHTLY)
 	string(REPLACE " " "_" version ${version})
 else()
 	set(version nightly)
