@@ -137,8 +137,8 @@ static struct Pane *get_parent_pane(struct Pane *pane, SciObject *view) {
 static void refresh_pane(struct Pane *pane) {
 	switch (pane->type) {
 	case SINGLE: scintilla_noutrefresh(pane->view); return;
-	case VSPLIT: mvwvline(pane->win, 0, 0, 0, pane->rows), wrefresh(pane->win); break;
-	case HSPLIT: mvwhline(pane->win, 0, 0, 0, pane->cols), wrefresh(pane->win); break;
+	case VSPLIT: mvwvline(pane->win, 0, 0, 0, pane->rows), wnoutrefresh(pane->win); break;
+	case HSPLIT: mvwhline(pane->win, 0, 0, 0, pane->cols), wnoutrefresh(pane->win); break;
 	}
 	refresh_pane(pane->child1), refresh_pane(pane->child2);
 }
@@ -277,10 +277,12 @@ void set_option_label(FindOption *option, const char *text) {
 
 // Refreshes the entire screen.
 static void refresh_all(void) {
-	refresh_pane(root_pane), refresh();
+	refresh_pane(root_pane);
 	if (command_entry_active)
-		mvaddstr(LINES - 2, 0, command_entry_label), refresh(), scintilla_noutrefresh(command_entry);
+		mvaddstr(LINES - 2, 0, command_entry_label), scintilla_noutrefresh(command_entry);
+	refresh(); // draw to stdscr (titlebar, splits, statusbar)
 	if (!findbox) scintilla_update_cursor(!command_entry_active ? focused_view : command_entry);
+	doupdate(); // draw to all windows
 }
 
 // Signal for a Find/Replace entry keypress.
@@ -411,7 +413,7 @@ void set_statusbar_text(int bar, const char *text) {
 	int end = bar == 0 ? COLS - statusbar_length[1] : COLS;
 	for (int i = start; i < end; i++) mvaddch(LINES - 1, i, ' '); // clear
 	int len = (int)utf8strlen(text);
-	mvaddstr(LINES - 1, bar == 0 ? 0 : COLS - len, text), refresh();
+	mvaddstr(LINES - 1, bar == 0 ? 0 : COLS - len, text);
 	statusbar_length[bar] = len;
 }
 
@@ -577,7 +579,7 @@ static Dialog new_dialog(DialogOptions *opts, int height, int width) {
 
 // Draws the given dialog to the screen.
 static void draw_dialog(Dialog *dialog) {
-	box(dialog->border, 0, 0), wrefresh(dialog->border), refreshCDKScreen(dialog->screen);
+	box(dialog->border, 0, 0), wnoutrefresh(dialog->border), refreshCDKScreen(dialog->screen);
 }
 
 // Deletes the given dialog and frees its resources.
