@@ -368,6 +368,9 @@ void focus_find(void) {
 		if (focused_entry->exitType == vNORMAL)
 			find_clicked(button_labels + getCDKButtonboxCurrentButton(buttonbox)), refresh_all();
 		find_entry->exitType = repl_entry->exitType = vNEVER_ACTIVATED;
+#if _WIN32
+		eraseCDKScreen(findbox); // refresh only redraws entries, not labels or buttons
+#endif
 		refreshCDKScreen(findbox), activateCDKEntry(focused_entry, NULL);
 	}
 	// Set Scintilla clipboard with new CDK paste buffer if necessary.
