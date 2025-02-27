@@ -32,7 +32,7 @@ static char *find_text, *repl_text, *find_label, *repl_label;
 static bool find_options[4];
 #define HIST_MAX 100
 static char *button_labels[4], *option_labels[4], *find_history[HIST_MAX], *repl_history[HIST_MAX];
-static char *command_entry_label;
+static WINDOW *command_entry_label;
 static bool command_entry_active;
 static int statusbar_length[2];
 TermKey *ta_tk; // global for CDK use
@@ -279,7 +279,8 @@ void set_option_label(FindOption *option, const char *text) {
 static void refresh_all(void) {
 	refresh_pane(root_pane);
 	if (command_entry_active)
-		mvaddstr(LINES - 2, 0, command_entry_label), scintilla_noutrefresh(command_entry);
+		touchwin(command_entry_label), wnoutrefresh(command_entry_label),
+			scintilla_noutrefresh(command_entry);
 	refresh(); // draw to stdscr (titlebar, splits, statusbar)
 	if (!findbox) scintilla_update_cursor(!command_entry_active ? focused_view : command_entry);
 	doupdate(); // draw to all windows
@@ -388,7 +389,7 @@ bool is_find_active(void) { return findbox != NULL; }
 // Resizes and repositions the command entry, taking label width into account.
 static void resize_command_entry(void) {
 	WINDOW *win = scintilla_get_window(command_entry);
-	int height = get_command_entry_height(), label_width = utf8strlen(command_entry_label);
+	int height = get_command_entry_height(), label_width = getmaxx(command_entry_label);
 	wresize(win, height, COLS - label_width), mvwin(win, LINES - 1 - height, label_width);
 }
 
@@ -401,13 +402,16 @@ void focus_command_entry(void) {
 
 bool is_command_entry_active(void) { return command_entry_active; }
 
-void set_command_entry_label(const char *text) { copyfree(&command_entry_label, text); }
+void set_command_entry_label(const char *text) {
+	if (!command_entry_label) command_entry_label = newwin(1, 1, LINES - 2, 0);
+	wresize(command_entry_label, 1, utf8strlen(text)), mvwaddstr(command_entry_label, 0, 0, text);
+}
 
 int get_command_entry_height(void) { return getmaxy(scintilla_get_window(command_entry)); }
 
 void set_command_entry_height(int height) {
 	WINDOW *win = scintilla_get_window(command_entry);
-	int label_width = utf8strlen(command_entry_label);
+	int label_width = getmaxx(command_entry_label);
 	wresize(win, height, COLS - label_width), mvwin(win, LINES - 1 - height, label_width);
 }
 
@@ -1023,6 +1027,6 @@ int main(int argc, char **argv) {
 		if (repl_history[i]) free(repl_history[i]);
 		if (i < 4) free(button_labels[i]), free(option_labels[i] - (find_options[i] ? 0 : 4));
 	}
-	if (command_entry_label) free(command_entry_label);
+	if (command_entry_label) delwin(command_entry_label);
 	return exit_status;
 }
