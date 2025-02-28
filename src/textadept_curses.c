@@ -497,10 +497,7 @@ static double get_seconds(void) {
 	gettimeofday(&time, NULL);
 	return time.tv_sec + time.tv_usec / 1.0e6;
 #else
-	FILETIME time;
-	GetSystemTimeAsFileTime(&time);
-	// Note: interval is time.Low | (time.High << 32) in 100's of nanoseconds.
-	return (time.dwLowDateTime + time.dwHighDateTime * 4294967296.0) / 1.0e7;
+	return GetTickCount64() / 1.0e3;
 #endif
 }
 
