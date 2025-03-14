@@ -258,10 +258,18 @@ local function find_in_files()
 	end
 
 	if buffer._type ~= _L['[Files Found Buffer]'] then preferred_view = view end
-	local function print(message) ui.print_to(_L['[Files Found Buffer]'], message) end
-	print(_L['Find:']:gsub('[_&]', '') .. ' ' .. M.find_entry_text)
-	print(_L['Directory:'] .. ' ' .. dir)
-	print(_L['Filter:']:gsub('[_&]', '') .. ' ' ..
+
+	ui.print_to(_L['[Files Found Buffer]'], _L['Find:']:gsub('[_&]', '') .. ' ' .. M.find_entry_text):line_up()
+	local top_line, screen_lines = buffer:line_from_position(buffer.current_pos), view.lines_on_screen
+	--- Appends line *line* to the files found buffer, scrolling it down until
+	local function append(line)
+		if line then buffer:append_text(line) end
+		buffer:append_text('\n')
+		buffer:set_save_point()
+		if top_line > 1 and buffer.line_count - top_line <= screen_lines then view:line_scroll_down() end
+	end
+	append(_L['Directory:'] .. ' ' .. dir)
+	append(_L['Filter:']:gsub('[_&]', '') .. ' ' ..
 		(type(filter) == 'string' and filter or table.concat(filter, ',')))
 
 	-- Determine which files to search.
@@ -275,12 +283,14 @@ local function find_in_files()
 				filenames[#filenames + 1] = filename
 				utf8_filenames[#utf8_filenames + 1] = filename:sub(#dir + 2):iconv('UTF-8', _CHARSET)
 			end
+			-- luacov: disable
 			return -1 -- indeterminate
+			-- luacov: enable
 		end
 	}
 	if stopped then
-		print(_L['Find in Files aborted'])
-		print() -- blank line
+		append(_L['Find in Files aborted'])
+		append() -- blank line
 		return
 	end
 
@@ -303,12 +313,12 @@ local function find_in_files()
 				found = true
 				if binary == nil then binary = buffer:text_range(1, 65536):find('\0') end
 				if binary then
-					print(string.format('%s:1:%s', utf8_filenames[i], _L['Binary file matches.']))
+					append(string.format('%s:1:%s', utf8_filenames[i], _L['Binary file matches.']))
 					break
 				end
 				local line_num = buffer:line_from_position(buffer.target_start)
 				local line = buffer:get_line(line_num):match('^[^\r\n]*')
-				print(string.format('%s:%d:%s', utf8_filenames[i], line_num, line))
+				append(string.format('%s:%d:%s', utf8_filenames[i], line_num, line))
 				local pos = ff_buffer.line_end_position[ff_buffer.line_count - 1] - #line +
 					buffer.target_start - buffer:position_from_line(line_num)
 				ff_buffer.indicator_current = M.INDIC_FIND
@@ -324,8 +334,8 @@ local function find_in_files()
 	}
 	buffer:close(true) -- temporary buffer
 	local status = stopped and _L['Find in Files aborted'] or not found and _L['No results found']
-	if status then print(status) end
-	print() -- blank line
+	if status then append(status) end
+	append() -- blank line
 end
 
 -- Handle "Find Next" or "Find Prev" click.
