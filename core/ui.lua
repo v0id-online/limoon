@@ -239,6 +239,7 @@ function ui.goto_file(filename, split, preferred_view, sloppy)
 	end
 	if #_VIEWS == 1 and split and not (view.buffer.filename or ''):find(patt) then
 		view:split()
+		if _VIEWS[preferred_view] then ui.goto_view(-1) end
 	else
 		local other_view = _VIEWS[preferred_view] and preferred_view
 		for _, view in ipairs(_VIEWS) do
