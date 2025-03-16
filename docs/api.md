@@ -4717,9 +4717,11 @@ handlers, which are simply Lua functions called in the order they were connected
 event. For example, if you created a module that needs to do something each time Textadept
 creates a new buffer, connect a Lua function to the [`events.BUFFER_NEW`](#events.BUFFER_NEW) event:
 
-	events.connect(events.BUFFER_NEW, function()
-		-- Do something here.
-	end)
+```lua
+events.connect(events.BUFFER_NEW, function()
+	-- Do something here.
+end)
+```
 
 Events themselves are nothing special. You do not have to declare one before using it. Events
 are simply strings containing arbitrary event names. When either you or Textadept emits an
@@ -5589,9 +5591,11 @@ print key sequences to standard out (stdout) for inspection.
 
 A command bound to a key sequence is simply a Lua function. For example:
 
-	keys['ctrl+n'] = buffer.new
-	keys['ctrl+z'] = buffer.undo
-	keys['ctrl+u'] = function() io.quick_open(_USERHOME) end
+```lua
+keys['ctrl+n'] = buffer.new
+keys['ctrl+z'] = buffer.undo
+keys['ctrl+u'] = function() io.quick_open(_USERHOME) end
+```
 
 Textadept handles [`buffer`](#buffer) and [`view`](#view) references properly in static contexts.
 
@@ -5601,22 +5605,24 @@ Modes are groups of key bindings such that when a key [mode](#keys.mode) is acti
 ignores all key bindings defined outside the mode until the mode is unset. Here is a simple
 vi mode example:
 
-	keys.command_mode = {
-		['h'] = buffer.char_left,
-		['j'] = buffer.line_up,
-		['k'] = buffer.line_down,
-		['l'] = buffer.char_right,
-		['i'] = function()
-			keys.mode = nil
-			ui.statusbar_text = 'INSERT MODE'
-		end
-	}
-	keys['esc'] = function() keys.mode = 'command_mode' end
-	events.connect(events.UPDATE_UI, function()
-		if keys.mode == 'command_mode' then return end
+```lua
+keys.command_mode = {
+	['h'] = buffer.char_left,
+	['j'] = buffer.line_up,
+	['k'] = buffer.line_down,
+	['l'] = buffer.char_right,
+	['i'] = function()
+		keys.mode = nil
 		ui.statusbar_text = 'INSERT MODE'
-	end)
-	keys.mode = 'command_mode' -- default mode
+	end
+}
+keys['esc'] = function() keys.mode = 'command_mode' end
+events.connect(events.UPDATE_UI, function()
+	if keys.mode == 'command_mode' then return end
+	ui.statusbar_text = 'INSERT MODE'
+end)
+keys.mode = 'command_mode' -- default mode
+```
 
 **Warning**: When creating a mode, be sure to define a way to exit the mode, otherwise you
 will probably have to restart Textadept.
@@ -5627,11 +5633,13 @@ Key chains are a powerful concept. They allow you to assign multiple key binding
 key sequence. By default, the `Esc` key cancels a key chain, but you can redefine it via
 [`keys.CLEAR`](#keys.CLEAR). An example key chain looks like:
 
-	keys['alt+a'] = {
-		a = function1,
-		b = function2,
-		c = {...}
-	}
+```lua
+keys['alt+a'] = {
+	a = function1,
+	b = function2,
+	c = {...}
+}
+```
 
 ### Fields defined by `keys`
 
@@ -5726,22 +5734,24 @@ There is a *lexers/template.txt* file that contains a simple template for a new 
 free to use it, replacing the '?' with the name of your lexer. Consider this snippet from
 the template:
 
-    -- ? LPeg lexer.
+```lua
+-- ? LPeg lexer.
 
-    local lexer = lexer
-    local P, S = lpeg.P, lpeg.S
+local lexer = lexer
+local P, S = lpeg.P, lpeg.S
 
-    local lex = lexer.new(...)
+local lex = lexer.new(...)
 
-    [... lexer rules ...]
+--[[... lexer rules ...]]
 
-    -- Identifier.
-    local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
-    lex:add_rule('identifier', identifier)
+-- Identifier.
+local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
+lex:add_rule('identifier', identifier)
 
-    [... more lexer rules ...]
+--[[... more lexer rules ...]]
 
-    return lex
+return lex
+```
 
 The first line of code is a Lua convention to store a global variable into a local variable
 for quick access. The second line simply defines often used convenience variables. The third
@@ -5773,12 +5783,16 @@ In a lexer, LPeg patterns that match particular sequences of characters are tagg
 tag name using the the [`lexer.tag()`](#lexer.tag) function. Let us examine the "identifier" tag used in
 the template shown earlier:
 
-    local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
+```lua
+local identifier = lex:tag(lexer.IDENTIFIER, lexer.word)
+```
 
 At first glance, the first argument does not appear to be a string name and the second
 argument does not appear to be an LPeg pattern. Perhaps you expected something like:
 
-    lex:tag('identifier', (lpeg.R('AZ', 'az')  + '_') * (lpeg.R('AZ', 'az', '09') + '_')^0)
+```lua
+lex:tag('identifier', (lpeg.R('AZ', 'az')  + '_') * (lpeg.R('AZ', 'az', '09') + '_')^0)
+```
 
 The [`lexer`](#lexer) module actually provides a convenient list of common tag names and common LPeg
 patterns for you to use. Tag names for programming languages include (but are not limited
@@ -5814,65 +5828,73 @@ of of the following methods:
 1. Use the convenience function [`lexer.word_match()`](#lexer.word_match) optionally coupled with
   [`lexer.set_word_list()`](#lexer.set_word_list). It is much easier and more efficient to write word matches like:
 
-       local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
-       [...]
-       lex:set_word_list(lexer.KEYWORD, {
-         'keyword_1', 'keyword_2', ..., 'keyword_n'
-       })
+  ```lua
+  local keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
+  --[[...]]
+  lex:set_word_list(lexer.KEYWORD, {
+    'keyword_1', 'keyword_2', ..., 'keyword_n'
+  })
 
-       local case_insensitive_word = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true))
-       [...]
-       lex:set_word_list(lexer.KEYWORD, {
-         'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
-       })
+  local case_insensitive_word = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD, true))
+  --[[...]]
+  lex:set_word_list(lexer.KEYWORD, {
+    'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+  })
 
-       local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
-       [...]
-       lex:set_word_list(lexer.KEYWORD, {
-         'keyword-1', 'keyword-2', ..., 'keyword-n'
-       })
+  local hyphenated_keyword = lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD))
+  --[[...]]
+  lex:set_word_list(lexer.KEYWORD, {
+    'keyword-1', 'keyword-2', ..., 'keyword-n'
+  })
+  ```
 
-   The benefit of using this method is that other lexers that inherit from, embed, or embed
-   themselves into your lexer can set, replace, or extend these word lists. For example,
-   the TypeScript lexer inherits from JavaScript, but extends JavaScript's keyword and type
-   lists with more options.
+  The benefit of using this method is that other lexers that inherit from, embed, or embed
+  themselves into your lexer can set, replace, or extend these word lists. For example,
+  the TypeScript lexer inherits from JavaScript, but extends JavaScript's keyword and type
+  lists with more options.
 
-   This method also allows applications that use your lexer to extend or replace your word
-   lists. For example, the Lua lexer includes keywords and functions for the latest version
-   of Lua (5.4 at the time of writing). However, editors using that lexer might want to use
-   keywords from Lua version 5.1, which is still quite popular.
+  This method also allows applications that use your lexer to extend or replace your word
+  lists. For example, the Lua lexer includes keywords and functions for the latest version
+  of Lua (5.4 at the time of writing). However, editors using that lexer might want to use
+  keywords from Lua version 5.1, which is still quite popular.
 
-   Note that calling `lex:set_word_list()` is completely optional. Your lexer is allowed to
-   expect the editor using it to supply word lists. Scintilla-based editors can do so via
-   Scintilla's `ILexer5` interface.
+  Note that calling `lex:set_word_list()` is completely optional. Your lexer is allowed to
+  expect the editor using it to supply word lists. Scintilla-based editors can do so via
+  Scintilla's `ILexer5` interface.
 
 2. Use the lexer-agnostic form of [`lexer.word_match()`](#lexer.word_match):
 
-       local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
-         'keyword_1', 'keyword_2', ..., 'keyword_n'
-       })
+  ```lua
+  local keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
+    'keyword_1', 'keyword_2', ..., 'keyword_n'
+  })
 
-       local case_insensitive_keyword = lex:tag(lexer.KEYWORD, lexer.word_match({
-         'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
-       }, true))
+  local case_insensitive_keyword = lex:tag(lexer.KEYWORD, lexer.word_match({
+    'KEYWORD_1', 'keyword_2', ..., 'KEYword_n'
+  }, true))
 
-       local hyphened_keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
-         'keyword-1', 'keyword-2', ..., 'keyword-n'
-       })
+  local hyphened_keyword = lex:tag(lexer.KEYWORD, lexer.word_match{
+    'keyword-1', 'keyword-2', ..., 'keyword-n'
+  })
+  ```
 
-   For short keyword lists, you can use a single string of words. For example:
+  For short keyword lists, you can use a single string of words. For example:
 
-       local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('key_1 key_2 ... key_n'))
+  ```lua
+  local keyword = lex:tag(lexer.KEYWORD, lexer.word_match('key_1 key_2 ... key_n'))
+  ```
 
-   You can use this method for static word lists that do not change, or where it does not
-   make sense to allow applications or other lexers to extend or replace a word list.
+  You can use this method for static word lists that do not change, or where it does not
+  make sense to allow applications or other lexers to extend or replace a word list.
 
 **Comments**
 
 Line-style comments with a prefix character(s) are easy to express:
 
-    local shell_comment = lex:tag(lexer.COMMENT, lexer.to_eol('#'))
-    local c_line_comment = lex:tag(lexer.COMMENT, lexer.to_eol('//', true))
+```lua
+local shell_comment = lex:tag(lexer.COMMENT, lexer.to_eol('#'))
+local c_line_comment = lex:tag(lexer.COMMENT, lexer.to_eol('//', true))
+```
 
 The comments above start with a '#' or "//" and go to the end of the line (EOL). The second
 comment recognizes the next line also as a comment if the current line ends with a '\'
@@ -5880,7 +5902,9 @@ escape character.
 
 C-style "block" comments with a start and end delimiter are also easy to express:
 
-    local c_comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/'))
+```lua
+local c_comment = lex:tag(lexer.COMMENT, lexer.range('/*', '*/'))
+```
 
 This comment starts with a "/\*" sequence and contains anything up to and including an ending
 "\*/" sequence. The ending "\*/" is optional so the lexer can recognize unfinished comments
@@ -5892,9 +5916,11 @@ Most programming languages allow escape sequences in strings such that a sequenc
 "\\&quot;" in a double-quoted string indicates that the '&quot;' is not the end of the
 string. [`lexer.range()`](#lexer.range) handles escapes inherently.
 
-    local dq_str = lexer.range('"')
-    local sq_str = lexer.range("'")
-    local string = lex:tag(lexer.STRING, dq_str + sq_str)
+```lua
+local dq_str = lexer.range('"')
+local sq_str = lexer.range("'")
+local string = lex:tag(lexer.STRING, dq_str + sq_str)
+```
 
 In this case, the lexer treats '\' as an escape character in a string sequence.
 
@@ -5903,16 +5929,22 @@ In this case, the lexer treats '\' as an escape character in a string sequence.
 Most programming languages have the same format for integers and floats, so it might be as
 simple as using a predefined LPeg pattern:
 
-    local number = lex:tag(lexer.NUMBER, lexer.number)
+```lua
+local number = lex:tag(lexer.NUMBER, lexer.number)
+```
 
 However, some languages allow postfix characters on integers.
 
-    local integer = P('-')^-1 * (lexer.dec_num * S('lL')^-1)
-    local number = lex:tag(lexer.NUMBER, lexer.float + lexer.hex_num + integer)
+```lua
+local integer = P('-')^-1 * (lexer.dec_num * S('lL')^-1)
+local number = lex:tag(lexer.NUMBER, lexer.float + lexer.hex_num + integer)
+```
 
 Other languages allow separaters within numbers for better readability.
 
-    local number = lex:tag(lexer.NUMBER, lexer.number_('_')) -- recognize 1_000_000
+```lua
+local number = lex:tag(lexer.NUMBER, lexer.number_('_')) -- recognize 1_000_000
+```
 
 Your language may need other tweaks, but it is up to you how fine-grained you want your
 highlighting to be. After all, you are not writing a compiler or interpreter!
@@ -5925,7 +5957,9 @@ cannot be keywords. In Lua lexers, grammars consist of LPeg pattern rules, many 
 are tagged.  Recall from the lexer template the [`lexer.add_rule()`](#lexer.add_rule) call, which adds a rule
 to the lexer's grammar:
 
-    lex:add_rule('identifier', identifier)
+```lua
+lex:add_rule('identifier', identifier)
+```
 
 Each rule has an associated name, but rule names are completely arbitrary and serve only to
 identify and distinguish between different rules. Rule order is important: if text does not
@@ -5934,13 +5968,15 @@ so on. Right now this lexer simply matches identifiers under a rule named "ident
 
 To illustrate the importance of rule order, here is an example of a simplified Lua lexer:
 
-    lex:add_rule('keyword', lex:tag(lexer.KEYWORD, ...))
-    lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, ...))
-    lex:add_rule('string', lex:tag(lexer.STRING, ...))
-    lex:add_rule('comment', lex:tag(lexer.COMMENT, ...))
-    lex:add_rule('number', lex:tag(lexer.NUMBER, ...))
-    lex:add_rule('label', lex:tag(lexer.LABEL, ...))
-    lex:add_rule('operator', lex:tag(lexer.OPERATOR, ...))
+```lua
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, ...))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, ...))
+lex:add_rule('string', lex:tag(lexer.STRING, ...))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, ...))
+lex:add_rule('number', lex:tag(lexer.NUMBER, ...))
+lex:add_rule('label', lex:tag(lexer.LABEL, ...))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, ...))
+```
 
 Notice how identifiers come _after_ keywords. In Lua, as with most programming languages,
 the characters allowed in keywords and identifiers are in the same set (alphanumerics plus
@@ -5954,9 +5990,11 @@ So what about text that does not match any rules? For example in Lua, the '!' ch
 meaningless outside a string or comment. Normally the lexer skips over such text. If instead
 you want to highlight these "syntax errors", add a final rule:
 
-    lex:add_rule('keyword', keyword)
-    ...
-    lex:add_rule('error', lex:tag(lexer.ERROR, lexer.any))
+```lua
+lex:add_rule('keyword', keyword)
+--[[...]]
+lex:add_rule('error', lex:tag(lexer.ERROR, lexer.any))
+```
 
 This identifies and tags any character not matched by an existing rule as a [`lexer.ERROR`](#lexer.ERROR).
 
@@ -5966,8 +6004,10 @@ tagged tag followed by an arbitrary number of tagged attributes, separated by wh
 allows the lexer to produce all tags separately, but in a single, convenient rule. That rule
 might look something like this:
 
-    local ws = lex:get_rule('whitespace') -- predefined rule for all lexers
-    lex:add_rule('tag', tag_start * (ws * attributes)^0 * tag_end^-1)
+```lua
+local ws = lex:get_rule('whitespace') -- predefined rule for all lexers
+lex:add_rule('tag', tag_start * (ws * attributes)^0 * tag_end^-1)
+```
 
 Note however that lexers with complex rules like these are more prone to lose track of their
 state, especially if they span multiple lines.
@@ -5993,7 +6033,9 @@ file "diff" needs to know if the line started with a '+' or '-' and then style t
 line accordingly. To indicate that your lexer matches by line, create the lexer with an
 extra parameter:
 
-    local lex = lexer.new(..., {lex_by_line = true})
+```lua
+local lex = lexer.new(..., {lex_by_line = true})
+```
 
 Now the input text for the lexer is a single line at a time. Keep in mind that line lexers
 do not have the ability to look ahead to subsequent lines.
@@ -6017,7 +6059,9 @@ Before embedding a child lexer into a parent lexer, the parent lexer needs to lo
 lexer. This is done with the [`lexer.load()`](#lexer.load) function. For example, loading the CSS lexer
 within the HTML lexer looks like:
 
-    local css = lexer.load('css')
+```lua
+local css = lexer.load('css')
+```
 
 The next part of the embedding process is telling the parent lexer when to switch over
 to the child lexer and when to switch back. The lexer refers to these indications as the
@@ -6025,9 +6069,11 @@ to the child lexer and when to switch back. The lexer refers to these indication
 HTML/CSS example, the transition from HTML to CSS is when the lexer encounters a "style"
 tag with a "type" attribute whose value is "text/css":
 
-    local css_tag = P('<style') * P(function(input, index)
-      if input:find('^[^>]+type="text/css"', index) then return true end
-    end)
+```lua
+local css_tag = P('<style') * P(function(input, index)
+  if input:find('^[^>]+type="text/css"', index) then return true end
+end)
+```
 
 This pattern looks for the beginning of a "style" tag and searches its attribute list for
 the text "`type="text/css"`". (In this simplified example, the Lua pattern does not consider
@@ -6035,18 +6081,24 @@ whitespace between the '=' nor does it consider that using single quotes is vali
 is a match, the functional pattern returns `true`. However, we ultimately want to style the
 "style" tag as an HTML tag, so the actual start rule looks like this:
 
-    local css_start_rule = #css_tag * tag
+```lua
+local css_start_rule = #css_tag * tag
+```
 
 Now that the parent knows when to switch to the child, it needs to know when to switch
 back. In the case of HTML/CSS, the switch back occurs when the lexer encounters an ending
 "style" tag, though the lexer should still style the tag as an HTML tag:
 
-    local css_end_rule = #P('</style>') * tag
+```lua
+local css_end_rule = #P('</style>') * tag
+```
 
 Once the parent loads the child lexer and defines the child's start and end rules, it embeds
 the child with the [`lexer.embed()`](#lexer.embed) function:
 
-    lex:embed(css, css_start_rule, css_end_rule)
+```lua
+lex:embed(css, css_start_rule, css_end_rule)
+```
 
 ##### Child Lexer
 
@@ -6055,10 +6107,12 @@ embedding a child into a parent: first, load the parent lexer into the child lex
 [`lexer.load()`](#lexer.load) function and then create start and end rules for the child lexer. However,
 in this case, call [`lexer.embed()`](#lexer.embed) with switched arguments. For example, in the PHP lexer:
 
-    local html = lexer.load('html')
-    local php_start_rule = lex:tag('php_tag', '<?php' * lexer.space)
-    local php_end_rule = lex:tag('php_tag', '?>')
-    html:embed(lex, php_start_rule, php_end_rule)
+```lua
+local html = lexer.load('html')
+local php_start_rule = lex:tag('php_tag', '<?php' * lexer.space)
+local php_end_rule = lex:tag('php_tag', '?>')
+html:embed(lex, php_start_rule, php_end_rule)
+```
 
 Note that the use of a 'php_tag' tag will require the editor using the lexer to specify how
 to highlight text with that tag. In order to avoid this, you could use the [`lexer.PREPROCESSOR`](#lexer.PREPROCESSOR)
@@ -6092,8 +6146,10 @@ these fold points cannot occur just anywhere. For example, lexers should not rec
 keywords that appear within strings or comments. The [`lexer.add_fold_point()`](#lexer.add_fold_point) function allows
 you to conveniently define fold points with such granularity. For example, consider C:
 
-    lex:add_fold_point(lexer.OPERATOR, '{', '}')
-    lex:add_fold_point(lexer.COMMENT, '/*', '*/')
+```lua
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.COMMENT, '/*', '*/')
+```
 
 The first assignment states that any '{' or '}' that the lexer tagged as an [`lexer.OPERATOR`](#lexer.OPERATOR)
 is a fold point. Likewise, the second assignment states that any "/\*" or "\*/" that the
@@ -6101,10 +6157,12 @@ lexer tagged as part of a [`lexer.COMMENT`](#lexer.COMMENT) is a fold point. The
 occurrences of these characters outside their tagged elements (such as in a string) as fold
 points. How do you specify fold keywords? Here is an example for Lua:
 
-    lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
-    lex:add_fold_point(lexer.KEYWORD, 'do', 'end')
-    lex:add_fold_point(lexer.KEYWORD, 'function', 'end')
-    lex:add_fold_point(lexer.KEYWORD, 'repeat', 'until')
+```lua
+lex:add_fold_point(lexer.KEYWORD, 'if', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'do', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'function', 'end')
+lex:add_fold_point(lexer.KEYWORD, 'repeat', 'until')
+```
 
 If your lexer has case-insensitive keywords as fold points, simply add a
 `case_insensitive_fold_points = true` option to [`lexer.new()`](#lexer.new), and specify keywords in
@@ -6116,16 +6174,18 @@ value of `1` indicates the element is a beginning fold point and a return value 
 indicates the element is an ending fold point. A return value of `0` indicates the element
 is not a fold point. For example:
 
-    local function fold_strange_element(text, pos, line, s, symbol)
-      if ... then
-        return 1 -- beginning fold point
-      elseif ... then
-        return -1 -- ending fold point
-      end
-      return 0
-    end
+```lua
+local function fold_strange_element(text, pos, line, s, symbol)
+  if ... then
+    return 1 -- beginning fold point
+  elseif ... then
+    return -1 -- ending fold point
+  end
+  return 0
+end
 
-    lex:add_fold_point('strange_element', '|', fold_strange_element)
+lex:add_fold_point('strange_element', '|', fold_strange_element)
+```
 
 Any time the lexer encounters a '|' that is tagged as a "strange_element", it calls the
 `fold_strange_element` function to determine if '|' is a fold point. The lexer calls these
@@ -6139,7 +6199,9 @@ Some languages have significant whitespace and/or no delimiters that indicate fo
 your lexer falls into this category and you would like to mark fold points based on changes
 in indentation, create the lexer with a `fold_by_indentation = true` option:
 
-    local lex = lexer.new(..., {fold_by_indentation = true})
+```lua
+local lex = lexer.new(..., {fold_by_indentation = true})
+```
 
 ### Using Lexers
 
@@ -6156,12 +6218,12 @@ your lexer if necessary.
 Create a *.properties* file for your lexer and `import` it in either your *SciTEUser.properties*
 or *SciTEGlobal.properties*. The contents of the *.properties* file should contain:
 
-    file.patterns.[lexer_name]=[file_patterns]
-    lexer.$(file.patterns.[lexer_name])=scintillua.[lexer_name]
-    keywords.$(file.patterns.[lexer_name])=scintillua
-    keywords2.$(file.patterns.[lexer_name])=scintillua
-    ...
-    keywords9.$(file.patterns.[lexer_name])=scintillua
+	file.patterns.[lexer_name]=[file_patterns]
+	lexer.$(file.patterns.[lexer_name])=scintillua.[lexer_name]
+	keywords.$(file.patterns.[lexer_name])=scintillua
+	keywords2.$(file.patterns.[lexer_name])=scintillua
+	...
+	keywords9.$(file.patterns.[lexer_name])=scintillua
 
 where `[lexer_name]` is the name of your lexer (minus the *.lua* extension) and
 `[file_patterns]` is a set of file extensions to use your lexer for. The `keyword` settings are
@@ -6176,36 +6238,38 @@ SciTE assigns styles to tag names in order to perform syntax highlighting. Since
 tag names used for a given language changes, your *.properties* file should specify styles
 for tag names instead of style numbers. For example:
 
-    scintillua.styles.my_tag=$(scintillua.styles.keyword),bold
+	scintillua.styles.my_tag=$(scintillua.styles.keyword),bold
 
 ### Migrating Legacy Lexers
 
 Legacy lexers are of the form:
 
-    local lexer = require('lexer')
-    local token, word_match = lexer.token, lexer.word_match
-    local P, S = lpeg.P, lpeg.S
+```lua
+local lexer = require('lexer')
+local token, word_match = lexer.token, lexer.word_match
+local P, S = lpeg.P, lpeg.S
 
-    local lex = lexer.new('?')
+local lex = lexer.new('?')
 
-    -- Whitespace.
-    lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+-- Whitespace.
+lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
 
-    -- Keywords.
-    lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
-      [...]
-    }))
+-- Keywords.
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match{
+  --[[...]]
+}))
 
-    [... other rule definitions ...]
+--[[... other rule definitions ...]]
 
-    -- Custom.
-    lex:add_rule('custom_rule', token('custom_token', ...))
-    lex:add_style('custom_token', lexer.styles.keyword .. {bold = true})
+-- Custom.
+lex:add_rule('custom_rule', token('custom_token', ...))
+lex:add_style('custom_token', lexer.styles.keyword .. {bold = true})
 
-    -- Fold points.
-    lex:add_fold_point(lexer.OPERATOR, '{', '}')
+-- Fold points.
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
-    return lex
+return lex
+```
 
 While Scintillua will mostly handle such legacy lexers just fine without any changes, it is
 recommended that you migrate yours. The migration process is fairly straightforward:
@@ -6233,46 +6297,50 @@ recommended that you migrate yours. The migration process is fairly straightforw
 
 As an example, consider the following sample legacy lexer:
 
-    local lexer = require('lexer')
-    local token, word_match = lexer.token, lexer.word_match
-    local P, S = lpeg.P, lpeg.S
+```lua
+local lexer = require('lexer')
+local token, word_match = lexer.token, lexer.word_match
+local P, S = lpeg.P, lpeg.S
 
-    local lex = lexer.new('legacy')
+local lex = lexer.new('legacy')
 
-    lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
-    lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
-    lex:add_rule('custom', token('custom', 'quux'))
-    lex:add_style('custom', lexer.styles.keyword .. {bold = true})
-    lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
-    lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
-    lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
-    lex:add_rule('number', token(lexer.NUMBER, lexer.number))
-    lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
+lex:add_rule('whitespace', token(lexer.WHITESPACE, lexer.space^1))
+lex:add_rule('keyword', token(lexer.KEYWORD, word_match('foo bar baz')))
+lex:add_rule('custom', token('custom', 'quux'))
+lex:add_style('custom', lexer.styles.keyword .. {bold = true})
+lex:add_rule('identifier', token(lexer.IDENTIFIER, lexer.word))
+lex:add_rule('string', token(lexer.STRING, lexer.range('"')))
+lex:add_rule('comment', token(lexer.COMMENT, lexer.to_eol('#')))
+lex:add_rule('number', token(lexer.NUMBER, lexer.number))
+lex:add_rule('operator', token(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
 
-    lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
-    return lex
+return lex
+```
 
 Following the migration steps would yield:
 
-    local lexer = lexer
-    local P, S = lpeg.P, lpeg.S
+```lua
+local lexer = lexer
+local P, S = lpeg.P, lpeg.S
 
-    local lex = lexer.new(...)
+local lex = lexer.new(...)
 
-    lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
-    lex:add_rule('custom', lex:tag('custom', 'quux'))
-    lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
-    lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
-    lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
-    lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
-    lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
+lex:add_rule('keyword', lex:tag(lexer.KEYWORD, lex:word_match(lexer.KEYWORD)))
+lex:add_rule('custom', lex:tag('custom', 'quux'))
+lex:add_rule('identifier', lex:tag(lexer.IDENTIFIER, lexer.word))
+lex:add_rule('string', lex:tag(lexer.STRING, lexer.range('"')))
+lex:add_rule('comment', lex:tag(lexer.COMMENT, lexer.to_eol('#')))
+lex:add_rule('number', lex:tag(lexer.NUMBER, lexer.number))
+lex:add_rule('operator', lex:tag(lexer.OPERATOR, S('+-*/%^=<>,.()[]{}')))
 
-    lex:add_fold_point(lexer.OPERATOR, '{', '}')
+lex:add_fold_point(lexer.OPERATOR, '{', '}')
 
-    lex:set_word_list(lexer.KEYWORD, {'foo', 'bar', 'baz'})
+lex:set_word_list(lexer.KEYWORD, {'foo', 'bar', 'baz'})
 
-    return lex
+return lex
+```
 
 Any editors using this lexer would have to add a style for the 'custom' tag.
 
@@ -6299,7 +6367,9 @@ Embedded preprocessor languages like PHP cannot completely embed themselves into
 languages because the parent's tagged patterns do not support start and end rules. This
 mostly goes unnoticed, but code like
 
+```php
     <div id="<?php echo $id; ?>">
+```
 
 will not style correctly. Also, these types of languages cannot currently embed themselves
 into their parent's child languages either.
@@ -6309,7 +6379,9 @@ possible that if lexing starts within the embedded entity, it will not be detect
 so a child to parent transition cannot happen. For example, the following Ruby code will
 not style correctly:
 
+```ruby
     sum = "1 + 2 = #{1 + 2}"
+```
 
 Also, there is the potential for recursion for languages embedding themselves within themselves.
 
@@ -8405,7 +8477,9 @@ Snippets can execute shell code enclosed within '\`' characters, and insert any 
 the following snippet evaluates (on macOS and Linux) the currently selected arithmetic
 expression and replaces it with the result:
 
-	snippets.eval = '`echo $(( $TM_SELECTED_TEXT ))`'
+```lua
+snippets.eval = '`echo $(( $TM_SELECTED_TEXT ))`'
+```
 
 #### Interpolated Lua Code
 
@@ -8413,7 +8487,9 @@ Snippets can also execute Lua code enclosed within "\`\`\`" sequences, and inser
 results returned by that code. For example, the following snippet inserts the current date
 and time:
 
-	snippets.date = '```os.date()```'
+```lua
+snippets.date = '```os.date()```'
+```
 
 Lua code is executed within Textadept's Lua environment, with the addition of snippet
 variables available as global variables (e.g. `TM_SELECTED_TEXT` exists as a global).
@@ -8433,17 +8509,21 @@ so on. When there are no more placeholders to jump to, the caret moves to either
 placeholder if it exists, or it moves to the end of the snippet. For example, the following
 snippet inserts a 3-element vector, with tab stops at each element:
 
-	snippets.vec = '[$1, $2, $3]'
+```lua
+snippets.vec = '[$1, $2, $3]'
+```
 
 ##### Default Values
 
 Placeholders may have default values using the "${*n*:*default*}" syntax. For example,
 the following snippet creates a numeric "for" loop in Lua:
 
-	snippets.lua.fori = [[
-	for ${1:i} = ${2:1}, $3 do
-		$0
-	end]]
+```lua
+snippets.lua.fori = [[
+for ${1:i} = ${2:1}, $3 do
+	$0
+end]]
+```
 
 Multiline snippets should be indented with tabs. Textadept will apply the buffer's current
 indentation settings to the snippet upon insertion.
@@ -8451,7 +8531,9 @@ indentation settings to the snippet upon insertion.
 Placeholders may be nested inside one another. For example, the following snippet inserts
 a function call with a mandatory first argument, but an optional second one:
 
-	snippets.call = '${1:func}($2${3:, $4})'
+```lua
+snippets.call = '${1:func}($2${3:, $4})'
+```
 
 Upon arriving at the third placeholder, backspacing and pressing `Tab` completes the snippet
 with a single argument. On the other hand, pressing `Tab` again at the third placeholder
@@ -8468,7 +8550,9 @@ finds. As you type text into a placeholder, any other placeholders with the same
 the typed text. For example, the following snippet inserts beginning and ending HTML/XML
 tags with the same name:
 
-	snippets.tag = '<${1:div}>$0</$1>'
+```lua
+snippets.tag = '<${1:div}>$0</$1>'
+```
 
 The end tag mirrors whatever name you type into the start tag.
 
@@ -8504,12 +8588,14 @@ may contain any of the following:
 
 For example, the following snippet defines an attribute along with its getter and setter functions:
 
-	snippets.attr = [[
-		${1:int} ${2:name};
+```lua
+snippets.attr = [[
+	${1:int} ${2:name};
 
-		${1} get${2/./${0:/upcase}/}() { return $2; }
-		void set${2/./${0:/upcase}/}(${1} ${3:value}) { $2 = $3; }
-	]]
+	${1} get${2/./${0:/upcase}/}() { return $2; }
+	void set${2/./${0:/upcase}/}(${1} ${3:value}) { $2 = $3; }
+]]
+```
 
 Note that the '/' and '}' characters are reserved in certain places within a placeholder
 transform. Use `\/` and `\}`, respectively, to represent literal versions of those characters

@@ -8,9 +8,11 @@
 -- event. For example, if you created a module that needs to do something each time Textadept
 -- creates a new buffer, connect a Lua function to the `events.BUFFER_NEW` event:
 --
---	events.connect(events.BUFFER_NEW, function()
---		-- Do something here.
---	end)
+-- ```lua
+-- events.connect(events.BUFFER_NEW, function()
+-- 	-- Do something here.
+-- end)
+-- ```
 --
 -- Events themselves are nothing special. You do not have to declare one before using it. Events
 -- are simply strings containing arbitrary event names. When either you or Textadept emits an

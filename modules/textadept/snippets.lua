@@ -40,7 +40,9 @@
 -- the following snippet evaluates (on macOS and Linux) the currently selected arithmetic
 -- expression and replaces it with the result:
 --
---	snippets.eval = '`echo $(( $TM_SELECTED_TEXT ))`'
+-- ```lua
+-- snippets.eval = '`echo $(( $TM_SELECTED_TEXT ))`'
+-- ```
 --
 -- #### Interpolated Lua Code
 --
@@ -48,7 +50,9 @@
 -- results returned by that code. For example, the following snippet inserts the current date
 -- and time:
 --
---	snippets.date = '```os.date()```'
+-- ```lua
+-- snippets.date = '```os.date()```'
+-- ```
 --
 -- Lua code is executed within Textadept's Lua environment, with the addition of snippet
 -- variables available as global variables (e.g. `TM_SELECTED_TEXT` exists as a global).
@@ -68,17 +72,21 @@
 -- placeholder if it exists, or it moves to the end of the snippet. For example, the following
 -- snippet inserts a 3-element vector, with tab stops at each element:
 --
---	snippets.vec = '[$1, $2, $3]'
+-- ```lua
+-- snippets.vec = '[$1, $2, $3]'
+-- ```
 --
 -- ##### Default Values
 --
 -- Placeholders may have default values using the "${*n*:*default*}" syntax. For example,
 -- the following snippet creates a numeric "for" loop in Lua:
 --
---	snippets.lua.fori = [[
---	for ${1:i} = ${2:1}, $3 do
---		$0
---	end]]
+-- ```lua
+-- snippets.lua.fori = [[
+-- for ${1:i} = ${2:1}, $3 do
+-- 	$0
+-- end]]
+-- ```
 --
 -- Multiline snippets should be indented with tabs. Textadept will apply the buffer's current
 -- indentation settings to the snippet upon insertion.
@@ -86,7 +94,9 @@
 -- Placeholders may be nested inside one another. For example, the following snippet inserts
 -- a function call with a mandatory first argument, but an optional second one:
 --
---	snippets.call = '${1:func}($2${3:, $4})'
+-- ```lua
+-- snippets.call = '${1:func}($2${3:, $4})'
+-- ```
 --
 -- Upon arriving at the third placeholder, backspacing and pressing `Tab` completes the snippet
 -- with a single argument. On the other hand, pressing `Tab` again at the third placeholder
@@ -103,7 +113,9 @@
 -- the typed text. For example, the following snippet inserts beginning and ending HTML/XML
 -- tags with the same name:
 --
---	snippets.tag = '<${1:div}>$0</$1>'
+-- ```lua
+-- snippets.tag = '<${1:div}>$0</$1>'
+-- ```
 --
 -- The end tag mirrors whatever name you type into the start tag.
 --
@@ -139,12 +151,14 @@
 --
 -- For example, the following snippet defines an attribute along with its getter and setter functions:
 --
---	snippets.attr = [[
---		${1:int} ${2:name};
+-- ```lua
+-- snippets.attr = [[
+-- 	${1:int} ${2:name};
 --
---		${1} get${2/./${0:/upcase}/}() { return $2; }
---		void set${2/./${0:/upcase}/}(${1} ${3:value}) { $2 = $3; }
---	]]
+-- 	${1} get${2/./${0:/upcase}/}() { return $2; }
+-- 	void set${2/./${0:/upcase}/}(${1} ${3:value}) { $2 = $3; }
+-- ]]
+-- ```
 --
 -- Note that the '/' and '}' characters are reserved in certain places within a placeholder
 -- transform. Use `\/` and `\}`, respectively, to represent literal versions of those characters
