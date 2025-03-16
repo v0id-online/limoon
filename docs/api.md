@@ -1,4 +1,4 @@
-## Textadept 12.6 API Documentation
+# Textadept 12.6 API Documentation
 
 1. [_G](#_G)
 1. [_L](#_L)
@@ -29,7 +29,6 @@
 
 <a id="_G"></a>
 ## The `_G` Module
----
 
 Extends Lua's _G table to provide extra functions and fields for Textadept.
 
@@ -269,20 +268,18 @@ Parameters:
 - *...*:  Additional arguments to pass to *f*.
 
 
----
+
 <a id="_L"></a>
 ## The `_L` Module
----
 
 Map of all messages used by Textadept to their localized form.
 If the localized version of a given message does not exist, the non-localized message is
 returned. Use `rawget()` to check if a localization exists.
 Note: the terminal version ignores any "_" or "&" mnemonics the GUI version would use.
 
----
+
 <a id="args"></a>
 ## The `args` Module
----
 
 Processes command line arguments for Textadept.
 
@@ -307,11 +304,9 @@ Parameters:
 - *description*:  The string description of the option for command line help.
 
 
----
+
 <a id="buffer"></a>
 ## The `buffer` Module
----
-
 A Textadept buffer or view object.
 Constants are documented in the fields they apply to.
 While you can work with individual buffer and view instances, it is really only useful to
@@ -4710,10 +4705,9 @@ A time of [`view.TIME_FOREVER`](#view.TIME_FOREVER) will never generate one.
 Deletes the buffer.
 **Do not call this function.** Call [`buffer:close()`](#buffer.close) instead. Emits [`events.BUFFER_DELETED`](#events.BUFFER_DELETED).
 
----
+
 <a id="events"></a>
 ## The `events` Module
----
 
 Textadept's core event structure and handlers.
 
@@ -5376,10 +5370,9 @@ Return:
 	that value
 
 
----
+
 <a id="io"></a>
 ## The `io` Module
----
 
 Extends Lua's [`io`](#io) library with Textadept functions for working with files.
 
@@ -5546,10 +5539,9 @@ Return:
 - `true` if all savable files were saved; `nil` otherwise.
 
 
----
+
 <a id="keys"></a>
 ## The `keys` Module
----
 
 Manages key bindings in Textadept.
 
@@ -5674,10 +5666,9 @@ When non-`nil`, all key bindings defined outside of `keys[mode]` are ignored.
 The default value is `nil`.
 
 
----
+
 <a id="lexer"></a>
 ## The `lexer` Module
----
 
 Lexes Scintilla documents and source code with Lua and LPeg.
 
@@ -7164,10 +7155,9 @@ Return:
 - pattern
 
 
----
+
 <a id="lfs"></a>
 ## The `lfs` Module
----
 
 Extends the [`lfs`](#lfs) library to find files in directories and determine absolute file paths.
 
@@ -7224,10 +7214,9 @@ Parameters:
 	current platform.
 
 
----
+
 <a id="os"></a>
 ## The `os` Module
----
 
 Extends Lua's [`os`](#os) library to provide process spawning capabilities.
 
@@ -7339,10 +7328,9 @@ Parameters:
 - *...*:  Standard input for *spawn_proc*.
 
 
----
+
 <a id="string"></a>
 ## The `string` Module
----
 
 Extends Lua's [`string`](#string) library to provide character set conversions.
 
@@ -7384,18 +7372,16 @@ Parameters:
 - *old*:  The string encoding to convert from.
 
 
----
+
 <a id="textadept"></a>
 ## The `textadept` Module
----
 
 The textadept module.
 It provides utilities for editing text in Textadept.
 
----
+
 <a id="textadept.bookmarks"></a>
 ## The `textadept.bookmarks` Module
----
 
 Bookmarks for Textadept.
 
@@ -7433,10 +7419,9 @@ Parameters:
 Toggles a bookmark on the current line.
 
 
----
+
 <a id="textadept.editing"></a>
 ## The `textadept.editing` Module
----
 
 Editing features for Textadept.
 
@@ -7696,10 +7681,9 @@ See also:
 - [`textadept.editing.comment_string`](#textadept.editing.comment_string)
 
 
----
+
 <a id="textadept.history"></a>
 ## The `textadept.history` Module
----
 
 Records buffer positions within Textadept views over time and allows for navigating through
 that history.
@@ -7757,10 +7741,9 @@ Parameters:
 	be skipped when navigating backward towards it, and updated when navigating away from it.
 
 
----
+
 <a id="textadept.keys"></a>
 ## The `textadept.keys` Module
----
 
 Defines key bindings for Textadept.
 This set of key bindings is pretty standard among other text editors, at least for basic
@@ -8021,10 +8004,9 @@ terminal version, since ^S and ^Q are flow control sequences.
 §: Only on Windows or the GTK version on Linux.
 
 
----
+
 <a id="textadept.macros"></a>
 ## The `textadept.macros` Module
----
 
 A module for recording, playing, saving, and loading keyboard macros.
 Menu commands are also recorded.
@@ -8070,10 +8052,9 @@ Parameters:
 	*[`_USERHOME`](#_USERHOME)/macros/*.
 
 
----
+
 <a id="textadept.menu"></a>
 ## The `textadept.menu` Module
----
 
 Defines the menus used by Textadept.
 Menus are simply tables of menu items and submenus and may be edited in place. A menu item
@@ -8124,10 +8105,9 @@ Submenus, and menu items can be retrieved by name in addition to table index num
 Prompts the user to select a menu command to run.
 
 
----
+
 <a id="textadept.run"></a>
 ## The `textadept.run` Module
----
 
 Compile and run source code files with Textadept.
 Language [modules][] may tweak the [`textadept.run.compile_commands`](#textadept.run.compile_commands), and
@@ -8323,10 +8303,9 @@ Parameters:
 	current project.
 
 
----
+
 <a id="textadept.session"></a>
 ## The `textadept.session` Module
----
 
 Session support for Textadept.
 
@@ -8382,10 +8361,9 @@ Usage:
 `
 
 
----
+
 <a id="textadept.snippets"></a>
 ## The `textadept.snippets` Module
----
 
 Snippets for Textadept.
 
@@ -8673,10 +8651,9 @@ Prompts the user to select a snippet to insert from a list of global and languag
 snippets.
 
 
----
+
 <a id="ui"></a>
 ## The `ui` Module
----
 
 Utilities for interacting with Textadept's user interface.
 
@@ -8967,10 +8944,9 @@ Processes pending UI events, including reading from spawned processes.
 This function is primarily used in Textadept's own unit tests.
 
 
----
+
 <a id="ui.command_entry"></a>
 ## The `ui.command_entry` Module
----
 
 Textadept's Command Entry.
 It supports multiple modes that each have their own functionality (such as running Lua code
@@ -9047,10 +9023,9 @@ Usage:
 `
 
 
----
+
 <a id="ui.dialogs"></a>
 ## The `ui.dialogs` Module
----
 
 Provides a set of interactive dialog prompts for user input.
 
@@ -9227,10 +9202,9 @@ Return:
 - filename or nil
 
 
----
+
 <a id="ui.find"></a>
 ## The `ui.find` Module
----
 
 Textadept's Find & Replace pane.
 
@@ -9423,11 +9397,10 @@ Mimics pressing the "Replace All" button.
 Emits [`events.REPLACE_ALL`](#events.REPLACE_ALL).
 
 
----
+
 <a id="view"></a>
 ## The `view` Module
----
 
 See [`buffer`](#buffer).
 
----
+

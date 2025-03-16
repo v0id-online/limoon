@@ -2,11 +2,18 @@
 
 Textadept is a fast, minimalist, and remarkably extensible cross-platform text editor for programmers.
 
-<a href="https://orbitalquark.github.io/textadept/images/windows.png"><img src="https://orbitalquark.github.io/textadept/images/windows.png" alt="windows" width="425" style="vertical-align: top;"/></a>
-<a href="https://orbitalquark.github.io/textadept/images/macos.png"><img src="https://orbitalquark.github.io/textadept/images/macos.png" alt="macos" width="425" style="vertical-align: top;"/></a>
+Quick links: [Download][] \| [Manual][] \| [Lua API Docs][] \| [Project Page][]
 
-<a href="https://orbitalquark.github.io/textadept/images/linux.png"><img src="https://orbitalquark.github.io/textadept/images/linux.png" alt="linux" width="425" style="vertical-align: top;"/></a>
-<a href="https://orbitalquark.github.io/textadept/images/terminal.png"><img src="https://orbitalquark.github.io/textadept/images/terminal.png" alt="terminal" width="425" style="vertical-align: top;"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/windows.png"><img src="https://orbitalquark.github.io/textadept/assets/images/windows.png" alt="windows" width="400" style="vertical-align: top;"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/macos.png"><img src="https://orbitalquark.github.io/textadept/assets/images/macos.png" alt="macos" width="400" style="vertical-align: top;"/></a>
+
+<a href="https://orbitalquark.github.io/textadept/assets/images/linux.png"><img src="https://orbitalquark.github.io/textadept/assets/images/linux.png" alt="linux" width="400" style="vertical-align: top;"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/terminal.png"><img src="https://orbitalquark.github.io/textadept/assets/images/terminal.png" alt="terminal" width="400" style="vertical-align: top;"/></a>
+
+[Download]: #download
+[Manual]: https://orbitalquark.github.io/textadept/manual.html
+[Lua API Docs]: https://orbitalquark.github.io/textadept/api.html
+[Project Page]: https://github.com/orbitalquark/textadept
 
 ## Features
 
@@ -23,7 +30,7 @@ Textadept is a fast, minimalist, and remarkably extensible cross-platform text e
 - Almost every aspect of the editor can be scripted, extended, and customized with Lua.
 - Does not connect to the internet -- *it's just a text editor!*
 
-<a href="https://orbitalquark.github.io/textadept/images/textadept.png"><img src="https://orbitalquark.github.io/textadept/images/textadept.png" alt="textadept"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/textadept.png"><img src="https://orbitalquark.github.io/textadept/assets/images/textadept.png" alt="textadept"/></a>
 
 [Lua]: https://lua.org
 
@@ -38,7 +45,8 @@ Textadept's pre-built binaries require the following:
 You can [compile](#compile) Textadept from source for use with different UI library versions,
 such as Qt 6 and GTK 2.24.
 
-**Note:** Lua and other [third-party dependencies][] are compiled into the application itself.
+**Note:** Lua and other [third-party dependencies][] are compiled into the application itself,
+and a Qt runtime is distributed with Windows and macOS builds.
 
 [Qt]: https://www.qt.io/
 [GTK]: https://gtk.org
@@ -84,8 +92,8 @@ functionality are available as optional modules in the "Extra modules" links abo
 - [Scratch buffers](https://github.com/orbitalquark/textadept-scratch)
 - [Spell checking](https://github.com/orbitalquark/textadept-spellcheck)
 
-<a href="https://orbitalquark.github.io/textadept/images/lsp.png"><img src="https://orbitalquark.github.io/textadept/images/lsp.png" alt="lsp" width="325"/></a>
-<a href="https://orbitalquark.github.io/textadept/images/diff.png"><img src="https://orbitalquark.github.io/textadept/images/diff.png" alt="diff" width="450"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/lsp.png"><img src="https://orbitalquark.github.io/textadept/assets/images/lsp.png" alt="lsp" width="325"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/diff.png"><img src="https://orbitalquark.github.io/textadept/assets/images/diff.png" alt="diff" width="450"/></a>
 
 ## Install and Use
 
@@ -123,7 +131,7 @@ require('file_diff')
 require('spellcheck')
 ```
 
-<a href="https://orbitalquark.github.io/textadept/images/settings.png"><img src="https://orbitalquark.github.io/textadept/images/settings.png" alt="preferences" width="400"/></a>
+<a href="https://orbitalquark.github.io/textadept/assets/images/settings.png"><img src="https://orbitalquark.github.io/textadept/assets/images/settings.png" alt="preferences" width="400"/></a>
 
 ## Compile
 
@@ -144,7 +152,7 @@ Basic procedure:
 1. Configure CMake by pointing it to Textadept's source directory (where *CMakeLists.txt* is),
   specify a directory to build in, and optionally specify a directory to install to. CMake will
   determine what UI toolkits are available and fetch third-party build dependencies.
-  <br/><a href="https://orbitalquark.github.io/textadept/images/compile.png"><img src="https://orbitalquark.github.io/textadept/images/compile.png" alt="cmake" width="400"/></a>
+  <br/><a href="https://orbitalquark.github.io/textadept/assets/images/compile.png"><img src="https://orbitalquark.github.io/textadept/assets/images/compile.png" alt="cmake" width="400"/></a>
 2. Build Textadept.
 3. Either copy the built binaries to Textadept's source directory or use CMake to install it.
 
@@ -160,7 +168,7 @@ cmake --install build_dir # self-contained installation is in build_dir/install/
 **Note:** if you would like to build the nightly development version of Textadept, enable the
 `NIGHTLY` option during the configuration phase (e.g. `-D NIGHTLY=1`).
 
-The "[Compiling][]" section in the manual contains more information about this process.
+The "[Compiling][]" section of the manual contains more information about this process.
 
 [CMake]: https://cmake.org
 [GNU C compiler]: https://gcc.gnu.org
@@ -175,6 +183,8 @@ The "[Compiling][]" section in the manual contains more information about this p
 
 Textadept is an open-source project, released under the MIT License.
 
+- [Manual](https://orbitalquark.github.io/textadept/manual.html)
+- [Lua API Documentation](https://orbitalquark.github.io/textadept/api.html)
 - [Project page](https://github.com/orbitalquark/textadept)
 - [Issue tracker](https://github.com/orbitalquark/textadept/issues)
 - [Discussions](https://github.com/orbitalquark/textadept/discussions)
@@ -184,4 +194,4 @@ Textadept is an open-source project, released under the MIT License.
 
 You can contact me personally at code att foicica.com.
 
-![Lines of Code](images/loc.png)
+![Lines of Code](assets/images/loc.png)
