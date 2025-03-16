@@ -1,77 +1,133 @@
 # Textadept
 
-Textadept is a fast, minimalist, and remarkably extensible cross-platform text editor for
-programmers. Written in a combination of C, C++, and [Lua][] and relentlessly optimized for
-speed and minimalism for more than 12 years, Textadept is an ideal editor for programmers who
-want endless extensibility without sacrificing speed and disk space, and without succumbing to
-code bloat and a superabundance of features. The application has both a graphical user interface
-(GUI) version that runs in a desktop environment, and a terminal version that runs within a
-terminal emulator.
+Textadept is a fast, minimalist, and remarkably extensible cross-platform text editor for programmers.
 
-![Linux](https://orbitalquark.github.io/textadept/images/linux.png)
-![macOS](https://orbitalquark.github.io/textadept/images/macosx.png)
-![Windows](https://orbitalquark.github.io/textadept/images/win32.png)
-![Terminal](https://orbitalquark.github.io/textadept/images/ncurses.png)
+<a href="https://orbitalquark.github.io/textadept/images/windows.png"><img src="https://orbitalquark.github.io/textadept/images/windows.png" alt="windows" width="425" style="vertical-align: top;"/></a>
+<a href="https://orbitalquark.github.io/textadept/images/macos.png"><img src="https://orbitalquark.github.io/textadept/images/macos.png" alt="macos" width="425" style="vertical-align: top;"/></a>
 
-[Lua]: https://lua.org
+<a href="https://orbitalquark.github.io/textadept/images/linux.png"><img src="https://orbitalquark.github.io/textadept/images/linux.png" alt="linux" width="425" style="vertical-align: top;"/></a>
+<a href="https://orbitalquark.github.io/textadept/images/terminal.png"><img src="https://orbitalquark.github.io/textadept/images/terminal.png" alt="terminal" width="425" style="vertical-align: top;"/></a>
 
 ## Features
 
-- Fast and minimalist.
-- Cross platform, and with a terminal version, too.
-- Self-contained executable -- no installation necessary.
+- Traditional desktop application written in a combination of C, C++, and [Lua][].
+- Runs on Windows, macOS, Linux, and BSD.
+- Self-contained executables -- no installation necessary.
+- User-friendly graphical and terminal interfaces with sensible defaults.
 - Support for over 100 programming languages.
+- Multiple carets and selections.
 - Unlimited split views.
-- Can be entirely keyboard driven.
-- Powerful snippets and key commands.
-- Code autocompletion and documentation lookup.
-- Remarkably extensible, with a heavily documented Application Programming Interface (API).
+- Configurable key bindings, including language-specific keys, key chains, and key modes.
+- Snippets, both generic and language-specific, and support for nested snippets.
+- Invoke shell commands for running code, building projects, and executing tests.
+- Almost every aspect of the editor can be scripted, extended, and customized with Lua.
+- Does not connect to the internet -- *it's just a text editor!*
 
-![Textadept](https://orbitalquark.github.io/textadept/images/splitviews.png)
+<a href="https://orbitalquark.github.io/textadept/images/textadept.png"><img src="https://orbitalquark.github.io/textadept/images/textadept.png" alt="textadept"/></a>
+
+[Lua]: https://lua.org
 
 ## Requirements
 
-In its bid for minimalism, Textadept depends on very little to run. On Windows and macOS,
-it has no external dependencies. On Linux, the GUI version depends only on either [Qt][] or
-[GTK][] (cross-platform GUI toolkits), and the terminal version depends only on [ncurses][].
-BSD depends on Qt and ncurses. Lua and any other third-party dependencies are compiled into
-the application itself.
+Textadept's pre-built binaries require the following:
+
+- Windows 10+ (64-bit or ARM)
+- macOS 11+
+- Linux: [Qt][] 5 or [GTK][] 3 for the GUI version, and [ncurses][] for the terminal version.
+
+You can [compile](#compile) Textadept from source for use with different UI library versions,
+such as Qt 6 and GTK 2.24.
+
+**Note:** Lua and other [third-party dependencies][] are compiled into the application itself.
 
 [Qt]: https://www.qt.io/
 [GTK]: https://gtk.org
 [ncurses]: https://invisible-island.net/ncurses/ncurses.html
+[third-party dependencies]: manual.html#technologies
 
 ## Download
 
-Textadept releases can be found [here][1]. Select the appropriate package for your platform. A
-comprehensive list of changes between releases can be found [here][2]. You can also download
-a separate set of modules that provide extra features and functionality to the core application.
+You can download pre-built binaries for various platforms, as well as source code from the
+links below.
 
-[1]: https://github.com/orbitalquark/textadept/releases
-[2]: https://orbitalquark.github.io/textadept/changelog.html
+Stable Release<br/>(12.6) | Beta Release<br/>(N/A) | Experimental<br/>nightly build
+-|-|-
+[Windows][stable win] | | [Windows][nightly win]
+[macOS][stable mac] | | [macOS][nightly mac]
+[Linux x64][stable linux] / [ARM][arm] | | [Linux x64][nightly linux] / [ARM][nightly arm]
+[Extra modules][stable modules] | | [Extra modules][nightly modules]
+[Source code][stable source] | | [Source code][nightly source]
 
-## Installation and Usage
+A list of all released versions is [here][all versions] along with their release notes.
 
-Textadept comes with a comprehensive [user manual][] in its *docs/* directory. It covers all
-of Textadept's main features, including installation, usage, configuration, theming, scripting,
-and compilation.
+[stable win]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.win.zip
+[stable mac]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.macOS.zip
+[stable linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.linux.tgz
+[arm]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.linux.arm.tgz
+[stable modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.modules.zip
+[stable source]: https://github.com/orbitalquark/textadept/archive/refs/tags/textadept_12.6.zip
+[nightly win]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.win.zip
+[nightly mac]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.macOS.zip
+[nightly linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.linux.tgz
+[nightly arm]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.linux.arm.tgz
+[nightly modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.modules.zip
+[nightly source]: https://github.com/orbitalquark/textadept/archive/refs/tags/textadept_nightly.zip
+[all versions]: https://github.com/orbitalquark/textadept/releases
 
-Since nearly every aspect of Textadept can be scripted using Lua, the editor's API is heavily
-documented. This [API documentation][] is also located in *docs/*. It serves as the ultimate
-resource when it comes to scripting the application.
+**Note:** while Textadept contains plenty of built-in productivity tools, some extra features and
+functionality are available as optional modules in the "Extra modules" links above. This includes:
 
-[user manual]: https://orbitalquark.github.io/textadept/manual.html
-[API documentation]: https://orbitalquark.github.io/textadept/api.html
+- [Language debuggers](https://github.com/orbitalquark/textadept-debugger)
+- [File comparison](https://github.com/orbitalquark/textadept-file-diff)
+- [Source code formatting](https://github.com/orbitalquark/textadept-format)
+- [Language Server Protocol client](https://github.com/orbitalquark/textadept-lsp)
+- [Scratch buffers](https://github.com/orbitalquark/textadept-scratch)
+- [Spell checking](https://github.com/orbitalquark/textadept-spellcheck)
+
+<a href="https://orbitalquark.github.io/textadept/images/lsp.png"><img src="https://orbitalquark.github.io/textadept/images/lsp.png" alt="lsp" width="325"/></a>
+<a href="https://orbitalquark.github.io/textadept/images/diff.png"><img src="https://orbitalquark.github.io/textadept/images/diff.png" alt="diff" width="450"/></a>
+
+## Install and Use
+
+Simply unpack the pre-built binary archive anywhere you have permission to and run one of the following executables:
+
+Platform | GUI version | Terminal version
+-|-|-
+Windows | *textadept.exe* | *textadept-curses.exe*
+macOS | *Textadept.app* <br/>*ta* (shell script)| *Textadept.app/Contents/MacOS/textadept-curses*
+Linux | *textadept* (Qt version)<br/> *textadept-gtk* (GTK version) | *textadept-curses*
+
+The "Help > Show Manual" menu item, or the `F1` keyboard shortcut opens Textadept's comprehensive
+user manual. There is also an [online version][manual]. The manual covers all of Textadept's
+main features, including installation, usage, configuration, theming, scripting, and compiling
+from source.
+
+The "Help > Show LuaDoc" menu item, or the `Shift+F1` keyboard shortcut opens Textadept's extensive
+API reference for users interested in scripting the editor. There is also an [online version][api].
+
+[manual]: https://orbitalquark.github.io/textadept/manual.html
+[api]: https://orbitalquark.github.io/textadept/api.html
+
+If you downloaded the optional set of modules, unpack it into the *.textadept/* directory in
+your home folder (keeping the top-level *modules/* directory intact). You could instead unpack
+it into Textadept's directory (thus merging the two *modules/* directories), but this is not
+recommended, as it may make upgrading more difficult.
+
+**Note:** Textadept generally does not auto-load modules. To use any of modules from the optional
+set, select the "Edit > Preferences", use Lua's `require()` function for each module to load,
+save the file, and restart Textadept. For example:
+
+```lua
+require('lsp')
+require('file_diff')
+require('spellcheck')
+```
+
+<a href="https://orbitalquark.github.io/textadept/images/settings.png"><img src="https://orbitalquark.github.io/textadept/images/settings.png" alt="preferences" width="400"/></a>
 
 ## Compile
 
-Textadept can be built on Windows, macOS, Linux, and BSD using [CMake][]. CMake will automatically
-detect which platforms you can compile Textadept for (e.g. Qt, GTK, and/or Curses) and build
-for them. On Windows and macOS you can then use CMake to create a self-contained application
-to run from anywhere. On Linux and BSD you can either use CMake to install Textadept, or place
-compiled binaries into Textadept's root directory and run it from there.
-
-General requirements:
+Compiling Textadept from source requires the following:
 
 - [CMake][] 3.16+
 - A C and C++ compiler, such as:
@@ -79,35 +135,32 @@ General requirements:
 	- [Microsoft Visual Studio][] 2019+
 	- [Clang][] 13+
 - A UI toolkit (at least one of the following):
-	- [Qt][] 5 or Qt 6 development libraries for the GUI version
-	- [GTK][] 3 development libraries for the GUI version (GTK 2.24 is also supported)
+	- [Qt][] 5.12+ development libraries for the GUI version
+	- [GTK][] 2.24+ development libraries for the GUI version
 	- [ncurses][](w) development libraries (wide character support) for the terminal version
 
 Basic procedure:
 
-1. Configure CMake to build Textadept by pointing it to Textadept's source directory (where
-  *CMakeLists.txt* is) and specifying a binary directory to compile to.
+1. Configure CMake by pointing it to Textadept's source directory (where *CMakeLists.txt* is),
+  specify a directory to build in, and optionally specify a directory to install to. CMake will
+  determine what UI toolkits are available and fetch third-party build dependencies.
+  <br/><a href="https://orbitalquark.github.io/textadept/images/compile.png"><img src="https://orbitalquark.github.io/textadept/images/compile.png" alt="cmake" width="400"/></a>
 2. Build Textadept.
-3. Either copy the built Textadept binaries to Textadept's directory or use CMake to install it.
+3. Either copy the built binaries to Textadept's source directory or use CMake to install it.
 
 For example:
 
-	cmake -S . -B build_dir -D CMAKE_BUILD_TYPE=RelWithDebInfo \
-		-D CMAKE_INSTALL_PREFIX=build_dir/install
-	cmake --build build_dir -j # compiled binaries are in build_dir/
-	cmake --install build_dir # self-contained installation is in build_dir/install/
+```bash
+cmake -S . -B build_dir -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+	-D CMAKE_INSTALL_PREFIX=build_dir/install
+cmake --build build_dir -j # compiled binaries are in build_dir/
+cmake --install build_dir # self-contained installation is in build_dir/install/
+```
 
-CMake boolean variables that affect the build:
+**Note:** if you would like to build the nightly development version of Textadept, enable the
+`NIGHTLY` option during the configuration phase (e.g. `-D NIGHTLY=1`).
 
-- `NIGHTLY`: Whether or not to build Textadept with bleeding-edge dependencies (i.e. the nightly
-  version). Defaults to off.
-- `QT`: Unless off, builds the Qt version of Textadept. The default is auto-detected.
-- `GTK3`: Unless off, builds the Gtk 3 version of Textadept. The default is auto-detected.
-- `GTK2`: Unless off, builds the Gtk 2 version of Textadept. The default is auto-detected.
-- `CURSES`: Unless off, builds the Curses (terminal) version of Textadept. The default is
-  auto-detected.
-
-For more information on compiling Textadept, please see the [manual][].
+The "[Compiling][]" section in the manual contains more information about this process.
 
 [CMake]: https://cmake.org
 [GNU C compiler]: https://gcc.gnu.org
@@ -116,11 +169,19 @@ For more information on compiling Textadept, please see the [manual][].
 [Qt]: https://www.qt.io
 [GTK]: https://gtk.org
 [ncurses]: https://invisible-island.net/ncurses/ncurses.html
-[manual]: https://orbitalquark.github.io/textadept/manual.html#compiling
+[Compiling]: https://orbitalquark.github.io/textadept/manual.html#compiling
 
-## Contribute
+## Support
 
-Textadept is [open source][]. Feel free to discuss features, report bugs, and submit patches. You
-can also contact me personally (code att foicica.com).
+Textadept is an open-source project, released under the MIT License.
 
-[open source]: https://github.com/orbitalquark/textadept
+- [Project page](https://github.com/orbitalquark/textadept)
+- [Issue tracker](https://github.com/orbitalquark/textadept/issues)
+- [Discussions](https://github.com/orbitalquark/textadept/discussions)
+- [Wiki](https://github.com/orbitalquark/textadept/wiki)
+- [Frequently Asked Questions](https://orbitalquark.github.io/textadept/faq.html)
+- [Credits](https://orbitalquark.github.io/textadept/thanks.html)
+
+You can contact me personally at code att foicica.com.
+
+![Lines of Code](images/loc.png)

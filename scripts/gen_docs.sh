@@ -19,7 +19,7 @@ fi
 
 # Generate HTML from Markdown (docs/*.html from docs/*.md)
 cd ../docs
-for file in `ls *.md`; do
+for file in `ls *.md ../README.md`; do
 	cat _layouts/default.html | ../scripts/fill_layout.lua $file > `basename -s .md $file`.html
 done
 

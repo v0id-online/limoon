@@ -8,13 +8,15 @@
 
 -- Filter the file through markdown using TOC generation in order to get header anchors, but
 -- ignore the actual TOC.
-local p = io.popen('markdown -f toc -T ' .. arg[1])
+local p = io.popen('markdown -f toc,fencedcode -T ' .. arg[1])
 local html = p:read('a'):match('^.-\n</ul>\n(.+)$')
 html = html:gsub('<h(%d) id="([^"]+)"', function(n, id)
 	id = id:gsub('%p+', '-'):gsub('%-$', ''):lower():gsub('^l%-', '')
 	return string.format('<h%d id="%s"', n, id)
 end)
 p:close()
+
+html = html:gsub('<a name=%b""', string.lower)
 
 -- Fill in HTML layout (stdin) with markdown output and print the result.
 local tags = {['page.title'] = html:match('<h%d.->([^<]+)'), content = html}

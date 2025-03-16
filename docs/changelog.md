@@ -3170,11 +3170,10 @@ Bugfixes:
 Changes:
 
 - Completely new [theme implementation][].
-- New [*properties.lua*][] for custom buffer and view properties.
+- New *properties.lua* for custom buffer and view properties.
 - Updated to [Scintilla][] 3.3.3.
 
 [theme implementation]: manual.html#themes
-[*properties.lua*]: manual.html#buffer-settings
 [Scintilla]: https://scintilla.org
 
 ### 6.6 (01 Jun 2013)
