@@ -1,27 +1,25 @@
 -- Copyright 2007-2025 Mitchell. See LICENSE.
 
---- Markdown filter for LDoc and doclet for Luadoc.
+--- Markdown filter for LDoc.
 -- @usage ldoc --filter markdowndoc.ldoc [ldoc opts] > api.md
--- @usage luadoc --doclet path/to/markdowndoc [file(s)] > api.md
 -- @module markdowndoc
 local M = {}
 
 local TOC = '1. [%s](#%s)\n'
-local MODULE = '<a id="%s"></a>\n## The `%s` Module\n'
-local FIELD = '<a id="%s"></a>\n#### `%s` %s\n\n'
-local FUNCTION = '<a id="%s"></a>\n#### `%s`(%s)\n\n'
-local FUNCTION_NO_PARAMS = '<a id="%s"></a>\n#### `%s`()\n\n'
+local MODULE = '<a id="%s"></a>\n## The `%s` module\n'
+local FIELD = '<a id="%s"></a>\n%s `%s`\n\n'
+local FUNCTION = '<a id="%s"></a>\n%s `%s`(%s)\n\n'
+local FUNCTION_NO_PARAMS = '<a id="%s"></a>\n%s `%s`()\n\n'
 local DESCRIPTION = '%s\n\n'
-local LIST_TITLE = '%s:\n\n'
 local PARAM = '- *%s*: %s\n'
-local USAGE = '- `%s`\n'
-local RETURN = '- %s\n'
-local SEE = '- [`%s`](#%s)\n'
-local TABLE = '<a id="%s"></a>\n#### `%s` &lt;table&gt;\n\n'
+local USAGE = '```lua\n%s```\n'
+local RETURN = '%s'
+local SEE = '[`%s`](#%s)'
+local TABLE = '<a id="%s"></a>\n%s `%s`\n\n'
 local TFIELD = '- `%s`: %s\n'
 local titles = {
-	[PARAM] = 'Parameters', [USAGE] = 'Usage', [RETURN] = 'Return', [SEE] = 'See also',
-	[TFIELD] = 'Fields'
+	[PARAM] = 'Parameters:\n\n', [USAGE] = 'Usage:\n\n', [RETURN] = 'Returns: ', [SEE] = 'See also: ',
+	[TFIELD] = 'Fields:\n\n'
 }
 
 --- Set of all known symbols that can be linked to.
@@ -52,7 +50,7 @@ end
 -- @param hashmap The LDoc hashmap.
 local function write_hashmap(f, fmt, hashmap)
 	if not hashmap or #hashmap == 0 then return end
-	f:write(string.format(LIST_TITLE, titles[fmt]))
+	f:write(titles[fmt])
 	for _, name in ipairs(hashmap) do
 		local description = hashmap.map and hashmap.map[name] or hashmap[name] or ''
 		if fmt == PARAM or fmt == TFIELD then description = link_known_symbols(description) end
@@ -70,8 +68,8 @@ end
 local function write_list(f, fmt, list, name)
 	if not list or #list == 0 then return end
 	if type(list) == 'string' then list = {list} end
-	f:write(string.format(LIST_TITLE, titles[fmt]))
-	for _, value in ipairs(list) do
+	f:write(titles[fmt])
+	for i, value in ipairs(list) do
 		if fmt == SEE and name ~= '_G' then
 			if not value:find('%.') then
 				-- Prepend module name to identifier if necessary.
@@ -81,8 +79,11 @@ local function write_list(f, fmt, list, name)
 				value = value:gsub('^_G%.', '')
 			end
 		end
+		if fmt == RETURN then value = link_known_symbols(value) end
 		f:write(string.format(fmt, value, value))
+		if (fmt == SEE or fmt == RETURN) and i < #list then f:write(', ') end
 	end
+	if (fmt == SEE or fmt == RETURN) then f:write('\n') end
 	f:write('\n')
 end
 
@@ -103,11 +104,15 @@ local function write_field(f, field, module_name)
 	elseif field.name:find('^_G%.[^.]+%.[^.]+') then
 		field.name = field.name:gsub('^_G%.', '') -- strip _G required for LDoc
 	end
-	local is_buffer_view_constant = field.name:find('^buffer%.[A-Z_]+$') or
-		field.name:find('^view%.[A-Z_]+$')
-	if not is_buffer_view_constant then
-		f:write(string.format(FIELD, field.name:gsub('^_G%.', ''), field.name, ''))
+	local skip_constant =
+		field.name:find('^buffer%.[A-Z_]+$') or field.name:find('^view%.[A-Z_]+$') or
+			field.name:find('^lexer%.[A-Z_]+$')
+	if not skip_constant then
+		local level = module_name ~= 'buffer' and 3 or 4
+		f:write(string.format(FIELD, field.name:gsub('^_G%.', ''), string.rep('#', level), field.name))
 		write_description(f, field.summary .. field.description)
+		if field.usage then write_list(f, USAGE, table.concat(field.usage)) end
+		write_list(f, SEE, field.tags.see, module_name)
 	end
 end
 
@@ -119,15 +124,15 @@ local function write_function(f, func, module_name)
 	if not func.name:find('[%.:]') and module_name ~= '_G' then
 		func.name = module_name .. '.' .. func.name -- absolute name
 	end
-	f:write(string.format(FUNCTION, func.name:gsub(':', '.'), func.name,
-		func.args:sub(2, -2):gsub('[%w_]+', '*%0*')))
+	local level = module_name ~= 'buffer' and 3 or 4
+	local args = func.args:sub(2, -2)
+	args = args:gsub('[%w_]+', '*%0*') -- italicize args
+	args = args:gsub('=[^[%]]+', function(default) return default:gsub('*', '') end) -- de-italicize
+	f:write(string.format(FUNCTION, func.name:gsub(':', '.'), string.rep('#', level), func.name, args))
 	write_description(f, func.summary .. func.description)
 	write_hashmap(f, PARAM, func.params)
-	write_list(f, USAGE, func.usage)
 	write_list(f, RETURN, func.ret)
-	-- Note: LDoc 1.4.6's *docs.lua* `Module:resolve_references()` removes tags.see values
-	-- for found references. This interferes with custom `--filter` functions. Comment out
-	-- the `tags.see:remove_value()` call.
+	if func.usage then write_list(f, USAGE, table.concat(func.usage)) end
 	write_list(f, SEE, func.tags.see, module_name)
 end
 
@@ -139,14 +144,15 @@ local function write_table(f, tbl, module_name)
 	if not tbl.name:find('%.') and module_name ~= '_G' then
 		tbl.name = module_name .. '.' .. tbl.name -- absolute name
 	else
-		tbl.name = tbl.name:gsub('^_G%.', '') -- strip _G required for LDoc/LuaDoc
+		tbl.name = tbl.name:gsub('^_G%.', '') -- strip _G required for LDoc
 	end
 	local tbl_id = tbl.name ~= 'buffer' and tbl.name ~= 'view' and tbl.name ~= 'keys' and
 		tbl.name:gsub('^_G.', '') or ('_G.' .. tbl.name)
-	f:write(string.format(TABLE, tbl_id, tbl.name))
+	local level = module_name ~= 'buffer' and 3 or 4
+	f:write(string.format(TABLE, tbl_id, string.rep('#', level), tbl.name))
 	write_description(f, tbl.summary .. tbl.description)
 	write_hashmap(f, TFIELD, tbl.params)
-	write_list(f, USAGE, tbl.usage)
+	if tbl.usage then write_list(f, USAGE, table.concat(tbl.usage)) end
 	write_list(f, SEE, tbl.tags.see, module_name)
 end
 
@@ -161,29 +167,9 @@ local function write_module(f, module)
 	f:write('\n')
 	write_description(f, module.summary .. module.description, name)
 
-	-- Write fields.
-	local fields = {}
-	for _, item in ipairs(module.items) do
-		if item.type == 'field' or item.type == 'table' then fields[#fields + 1] = item end
-	end
-	table.sort(fields, function(a, b) return a.name < b.name end)
-	if #fields > 0 then
-		f:write('### Fields defined by `', name, '`\n\n')
-		for _, field in ipairs(fields) do write(f, field, name) end
-		f:write('\n')
-	end
-
-	-- Write functions.
-	local funcs = {}
-	for _, item in ipairs(module.items) do
-		if item.type == 'function' then funcs[#funcs + 1] = item end
-	end
-	table.sort(funcs, function(a, b) return a.name < b.name end)
-	if #funcs > 0 then
-		f:write('### Functions defined by `', name, '`\n\n')
-		for _, func in ipairs(funcs) do write(f, func, name) end
-		f:write('\n')
-	end
+	table.sort(module.items, function(a, b) return a.name < b.name end)
+	for _, item in ipairs(module.items) do write(f, item, name) end
+	f:write('\n')
 end
 
 --- Writes an LDoc section to the given file.
@@ -191,7 +177,8 @@ end
 -- @param section The LDoc section.
 local function write_section(f, section)
 	f:write('### ', section.display_name, '\n\n')
-	f:write(section.description, '\n')
+	local description = link_known_symbols(section.description):gsub('\n ', '\n') -- strip leading spaces
+	f:write(description, '\n')
 end
 
 --- Writes an LDoc class module to the given file.
@@ -271,12 +258,17 @@ function M.ldoc(doc)
 		end
 	end
 
-	-- Populate `known_symbols`.
+	-- Populate `known_symbols`, but skip some buffer/view/lexer field constants.
 	for _, module in ipairs(doc) do
 		known_symbols[module.name] = true
 		for _, item in ipairs(module.items) do
+			local skip_constant = item.name:find('buffer.[A-Z]+') or item.name:find('view.[A-Z]+') or
+				(module.name == 'lexer' and item.name:find('^[A-Z]+'))
+			if skip_constant then goto continue end
+			if item.name == 'buffer:new' then item.name = 'buffer.new' end -- fix
 			known_symbols[not item.name:find('[.:]') and module.name ~= '_G' and module.name .. '.' ..
 				item.name or item.name] = true
+			::continue::
 		end
 	end
 

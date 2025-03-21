@@ -14,52 +14,52 @@ for _, v in ipairs(file_io_events) do events[v:upper()] = v end
 -- - *filename*: The opened file's filename.
 -- @field _G.events.FILE_OPENED
 
---- Emitted right before saving a file to disk.
+--- Emitted before saving a file to disk.
 -- Emitted by `buffer:save()`.
 -- Arguments:
 --
 -- - *filename*: The filename of the file being saved.
 -- @field _G.events.FILE_BEFORE_SAVE
 
---- Emitted right after saving a file to disk.
+--- Emitted after saving a file to disk.
 -- Emitted by `buffer:save()` and `buffer:save_as()`.
 -- Arguments:
 --
--- - *filename*: The filename of the file being saved.
+-- - *filename*: The filename of the saved file.
 -- - *saved_as*: Whether or not the file was saved under a different filename.
 -- @field _G.events.FILE_AFTER_SAVE
 
 --- Emitted when Textadept detects that an open file was modified externally.
--- When connecting to this event, connect with an index of 1 in order to override the default
--- prompt to reload the file.
+-- The default behavior is to prompt the user to reload the file. In order to override this,
+-- connect to this event with an index of `1` and return `true`.
 -- Arguments:
 --
 -- - *filename*: The filename externally modified.
 -- @field _G.events.FILE_CHANGED
 
---- Whether or not to attempt to detect indentation settings for opened files.
+--- Attempt to detect indentation settings for opened files.
 -- If any non-blank line starts with a tab, tabs are used. Otherwise, for the first non-blank
 -- line that starts with between two and eight spaces, that number of spaces is used.
 -- The default value is `true`.
 io.detect_indentation = true
 
---- Whether or not to ensure there is a final newline when saving text files.
+--- Ensure there is a final newline when saving text files.
 -- This has no effect on binary files.
 -- The default value is `false` on Windows, and `true` on macOS, Linux, and BSD.
 io.ensure_final_newline = not WIN32
 
---- The maximum number of files listed in the quick open dialog.
+--- The maximum number of files listed in the quick open list.
 -- The default value is `5000`.
 io.quick_open_max = 5000
 
 --- List of recently opened files, the most recent being towards the top.
 io.recent_files = {}
 
---- List of encodings to attempt to decode files as.
+--- List of encodings to attempt to decode files with.
 -- The default list contains UTF-8, ASCII, CP1252, and UTF-16.
 --
--- You should add to this list if you get a "Conversion failed" error when trying to open a file
--- whose encoding is not recognized. Valid encodings are [GNU iconv's encodings][] and include:
+-- You should add to this list if you work with files encoded in something else. Valid encodings
+-- are [GNU iconv's encodings][], and include:
 --
 -- - European: ASCII, ISO-8859-{1,2,3,4,5,7,9,10,13,14,15,16}, KOI8-R,
 --	KOI8-U, KOI8-RU, CP{1250,1251,1252,1253,1254,1257}, CP{850,866,1131},
@@ -70,6 +70,7 @@ io.recent_files = {}
 --
 -- [GNU iconv's encodings]: https://www.gnu.org/software/libiconv/
 -- @usage io.encodings[#io.encodings + 1] = 'UTF-32'
+-- @see string.iconv
 -- @table encodings
 
 -- This comment is needed to prevent LDoc from parsing the following table.
@@ -77,9 +78,10 @@ io.recent_files = {}
 io.encodings = {'UTF-8', 'ASCII', 'CP1252', 'UTF-16'}
 
 --- Opens *filenames*, a string filename or list of filenames, or the user-selected filename(s).
--- Emits `events.FILE_OPENED`.
+-- Emits `events.FILE_OPENED` for each file opened.
 -- @param[opt] filenames Optional string filename or table of filenames to open. If `nil`,
---	the user is prompted with a fileselect dialog.
+--	the user is prompted to open one or more.
+-- @see _G._CHARSET
 function io.open_file(filenames)
 	if not assert_type(filenames, 'string/table/nil', 1) then
 		filenames = ui.dialogs.open{
@@ -368,31 +370,27 @@ end
 --- Map of directory paths to filters used by `io.quick_open()`.
 io.quick_open_filters = {}
 
---- Prompts the user to select files to be opened from *paths*, a string directory path or list
--- of directory paths, using a list dialog.
+--- Prompts the user to select from a list one or more files to open from *paths*, a string
+-- directory path or list of directory paths.
 -- If *paths* is `nil`, uses the current project's root directory, which is obtained from
 -- `io.get_project_root()`.
--- String or list *filter* determines which files to show in the dialog, with the default filter
--- being `io.quick_open_filters[path]` (if it exists) or `lfs.default_filter`. A filter consists
+--
+-- String or list *filter* determines which files to show in the list, with the default filter
+-- being `io.quick_open_filters[paths]` (if it exists) or `lfs.default_filter`. A filter consists
 -- of glob patterns that match file and directory paths to include or exclude. Patterns are
--- inclusive by default. Exclusive patterns begin with a '!'. If no inclusive patterns are given,
--- any path is initially considered. As a convenience, '/' also matches the Windows directory
--- separator ('[/\\]' is not needed).
+-- inclusive by default. Exclusive patterns begin with a '!'. If no inclusive patterns are
+-- given, any path is initially considered. As a convenience, '/' also matches the Windows
+-- directory separator.
+--
 -- The number of files in the list is capped at `io.quick_open_max`.
--- If *filter* is `nil` and *paths* is ultimately a string, the filter from the
--- `io.quick_open_filters` table is used. If that filter does not exist, `lfs.default_filter`
--- is used.
 -- @param[opt] paths Optional string directory path or table of directory paths to search. The
 --	default value is the current project's root directory, if available.
 -- @param[optchain] filter Optional filter for files and directories to include and/or
 --	exclude. The default value is `lfs.default_filter` unless a filter for *paths* is
 --	defined in `io.quick_open_filters`.
--- @usage io.quick_open(buffer.filename:match('^(.+)[/\\]')) -- list all files in the current
---	file's directory, subject to the default filter
--- @usage io.quick_open(io.get_current_project(), '.lua') -- list all Lua files in the current
---	project
--- @usage io.quick_open(io.get_current_project(), '!/build') -- list all files in the current
---	project except those in the build directory
+-- @usage io.quick_open(buffer.filename:match('^(.+)[/\\]')) -- list files in the buffer's directory
+-- @usage io.quick_open(io.get_current_project(), '.lua') -- list Lua project files
+-- @usage io.quick_open(io.get_current_project(), '!/build') -- list non-build project files
 function io.quick_open(paths, filter)
 	if not assert_type(paths, 'string/table/nil', 1) then
 		paths = io.get_project_root()

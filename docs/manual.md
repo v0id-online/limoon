@@ -314,7 +314,7 @@ Textadept's user interface is sleek and simple. It consists of:
 - Completely customizable menu bar
 - Scrollable tab bar
 - Editor view with unlimited split views
-- Find & Replace pane (initially hidden)
+- Find & replace pane (initially hidden)
 - Command entry (initially hidden)
 - Statusbar and document statusbar
 
@@ -336,7 +336,7 @@ in a future release.
 
 The menu bar provides access to nearly all of Textadept's editing features. Almost every
 menu item has a key binding for quick access. Some languages and platforms also provide menu
-accelerators for opening and selecting menu items. For example, on Windows and Linux/BSD with
+mnemonics for opening and selecting menu items. For example, on Windows and Linux/BSD with
 the English language, `Alt+E` opens the "Edit" menu, `S` opens the "Select" sub-menu, and `L`
 invokes the "Select Line" menu item.
 
@@ -361,7 +361,7 @@ modifying the [`textadept.menu.menubar`][] table. For example, in your *~/.texta
 ```lua
 local tools = textadept.menu.menubar['Tools']
 tools[#tools + 1] = {''} -- separator
-tools[#tools + 1] = {'Reset L&ua State', reset} -- mark 'u' as the accelerator
+tools[#tools + 1] = {'Reset L&ua State', reset} -- mark 'u' as the mnemonic
 ```
 
 [`textadept.menu.menubar`]: api.html#textadept.menu.menubar
@@ -458,7 +458,7 @@ In the GUI version:
 - Perform "Replace" and "Replace All" in the "Replace" entry via `Enter` and `Shift+Enter`,
   respectively.
 - For at least the English locale on Windows and Linux/BSD, toggle the find options using their
-  button accelerators: `Alt+M`, `Alt+W`, `Alt+X`, `Alt+I`.
+  button mnemonics: `Alt+M`, `Alt+W`, `Alt+X`, `Alt+I`.
 - Cycle through find/replace history via `Up` and `Down` on Windows, Linux, BSD, and the terminal
   version; and `⇡` and `⇣` on macOS.
 - Dismiss the pane via `Esc`.

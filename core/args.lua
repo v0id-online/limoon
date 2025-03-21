@@ -1,6 +1,18 @@
 -- Copyright 2007-2025 Mitchell. See LICENSE.
 
 --- Processes command line arguments for Textadept.
+-- You can register your own command line arguments. For example:
+--
+-- ```lua
+-- args.register('-r', '--read-only', 0, function()
+-- 	events.connect(events.FILE_OPENED, function()
+-- 		buffer.read_only = true -- make all opened buffers read-only
+-- 	end)
+-- 	textadept.menu.menubar = nil -- hide the menubar
+-- end, "Read-only mode")
+-- ```
+--
+-- Running `textadept -r file.txt` will open that and all subsequent files in read-only mode.
 -- @module args
 local M = {}
 
@@ -67,11 +79,10 @@ events.connect('command_line', function(arg) process(arg, true) end)
 -- This needs to be set as soon as possible since the processing of arguments is positional.
 
 ---
--- The path to the user's *~/.textadept/* directory, where all preferences and user-data is stored.
--- On Windows machines *~/* is the value of the "USERHOME" environment variable (typically
--- *C:\Users\username\\* or *C:\Documents and Settings\username\\*). On macOS and Linux/BSD
--- machines *~/* is the value of "$HOME" (typically */Users/username/* and */home/username/*,
--- respectively).
+-- The path to the user's *~/.textadept/* directory, where all preferences and user-data
+-- is stored.  On Windows machines *~/* is the value of the "USERHOME" environment variable
+-- (typically *C:\Users\username\\*). On macOS and Linux/BSD machines *~/* is the value of
+-- "$HOME" (typically */Users/username/* and */home/username/*, respectively).
 _G._USERHOME = os.getenv(not WIN32 and 'HOME' or 'USERPROFILE') .. '/.textadept'
 for i, option in ipairs(arg) do
 	if (option == '-u' or option == '--userhome') and arg[i + 1] then

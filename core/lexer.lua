@@ -4,6 +4,7 @@
 local M = dofile(_HOME .. '/lexers/lexer.lua')
 
 --- A ';'-separated list of directory paths that contain lexers for syntax highlighting.
+-- The default value contains *~/.textadept/lexers/* and Textadept's *lexers/'* directory.
 _G._LEXERPATH = string.format('%s/lexers;%s/lexers', _USERHOME, _HOME)
 
 M.property = setmetatable({}, {__index = function() return '' end}) -- avoid auto-initialization

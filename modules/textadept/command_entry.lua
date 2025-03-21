@@ -4,8 +4,8 @@
 --- Textadept's Command Entry.
 -- It supports multiple modes that each have their own functionality (such as running Lua code
 -- and filtering text through shell commands) and history.
--- In addition to the functions and fields listed below, the command entry also has the same
--- functions and fields that `buffer`s and `view`s do.
+-- In addition to the API listed below, the command entry also shares the same API as `buffer`
+-- and `view`.
 -- @module ui.command_entry
 local M = ui.command_entry
 
@@ -45,10 +45,9 @@ local function cycle_history(prev)
 	M:add_text(mode_history[mode_history.pos])
 end
 
---- A metatable with typical platform-specific key bindings for text entries.
--- This metatable may be used to add basic editing and movement keys to command entry modes. It
--- is automatically added to command entry modes unless a metatable was previously set.
--- @usage setmetatable(mode_keys, ui.command_entry.editing_keys)
+--- A Lua metatable that contains a set of typical key bindings for text entries.
+-- It is automatically added to keys passed to `ui.command_entry.run()` unless those keys
+-- already have their own metatable.
 -- @table editing_keys
 
 -- This separation is needed to prevent LDoc from parsing the following table.
@@ -189,17 +188,16 @@ local function append_history(text)
 	mode_history[#mode_history + 1], mode_history.pos = text, #mode_history + 1
 end
 
---- Opens the command entry with label *label* (and optionally with string *initial_text*),
--- subjecting it to any key bindings defined in table *keys*, highlighting text with lexer
--- name *lang*, and then when the `Enter` key is pressed, closes the command entry and calls
--- function *f* (if non-`nil`) with the command entry's text as an argument, along with any
--- extra arguments passed to this function.
--- By default with no arguments given, opens a Lua command entry.
+--- Opens the command entry with label *label* and initial text *initial_text*.
+-- Entry text is highlighted using lexer language *lang*. When the user presses the `Enter`
+-- key, function *f* is called (if non-`nil`) with the command entry's text as an argument,
+-- along with any extra arguments passed to this function.
 -- The command entry does not respond to Textadept's default key bindings, but instead to the
 -- key bindings defined in *keys* and in `ui.command_entry.editing_keys`.
--- @param label String label to display in front of input.
--- @param f Function to call upon pressing `Enter` in the command entry, ending the mode.
---	It should accept at a minimum the command entry text as an argument.
+-- By default with no arguments given, this function opens a Lua command entry.
+-- @param label String label to display in front of the entry.
+-- @param f Function to call upon pressing `Enter` in the command entry. It should accept at
+--	a minimum the command entry text as an argument.
 -- @param[opt] keys Optional table of key bindings to respond to. This is in addition to the
 --	basic editing and movement keys defined in `ui.command_entry.editing_keys`. `Esc` and
 --	`Enter` are automatically defined to cancel and finish the command entry, respectively.
@@ -208,6 +206,7 @@ end
 --	default value comes from the command history for *f*.
 -- @param[optchain] ... Optional additional arguments to pass to *f*.
 -- @usage ui.command_entry.run('echo:', ui.print)
+-- @usage ui.command_entry.run('$', os.spawn, 'bash', 'env', ui.print) -- spawn a process
 function M.run(label, f, keys, lang, initial_text, ...)
 	if _G.keys.mode == '_command_entry' then return end -- already in command entry
 	local args = table.pack(...)

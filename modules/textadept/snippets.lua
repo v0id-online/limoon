@@ -5,12 +5,15 @@
 -- ### Overview
 --
 -- Define snippets in the global `snippets` table in key-value pairs. Each pair consists of
--- either a string trigger word and its snippet text, or a string lexer name (from the *lexers/*
--- directory) with a table of trigger words and snippet texts. When searching for a snippet to
--- insert based on a trigger word, Textadept considers snippets in the current lexer to have
--- priority, followed by the ones in the global table. This means if there are two snippets
--- with the same trigger word, Textadept inserts the one specific to the current lexer, not
--- the global one.
+-- either:
+--
+-- - A string trigger word and its snippet text.
+-- - A string lexer name with a table of trigger words and snippet texts.
+--
+-- When searching for a snippet to insert based on a trigger word, Textadept considers snippets
+-- in the current lexer to have priority, followed by the ones in the global table. This means
+-- if there are two snippets with the same trigger word, Textadept inserts the one specific to
+-- the current lexer, not the global one.
 --
 -- ### Syntax
 --
@@ -21,7 +24,7 @@
 --
 -- Plain text consists of any character except '$' and '\`'. Those two characters are reserved for
 -- variables, interpolated code, and placeholders. In order to use either of those two characters
--- literally, prefix them with '\' (e.g. `\$` inserts a literal '$').
+-- literally, prefix them with '\\' (e.g. "\\$" inserts a literal '$').
 --
 -- #### Variables
 --
@@ -65,12 +68,12 @@
 --
 -- ##### Tab Stops
 --
--- The simplest kind of placeholder is called a tab stop, and its syntax is either `$`*n*
--- or `${`*n*`}`, where *n* is an integer. When a snippet is inserted, the caret is moved
--- to the "$1" placeholder. Pressing the `Tab` key jumps to the next placeholder, "$2", and
--- so on. When there are no more placeholders to jump to, the caret moves to either the "$0"
--- placeholder if it exists, or it moves to the end of the snippet. For example, the following
--- snippet inserts a 3-element vector, with tab stops at each element:
+-- The simplest kind of placeholder is called a tab stop, and its syntax is either "$*n*" or
+-- "${*n*}", where *n* is an integer. When a snippet is inserted, the caret is moved to the
+-- "$1" placeholder. Pressing the `Tab` key jumps to the next placeholder, "$2", and so on. When
+-- there are no more placeholders to jump to, the caret moves to either the "$0" placeholder if
+-- it exists, or it moves to the end of the snippet. For example, the following snippet inserts
+-- a 3-element vector, with tab stops at each element:
 --
 -- ```lua
 -- snippets.vec = '[$1, $2, $3]'
@@ -103,7 +106,7 @@
 -- jumps to the second argument for input.
 --
 -- Note that plain text inside default values may not contain a '}' character either, as it is
--- reserved to indicate the end of the placeholder. Use `\}` to represent a literal '}'.
+-- reserved to indicate the end of the placeholder. Use "\\}" to represent a literal '}'.
 --
 -- ##### Mirrors
 --
@@ -161,7 +164,7 @@
 -- ```
 --
 -- Note that the '/' and '}' characters are reserved in certain places within a placeholder
--- transform. Use `\/` and `\}`, respectively, to represent literal versions of those characters
+-- transform. Use "\\/" and "\\}", respectively, to represent literal versions of those characters
 -- where necessary.
 --
 -- [regular expression]: manual.html#regex-and-lua-pattern-syntax
@@ -173,7 +176,7 @@
 -- (e.g. `${1|foo,bar,baz|}`).
 --
 -- Items may not contain a '\|' character, as it is reserved to indicate the end of the choice list.
--- Use `\|` to represent a literal '\|'.
+-- Use "\\|" to represent a literal '\|'.
 --
 -- ### Migrating Legacy Snippets
 --
@@ -248,10 +251,8 @@ for _, name in ipairs(lexer.names()) do snippets[name] = {} end
 -- If *grep* is `true`, returns a table of snippets (trigger-text key-value pairs) that match
 -- the trigger word instead of snippet text. Snippets are searched for in the global snippets
 -- table followed by snippet directories. Lexer-specific snippets are preferred.
--- @param grep Flag that indicates whether or not to return a table of snippets that match the
---	trigger word.
--- @param no_trigger Flag that indicates whether or not to ignore the trigger word and return
---	all snippets.
+-- @param grep Whether or not to return a table of snippets that match the trigger word.
+-- @param no_trigger Whether or not to ignore the trigger word and return all snippets.
 -- @return trigger word, snippet text or table of matching snippets
 local function find_snippet(grep, no_trigger)
 	local matching_snippets = {}
@@ -770,7 +771,7 @@ events.connect(events.VIEW_NEW, function()
 	view.indic_style[INDIC_CURRENTPLACEHOLDER] = view.INDIC_HIDDEN
 end)
 
---- Autocompleter function for snippet trigger words.
+--- Autocompletion function for snippet trigger words.
 -- @see textadept.editing.autocomplete
 -- @function _G.textadept.editing.autocompleters.snippet
 textadept.editing.autocompleters.snippet = function()

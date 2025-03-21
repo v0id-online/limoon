@@ -135,7 +135,11 @@ end, 1)
 -- @field _HOME
 
 --- The filesystem's character encoding.
--- This is used when [working with files](#io).
+-- This really only matters on Windows, where there is a mismatch between the UI encoding
+-- (UTF-8), and the filesystem encoding (non-UTF-8).
+-- @usage local utf8_filename = buffer.filename:iconv('UTF-8', _CHARSET)
+-- @usage local f = io.open(utf8_filename:iconv(_CHARSET, 'UTF-8'))
+-- @see string.iconv
 -- @field _CHARSET
 
 --- Whether or not Textadept is running on Windows.
@@ -157,13 +161,13 @@ end, 1)
 -- @field QT
 
 --- Whether or not Textadept is running in a terminal.
--- Curses feature incompatibilities are listed in the [Appendix][].
---
--- [Appendix]: manual.html#terminal-version-compatibility
 -- @field CURSES
 
 --- Textadept's current UI mode, either "light" or "dark".
--- Manually changing this field has no effect.
+-- Manually changing this field has no effect. It is used internally to set a theme on startup
+-- based on the current OS theme.
+-- @see view.set_theme
+-- @see events.MODE_CHANGED
 -- @field _THEME
 
 -- The tables below were defined in C.
@@ -174,15 +178,15 @@ end, 1)
 
 --- Table of all open buffers in Textadept.
 -- Numeric keys have buffer values and buffer keys have their associated numeric keys.
--- @usage _BUFFERS[n]      --> buffer at index n
--- @usage _BUFFERS[buffer] --> index of buffer in _BUFFERS
+-- @usage local buffer = _BUFFERS[n] -- buffer at index n
+-- @usage local i = _BUFFERS[buffer] -- index of buffer in _BUFFERS
 -- @see buffer
 -- @table _BUFFERS
 
 --- Table of all views in Textadept.
 -- Numeric keys have view values and view keys have their associated numeric keys.
--- @usage _VIEWS[n]    --> view at index n
--- @usage _VIEWS[view] --> index of view in _VIEWS
+-- @usage local view = _VIEWS[n] -- view at index n
+-- @usage local i = _VIEWS[view] -- index of view in _VIEWS
 -- @see view
 -- @table _VIEWS
 
@@ -203,16 +207,16 @@ end, 1)
 
 --- Attempts to quit Textadept.
 -- Emits `events.QUIT` unless *events* is `false`.
--- @param[opt] status Optional status code for Textadept to exit with. The default value is 0.
+-- @param[opt] status Optional status code for Textadept to exit with. The default value is `0`.
 -- @param[optchain] events Optional flag that indicates whether or not to emit `events.QUIT`,
 -- which could prevent quitting. Passing `false` is not recommended and could result in data
 -- loss. The default value is `true`.
 -- @function quit
 
 --- Resets the Lua State by reloading all initialization scripts.
--- This function is useful for modifying user scripts (such as *~/.textadept/init.lua*) on the
--- fly without having to restart Textadept. `arg` is set to `nil` when reinitializing the Lua
--- State. Any scripts that need to differentiate between startup and reset can test `arg`.
+-- This function is useful for modifying user scripts (such as *~/.textadept/init.lua*) or themes
+-- on the fly without having to restart Textadept. `arg` is set to `nil` when reinitializing
+-- the Lua State. Any scripts that need to differentiate between startup and reset can test `arg`.
 -- @function reset
 
 --- Calls function *f* with the given arguments after *interval* seconds.

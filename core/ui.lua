@@ -30,7 +30,7 @@ local ui = ui
 -- This field is always `false` in the terminal version.
 -- @field maximized
 
---- Whether or not to display the tab bar when multiple buffers are open.
+--- Display the tab bar when multiple buffers are open.
 -- The default value is `true` in the GUI version, and `false` in the terminal version.
 -- A third option, `ui.SHOW_ALL_TABS` may be used to always show the tab bar, even if only one
 -- buffer is open.
@@ -40,8 +40,8 @@ local ui = ui
 ui.SHOW_ALL_TABS = 2 -- ui.tabs options must be greater than 1
 if CURSES then ui.tabs = false end -- not supported right now
 
---- Whether or not to list buffers by their z-order (most recently viewed to least recently
--- viewed) in the switcher dialog.
+--- List buffers by their z-order (most recently viewed to least recently viewed) in the switcher
+-- dialog.
 -- The default value is `true`.
 ui.buffer_list_zorder = true
 
@@ -113,8 +113,6 @@ end
 -- @param type String type of print buffer.
 -- @param message String message to print.
 -- @usage ui.print_to('[Typed Buffer]', message)
--- @return print buffer
--- @see print_silent_to
 function ui.print_to(type, message)
 	if not assert_type(message, 'string/nil', 2) then message = '' end
 	return print_to(assert_type(type, 'string', 1), false, message, '\n')
@@ -124,8 +122,6 @@ end
 -- Opens a new buffer for printing to if necessary.
 -- @param type String type of print buffer.
 -- @param message String message to print.
--- @return print buffer
--- @see print_to
 function ui.print_silent_to(type, message)
 	if not assert_type(message, 'string/nil', 2) then message = '' end
 	return print_to(assert_type(type, 'string', 1), true, message, '\n')
@@ -142,22 +138,19 @@ local function output_to(silent, ...)
 end
 
 --- Prints the given strings to the output buffer, and returns that buffer.
--- Opens a new buffer if one has not already been opened for printing output. The output buffer
--- attempts to understand the error messages and warnings produced by various tools.
+-- Opens a new buffer for printing to if necessary. The output buffer attempts to understand
+-- the error messages and warnings produced by various tools.
 -- @param ... Output strings to print.
--- @return output buffer
--- @see output_silent
 function ui.output(...) return output_to(false, ...) end
 
 --- Silently prints the given strings to the output buffer, and returns that buffer.
 -- Opens a new buffer for printing to if necessary.
 -- @param ... Output strings to print.
--- @return output buffer
--- @see output
 function ui.output_silent(...) return output_to(true, ...) end
 
 --- Prints the given value(s) to the output buffer, along with a trailing newline.
--- Opens a new buffer if one has not already been opened for printing output.
+-- Opens a new buffer for printing to if necessary.
+-- This is primarily for use in the Lua command entry in place of Lua's `print()` function.
 -- @param ... Values to print. Lua's `tostring()` function is called for each value.
 --	They will be printed as tab-separated values.
 function ui.print(...)
@@ -225,9 +218,9 @@ end
 --	is not visible in any other view.
 -- @param[optchain=false] sloppy Optional flag that indicates whether or not to not match
 --	*filename* to `buffer.filename` exactly. When `true`, matches *filename* to only the
---	last part of `buffer.filename` This is useful for run and compile commands which output
---	relative filenames and paths instead of full ones and it is likely that the file in
---	question is already open.
+--	last part of `buffer.filename` This is useful for compile/run/test/build commands which
+--	output relative filenames and paths instead of full ones and it is likely that the file
+--	in question is already open.
 function ui.goto_file(filename, split, preferred_view, sloppy)
 	assert_type(filename, 'string', 1)
 	local patt = string.format('%s%s$', not sloppy and '^' or '',
@@ -456,6 +449,7 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- @table menubar
 
 --- A table containing the width and height pixel values of Textadept's window.
+-- @usage ui.size = {1000, 625} -- resize window
 -- @table size
 
 -- The functions below are Lua C functions.
@@ -476,7 +470,6 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 --- Low-level function for creating a menu from table *menu_table* and returning the userdata.
 -- You probably want to use the higher-level `textadept.menu.menubar`,
 -- `textadept.menu.context_menu`, or `textadept.menu.tab_context_menu` tables.
--- Emits `events.MENU_CLICKED` when a menu item is selected.
 -- @param menu_table A table defining the menu. It is an ordered list of tables with a string
 --	menu item, integer menu ID, and optional keycode and modifier mask. The latter two are
 --	used to display key shortcuts in the menu. '&' characters are treated as a menu mnemonics

@@ -22,7 +22,7 @@ for _, v in ipairs(session_events) do events[v:upper()] = v end
 -- - *session*: Table of session data to save. All handlers will have access to this same table,
 --	and Textadept's default handler reserves the use of some keys. Note that functions,
 --	userdata, and circular table values cannot be saved. The latter case is not recognized
---	at all, so beware.
+--	at all, so beware of creating in infinite loop.
 -- @field _G.events.SESSION_SAVE
 
 --- Emitted when loading a session.
@@ -41,7 +41,6 @@ local session_file = _USERHOME .. (not CURSES and '/session' or '/session_term')
 -- @param[opt] filename Optional absolute path to the session file to load. If `nil`, the user
 --	is prompted for one.
 -- @return `true` if the session file was opened and read; `nil` otherwise.
--- @usage textadept.session.load(filename)
 function M.load(filename)
 	local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 	if not assert_type(filename, 'string/nil', 1) then
@@ -133,7 +132,6 @@ end
 -- `textadept.session.save_on_quit` is `false`.
 -- @param filename[opt] Optional absolute path to the session file to save. If `nil`, the user
 --	is prompted for one.
--- @usage textadept.session.save(filename)
 function M.save(filename)
 	local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 	if not assert_type(filename, 'string/nil', 1) then

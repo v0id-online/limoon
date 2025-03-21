@@ -2,9 +2,23 @@
 -- Contributions from Robert Gieseke.
 
 --- Defines the menus used by Textadept.
--- Menus are simply tables of menu items and submenus and may be edited in place. A menu item
--- itself is a table whose first element is a menu label and whose second element is a menu
--- command to run. Submenus have `title` keys assigned to string text.
+-- Menus are simply tables of menu items and submenus. A menu item itself is a two-element table:
+-- a menu label and a menu command to run. Submenus have `title` keys assigned to string text.
+--
+-- Menus may be edited in place using normal Lua table operations. You can index a menu with
+-- either an index, a string label name, or a string path with submenus separated by '/'. When
+-- indexing with strings, labels are localized as needed, so you can use either English labels
+-- or their localized equivalent.
+--
+-- ```lua
+-- -- Append to the right-click context menu.
+-- table.insert(textadept.menu.context_menu, {'Label', function() ... end})
+-- -- Append an encoding in the "Buffer > Encoding" menu.
+-- table.insert(textadept.menu.menubar['Buffer/Encoding'],
+-- 	{'UTF-32', function() buffer:set_encoding('UTF-32') end})
+-- -- Change the "Search > Find" command.
+-- textadept.menu.menubar['Search/Find'][2] = function() ... end
+-- ```
 -- @module textadept.menu
 local M = {}
 
@@ -57,12 +71,9 @@ local function open_page(url)
 end
 
 --- The default main menubar.
--- Individual menus, submenus, and menu items can be retrieved by name in addition to table
--- index number.
--- As a convenience, a single menu path may be used, with submenus delineated by '/'. Labels
--- are localized as needed, so English labels or their localized equivalent may be used.
--- @usage textadept.menu.menubar['File/New']
--- @usage textadept.menu.menubar['File/New'][2] = function() .. end
+-- @usage table.insert(textadept.menu.menubar['Tools'], {...}) -- Append to the Tools menu
+-- @usage textadept.menu.menubar['File/New'] --> table for "File > New"
+-- @usage textadept.menu.menubar['File/New'][2] = function() ... end -- change "File > New" command
 -- @table menubar
 
 -- This separation is needed to prevent LDoc from parsing the following table.
@@ -337,8 +348,7 @@ local default_menubar = {
 }
 
 --- The default right-click context menu.
--- Submenus, and menu items can be retrieved by name in addition to table index number.
--- @usage textadept.menu.context_menu[#textadept.menu.context_menu + 1] = {...}
+-- @usage table.insert(textadept.menu.context_menu, {'Label', function() ... end})
 -- @table context_menu
 
 -- This separation is needed to prevent LDoc from parsing the following table.
@@ -356,7 +366,6 @@ local default_context_menu = {
 }
 
 --- The default tabbar context menu.
--- Submenus, and menu items can be retrieved by name in addition to table index number.
 -- @table tab_context_menu
 
 -- This separation is needed to prevent LDoc from parsing the following table.
@@ -405,8 +414,8 @@ end
 --- Creates a menu suitable for `ui.menu()` from the menu table format.
 -- Also assigns key bindings.
 -- @param menu The menu to create a menu from.
--- @param contextmenu Flag indicating whether or not the menu is a context menu. If so, menu_id
---	offset is 1000. The default value is `false`.
+-- @param contextmenu Whether or not the menu is a context menu. If so, menu_id offset is
+--	1000. The default value is `false`.
 -- @return menu that can be passed to `ui.menu()`.
 local function read_menu_table(menu, contextmenu)
 	local ui_menu = {title = menu.title}

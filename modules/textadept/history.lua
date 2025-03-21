@@ -101,9 +101,9 @@ end
 --- Records the given location in the current view's history.
 -- @param[opt] filename Optional string filename, buffer type, or identifier of the buffer to
 --	store. If `nil`, uses the current buffer.
--- @param[optchain] line Optional Integer line number to store. If `nil`, uses the current line.
--- @param[optchain] column Optional integer column number on line *line* to store. If `nil`,
---	uses the current column.
+-- @param[optchain] line Optional line number to store. If `nil`, uses the current line.
+-- @param[optchain] column Optional column number on line *line* to store. If `nil`, uses the
+--	current column.
 -- @param[optchain=false] soft Optional flag that indicates whether or not this record should
 --	be skipped when navigating backward towards it, and updated when navigating away from it.
 function M.record(filename, line, column, soft)

@@ -307,7 +307,7 @@ if have_sleep then sleep = require('debugger').socket.sleep end
 -- of *timeout* seconds is reached.
 -- If *condition* succeeds, returns its value. Otherwise raises an error on timeout.
 -- @param condition Function to call.
--- @param timeout Number of seconds to wait before timing out. The default value is 1.
+-- @param timeout Number of seconds to wait before timing out. The default value is `1`.
 -- @return value returned by *condition* unless there was a timeout
 -- @usage wait(function() return f.called end)
 function M.wait(condition, timeout)

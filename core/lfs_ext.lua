@@ -7,7 +7,7 @@
 -- to exclude when iterating over files and directories using `lfs.walk`.
 -- Extensions excluded: a, bmp, bz2, class, dll, exe, gif, gz, jar, jpeg, jpg, o, pdf, png,
 -- so, tar, tgz, tif, tiff, xz, and zip.
--- Directories excluded: .bzr, .git, .hg, .svn, _FOSSIL_, and node_modules.
+-- Directories excluded: .bzr, .git, .hg, .svn, \_FOSSIL\_, and node_modules.
 -- @table default_filter
 
 -- LuaFormatter off
@@ -66,15 +66,16 @@ end
 -- `lfs.default_filter`. A filter consists of glob patterns that match file and directory paths to
 -- include or exclude. Exclusive patterns begin with a '!'. If no inclusive patterns are given,
 -- any path is initially considered. As a convenience, '/' also matches the Windows directory
--- separator ('[/\\]' is not needed).
+-- separator.
 -- @param dir The directory path to iterate over.
 -- @param[opt=lfs.default_filter] filter Optional filter for files and directories to include
 --	and exclude.
 -- @param[optchain] n Optional maximum number of directory levels to descend into. The default
 --	is to have no limit.
--- @param[optchain=false] include_dirs Optional flag indicating whether or not to yield directory
---	names too.  Directory names are passed with a trailing '/' or '\', depending on the
---	current platform.
+-- @param[optchain=false] include_dirs Optional flag that indicates whether or not to yield
+--	directory names too. Directory names are passed with a trailing '/' or '\\', depending
+--	on the current platform.
+-- @usage for filename in lfs.walk(buffer.filename:match('^.+[/\\]')) do ... end
 function lfs.walk(dir, filter, n, include_dirs)
 	dir = assert_type(dir, 'string', 1):match('^..-[/\\]?$')
 	assert(lfs.attributes(dir, 'mode') == 'directory', 'directory not found: %s', dir)

@@ -26,8 +26,7 @@ local function bookmarks(buffer)
 	end, buffer, 0
 end
 
---- Prompts the user to select a bookmarked line to move the caret to the beginning of unless
--- *next* is given.
+--- Prompts the user to select a bookmarked line to jump to unless *next* is given.
 -- If *next* is `true` or `false`, moves the caret to the beginning of the next or previously
 -- bookmarked line, respectively.
 -- @param[opt] next Optional flag indicating whether to go to the next or previous bookmarked line

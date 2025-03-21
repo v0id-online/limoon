@@ -4,22 +4,20 @@
 -- @module textadept.editing
 local M = {}
 
---- Map of lexer names to line comment strings for programming languages, used by
--- `editing.toggle_comment()`.
--- Keys are lexer names and values are either the language's line comment prefixes or block
--- comment delimiters separated by a '|' character. If no comment string exists for a given
--- language, the lexer-supplied string is used, if available.
+--- Map of lexer names to line comment strings for programming languages.
+-- Line comment strings are either prefixes or block comment delimiters separated by a '|'
+-- character. If no comment string exists for a given language, the lexer-supplied string is
+-- used, if available.
+-- @usage textadept.editing.comment_string.c = '/*|*/' -- instead of the default '//'
 M.comment_string = {}
 
 --- Map of autocompleter names to autocompletion functions.
 -- Names are typically lexer names and autocompletion functions typically autocomplete symbols.
 -- Autocompletion functions must return two values: the number of characters behind the caret
 -- that are used as the prefix of the entity to be autocompleted, and a list of completions
--- to be shown. By default, the list of completions should be separated by space characters,
--- but the function may change `buffer.auto_c_separator` if needed. Also, autocompletion lists
--- are sorted automatically by default, but the function may change `buffer.auto_c_order`
--- if it wants to control sort order.
--- @see autocomplete
+-- to show. If any completion contains a space character, the function should change
+-- `buffer.auto_c_separator`. Also, autocompletion lists are sorted automatically by default,
+-- but the function may change `buffer.auto_c_order` if it wants to control sort order.
 M.autocompleters = {}
 
 --- Autocomplete the current word using words from all open buffers.
@@ -35,7 +33,7 @@ M.autocomplete_all_words = false
 M.auto_pairs = {}
 for k, v in string.gmatch([[()[]{}''""``]], '(.)(.)') do M.auto_pairs[k] = v end
 
---- Whether or not to type over an auto-paired complement character.
+--- Type over an auto-paired complement character from `textadept.editing.auto_pairs`.
 -- The default value is `true`.
 M.typeover_auto_paired = true
 
@@ -43,7 +41,7 @@ M.typeover_auto_paired = true
 -- The default value is `true`.
 M.auto_indent = true
 
---- Whether or not to auto-enclose selected text when typing a punctuation character, taking
+--- Auto-enclose selected text when typing a punctuation character, taking
 -- `textadept.editing.auto_pairs` into account.
 -- While a snippet is active, only auto-paired punctuation characters can auto-enclose
 -- placeholders.
@@ -55,16 +53,16 @@ M.auto_enclose = false
 M.strip_trailing_spaces = false
 
 M.HIGHLIGHT_NONE, M.HIGHLIGHT_CURRENT, M.HIGHLIGHT_SELECTED = 1, 2, 3
---- The word highlight mode.
+--- Automatically highlight words.
 --
--- - `textadept.editing.HIGHLIGHT_CURRENT`
---	Automatically highlight all instances of the current word.
--- - `textadept.editing.HIGHLIGHT_SELECTED`
---	Automatically highlight all instances of the selected word.
--- - `textadept.editing.HIGHLIGHT_NONE`
---	Do not automatically highlight words.
+-- - `textadept.editing.HIGHLIGHT_CURRENT`: Automatically highlight all instances of the
+--	current word.
+-- - `textadept.editing.HIGHLIGHT_SELECTED`: Automatically highlight all instances of the
+--	selected word.
+-- - `textadept.editing.HIGHLIGHT_NONE`: Do not automatically highlight words.
 --
 -- The default value is `textadept.editing.HIGHLIGHT_NONE`.
+-- @see buffer.word_chars
 M.highlight_words = M.HIGHLIGHT_NONE
 
 --- The word highlight indicator number.
@@ -85,10 +83,10 @@ M.INDIC_HIGHLIGHT = view.new_indic_number()
 M.XPM_IMAGES = {not CURSES and '/* XPM */static char *class[] = {/* columns rows colors chars-per-pixel */"16 16 10 1 ","  c #000000",". c #001CD0","X c #008080","o c #0080E8","O c #00C0C0","+ c #24D0FC","@ c #00FFFF","# c #A4E8FC","$ c #C0FFFF","% c None",/* pixels */"%%%%%  %%%%%%%%%","%%%% ##  %%%%%%%","%%% ###++ %%%%%%","%% +++++.   %%%%","%% oo++.. $$  %%","%% ooo.. $$$@@ %","%% ooo. @@@@@X %","%%%   . OO@@XX %","%%% ##  OOOXXX %","%% ###++ OOXX %%","% +++++.  OX %%%","% oo++.. %  %%%%","% ooo... %%%%%%%","% ooo.. %%%%%%%%","%%  o. %%%%%%%%%","%%%%  %%%%%%%%%%"};' or '*',not CURSES and '/* XPM */static char *namespace[] = {/* columns rows colors chars-per-pixel */"16 16 7 1 ","  c #000000",". c #1D1D1D","X c #393939","o c #555555","O c #A8A8A8","+ c #AAAAAA","@ c None",/* pixels */"@@@@@@@@@@@@@@@@","@@@@+@@@@@@@@@@@","@@@.o@@@@@@@@@@@","@@@ +@@@@@@@@@@@","@@@ +@@@@@@@@@@@","@@+.@@@@@@@+@@@@","@@+ @@@@@@@o.@@@","@@@ +@@@@@@+ @@@","@@@ +@@@@@@+ @@@","@@@.X@@@@@@@.+@@","@@@@+@@@@@@@ @@@","@@@@@@@@@@@+ @@@","@@@@@@@@@@@+ @@@","@@@@@@@@@@@X.@@@","@@@@@@@@@@@+@@@@","@@@@@@@@@@@@@@@@"};' or '@',not CURSES and '/* XPM */static char *method[] = {/* columns rows colors chars-per-pixel */"16 16 5 1 ","  c #000000",". c #E0BC38","X c #F0DC5C","o c #FCFC80","O c None",/* pixels */"OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOO  OOOO","OOOOOOOOO oo  OO","OOOOOOOO ooooo O","OOOOOOO ooooo. O","OOOO  O XXoo.. O","OOO oo  XXX... O","OO ooooo XX.. OO","O ooooo.  X. OOO","O XXoo.. O  OOOO","O XXX... OOOOOOO","O XXX.. OOOOOOOO","OO  X. OOOOOOOOO","OOOO  OOOOOOOOOO"};' or '+',not CURSES and '/* XPM */static char *signal[] = {/* columns rows colors chars-per-pixel */"16 16 6 1 ","  c #000000",". c #FF0000","X c #E0BC38","o c #F0DC5C","O c #FCFC80","+ c None",/* pixels */"++++++++++++++++","++++++++++++++++","++++++++++++++++","++++++++++  ++++","+++++++++ OO  ++","++++++++ OOOOO +","+++++++ OOOOOX +","++++  + ooOOXX +","+++ OO  oooXXX +","++ OOOOO ooXX ++","+ OOOOOX  oX +++","+ ooOOXX +  ++++","+ oooXXX +++++++","+ oooXX +++++..+","++  oX ++++++..+","++++  ++++++++++"};' or '~',not CURSES and '/* XPM */static char *slot[] = {/* columns rows colors chars-per-pixel */"16 16 5 1 ","  c #000000",". c #E0BC38","X c #F0DC5C","o c #FCFC80","O c None",/* pixels */"OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOO  OOOO","OOOOOOOOO oo  OO","OOOOOOOO ooooo O","OOOOOOO ooooo. O","OOOO  O XXoo.. O","OOO oo  XXX... O","OO ooooo XX.. OO","O ooooo.  X. OOO","O XXoo.. O  OOOO","O XXX... OOOOOOO","O XXX.. OOOOO   ","OO  X. OOOOOO O ","OOOO  OOOOOOO   "};' or '-',not CURSES and '/* XPM */static char *variable[] = {/* columns rows colors chars-per-pixel */"16 16 5 1 ","  c #000000",". c #8C748C","X c #9C94A4","o c #ACB4C0","O c None",/* pixels */"OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOOOOOOOOO","OOOOOOOOO  OOOOO","OOOOOOOO oo  OOO","OOOOOOO ooooo OO","OOOOOO ooooo. OO","OOOOOO XXoo.. OO","OOOOOO XXX... OO","OOOOOO XXX.. OOO","OOOOOOO  X. OOOO","OOOOOOOOO  OOOOO","OOOOOOOOOOOOOOOO"};' or '.',not CURSES and '/* XPM */static char *struct[] = {/* columns rows colors chars-per-pixel */"16 16 14 1 ","  c #000000",". c #008000","X c #00C000","o c #00FF00","O c #808000","+ c #C0C000","@ c #FFFF00","# c #008080","$ c #00C0C0","% c #00FFFF","& c #C0FFC0","* c #FFFFC0","= c #C0FFFF","- c None",/* pixels */"-----  ---------","---- &&  -------","--- &&&oo ------","-- ooooo.   ----","-- XXoo.. ==  --","-- XXX.. ===%% -","-- XXX. %%%%%# -","---   . $$%%## -","--- **  $$$### -","-- ***@@ $$## --","- @@@@@O  $# ---","- ++@@OO -  ----","- +++OOO -------","- +++OO --------","--  +O ---------","----  ----------"};' or '}',not CURSES and '/* XPM */static char *typedef[] = {/* columns rows colors chars-per-pixel */"16 16 10 1 ","  c #000000",". c #404040","X c #6D6D6D","o c #777777","O c #949494","+ c #ACACAC","@ c #BBBBBB","# c #DBDBDB","$ c #EEEEEE","% c None",/* pixels */"%%%%%  %%%%%%%%%","%%%% ##  %%%%%%%","%%% ###++ %%%%%%","%% +++++.   %%%%","%% oo++.. $$  %%","%% ooo.. $$$@@ %","%% ooo. @@@@@X %","%%%   . OO@@XX %","%%% ##  OOOXXX %","%% ###++ OOXX %%","% +++++.  OX %%%","% oo++.. %  %%%%","% ooo... %%%%%%%","% ooo.. %%%%%%%%","%%  o. %%%%%%%%%","%%%%  %%%%%%%%%%"};' or ':',CLASS=1,NAMESPACE=2,METHOD=3,SIGNAL=4,SLOT=5,VARIABLE=6,STRUCT=7,TYPEDEF=8}
 -- LuaFormatter on
 
---- Comments or uncomments the selected lines based on the current language.
+--- Comments or uncomments the selected lines based on the current language and the
+-- `textadept.editing.comment_string` table.
 -- As long as any part of a line is selected, the entire line is eligible for
 -- commenting/uncommenting.
--- @see comment_string
 function M.toggle_comment()
 	local lang = buffer:get_lexer(true)
 	local comment = M.comment_string[lang] or buffer.property['scintillua.comment.' .. lang]
@@ -257,8 +255,8 @@ function M.select_paragraph()
 end
 
 --- Converts indentation between tabs and spaces according to `buffer.use_tabs`.
--- If `buffer.use_tabs` is `true`, `buffer.tab_width` indenting spaces are converted to tabs.
--- Otherwise, all indenting tabs are converted to `buffer.tab_width` spaces.
+-- If `buffer.use_tabs` is `true`, converts `buffer.tab_width` number of indenting spaces to
+-- tabs. Otherwise, converts all indenting tabs to `buffer.tab_width` number of spaces.
 function M.convert_indentation()
 	buffer:begin_undo_action()
 	for line = 1, buffer.line_count do
@@ -330,22 +328,19 @@ function M.paste_reindent()
 end
 
 --- Passes the selected text or all buffer text to string shell command *command* as standard input
--- (stdin) and replaces the input text with the command's standard output (stdout). *command*
--- may contain shell pipes ('|').
+-- (stdin) and replaces that input text with the command's standard output (stdout).
+-- *command* may contain shell pipes ('|').
 -- Standard input is as follows:
 --
 -- 1. If no text is selected, the entire buffer is used.
 -- 2. If text is selected and spans a single line, is a multiple selection, or is a rectangular
 --	selection, only the selected text is used.
--- 3. If text is selected and spans multiple lines, all text on the lines that have text selected
---	is passed as stdin. However, if the end of the selection is at the beginning of a line,
---	only the line ending delimiters from the previous line are included. The rest of the
---	line is excluded.
+-- 3. If text is selected and spans multiple lines, all text on those lines is used. However,
+--	if the end of the selection is at the beginning of a line, that line is omitted.
 --
--- Note: Be careful when using commands that emit stdout while reading stdin (as opposed
--- to emitting stdout only after stdin is closed). Input that generates more output
--- than an OS-specific pipe can hold may hang Textadept. On Linux, this may be 64K. See
--- `spawn_proc:write()`.
+-- Note: commands that emit emit stdout while reading stdin (as opposed to emitting stdout
+-- only after stdin is closed) may hang the GTK and terminal versions of Textadept if input
+-- generates more output than stdout can buffer. On Linux, this may be 64K. See `proc:write()`.
 -- @param command The OS shell command to filter text through. May contain pipes.
 function M.filter_through(command)
 	assert_type(command, 'string', 1)
@@ -415,7 +410,6 @@ end
 -- *name*, and returns `true` if completions were found.
 -- @param name The name of an autocompleter function in the `textadept.editing.autocompleters`
 --	table to use for providing autocompletions.
--- @see autocompleters
 function M.autocomplete(name)
 	if not M.autocompleters[assert_type(name, 'string', 1)] then return end
 	buffer.auto_c_separator, buffer.auto_c_order = string.byte(' '), buffer.ORDER_PERFORMSORT
@@ -429,12 +423,11 @@ function M.autocomplete(name)
 	return buffer:auto_c_active() or buffer.auto_c_choose_single and buffer.current_pos ~= pos
 end
 
---- Returns for the word part behind the caret a list of whole word completions
--- constructed from the current buffer or all open buffers (depending on
--- `textadept.editing.autocomplete_all_words`).
+--- Autocompletion function for words from the current buffer, or all open buffers if
+-- `textadept.editing.autocomplete_all_words` is `true`.
+-- `buffer.word_chars` contains the set of characters that constitute words.
 -- If `buffer.auto_c_ignore_case` is `true`, completions are not case-sensitive.
--- @see buffer.word_chars
--- @see autocomplete
+-- @see textadept.editing.autocomplete
 -- @function _G.textadept.editing.autocompleters.word
 M.autocompleters.word = function()
 	local list, matches = {}, {}

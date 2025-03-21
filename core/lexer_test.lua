@@ -2,7 +2,7 @@
 
 --- Returns the current buffer's syntax highlighting as a tag table:
 --	{'function', 9, 'whitespace', 10, ...}.
--- @param offset Optional offset position to start at. The default value is 1.
+-- @param offset Optional offset position to start at. The default value is `1`.
 -- @return tag table
 local function get_syntax_highlighting(offset)
 	local tags = {}

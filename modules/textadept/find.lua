@@ -17,6 +17,7 @@ local M = ui.find
 
 --- Match search text only when it is surrounded by non-word characters in searches.
 -- The default value is `false`.
+-- @see buffer.word_chars
 -- @field whole_word
 
 --- Interpret search text as a Regular Expression.
@@ -78,7 +79,7 @@ M.regex_label_text = not CURSES and _L['Regex'] or _L['Regex(F3)']
 -- This is primarily used for localization.
 M.in_files_label_text = not CURSES and _L['In files'] or _L['Files(F4)']
 
---- Whether or not to highlight all occurrences of found text in the current buffer.
+--- Highlight all occurrences of found text in the current buffer.
 -- The default value is `false`.
 M.highlight_all_matches = false
 
@@ -95,21 +96,25 @@ M.INDIC_FIND = view.new_indic_number()
 local find_events = {'find_result_found', 'find_wrapped'}
 for _, v in ipairs(find_events) do events[v:upper()] = v end
 
---- Emitted when a result is found. It is selected and has been scrolled into view.
+--- Emitted when finding a text search result. It is selected and has been scrolled into view.
 -- Arguments:
 --
 -- - *find_text*: The text originally searched for.
 -- - *wrapped*: Whether or not the result found is after a text search wrapped.
 -- @field _G.events.FIND_RESULT_FOUND
 
---- Emitted when a text search wraps (passes through the beginning of the buffer), either from
--- bottom to top (when searching for a next occurrence), or from top to bottom (when searching
--- for a previous occurrence).
--- This is useful for implementing a more visual or audible notice when a search wraps in
--- addition to the statusbar message.
+--- Emitted when a text search wraps, either from bottom to top (when searching for a next
+-- occurrence), or from top to bottom (when searching for a previous occurrence).
+-- The default behavior is to print a statusbar notification. You can connect to this event to
+-- implementing a more visual or audible notice.
 -- @field _G.events.FIND_WRAPPED (string)
 
 --- Map of directory paths to filters used when finding in files.
+--
+-- A filter consists of glob patterns that match file and directory paths to include or
+-- exclude. Exclusive patterns begin with a '!'. If no inclusive patterns are given, any path
+-- is initially considered. As a convenience, '/' also matches the Windows directory separator.
+--
 -- This table is updated when the user manually specifies a filter in the "Filter" entry during
 -- an "In files" search.
 M.find_in_files_filters = {}
@@ -133,6 +138,7 @@ end
 local orig_focus = M.focus
 --- Displays and focuses the Find & Replace Pane.
 -- @param[opt] options Optional table of `ui.find` field options to initially set.
+-- @usage ui.find.focus{find_entry_text = buffer:get_sel_text(), match_case = true}
 function M.focus(options)
 	local already_in_files = M.in_files
 	if not assert_type(options, 'table/nil', 1) then options = {} end
@@ -175,12 +181,12 @@ end, 1)
 local incremental_orig_pos
 --- Finds and selects text in the current buffer.
 -- @param text The text to find.
--- @param next Flag indicating whether or not the search direction is forward.
+-- @param next Whether or not the search direction is forward.
 -- @param flags Search flags. This is a bit-mask of 4 flags: `buffer.FIND_MATCHCASE`,
 --	`buffer.FIND_WHOLEWORD`, `buffer.FIND_REGEXP`, and 1 << 31 (in files), each joined with
 --	binary OR. If `nil`, this is determined based on the checkboxes in the find box.
--- @param no_wrap Flag indicating whether or not the search will not wrap.
--- @param wrapped Utility flag indicating whether or not the search has wrapped for displaying
+-- @param no_wrap Whether or not the search will not wrap.
+-- @param wrapped Utility flag that indicates whether or not the search has wrapped for displaying
 --	useful statusbar information. This flag is used and set internally, and should not be
 --	set otherwise.
 -- @return position of the found text or `-1`
@@ -237,7 +243,7 @@ local function find(text, next, flags, no_wrap, wrapped)
 end
 
 --- Prompts the user for a directory to search in for files that match search text and search
--- options, and prints the results to a buffer titled "Files Found", highlighting found text.
+-- options, and prints the results to a "Files Found" buffer, highlighting found text.
 -- A filter determines which files to search in, with the default filter being
 -- `ui.find.find_in_files_filters[dir]` (if it exists) or `lfs.default_filter`.
 local function find_in_files()
@@ -471,8 +477,8 @@ local function get_ff_buffer()
 	for _, buffer in ipairs(_BUFFERS) do if is_ff_buf(buffer) then return buffer end end
 end
 
---- Jumps to the source of the next or previous find in files search result in the buffer titled
--- "Files Found", or the result on a given line number, depending on the value of *location*.
+--- Jumps to the source of the next or previous find in files search result in the "Files Found"
+-- buffer, or the result on a given line number, depending on the value of *location*.
 -- @param location When `true`, jumps to the next search result. When `false`, jumps to the
 --	previous one. When a line number, jumps to it.
 function M.goto_file_found(location)

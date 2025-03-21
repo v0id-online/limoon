@@ -59,7 +59,7 @@ end
 --- Plays a recorded or previously loaded macro, or loads and plays the macro from file *filename*
 -- if given.
 -- @param[opt] filename Optional filename of a macro to load and play. If the filename is a
---	relative path, it will be relative to *`_USERHOME`/macros/*.
+--	relative path, it will be relative to *~/.textadept/macros/*.
 function M.play(filename)
 	if recording then return end
 	if assert_type(filename, 'string/nil', 1) then M.load(filename) end
@@ -80,7 +80,7 @@ end
 --- Saves a recorded macro to file *filename* or the user-selected file.
 -- @param[opt] filename Optional filename to save the recorded macro to. If `nil`, the user
 --	is prompted for one. If the filename is a relative path, it will be relative to
---	*`_USERHOME`/macros/*.
+--	*~/.textadept/macros/*.
 function M.save(filename)
 	if recording or not macro then return end
 	if not assert_type(filename, 'string/nil', 1) then
@@ -101,7 +101,7 @@ end
 
 --- Loads a macro from file *filename* or the user-selected file.
 -- @param[opt] filename Optional macro file to load. If `nil`, the user is prompted for one. If
---	the filename is a relative path, it will be relative to *`_USERHOME`/macros/*.
+--	the filename is a relative path, it will be relative to *~/.textadept/macros/*.
 function M.load(filename)
 	if recording then return end
 	if not assert_type(filename, 'string/nil', 1) then

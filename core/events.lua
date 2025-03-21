@@ -117,12 +117,12 @@ local M = {}
 -- Arguments:
 --
 -- - *position*: The position double-clicked.
--- - *line*: The line number of the position double-clicked.
+-- - *line*: The position's line number.
 -- - *modifiers*: A bit-mask of any modifier keys held down: `view.MOD_CTRL`,
 --	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
 --	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
---	reported as *both* "Control" and "Alt" due to a Scintilla limitation with GTK.
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field DOUBLE_CLICK
 
 --- Emitted when the terminal version receives an unrecognized CSI sequence.
@@ -157,7 +157,8 @@ local M = {}
 -- - *text*: The error message text.
 -- @field ERROR
 
---- Emitted to find text via the Find & Replace Pane.
+--- Emitted to find text.
+-- `ui.find` contains active find options.
 -- Emitted by `ui.find.find_next()` and `ui.find.find_prev()`.
 -- Arguments:
 --
@@ -165,7 +166,7 @@ local M = {}
 -- - *next*: Whether or not to search forward.
 -- @field FIND
 
---- Emitted when the text in the "Find" field of the Find & Replace Pane changes.
+--- Emitted when the text in the "Find" field of the find & replace pane changes.
 -- `ui.find.find_entry_text` contains the current text.
 -- @field FIND_TEXT_CHANGED
 
@@ -173,7 +174,7 @@ local M = {}
 -- This event is never emitted when Textadept is running in the terminal.
 -- @field FOCUS
 
---- Emitted when clicking the mouse on text that has an indicator present.
+--- Emitted when clicking the mouse on text within an [indicator range](#mark-text-with-indicators).
 -- Arguments:
 --
 -- - *position*: The clicked text's position.
@@ -181,10 +182,11 @@ local M = {}
 --	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
 --	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
---	reported as *both* "Control" and "Alt" due to a Scintilla limitation with GTK.
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field INDICATOR_CLICK
 
---- Emitted when releasing the mouse after clicking on text that has an indicator present.
+--- Emitted when releasing the mouse after clicking on text within an [indicator
+-- range](#mark-text-with-indicators).
 -- Arguments:
 --
 -- - *position*: The clicked text's position.
@@ -192,7 +194,7 @@ local M = {}
 --	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
 --	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
---	reported as *both* "Control" and "Alt" due to a Scintilla limitation with GTK.
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field INDICATOR_RELEASE
 
 --- Emitted after Textadept finishes initializing.
@@ -202,12 +204,12 @@ local M = {}
 -- Arguments:
 --
 -- - *margin*: The margin number clicked.
--- - *position*: The beginning position of the clicked margin's line.
+-- - *position*: The position of the beginning of the clicked margin's line.
 -- - *modifiers*: A bit-mask of any modifier keys held down: `view.MOD_CTRL`,
 --	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
 --	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
---	reported as *both* "Control" and "Alt" due to a Scintilla limitation with GTK.
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field MARGIN_CLICK
 
 --- Emitted after selecting a menu item.
@@ -224,8 +226,8 @@ local M = {}
 
 --- Emitted by the terminal version for an unhandled mouse event.
 -- A handler should return `true` if it handled the event. Otherwise Textadept will try again.
--- (This side effect for a `false` or `nil` return is useful for sending the original mouse
--- event to a different view that a handler has switched to.)
+-- (This side effect for `nil` return is useful for sending the original mouse event to a
+-- different view that a handler has switched to.)
 -- Arguments:
 --
 -- - *event*: The mouse event: `view.MOUSE_PRESS`, `view.MOUSE_DRAG`, or `view.MOUSE_RELEASE`.
@@ -237,14 +239,16 @@ local M = {}
 -- @field MOUSE
 
 --- Emitted when quitting Textadept.
--- When connecting to this event, connect with an index of 1 if the handler needs to run before
--- Textadept closes all open buffers. If a handler returns `true`, Textadept does not quit. It is
--- not recommended to return `false` from a quit handler, as that may interfere with Textadept's
--- normal shutdown procedure.
+-- The default behavior is to close all buffers and, if that was successful, quit the application.
+-- In order to do something before Textadept closes all open buffers, connect to this event with
+-- an index of `1`. If a handler returns `true`, Textadept does not quit. It is not recommended
+-- to return `false` from a quit handler, as that may interfere with Textadept's normal shutdown
+-- procedure.
 -- Emitted by `quit()`.
 -- @field QUIT
 
 --- Emitted to replace selected (found) text.
+-- `ui.find` contains active find options.
 -- Emitted by `ui.find.replace()`.
 -- Arguments:
 --
@@ -252,6 +256,7 @@ local M = {}
 -- @field REPLACE
 
 --- Emitted to replace all occurrences of found text.
+-- `ui.find` contains active find options.
 -- Emitted by `ui.find.replace_all()`.
 -- Arguments:
 --
@@ -290,8 +295,8 @@ local M = {}
 -- @field SUSPEND
 
 --- Emitted when the user clicks on a buffer tab.
--- When connecting to this event, connect with an index of 1 if the handler needs to run before
--- Textadept switches between buffers.
+-- The default behavior is to switch to the clicked tab's buffer. In order to do something
+-- before the switch, connect to this event with an index of `1`.
 -- Note that Textadept always displays a context menu on right-click.
 -- Arguments:
 --
@@ -302,13 +307,13 @@ local M = {}
 --	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
 --	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
---	reported as *both* "Control" and "Alt" due to a Scintilla limitation with GTK.
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field TAB_CLICKED
 
 --- Emitted when the user clicks a buffer tab's close button.
--- When connecting to this event, connect with an index of 1 if the handler needs to run before
--- Textadept closes the buffer.
--- This event is only emitted in the Qt GUI version.
+-- The default behavior is to close the tab's buffer. If you need to do something before
+-- Textadept closes the buffer, connect to this event with an index of `1`.
+-- This event is only emitted in the Qt version.
 -- Arguments:
 --
 -- - *index*: The numeric index of the clicked tab.
@@ -352,12 +357,12 @@ local M = {}
 -- Emitted on startup and by `view:split()`.
 -- @field VIEW_NEW
 
---- Emitted right before switching to another view.
+--- Emitted before switching to another view.
 -- The view being switched from is `view`.
 -- Emitted by `ui.goto_view()` and `view:split()`.
 -- @field VIEW_BEFORE_SWITCH
 
---- Emitted right after switching to another view.
+--- Emitted after switching to another view.
 -- The view being switched to is `view`.
 -- Emitted by `ui.goto_view()`.
 -- @field VIEW_AFTER_SWITCH
@@ -383,7 +388,6 @@ local handlers = setmetatable({}, {
 -- @param event The string event name.
 -- @param f The Lua function to connect to *event*.
 -- @param[opt] index Optional index to insert the handler into.
--- @usage events.connect('my_event', function() ... end)
 function M.connect(event, f, index)
 	assert_type(event, 'string', 1)
 	assert_type(f, 'function', 2)
@@ -412,10 +416,8 @@ local error_emitted = false
 -- ceases to call subsequent handlers. This is useful for stopping the propagation of an event
 -- like a keypress after it has been handled, or for passing back values from handlers.
 -- @param event The string event name.
--- @param[opt] ... Arguments passed to the handler.
--- @return `nil` unless any any handler explicitly returned a non-`nil` value; otherwise returns
---	that value
--- @usage events.emit('my_event', 'my message')
+-- @param[opt] ... Arguments passed to each handler.
+-- @return the first non-`nil` value returned by a handler; otherwise does not return anything
 function M.emit(event, ...)
 	local event_handlers = handlers[assert_type(event, 'string', 1)]
 	local i = 1

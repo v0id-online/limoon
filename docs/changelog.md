@@ -2562,12 +2562,12 @@ Changes:
 - [`textadept.bookmarks.toggle()`][] accepts an optional line to bookmark.
 - Added support for Rust and TOML.
 - "Go To Bookmark" now lists bookmarks in all open buffers.
-- [`spawn_proc:kill()`][] can send signals to processes.
+- [`proc:kill()`][] can send signals to processes.
 - New [`lexer._FOLDBYINDENTATION`][] field for lexers that fold based on indentation.
 
 [compile and run macros]: api.html#textadept.run.compile\_commands
 [`textadept.bookmarks.toggle()`]: api.html#textadept.bookmarks.toggle
-[`spawn_proc:kill()`]: api.html#spawn_proc:kill
+[`proc:kill()`]: api.html#proc.kill
 [`lexer._FOLDBYINDENTATION`]: api.html#fold-by-indentation
 
 ### 7.9 (11 Mar 2015)
@@ -2651,13 +2651,13 @@ Changes:
 
 - The terminal version can suspend via `^Z` (changed "undo" key binding to `M-Z` and added
   additional `M-S-Z` "redo" binding).
-- Added [`spawn_proc:close()`][] for sending EOF to spawned processes.
+- Added [`proc:close()`][] for sending EOF to spawned processes.
 - Updated Tcl lexer.
 - Scintilla: Added `buffer.ANNOTATION_INDENTED` for indented, non-bordered annotations.
 - Scintilla: tab arrows, wrap markers, and line markers are now drawn in the terminal version.
 - Updated to [Scintilla][] 3.5.2.
 
-[`spawn_proc:close()`]: api.html#spawn_proc:close
+[`proc:close()`]: api.html#proc.close
 [Scintilla]: https://scintilla.org
 
 ### 7.8 beta (01 Dec 2014)

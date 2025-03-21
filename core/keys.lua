@@ -4,12 +4,15 @@
 --
 -- ### Overview
 --
--- Define key bindings in the global `keys` table in key-value pairs. Each pair consists of
--- either a string key sequence and its associated command, a string lexer name (from the
--- *lexers/* directory) with a table of key sequences and commands, a string key mode with a
--- table of key sequences and commands, or a key sequence with a table of more sequences and
--- commands. The latter is part of what is called a "key chain", to be discussed below. When
--- searching for a command to run based on a key sequence, Textadept considers key bindings
+-- Define key bindings in the global `keys` table in key-value pairs. Each pair consists of either:
+--
+-- - A string key sequence and its associated command.
+-- - A string lexer name and its table of key sequences and commands. These are called
+--	language-specific keys.
+-- - A string key mode and its table of key sequences and commands. This is called a key mode.
+-- - A key sequence and its table of more key sequences and commands. This is called a key chain.
+--
+-- When searching for a command to run based on a key sequence, Textadept considers key bindings
 -- in the current key mode to have priority. If no key mode is active, language-specific key
 -- bindings have priority, followed by the ones in the global table. This means if there are
 -- two commands with the same key sequence, Textadept runs the language-specific one. However,
@@ -52,7 +55,8 @@
 -- keys['ctrl+u'] = function() io.quick_open(_USERHOME) end
 -- ```
 --
--- Textadept handles `buffer` and `view` references properly in static contexts.
+-- Textadept handles `buffer` and `view` references properly in this context; it will use the
+-- correct buffer and view when running the key command.
 --
 -- ### Modes
 --
@@ -95,11 +99,14 @@
 -- 	c = {...}
 -- }
 -- ```
+--
+-- Pressing "Alt+a" activates the chain, and pressing "a" after that invokes function1. "Alt+a"
+-- followed by "b" invokes function2, and so on.
 -- @module keys
 local M = {}
 
 --- The current key mode.
--- When non-`nil`, all key bindings defined outside of `keys[mode]` are ignored.
+-- When non-`nil`, all key bindings defined outside of `keys[keys.mode]` are ignored.
 -- The default value is `nil`.
 -- @field mode
 
@@ -152,7 +159,7 @@ end)
 --- The current key sequence.
 local keychain = {}
 
---- The current chain of key sequences. (Read-only.)
+--- The current chain of key sequences. (Read-only)
 -- @table keychain
 M.keychain = setmetatable({}, {
 	__index = keychain, __newindex = function() error('read-only table') end,

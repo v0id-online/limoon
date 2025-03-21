@@ -1,12 +1,9 @@
 -- Copyright 2007-2025 Mitchell. See LICENSE.
 
---- Compile and run source code files with Textadept.
--- Language [modules][] may tweak the `textadept.run.compile_commands`, and
--- `textadept.run.run_commands` tables for particular languages. The user may
--- tweak `textadept.run.build_commands`, `textadept.run.test_commands`, and
--- `textadept.run.run_project_commands` for particular projects.
---
--- [modules]: manual.html#modules
+--- Execute compile, run, build, test, and project shell commands with Textadept.
+-- The editor prompts you with/for shell commands to run, prints output in real-time, and marks
+-- any warning and error messages it recognizes.
+-- Textadept remembers commands on a per-filename and per-directory basis where applicable.
 -- @module textadept.run
 local M = {}
 
@@ -31,36 +28,36 @@ M.INDIC_ERROR = view.new_indic_number()
 local run_events = {'compile_output', 'run_output', 'build_output', 'test_output'}
 for _, event in ipairs(run_events) do events[event:upper()] = event end
 
---- Emitted when executing a language's compile shell command.
--- By default, compiler output is printed to the output buffer. In order to override this
--- behavior, connect to the event with an index of `1` and return `true`.
+--- Emitted when an executed compile command has output.
+-- By default, output prints to the output buffer. In order to override this behavior, connect
+-- to this event with an index of `1` and return `true`.
 -- Arguments:
 --
--- - *output*: A line of string output from the command.
+-- - *output*: A chunk of string output from the command.
 -- @field _G.events.COMPILE_OUTPUT
 
---- Emitted when executing a language's or project's run shell command.
--- By default, output is printed to the output buffer. In order to override this behavior,
--- connect to the event with an index of `1` and return `true`.
+--- Emitted when an executed run command has output.
+-- By default, output prints to the output buffer. In order to override this behavior, connect
+-- to this event with an index of `1` and return `true`.
 -- Arguments:
 --
--- - *output*: A line of string output from the command.
+-- - *output*: A chunk of string output from the command.
 -- @field _G.events.RUN_OUTPUT
 
---- Emitted when executing a project's build shell command.
--- By default, output is printed to the output buffer. In order to override this behavior,
--- connect to the event with an index of `1` and return `true`.
+--- Emitted when an executed build command has output.
+-- By default, output prints to the output buffer. In order to override this behavior, connect
+-- to this event with an index of `1` and return `true`.
 -- Arguments:
 --
--- - *output*: A line of string output from the command.
+-- - *output*: A chunk of string output from the command.
 -- @field _G.events.BUILD_OUTPUT
 
---- Emitted when executing a project's shell command for running tests.
--- By default, output is printed to the output buffer. In order to override this behavior,
--- connect to the event with an index of `1` and return `true`.
+--- Emitted when an executed test command has output.
+-- By default, output prints to the output buffer. In order to override this behavior, connect
+-- to this event with an index of `1` and return `true`.
 -- Arguments:
 --
--- - *output*: A line of string output from the command.
+-- - *output*: A chunk of string output from the command.
 -- @field _G.events.TEST_OUTPUT
 
 --- Table of currently running spawned processes.
@@ -87,7 +84,7 @@ local line_state_marks = {M.MARK_ERROR, M.MARK_WARNING}
 local line_state_indics = {M.INDIC_ERROR, M.INDIC_WARNING}
 --- Prints output from a compile, run, build, or test shell command, or prints a Lua error.
 -- Any filenames encoded in _CHARSET are left alone and may not display properly.
--- All stdout and stderr from the command is printed silently.
+-- All stdout and stderr from the command may be printed silently.
 -- @param silent Whether or not to print silently.
 -- @param ... Output to print.
 local function print_output(silent, ...)
@@ -191,6 +188,7 @@ end
 -- Functions may also return a working directory and process environment table to operate in. By
 -- default, the working directory is the current file's parent directory and the environment
 -- is Textadept's environment.
+-- @usage textadept.run.compile_commands.c = 'clang -o "%e" "%f"'
 -- @table compile_commands
 
 -- LuaFormatter off
@@ -219,6 +217,7 @@ end
 -- Functions may also return a working directory and process environment table to operate in. By
 -- default, the working directory is the current file's parent directory and the environment
 -- is Textadept's environment.
+-- @usage textadept.run.run_commands.lua = 'lua5.1 "%f"'
 -- @table run_commands
 
 -- LuaFormatter off
@@ -240,6 +239,8 @@ end
 -- Functions may also return a working directory and process environment table to operate
 -- in. By default, the working directory is the project's root directory and the environment
 -- is Textadept's environment.
+-- @usage textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
+-- @usage textadept.run.build_commands['/path/to/project'] = 'make -C src'
 -- @table build_commands
 
 -- LuaFormatter off
@@ -275,6 +276,7 @@ end
 -- Functions may also return a working directory and process environment table to operate
 -- in. By default, the working directory is the project's root directory and the environment
 -- is Textadept's environment.
+-- @usage textadept.run.test_commands['/path/to/project'] = 'pytest'
 M.test_commands = {}
 
 --- Prompts the user with the command entry to run tests for the project whose root path is *dir*
@@ -299,6 +301,11 @@ end
 -- Functions may also return a working directory and process environment table to operate
 -- in. By default, the working directory is the project's root directory and the environment
 -- is Textadept's environment.
+-- @usage textadept.run.run_project_commands[_HOME] = function()
+--		local env = {TEXTADEPT_HOME = _HOME}
+--		for setting in os.spawn('env'):read('a'):gmatch('[^\n]+') do env[#env + 1] = setting end
+--		return _HOME .. '/build/textadept -f -n', '/tmp', env
+--	end
 M.run_project_commands = {}
 
 --- Prompts the user with the command entry to run shell command *cmd* or the shell command
@@ -358,9 +365,9 @@ local function get_tagged_text(line_num, tag)
 	end
 end
 
---- Jumps to the source of the next or previous recognized compile/run warning or error in
--- the output buffer, or the warning/error on a given line number, depending on the value
--- of *location*.
+--- Jumps to the source of the next or previous recognized compile/run/build/test warning or
+-- error in the output buffer, or the warning/error on a given line number, depending on the
+-- value of *location*.
 -- Displays an annotation with the warning or error message if possible.
 -- @param location When `true`, jumps to the next recognized warning/error. When `false`,
 --	jumps to the previous one. When a line number, jumps to it.
