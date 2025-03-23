@@ -83,9 +83,10 @@ M.in_files_label_text = not CURSES and _L['In files'] or _L['Files(F4)']
 -- The default value is `false`.
 M.highlight_all_matches = false
 
---- Whether to show filenames in the find in files search progressbar.
+--- Show filenames in the find in files search progressbar.
 -- This can be useful for determining whether or not custom filters are working as expected.
 -- Showing filenames can slow down searches on computers with really fast SSDs.
+--
 -- The default value is `false`.
 M.show_filenames_in_progressbar = false
 
@@ -96,9 +97,10 @@ M.INDIC_FIND = view.new_indic_number()
 local find_events = {'find_result_found', 'find_wrapped'}
 for _, v in ipairs(find_events) do events[v:upper()] = v end
 
---- Emitted when finding a text search result. It is selected and has been scrolled into view.
--- Arguments:
+--- Emitted when finding a text search result.
+-- It is selected and has been scrolled into view.
 --
+-- Arguments:
 -- - *find_text*: The text originally searched for.
 -- - *wrapped*: Whether or not the result found is after a text search wrapped.
 -- @field _G.events.FIND_RESULT_FOUND
@@ -137,7 +139,7 @@ end
 
 local orig_focus = M.focus
 --- Displays and focuses the Find & Replace Pane.
--- @param[opt] options Optional table of `ui.find` field options to initially set.
+-- @param[opt] options Table of `ui.find` field options to initially set.
 -- @usage ui.find.focus{find_entry_text = buffer:get_sel_text(), match_case = true}
 function M.focus(options)
 	local already_in_files = M.in_files
@@ -289,9 +291,7 @@ local function find_in_files()
 				filenames[#filenames + 1] = filename
 				utf8_filenames[#utf8_filenames + 1] = filename:sub(#dir + 2):iconv('UTF-8', _CHARSET)
 			end
-			-- luacov: disable
 			return -1 -- indeterminate
-			-- luacov: enable
 		end
 	}
 	if stopped then
@@ -400,7 +400,7 @@ local re_patt = lpeg.Cs(P{
 	L = P('\\L') / '' * (V('text') / lower + V('u') + V('l'))^0 * V('E')^-1, --
 	E = P('\\E') / '', esc = '\\' * C(1) / esc
 })
---- Returns string *text* with the following sequences unescaped:
+--- Returns text with the following sequences unescaped:
 --
 -- - "\uXXXX" sequences replaced with the equivalent UTF-8 character.
 -- - "\d" sequences replaced with the text of capture number *d* from the regular expression
@@ -477,10 +477,9 @@ local function get_ff_buffer()
 	for _, buffer in ipairs(_BUFFERS) do if is_ff_buf(buffer) then return buffer end end
 end
 
---- Jumps to the source of the next or previous find in files search result in the "Files Found"
--- buffer, or the result on a given line number, depending on the value of *location*.
+--- Jumps to the source of a find in files search result in the "Files Found" buffer.
 -- @param location When `true`, jumps to the next search result. When `false`, jumps to the
---	previous one. When a line number, jumps to it.
+--	previous one. When a line number, jumps to it's source.
 function M.goto_file_found(location)
 	local line_num = type(assert_type(location, 'boolean/number', 1)) == 'number' and location
 	local ff_view, ff_buffer = get_ff_view(), get_ff_buffer()
@@ -552,18 +551,18 @@ events.connect(events.DOUBLE_CLICK,
 -- The functions below are Lua C functions.
 
 --- Mimics pressing the "Find Next" button.
--- Emits `events.FIND`.
+-- @see events.FIND
 -- @function find_next
 
 --- Mimics pressing the "Find Prev" button.
--- Emits `events.FIND`.
+-- @see events.FIND
 -- @function find_prev
 
 --- Mimics pressing the "Replace" button.
--- Emits `events.REPLACE` followed by `events.FIND` unless any `events.REPLACE` handler returns
--- `true`.
+-- If any `events.REPLACE` handler returns `true`, `events.FIND` will not be emitted to mimic
+-- pressing the "Find Next" button.
 -- @function replace
 
 --- Mimics pressing the "Replace All" button.
--- Emits `events.REPLACE_ALL`.
+-- @see events.REPLACE_ALL
 -- @function replace_all

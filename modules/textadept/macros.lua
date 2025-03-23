@@ -56,9 +56,8 @@ function M.record()
 	recording = not recording
 end
 
---- Plays a recorded or previously loaded macro, or loads and plays the macro from file *filename*
--- if given.
--- @param[opt] filename Optional filename of a macro to load and play. If the filename is a
+--- Plays a recorded or previously loaded macro.
+-- @param[opt] filename String filename of a macro to load and play. If the filename is a
 --	relative path, it will be relative to *~/.textadept/macros/*.
 function M.play(filename)
 	if recording then return end
@@ -77,8 +76,8 @@ function M.play(filename)
 	end
 end
 
---- Saves a recorded macro to file *filename* or the user-selected file.
--- @param[opt] filename Optional filename to save the recorded macro to. If `nil`, the user
+--- Saves a recorded macro.
+-- @param[opt] filename String filename to save the recorded macro to. If `nil`, the user
 --	is prompted for one. If the filename is a relative path, it will be relative to
 --	*~/.textadept/macros/*.
 function M.save(filename)
@@ -99,8 +98,8 @@ function M.save(filename)
 	f:write('}\n'):close()
 end
 
---- Loads a macro from file *filename* or the user-selected file.
--- @param[opt] filename Optional macro file to load. If `nil`, the user is prompted for one. If
+--- Loads a macro.
+-- @param[opt] filename String macro file to load. If `nil`, the user is prompted for one. If
 --	the filename is a relative path, it will be relative to *~/.textadept/macros/*.
 function M.load(filename)
 	if recording then return end

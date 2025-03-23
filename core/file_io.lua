@@ -8,43 +8,43 @@ local file_io_events = {'file_opened', 'file_before_save', 'file_after_save', 'f
 for _, v in ipairs(file_io_events) do events[v:upper()] = v end
 
 --- Emitted after opening a file in a new buffer.
--- Emitted by `io.open_file()`.
 -- Arguments:
---
 -- - *filename*: The opened file's filename.
+-- @see io.open_file
 -- @field _G.events.FILE_OPENED
 
 --- Emitted before saving a file to disk.
--- Emitted by `buffer:save()`.
 -- Arguments:
---
 -- - *filename*: The filename of the file being saved.
+-- @see buffer.save
 -- @field _G.events.FILE_BEFORE_SAVE
 
 --- Emitted after saving a file to disk.
--- Emitted by `buffer:save()` and `buffer:save_as()`.
 -- Arguments:
---
 -- - *filename*: The filename of the saved file.
 -- - *saved_as*: Whether or not the file was saved under a different filename.
+-- @see buffer.save
+-- @see buffer.save_as
 -- @field _G.events.FILE_AFTER_SAVE
 
 --- Emitted when Textadept detects that an open file was modified externally.
 -- The default behavior is to prompt the user to reload the file. In order to override this,
 -- connect to this event with an index of `1` and return `true`.
--- Arguments:
 --
+-- Arguments:
 -- - *filename*: The filename externally modified.
 -- @field _G.events.FILE_CHANGED
 
 --- Attempt to detect indentation settings for opened files.
 -- If any non-blank line starts with a tab, tabs are used. Otherwise, for the first non-blank
 -- line that starts with between two and eight spaces, that number of spaces is used.
+--
 -- The default value is `true`.
 io.detect_indentation = true
 
 --- Ensure there is a final newline when saving text files.
 -- This has no effect on binary files.
+--
 -- The default value is `false` on Windows, and `true` on macOS, Linux, and BSD.
 io.ensure_final_newline = not WIN32
 
@@ -52,10 +52,10 @@ io.ensure_final_newline = not WIN32
 -- The default value is `5000`.
 io.quick_open_max = 5000
 
---- List of recently opened files, the most recent being towards the top.
+--- Table of recently opened files, the most recent being towards the top.
 io.recent_files = {}
 
---- List of encodings to attempt to decode files with.
+--- Table of encodings to attempt to decode files with.
 -- The default list contains UTF-8, ASCII, CP1252, and UTF-16.
 --
 -- You should add to this list if you work with files encoded in something else. Valid encodings
@@ -77,11 +77,11 @@ io.recent_files = {}
 
 io.encodings = {'UTF-8', 'ASCII', 'CP1252', 'UTF-16'}
 
---- Opens *filenames*, a string filename or list of filenames, or the user-selected filename(s).
--- Emits `events.FILE_OPENED` for each file opened.
--- @param[opt] filenames Optional string filename or table of filenames to open. If `nil`,
+--- Opens files for editing.
+-- @param[opt] filenames String filename or table of filenames to open. If `nil`,
 --	the user is prompted to open one or more.
 -- @see _G._CHARSET
+-- @see events.FILE_OPENED
 function io.open_file(filenames)
 	if not assert_type(filenames, 'string/table/nil', 1) then
 		filenames = ui.dialogs.open{
@@ -225,11 +225,10 @@ local function save_as(buffer, filename)
 	return true
 end
 
---- Saves all unsaved buffers to their respective files, prompting the user for filenames for
--- untitled buffers if *untitled* is `true`, and returns `true` on success.
+--- Saves all unsaved buffers to their respective files.
 -- Print and output buffers are ignored.
--- @param untitled Whether or not to prompt for filenames for untitled buffers. The default
---	value is `false`.
+-- @param[opt=false] untitled Prompt the user for filenames to save untitled buffers to. If
+--	the user cancels saving any untitled buffer, the remaining unsaved files stay unsaved.
 -- @return `true` if all savable files were saved; `nil` otherwise.
 function io.save_all_files(untitled)
 	for _, buffer in ipairs(_BUFFERS) do
@@ -286,10 +285,12 @@ events.connect(events.FILE_CHANGED, function(filename)
 	if button == 1 then buffer:reload() end
 end)
 
---- Closes all open buffers, prompting the user to continue if there are unsaved buffers, and
--- returns `true` if the user did not cancel.
--- No buffers are saved automatically. They must be saved manually.
--- @return `true` if user did not cancel; `nil` otherwise.
+--- Closes all open buffers.
+-- If there are any unsaved buffers, the user is prompted to confirm closing without saving
+-- for each one. If the user does not confirm, the remaining open buffers stay open.
+--
+-- Buffers are not saved automatically. They must be saved manually.
+-- @return `true` if user did not cancel, and all buffers were closed; `nil` otherwise.
 function io.close_all_buffers()
 	events.disconnect(events.BUFFER_AFTER_SWITCH, update_modified_file)
 	while #_BUFFERS > 1 do if not buffer:close() then return nil end end
@@ -316,7 +317,7 @@ events.connect(events.FILE_OPENED, function()
 	buffer:close()
 end)
 
---- Prompts the user to select a recently opened file to be reopened.
+--- Prompts the user to select a recently opened file to reopen.
 -- @see recent_files
 function io.open_recent_file()
 	if #io.recent_files == 0 then return end
@@ -345,14 +346,14 @@ local vcs = {
 	['.fslckout'] = 'file', _FOSSIL_ = 'file'
 }
 
---- Returns the root directory of the project that contains filesystem path *path*.
--- In order to be recognized, projects must be under version control. Recognized VCSes are
--- Bazaar, Fossil, Git, Mercurial, and SVN.
--- @param[opt] path Optional filesystem path to a project or a file contained within a project. The
---	default value is the buffer's filename or the current working directory.
--- @param[opt=false] submodule Optional flag that indicates whether or not to return the root
---	of the current submodule (if applicable).
--- @return string root or nil
+--- Returns a project's root directory.
+-- Textadept only recognizes projects under one of the following version control systems: Git,
+-- Mercurial, SVN, Bazaar, and Fossil.
+-- @param[opt] path String path to a project, or the path to a file that belongs to a project. The
+--	default value is either the buffer's filename (if available) or the current working directory.
+-- @param[opt=false] submodule Return the root of the current submodule instead of the repository
+--	root (if applicable).
+-- @return string root, or `nil` if no project was found
 function io.get_project_root(path, submodule)
 	if type(path) == 'boolean' then path, submodule = nil, path end
 	if not assert_type(path, 'string/nil', 1) then path = buffer.filename or lfs.currentdir() end
@@ -370,26 +371,19 @@ end
 --- Map of directory paths to filters used by `io.quick_open()`.
 io.quick_open_filters = {}
 
---- Prompts the user to select from a list one or more files to open from *paths*, a string
--- directory path or list of directory paths.
--- If *paths* is `nil`, uses the current project's root directory, which is obtained from
--- `io.get_project_root()`.
---
--- String or list *filter* determines which files to show in the list, with the default filter
--- being `io.quick_open_filters[paths]` (if it exists) or `lfs.default_filter`. A filter consists
--- of glob patterns that match file and directory paths to include or exclude. Patterns are
--- inclusive by default. Exclusive patterns begin with a '!'. If no inclusive patterns are
--- given, any path is initially considered. As a convenience, '/' also matches the Windows
--- directory separator.
---
--- The number of files in the list is capped at `io.quick_open_max`.
--- @param[opt] paths Optional string directory path or table of directory paths to search. The
---	default value is the current project's root directory, if available.
--- @param[optchain] filter Optional filter for files and directories to include and/or
---	exclude. The default value is `lfs.default_filter` unless a filter for *paths* is
---	defined in `io.quick_open_filters`.
+--- Prompts the user to select a file to open from a list of files read from a directory.
+-- The number of files shown in the list is capped at `io.quick_open_max`.
+-- @param[opt] paths String directory path or table of directory paths to search for files
+--	in. The default value is the current project's root directory.
+-- @param[optchain] filter Filter table or filter string of files to show in the list. A
+--	filter consists of glob patterns that match file and directory paths to include
+--	or exclude. Patterns are inclusive by default. Exclusive patterns begin with a
+--	'!'. If no inclusive patterns are given, any path is initially considered. As a
+--	convenience, '/' also matches the Windows directory separator. The default value is
+--	`io.quick_open_filters[paths]` if it exists, or
+-- `lfs.default_filter` otherwise.
 -- @usage io.quick_open(buffer.filename:match('^(.+)[/\\]')) -- list files in the buffer's directory
--- @usage io.quick_open(io.get_current_project(), '.lua') -- list Lua project files
+-- @usage io.quick_open(io.get_current_project(), {'.lua', '.c'}) -- list Lua and C project files
 -- @usage io.quick_open(io.get_current_project(), '!/build') -- list non-build project files
 function io.quick_open(paths, filter)
 	if not assert_type(paths, 'string/table/nil', 1) then

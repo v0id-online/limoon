@@ -2,8 +2,8 @@
 -- Contributions from Robert Gieseke.
 
 --- Defines the menus used by Textadept.
--- Menus are simply tables of menu items and submenus. A menu item itself is a two-element table:
--- a menu label and a menu command to run. Submenus have `title` keys assigned to string text.
+-- Menus are simply tables of menu items and submenus. A menu item itself is a two-element table: a
+-- menu label and a menu command to run. Submenus have `title` keys assigned to string label text.
 --
 -- Menus may be edited in place using normal Lua table operations. You can index a menu with
 -- either an index, a string label name, or a string path with submenus separated by '/'. When
@@ -390,7 +390,7 @@ local ignore = {[0xFE20] = true, [0x01000002] = true}
 -- item accelerator.
 -- Keycodes are either ASCII bytes or codes from `keys.KEYSYMS`. Modifiers are a combination of
 -- `SCMOD_*` modifiers.
--- @param key_seq The string key sequence.
+-- @param key_seq String key sequence.
 -- @return keycode and modifier mask
 local function get_menu_key_seq(key_seq)
 	if not key_seq then return nil end
@@ -413,9 +413,8 @@ end
 
 --- Creates a menu suitable for `ui.menu()` from the menu table format.
 -- Also assigns key bindings.
--- @param menu The menu to create a menu from.
--- @param contextmenu Whether or not the menu is a context menu. If so, menu_id offset is
---	1000. The default value is `false`.
+-- @param menu Menu to create a menu from.
+-- @param[opt=false] contextmenu The menu is a context menu. If so, menu_id offset is 1000.
 -- @return menu that can be passed to `ui.menu()`.
 local function read_menu_table(menu, contextmenu)
 	local ui_menu = {title = menu.title}
@@ -435,10 +434,10 @@ local function read_menu_table(menu, contextmenu)
 	return ui_menu
 end
 
---- Returns a proxy table for menu table *menu* such that when a menu item is changed or added,
--- *update* is called to update the menu in the UI.
--- @param menu The menu or table of menus to create a proxy for.
--- @param update The function to call to update the menu in the UI when a menu item is changed
+--- Returns a proxy table for a menu table such that when a menu item is changed or added,
+-- the menu is updated in the UI.
+-- @param menu Menu or table of menus to create a proxy for.
+-- @param update Function to call to update the menu in the UI when a menu item is changed
 --	or added.
 -- @param menubar Used internally to keep track of the top-level menu for calling *update* with.
 local function proxy_menu(menu, update, menubar)
@@ -483,12 +482,12 @@ local function proxy_menu(menu, update, menubar)
 	return setmetatable({}, toplevel_proxy_mt)
 end
 
---- Sets `ui.menubar` from menu table *menubar*.
+--- Sets `ui.menubar` from the given menu table.
 -- Each menu is an ordered list of menu items and has a `title` key for the title text. Menu
 -- items are tables containing menu text and either a function to call or a table containing a
 -- function with its parameters to call when an item is clicked. Menu items may also be sub-menus,
 -- ordered lists of menu items with an additional `title` key for the sub-menu's title text.
--- @param menubar The table of menu tables to create the menubar from. If `nil`, clears the
+-- @param[opt] menubar Table of menu tables to create the menubar from. If `nil`, clears the
 --	menubar from view, but keeps it intact in order for `textadept.menu.select_command()`
 --	to function properly.
 -- @see ui.menu
@@ -510,15 +509,13 @@ events.connect(events.INITIALIZED, function() set_menubar(default_menubar) end)
 -- will create the first visible menubar and proper proxy.
 proxies.menubar = proxy_menu(default_menubar, function() end)
 
---- Sets `ui.context_menu` and `ui.tab_context_menu` from menu item lists *buffer_menu* and
--- *tab_menu*, respectively.
+--- Sets `ui.context_menu` and `ui.tab_context_menu` from the given menu item lists.
 -- Menu items are tables containing menu text and either a function to call or a table containing a
 -- function with its parameters to call when an item is clicked. Menu items may also be sub-menus,
 -- ordered lists of menu items with an additional `title` key for the sub-menu's title text.
--- @param[opt] buffer_menu Optional menu table to create the buffer context menu from. If `nil`,
---	uses the default context menu.
--- @param[optchain] tab_menu Optional menu table to create the tabbar context menu from. If
---	`nil`, uses the default tab context menu.
+-- @param[opt=default_context_menu] buffer_menu Menu table to create the buffer context menu from.
+-- @param[optchain=default_tab_context_menu] tab_menu Menu table to create the tabbar context
+--	menu from.
 -- @see ui.menu
 local function set_contextmenus(buffer_menu, tab_menu)
 	contextmenu_items = {} -- reset
@@ -559,7 +556,7 @@ end)
 function M.select_command()
 	local items = {}
 	-- Builds the item tables for the list dialog.
-	-- @param menu The menu to read from.
+	-- @param menu Menu to read from.
 	local function build_command_tables(menu)
 		for _, item in ipairs(menu) do
 			if item.title then

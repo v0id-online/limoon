@@ -2,7 +2,7 @@
 
 --- Manages key bindings in Textadept.
 --
--- ### Overview
+-- ### Key Bindings Overview
 --
 -- Define key bindings in the global `keys` table in key-value pairs. Each pair consists of either:
 --
@@ -52,7 +52,11 @@
 -- ```lua
 -- keys['ctrl+n'] = buffer.new
 -- keys['ctrl+z'] = buffer.undo
--- keys['ctrl+u'] = function() io.quick_open(_USERHOME) end
+-- keys.c['shift+\n'] = function() -- language-specific key
+-- 	buffer:line_end()
+-- 	buffer:add_text(';')
+-- 	buffer:new_line()
+-- end
 -- ```
 --
 -- Textadept handles `buffer` and `view` references properly in this context; it will use the
@@ -100,20 +104,21 @@
 -- }
 -- ```
 --
--- Pressing "Alt+a" activates the chain, and pressing "a" after that invokes function1. "Alt+a"
--- followed by "b" invokes function2, and so on.
+-- Pressing `Alt+A` activates the chain, and pressing `A` after that invokes function1. `Alt+A`
+-- followed by `B` invokes function2, and so on.
 -- @module keys
 local M = {}
 
 --- The current key mode.
 -- When non-`nil`, all key bindings defined outside of `keys[keys.mode]` are ignored.
+--
 -- The default value is `nil`.
 -- @field mode
 
 --- Emitted when pressing a recognized key.
 -- If any handler returns `true`, the key is not handled further (e.g. inserted into the buffer).
--- Arguments:
 --
+-- Arguments:
 -- - *key*: The string representation of the [key sequence](#key-sequences).
 -- @field _G.events.KEYPRESS
 
@@ -222,8 +227,14 @@ events.connect(events.KEYPRESS, function(key)
 	-- PROPAGATE otherwise.
 end)
 
---- Map of [key bindings](#keys) to commands, with language-specific key tables assigned to a
--- lexer name key.
+--- Textadept's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
+-- Language-specific keys are in subtables assigned to lexer names.
+-- @usage keys['ctrl+n'] = buffer.new
+-- @usage keys.c['shift+\n'] = function() -- language-specific key
+--		buffer:line_end()
+--		buffer:add_text(';')
+--		buffer:new_line()
+--	end
 -- @table _G.keys
 
 for _, name in ipairs(lexer.names()) do M[name] = {_lexer = true} end

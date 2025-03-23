@@ -11,7 +11,7 @@
 -- In general, bindings for macOS are the same as for Windows/Linux/BSD except the "Control"
 -- modifier key on Windows/Linux/BSD is replaced by "Command" (⌘) and the "Alt" modifier key
 -- is replaced by "Control" (^). The only exception is for word- and paragraph-based movement
--- keys, which use "Alt" (⌥) instead of "Command" (⌘).
+-- keys, which use "Alt" (⌥) instead of "Command" (⌘), as is customary on macOS.
 --
 -- In general, bindings for the terminal version are the same as for Windows/Linux/BSD except:
 --
@@ -298,8 +298,7 @@ local M = {}
 local function m(path) return textadept.menu.menubar[path][2] end
 
 --- Starts a new line below or above the current one.
--- @param above Whether or not to start a new line above the current one. The default value is
---	`false.`
+-- @param[opt=false] above Start a new line above the current one instead of below.
 local function start_new_line(above)
 	local line = buffer:line_from_position(buffer.current_pos)
 	if above then buffer:line_up() end

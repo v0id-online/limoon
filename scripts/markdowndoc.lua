@@ -18,7 +18,7 @@ local SEE = '[`%s`](#%s)'
 local TABLE = '<a id="%s"></a>\n%s `%s`\n\n'
 local TFIELD = '- `%s`: %s\n'
 local titles = {
-	[PARAM] = 'Parameters:\n\n', [USAGE] = 'Usage:\n\n', [RETURN] = 'Returns: ', [SEE] = 'See also: ',
+	[PARAM] = 'Parameters:\n', [USAGE] = 'Usage:\n\n', [RETURN] = 'Returns: ', [SEE] = 'See also: ',
 	[TFIELD] = 'Fields:\n\n'
 }
 
@@ -34,20 +34,22 @@ local function link_known_symbols(md)
 	end)
 end
 
---- Writes an LDoc description to the given file.
--- @param f The markdown file being written to.
--- @param description The description.
--- @param name The name of the module the description belongs to. Used for headers in module
+--- Writes an LDoc description to a file.
+-- @param f File to write to.
+-- @param item LDoc tem to describe.
+-- @param name String name of the module the item belongs to. Used for headers in module
 --	descriptions.
-local function write_description(f, description, name)
+local function write_description(f, item, name)
+	local description = item.summary
+	if item.description ~= '' then description = description .. '\n' .. item.description end
 	description = link_known_symbols(description):gsub('\n ', '\n') -- strip leading spaces
 	f:write(string.format(DESCRIPTION, description))
 end
 
---- Writes an LDoc hashmap to the given file.
--- @param f The markdown file being written to.
--- @param fmt The format of a hashmap item.
--- @param hashmap The LDoc hashmap.
+--- Writes an LDoc hashmap to a file.
+-- @param f File to write to.
+-- @param fmt String format of a hashmap item.
+-- @param hashmap LDoc hashmap to write.
 local function write_hashmap(f, fmt, hashmap)
 	if not hashmap or #hashmap == 0 then return end
 	f:write(titles[fmt])
@@ -60,11 +62,11 @@ local function write_hashmap(f, fmt, hashmap)
 	f:write('\n')
 end
 
---- Writes an LDoc list to the given file.
--- @param f The markdown file being written to.
--- @param fmt The format of a list item.
--- @param list The LDoc list.
--- @param name The name of the module the list belongs to. Used for @see.
+--- Writes an LDoc list to a file.
+-- @param f File to write to.
+-- @param fmt String format of a list item.
+-- @param list LDoc list to write.
+-- @param name String name of the module the list belongs to. Used for @see.
 local function write_list(f, fmt, list, name)
 	if not list or #list == 0 then return end
 	if type(list) == 'string' then list = {list} end
@@ -87,17 +89,17 @@ local function write_list(f, fmt, list, name)
 	f:write('\n')
 end
 
---- Writes an LDoc item to the given file.
--- @param f The markdown file being written to.
--- @param item The LDoc item.
--- @param module_name The LDoc item's module name.
+--- Writes an LDoc item to a file.
+-- @param f File to write to.
+-- @param item LDoc item to write.
+-- @param module_name String LDoc item's module name.
 -- @function write
 local write
 
---- Writes an LDoc field to the given file.
--- @param f The markdown file being written to.
--- @param field The LDoc field.
--- @param module_name The LDoc field's module name.
+--- Writes an LDoc field to a file.
+-- @param f File to write to.
+-- @param field LDoc field to write.
+-- @param module_name String LDoc field's module name.
 local function write_field(f, field, module_name)
 	if not field.name:find('%.') and module_name ~= '_G' then
 		field.name = module_name .. '.' .. field.name -- absolute name
@@ -110,16 +112,16 @@ local function write_field(f, field, module_name)
 	if not skip_constant then
 		local level = module_name ~= 'buffer' and 3 or 4
 		f:write(string.format(FIELD, field.name:gsub('^_G%.', ''), string.rep('#', level), field.name))
-		write_description(f, field.summary .. field.description)
+		write_description(f, field)
 		if field.usage then write_list(f, USAGE, table.concat(field.usage)) end
 		write_list(f, SEE, field.tags.see, module_name)
 	end
 end
 
---- Writes an LDoc function to the given file.
--- @param f The markdown file being written to.
--- @param func The LDoc function.
--- @param module_name The LDoc function's module name.
+--- Writes an LDoc function to a file.
+-- @param f File to write to.
+-- @param func LDoc function to write.
+-- @param module_name String LDoc function's module name.
 local function write_function(f, func, module_name)
 	if not func.name:find('[%.:]') and module_name ~= '_G' then
 		func.name = module_name .. '.' .. func.name -- absolute name
@@ -129,17 +131,17 @@ local function write_function(f, func, module_name)
 	args = args:gsub('[%w_]+', '*%0*') -- italicize args
 	args = args:gsub('=[^[%]]+', function(default) return default:gsub('*', '') end) -- de-italicize
 	f:write(string.format(FUNCTION, func.name:gsub(':', '.'), string.rep('#', level), func.name, args))
-	write_description(f, func.summary .. func.description)
+	write_description(f, func)
 	write_hashmap(f, PARAM, func.params)
 	write_list(f, RETURN, func.ret)
 	if func.usage then write_list(f, USAGE, table.concat(func.usage)) end
 	write_list(f, SEE, func.tags.see, module_name)
 end
 
---- Writes an LDoc table to the given file.
--- @param f The markdown file being written to.
--- @param tbl The LDoc table.
--- @param module_name The LDoc table's module name.
+--- Writes an LDoc table to a file.
+-- @param f File to write to.
+-- @param tbl LDoc table to write.
+-- @param module_name String LDoc table's module name.
 local function write_table(f, tbl, module_name)
 	if not tbl.name:find('%.') and module_name ~= '_G' then
 		tbl.name = module_name .. '.' .. tbl.name -- absolute name
@@ -150,46 +152,46 @@ local function write_table(f, tbl, module_name)
 		tbl.name:gsub('^_G.', '') or ('_G.' .. tbl.name)
 	local level = module_name ~= 'buffer' and 3 or 4
 	f:write(string.format(TABLE, tbl_id, string.rep('#', level), tbl.name))
-	write_description(f, tbl.summary .. tbl.description)
+	write_description(f, tbl)
 	write_hashmap(f, TFIELD, tbl.params)
 	if tbl.usage then write_list(f, USAGE, table.concat(tbl.usage)) end
 	write_list(f, SEE, tbl.tags.see, module_name)
 end
 
---- Writes an LDoc module to the given file.
--- @param f The markdown file being written to.
--- @param module The LDoc module.
+--- Writes an LDoc module to a file.
+-- @param f File to write to.
+-- @param module LDoc module to write.
 local function write_module(f, module)
 	local name = module.name
 
 	-- Write the header and description.
 	f:write(string.format(MODULE, name, name))
 	f:write('\n')
-	write_description(f, module.summary .. module.description, name)
+	write_description(f, module, name)
 
 	table.sort(module.items, function(a, b) return a.name < b.name end)
 	for _, item in ipairs(module.items) do write(f, item, name) end
 	f:write('\n')
 end
 
---- Writes an LDoc section to the given file.
--- @param f The markdown file being written to.
--- @param section The LDoc section.
+--- Writes an LDoc section to a file.
+-- @param f File to write to.
+-- @param section LDoc section to write.
 local function write_section(f, section)
 	f:write('### ', section.display_name, '\n\n')
 	local description = link_known_symbols(section.description):gsub('\n ', '\n') -- strip leading spaces
 	f:write(description, '\n')
 end
 
---- Writes an LDoc class module to the given file.
--- @param f The markdown file being written to.
--- @param module The LDoc class module.
+--- Writes an LDoc class module to a file.
+-- @param f File to write to.
+-- @param module LDoc class module to write.
 local function write_classmod(f, module)
 	local name = module.name
 
 	-- Write the header and description.
 	f:write(string.format(MODULE, name, name))
-	write_description(f, module.summary .. module.description, name)
+	write_description(f, module, name)
 
 	-- Write the table of contents for the module's sections.
 	for _, item in ipairs(module.sections) do
@@ -219,7 +221,7 @@ write = function(f, item, module_name)
 end
 
 --- Called by LDoc to process a doc object.
--- @param doc The LDoc doc object.
+-- @param doc LDoc doc object to process.
 function M.ldoc(doc)
 	local f = io.stdout
 	f:write('# Textadept API Documentation\n\n')

@@ -603,7 +603,7 @@ Text passed as standard input to shell commands is determined as follows:
 
 1. If no text is selected, the entire buffer's text is used.
 2. If text is selected and either spans a single line, is a multiple selection, or is a
-  rectangular selection, only the selected text is used.
+  rectangular selection, only that selected text is used.
 3. If text is selected and spans multiple lines, all text on those lines is used. However,
   if the end of the selection is at the beginning of a line, that line is omitted.
 
