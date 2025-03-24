@@ -4,11 +4,11 @@ Textadept is a fast, minimalist, and remarkably extensible cross-platform text e
 
 Quick links: [Download][] \| [Manual][] \| [Lua API Docs][] \| [Project Page][]
 
-<a href="https://orbitalquark.github.io/textadept/assets/images/windows.png"><img src="https://orbitalquark.github.io/textadept/assets/images/windows.png" alt="windows" width="400" style="vertical-align: top;"/></a>
-<a href="https://orbitalquark.github.io/textadept/assets/images/macos.png"><img src="https://orbitalquark.github.io/textadept/assets/images/macos.png" alt="macos" width="400" style="vertical-align: top;"/></a>
+<a href="assets/images/windows.png"><img src="assets/images/windows.png" alt="windows" width="400" style="vertical-align: top;"/></a>
+<a href="assets/images/macos.png"><img src="assets/images/macos.png" alt="macos" width="400" style="vertical-align: top;"/></a>
 
-<a href="https://orbitalquark.github.io/textadept/assets/images/linux.png"><img src="https://orbitalquark.github.io/textadept/assets/images/linux.png" alt="linux" width="400" style="vertical-align: top;"/></a>
-<a href="https://orbitalquark.github.io/textadept/assets/images/terminal.png"><img src="https://orbitalquark.github.io/textadept/assets/images/terminal.png" alt="terminal" width="400" style="vertical-align: top;"/></a>
+<a href="assets/images/linux.png"><img src="assets/images/linux.png" alt="linux" width="400" style="vertical-align: top;"/></a>
+<a href="assets/images/terminal.png"><img src="assets/images/terminal.png" alt="terminal" width="400" style="vertical-align: top;"/></a>
 
 [Download]: #download
 [Manual]: https://orbitalquark.github.io/textadept/manual.html
@@ -30,7 +30,7 @@ Quick links: [Download][] \| [Manual][] \| [Lua API Docs][] \| [Project Page][]
 - Almost every aspect of the editor can be scripted, extended, and customized with Lua.
 - Does not connect to the internet -- *it's just a text editor!*
 
-<a href="https://orbitalquark.github.io/textadept/assets/images/textadept.png"><img src="https://orbitalquark.github.io/textadept/assets/images/textadept.png" alt="textadept"/></a>
+<a href="assets/images/textadept.png"><img src="assets/images/textadept.png" alt="textadept"/></a>
 
 [Lua]: https://lua.org
 
@@ -91,8 +91,8 @@ functionality are available as optional modules in the "Extra modules" links abo
 - [Scratch buffers](https://github.com/orbitalquark/textadept-scratch)
 - [Spell checking](https://github.com/orbitalquark/textadept-spellcheck)
 
-<a href="https://orbitalquark.github.io/textadept/assets/images/lsp.png"><img src="https://orbitalquark.github.io/textadept/assets/images/lsp.png" alt="lsp" width="325"/></a>
-<a href="https://orbitalquark.github.io/textadept/assets/images/diff.png"><img src="https://orbitalquark.github.io/textadept/assets/images/diff.png" alt="diff" width="450"/></a>
+<a href="assets/images/lsp.png"><img src="assets/images/lsp.png" alt="lsp" width="325"/></a>
+<a href="assets/images/diff.png"><img src="assets/images/diff.png" alt="diff" width="450"/></a>
 
 ## Install and Use
 
@@ -130,7 +130,7 @@ require('file_diff')
 require('spellcheck')
 ```
 
-<a href="https://orbitalquark.github.io/textadept/assets/images/settings.png"><img src="https://orbitalquark.github.io/textadept/assets/images/settings.png" alt="preferences" width="400"/></a>
+<a href="assets/images/settings.png"><img src="assets/images/settings.png" alt="preferences" width="400"/></a>
 
 ## Compile
 
@@ -151,7 +151,7 @@ Basic procedure:
 1. Configure CMake by pointing it to Textadept's source directory (where *CMakeLists.txt* is),
   specify a directory to build in, and optionally specify a directory to install to. CMake will
   determine what UI toolkits are available and fetch third-party build dependencies.
-  <br/><a href="https://orbitalquark.github.io/textadept/assets/images/compile.png"><img src="https://orbitalquark.github.io/textadept/assets/images/compile.png" alt="cmake" width="400"/></a>
+  <br/><a href="assets/images/compile.png"><img src="assets/images/compile.png" alt="cmake" width="400"/></a>
 2. Build Textadept.
 3. Either copy the built binaries to Textadept's source directory or use CMake to install it.
 
