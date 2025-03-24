@@ -62,7 +62,7 @@ Stable Release<br/>(12.6) | Beta Release<br/>(N/A) | Experimental<br/>nightly bu
 -|-|-
 [Windows][stable win] | | [Windows][nightly win]
 [macOS][stable mac] | | [macOS][nightly mac]
-[Linux x64][stable linux] / [ARM][arm] | | [Linux x64][nightly linux] / [ARM][nightly arm]
+[Linux x64][stable linux] | | [Linux x64][nightly linux] / [ARM][nightly arm]
 [Extra modules][stable modules] | | [Extra modules][nightly modules]
 [Source code][stable source] | | [Source code][nightly source]
 
@@ -71,7 +71,6 @@ A list of all released versions is [here][all versions] along with their release
 [stable win]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.win.zip
 [stable mac]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.macOS.zip
 [stable linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.linux.tgz
-[arm]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.linux.arm.tgz
 [stable modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.modules.zip
 [stable source]: https://github.com/orbitalquark/textadept/archive/refs/tags/textadept_12.6.zip
 [nightly win]: https://github.com/orbitalquark/textadept/releases/download/textadept_nightly/textadept_nightly.win.zip
