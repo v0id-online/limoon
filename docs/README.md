@@ -112,8 +112,8 @@ from source.
 The "Help > Show LuaDoc" menu item, or the `Shift+F1` keyboard shortcut opens Textadept's extensive
 API reference for users interested in scripting the editor. There is also an [online version][api].
 
-[manual]: manual.html
-[api]: api.html
+[manual]: manual.md
+[api]: api.md
 
 If you downloaded the optional set of modules, unpack it into the *.textadept/* directory in
 your home folder (keeping the top-level *modules/* directory intact). You could instead unpack
