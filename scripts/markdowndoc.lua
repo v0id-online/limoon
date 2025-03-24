@@ -36,7 +36,7 @@ end
 
 --- Writes an LDoc description to a file.
 -- @param f File to write to.
--- @param item LDoc tem to describe.
+-- @param item LDoc item to describe.
 -- @param name String name of the module the item belongs to. Used for headers in module
 --	descriptions.
 local function write_description(f, item, name)
