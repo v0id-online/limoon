@@ -5,7 +5,7 @@
 -- @module markdowndoc
 local M = {}
 
-local TOC = '1. [%s](#%s)\n'
+local TOC = '%d. [%s](#%s)\n'
 local MODULE = '<a id="%s"></a>\n## The `%s` module\n'
 local FIELD = '<a id="%s"></a>\n%s `%s`\n\n'
 local FUNCTION = '<a id="%s"></a>\n%s `%s`(%s)\n\n'
@@ -194,9 +194,9 @@ local function write_classmod(f, module)
 	write_description(f, module, name)
 
 	-- Write the table of contents for the module's sections.
-	for _, item in ipairs(module.sections) do
+	for i, item in ipairs(module.sections) do
 		local section = item.display_name
-		f:write(string.format(TOC, section, section:gsub(' ', '-'):lower()))
+		f:write(string.format(TOC, i, section, section:gsub(' ', '-'):lower()))
 	end
 	f:write('\n')
 
@@ -275,7 +275,15 @@ function M.ldoc(doc)
 	end
 
 	-- Create the table of contents.
-	for _, module in ipairs(doc) do f:write(string.format(TOC, module.name, module.name)) end
+	for i, module in ipairs(doc) do
+		local anchor = module.name
+		if anchor == 'buffer' or anchor == 'keys' or anchor == 'view' then
+			-- Jekyll auto-creates id tags for headers, so ensure TOC buffer and
+			-- view links go to their modules instead of _G.buffer, _G.keys, and _G.view.
+			anchor = 'the-' .. anchor .. '-module'
+		end
+		f:write(string.format(TOC, i, module.name, anchor))
+	end
 	f:write('\n')
 
 	-- Loop over modules, writing the Markdown document (to stdout).

@@ -167,7 +167,7 @@ local function get_flags()
 		(M.whole_word and buffer.FIND_WHOLEWORD or 0) | (M.regex and buffer.FIND_REGEXP or 0)
 end
 
---- Returns whether or not the given buffer is a files found buffer.
+--- Returns whether or not a buffer is a files found buffer.
 local function is_ff_buf(buf) return buf._type == _L['[Files Found Buffer]'] end
 
 --- Clears highlighted match indicators.
