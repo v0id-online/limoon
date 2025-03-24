@@ -76,7 +76,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install qtbase5-dev libgtk-3-dev lua5.3 discount --no-install-recommends -y
+          sudo apt-get install qtbase5-dev libgtk-3-dev lua5.3 --no-install-recommends -y
 
       - name: Build
         shell: bash

@@ -560,8 +560,8 @@ and `⇥` on macOS. Use the arrow keys to make a selection and press `Enter` to 
 Lua code here runs in a modified environment for your convenience:
 
 - The contents (keys) of the following tables are global variables:
-  - [`buffer`](api.html#buffer)
-  - [`view`](api.html#view)
+  - [`buffer`](api.html#the-buffer-module)
+  - [`view`](api.html#the-view-module)
   - [`ui`](api.html#ui)
   - [`textadept`](api.html#textadept)
 - The first argument to `buffer` and `view` functions may be omitted.
@@ -1463,11 +1463,11 @@ CMake boolean variables that affect the build:
 - `CURSES`: Unless off, builds the Curses (terminal) version of Textadept. The default is
   auto-detected.
 - `GENERATE_HTML`: When on, creates a `html` target to build HTML documentation in the *docs/*
-  directory (e.g. `cmake --build build_dir --target html`). Requires [Lua][] and [Discount][]
+  directory (e.g. `cmake --build build_dir --target html`). Requires [Lua][] and [Ruby][]
   to be installed. Defaults to off.
 
 [Lua]: https://www.lua.org
-[Discount]: https://www.pell.portland.or.us/~orc/Code/discount/
+[Ruby]: https://www.ruby-lang.org/en/
 
 ## Appendix
 
