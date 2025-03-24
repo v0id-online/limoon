@@ -477,7 +477,7 @@ In the terminal version:
 When the "Regex" find option is enabled, the "Replace" entry interprets the following character
 sequences:
 
-- `\`*`n`* represents the *n*th captured matching region's text, and `\0` represents all
+- `\1` through `\9` represent their captured matching region's text, and `\0` represents all
   matched text.
 - `\U` and `\L` converts everything up to the next `\L`, `\U`, or `\E` to uppercase and lowercase,
   respectively. (`\E` turns off conversion.)
