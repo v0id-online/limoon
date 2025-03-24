@@ -11,8 +11,8 @@ Quick links: [Download][] \| [Manual][] \| [Lua API Docs][] \| [Project Page][]
 <a href="assets/images/terminal.png"><img src="assets/images/terminal.png" alt="terminal" width="400" style="vertical-align: top;"/></a>
 
 [Download]: #download
-[Manual]: https://orbitalquark.github.io/textadept/manual.html
-[Lua API Docs]: https://orbitalquark.github.io/textadept/api.html
+[Manual]: manual.md
+[Lua API Docs]: api.md
 [Project Page]: https://github.com/orbitalquark/textadept
 
 ## Features
@@ -112,8 +112,8 @@ from source.
 The "Help > Show LuaDoc" menu item, or the `Shift+F1` keyboard shortcut opens Textadept's extensive
 API reference for users interested in scripting the editor. There is also an [online version][api].
 
-[manual]: https://orbitalquark.github.io/textadept/manual.html
-[api]: https://orbitalquark.github.io/textadept/api.html
+[manual]: manual.html
+[api]: api.html
 
 If you downloaded the optional set of modules, unpack it into the *.textadept/* directory in
 your home folder (keeping the top-level *modules/* directory intact). You could instead unpack
@@ -176,20 +176,20 @@ The "[Compiling][]" section of the manual contains more information about this p
 [Qt]: https://www.qt.io
 [GTK]: https://gtk.org
 [ncurses]: https://invisible-island.net/ncurses/ncurses.html
-[Compiling]: https://orbitalquark.github.io/textadept/manual.html#compiling
+[Compiling]: manual.html#compiling
 
 ## Support
 
 Textadept is an open-source project, released under the MIT License.
 
-- [Manual](https://orbitalquark.github.io/textadept/manual.html)
-- [Lua API Documentation](https://orbitalquark.github.io/textadept/api.html)
+- [Manual](manual.md)
+- [Lua API Documentation](api.md)
 - [Project page](https://github.com/orbitalquark/textadept)
 - [Issue tracker](https://github.com/orbitalquark/textadept/issues)
 - [Discussions](https://github.com/orbitalquark/textadept/discussions)
 - [Wiki](https://github.com/orbitalquark/textadept/wiki)
-- [Frequently Asked Questions](https://orbitalquark.github.io/textadept/faq.html)
-- [Credits](https://orbitalquark.github.io/textadept/thanks.html)
+- [Frequently Asked Questions](faq.md)
+- [Credits](thanks.md)
 
 You can contact me personally at code att foicica.com.
 
