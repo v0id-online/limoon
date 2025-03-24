@@ -292,7 +292,7 @@ local M = {}
 --
 -- Note: meta+[befhstv] may be used by Linux/BSD GUI terminals for menu access.
 
---- Returns the menu command associated with the given menu path.
+--- Returns the menu command associated with a menu path.
 -- @param path Path to the menu item.
 -- @usage m('Edit/Select/Select in XML Tag')
 local function m(path) return textadept.menu.menubar[path][2] end
@@ -310,7 +310,7 @@ end
 --- Shows the popup context menu.
 local function show_context_menu() ui.popup_menu(ui.context_menu) end
 
---- Returns a macro register key chain for the given macro function (save or play).
+--- Returns the macro register key chain for a macro function (save or play).
 -- Non-alphanumeric keys are invalid registers.
 local function macro_register(f)
 	return setmetatable({}, {

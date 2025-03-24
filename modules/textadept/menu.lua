@@ -64,7 +64,7 @@ local function set_encoding(encoding)
 	buffer:set_encoding(encoding)
 	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
 end
---- Opens the given URL in the user's default web browser.
+--- Opens a URL in the user's default web browser.
 local function open_page(url)
 	local cmd = (WIN32 and 'start ""') or (OSX and 'open') or 'xdg-open'
 	os.spawn(string.format('%s "%s"', cmd, not OSX and url or 'file://' .. url))
@@ -482,7 +482,7 @@ local function proxy_menu(menu, update, menubar)
 	return setmetatable({}, toplevel_proxy_mt)
 end
 
---- Sets `ui.menubar` from the given menu table.
+--- Sets `ui.menubar` from a menu table.
 -- Each menu is an ordered list of menu items and has a `title` key for the title text. Menu
 -- items are tables containing menu text and either a function to call or a table containing a
 -- function with its parameters to call when an item is clicked. Menu items may also be sub-menus,

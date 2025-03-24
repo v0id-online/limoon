@@ -110,7 +110,7 @@ end
 -- Load session when no args are present.
 events.connect(events.ARG_NONE, function() if M.save_on_quit then M.load(session_file) end end)
 
---- Returns the given value serialized as a string.
+--- Returns a value serialized as a string.
 -- This is a very simple implementation suitable for session saving only.
 -- Ignores function, userdata, and thread types, and does not handle circular tables.
 local function _tostring(val)
@@ -193,7 +193,7 @@ events.connect(events.QUIT, function() if M.save_on_quit then M.save(session_fil
 -- Does not save session on quit.
 args.register('-n', '--nosession', 0, function() M.save_on_quit = false end,
 	'No session functionality')
--- Loads the given session on startup.
+-- Loads a session on startup.
 args.register('-s', '--session', 1, function(name)
 	if not lfs.attributes(name) then name = string.format('%s/%s', _USERHOME, name) end
 	M.load(name)

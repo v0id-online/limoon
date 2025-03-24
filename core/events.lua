@@ -57,7 +57,7 @@ local M = {}
 -- - *position*: The position the list was displayed at.
 -- @field AUTO_C_SELECTION_CHANGE
 
---- Emitted right after switching to another buffer.
+--- Emitted after switching to another buffer.
 -- The buffer being switched to is `buffer`.
 -- @see view.goto_buffer
 -- @field BUFFER_AFTER_SWITCH
@@ -68,7 +68,7 @@ local M = {}
 -- The buffer **must not** be modified during this event.
 -- @field BUFFER_BEFORE_REPLACE_TEXT
 
---- Emitted right before switching to another buffer.
+--- Emitted before switching to another buffer.
 -- The buffer being switched from is `buffer`.
 -- @see view.goto_buffer
 -- @see buffer.new
@@ -153,7 +153,7 @@ local M = {}
 -- Arguments:
 --
 -- - *text*: The text to search for.
--- - *next*: Search forward instead of backward.
+-- - *next*: Whether or not to search forward instead of backward.
 -- @see ui.find.find_next
 -- @see ui.find.find_prev
 -- @field FIND
@@ -283,7 +283,7 @@ local M = {}
 -- The default behavior is to switch to the clicked tab's buffer. In order to do something
 -- before the switch, connect to this event with an index of `1`.
 --
--- Note that Textadept always displays a context menu on right-click.
+-- Note that Textadept always displays a context menu for a right-click.
 --
 -- Arguments:
 -- - *index*: The numeric index of the clicked tab.
@@ -315,13 +315,13 @@ local M = {}
 -- - *updated*: A bitmask of changes since the last update.
 --
 --	+ `buffer.UPDATE_CONTENT`
---		Buffer contents, styling, or markers have changed.
+--		The buffer's contents, styling, or markers have changed.
 --	+ `buffer.UPDATE_SELECTION`
---		Buffer selection has changed (including caret movement).
+--		The buffer's selection has changed (including caret movement).
 --	+ `view.UPDATE_V_SCROLL`
---		View has scrolled vertically.
+--		The view has scrolled vertically.
 --	+ `view.UPDATE_H_SCROLL`
---		View has scrolled horizontally.
+--		The view has scrolled horizontally.
 -- @field UPDATE_UI
 
 --- Emitted after dragging and dropping a URI into a view.

@@ -19,7 +19,7 @@ test('macro.record should record keyboard macros', function()
 	test.assert_equal(buffer:get_text(), test.lines{'replacement', 'replacement'})
 end)
 
---- Records the given function as a macro.
+--- Records a function as a macro.
 -- @param f Function to record.
 local function record(f)
 	textadept.macros.record()

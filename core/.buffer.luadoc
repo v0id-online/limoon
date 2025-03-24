@@ -450,7 +450,7 @@
 -- @section
 
 --- Splits up lines in the target range that exceed a certain width.
--- @param width Pixel width to split lines at. If `0`, uses the width of the view.
+-- @param width Pixel width to split lines at. If `0`, the width of the view is used.
 -- @see set_target_range
 -- @see target_from_selection
 -- @see view.text_width
@@ -736,14 +736,14 @@
 
 --- Adds to the set of selections the next occurrence of the main selection within the target
 -- range, makes that occurrence the new main selection, and scrolls it into view.
--- If there is no selected text, uses the current word.
+-- If there is no selected text, the current word is used.
 -- @see textadept.editing.select_word
 -- @see buffer.set_target_range
 -- @see buffer.target_whole_document
 -- @function multiple_select_add_next
 
 --- Adds to the set of selections each occurrence of the main selection within the target range.
--- If there is no selected text, uses the current word.
+-- If there is no selected text, the current word is used.
 -- @see textadept.editing.select_word
 -- @see buffer.set_target_range
 -- @see buffer.target_whole_document
@@ -1126,7 +1126,7 @@
 -- @param end_pos End position of the range to stop counting at.
 -- @function count_characters
 
---- Returns the pixel width the given text would have when styled in the given style.
+--- Returns the pixel width text would have when styled in a particular style.
 -- @param style_num Style number between `1` and `256` to use.
 -- @param text String text to measure the width of.
 -- @function view:text_width
@@ -1624,7 +1624,9 @@
 -- - `view.EOLANNOTATION_FLAT_ANGLE`: Outline annotations with flat left and angled right ends.
 -- - `view.EOLANNOTATION_ANGLES`: Outline annotations with angled ends.
 --
--- All annotations have the same shape. The default value is `view.EOLANNOTATION_BOXED`.
+-- All annotations have the same shape.
+--
+-- The default value is `view.EOLANNOTATION_BOXED`.
 -- @field view.eol_annotation_visible
 
 --- @field view.EOLANNOTATION_HIDDEN

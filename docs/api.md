@@ -1090,7 +1090,7 @@ some buffer functions operate on).
 Splits up lines in the target range that exceed a certain width.
 
 Parameters:
-- *width*:  Pixel width to split lines at. If `0`, uses the width of the view.
+- *width*:  Pixel width to split lines at. If `0`, the width of the view is used.
 
 See also: [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_from_selection`](#buffer.target_from_selection), [`view.text_width`](#view.text_width)
 
@@ -1506,7 +1506,7 @@ Parameters:
 Adds to the set of selections the next occurrence of the main selection within the target
 range, makes that occurrence the new main selection, and scrolls it into view.
 
-If there is no selected text, uses the current word.
+If there is no selected text, the current word is used.
 
 See also: [`textadept.editing.select_word`](#textadept.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
 
@@ -1515,7 +1515,7 @@ See also: [`textadept.editing.select_word`](#textadept.editing.select_word), [`b
 
 Adds to the set of selections each occurrence of the main selection within the target range.
 
-If there is no selected text, uses the current word.
+If there is no selected text, the current word is used.
 
 See also: [`textadept.editing.select_word`](#textadept.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
 
@@ -2095,7 +2095,7 @@ Parameters:
 <a id="view.text_width"></a>
 #### `view:text_width`(*style_num*, *text*)
 
-Returns the pixel width the given text would have when styled in the given style.
+Returns the pixel width text would have when styled in a particular style.
 
 Parameters:
 - *style_num*:  Style number between `1` and `256` to use.
@@ -2675,7 +2675,9 @@ The EOL annotation display style.
 - `view.EOLANNOTATION_FLAT_ANGLE`: Outline annotations with flat left and angled right ends.
 - `view.EOLANNOTATION_ANGLES`: Outline annotations with angled ends.
 
-All annotations have the same shape. The default value is `view.EOLANNOTATION_BOXED`.
+All annotations have the same shape.
+
+The default value is `view.EOLANNOTATION_BOXED`.
 
 <a id="buffer.annotation_lines"></a>
 #### `buffer.annotation_lines`
@@ -4769,7 +4771,7 @@ The buffer **must not** be modified during this event.
 <a id="events.BUFFER_AFTER_SWITCH"></a>
 ### `events.BUFFER_AFTER_SWITCH`
 
-Emitted right after switching to another buffer.
+Emitted after switching to another buffer.
 
 The buffer being switched to is [`buffer`](#buffer).
 
@@ -4787,7 +4789,7 @@ The buffer **must not** be modified during this event.
 <a id="events.BUFFER_BEFORE_SWITCH"></a>
 ### `events.BUFFER_BEFORE_SWITCH`
 
-Emitted right before switching to another buffer.
+Emitted before switching to another buffer.
 
 The buffer being switched from is [`buffer`](#buffer).
 
@@ -4818,8 +4820,8 @@ See also: [`buffer.new`](#buffer.new)
 
 Emitted when an executed build command has output.
 
-By default, output prints to the output buffer. In order to override this behavior, connect
-to this event with an index of `1` and return `true`.
+The default behavior is to print output to the output buffer. In order to override this,
+connect to this event with an index of `1` and return `true`.
 
 Arguments:
 - *output*: A chunk of string output from the command.
@@ -4855,8 +4857,8 @@ Emitted when the text in the command entry changes.
 
 Emitted when an executed compile command has output.
 
-By default, output prints to the output buffer. In order to override this behavior, connect
-to this event with an index of `1` and return `true`.
+The default behavior is to print output to the output buffer. In order to override this,
+connect to this event with an index of `1` and return `true`.
 
 Arguments:
 - *output*: A chunk of string output from the command.
@@ -4967,7 +4969,7 @@ Emitted to find text.
 Arguments:
 
 - *text*: The text to search for.
-- *next*: Search forward instead of backward.
+- *next*: Whether or not to search forward instead of backward.
 
 See also: [`ui.find.find_next`](#ui.find.find_next), [`ui.find.find_prev`](#ui.find.find_prev)
 
@@ -4996,7 +4998,7 @@ Emitted when a text search wraps, either from bottom to top (when searching for 
 occurrence), or from top to bottom (when searching for a previous occurrence).
 
 The default behavior is to print a statusbar notification. You can connect to this event to
-implementing a more visual or audible notice.
+implement a more visual or audible notice.
 
 <a id="events.FOCUS"></a>
 ### `events.FOCUS`
@@ -5177,8 +5179,8 @@ This event is only emitted by the terminal version.
 
 Emitted when an executed run command has output.
 
-By default, output prints to the output buffer. In order to override this behavior, connect
-to this event with an index of `1` and return `true`.
+The default behavior is to print output to the output buffer. In order to override this,
+connect to this event with an index of `1` and return `true`.
 
 Arguments:
 - *output*: A chunk of string output from the command.
@@ -5227,7 +5229,7 @@ Emitted when the user clicks on a buffer tab.
 The default behavior is to switch to the clicked tab's buffer. In order to do something
 before the switch, connect to this event with an index of `1`.
 
-Note that Textadept always displays a context menu on right-click.
+Note that Textadept always displays a context menu for a right-click.
 
 Arguments:
 - *index*: The numeric index of the clicked tab.
@@ -5257,8 +5259,8 @@ Arguments:
 
 Emitted when an executed test command has output.
 
-By default, output prints to the output buffer. In order to override this behavior, connect
-to this event with an index of `1` and return `true`.
+The default behavior is to print output to the output buffer. In order to override this,
+connect to this event with an index of `1` and return `true`.
 
 Arguments:
 - *output*: A chunk of string output from the command.
@@ -5279,13 +5281,13 @@ Arguments:
 - *updated*: A bitmask of changes since the last update.
 
 	+ `buffer.UPDATE_CONTENT`
-		Buffer contents, styling, or markers have changed.
+		The buffer's contents, styling, or markers have changed.
 	+ `buffer.UPDATE_SELECTION`
-		Buffer selection has changed (including caret movement).
+		The buffer's selection has changed (including caret movement).
 	+ `view.UPDATE_V_SCROLL`
-		View has scrolled vertically.
+		The view has scrolled vertically.
 	+ `view.UPDATE_H_SCROLL`
-		View has scrolled horizontally.
+		The view has scrolled horizontally.
 
 <a id="events.URI_DROPPED"></a>
 ### `events.URI_DROPPED`
@@ -6414,27 +6416,20 @@ and thanks to Roberto Ierusalimschy for LPeg.
 <a id="lexer.add_fold_point"></a>
 ### `lexer.add_fold_point`(*lexer*, *tag_name*, *start_symbol*, *end_symbol*)
 
-Adds to lexer *lexer* a fold point whose beginning and end points are tagged with string
-*tag_name* tags and have string content *start_symbol* and *end_symbol*, respectively.
-
-In the event that *start_symbol* may or may not be a fold point depending on context, and that
-additional processing is required, *end_symbol* may be a function that ultimately returns
-`1` (indicating a beginning fold point), `-1` (indicating an ending fold point), or `0`
-(indicating no fold point). That function is passed the following arguments:
-
-  - `text`: The text being processed for fold points.
-  - `pos`: The position in *text* of the beginning of the line currently being processed.
-  - `line`: The text of the line currently being processed.
-  - `s`: The position of *start_symbol* in *line*.
-  - `symbol`: *start_symbol* itself.
+Adds a fold point to a lexer.
 
 Parameters:
-- *lexer*:  The lexer to add a fold point to.
-- *tag_name*:  The tag name for text that indicates a fold point.
-- *start_symbol*:  The text that indicates the beginning of a fold point.
-- *end_symbol*:  Either the text that indicates the end of a fold point, or a function that
-   returns whether or not *start_symbol* is a beginning fold point (1), an ending fold point
-   (-1), or not a fold point at all (0).
+- *lexer*:  Lexer to add a fold point to.
+- *tag_name*:  String tag name of fold point text.
+- *start_symbol*:  String fold point start text.
+- *end_symbol*:  Either string fold point end text, or a function that returns whether or
+   not *start_symbol* is a beginning fold point (1), an ending fold point (-1), or not a fold
+   point at all (0). If it is a function, it is passed the following arguments:
+   - `text`: The text being processed for fold points.
+   - `pos`: The position in *text* of the beginning of the line currently being processed.
+   - `line`: The text of the line currently being processed.
+   - `s`: The position of *start_symbol* in *line*.
+   - `symbol`: *start_symbol* itself.
 
 Usage:
 
@@ -6447,30 +6442,31 @@ lex:add_fold_point('custom', function(text, pos, line, s, symbol) ... end)
 <a id="lexer.add_rule"></a>
 ### `lexer.add_rule`(*lexer*, *id*, *rule*)
 
-Adds pattern *rule* identified by string *id* to the ordered list of rules for lexer *lexer*.
+Adds a rule to a lexer.
 
 Parameters:
-- *lexer*:  The lexer to add the given rule to.
-- *id*:  The id associated with this rule. It does not have to be the same as the name
-   passed to `tag()`.
-- *rule*:  The LPeg pattern of the rule.
+- *lexer*:  Lexer to add *rule* to.
+- *id*:  String id associated with this rule. It does not have to be the same as the name
+   passed to `lex:tag()`.
+- *rule*:  LPeg pattern of the rule to add.
 
 <a id="lexer.after_set"></a>
 ### `lexer.after_set`(*set*, *patt*, *skip*)
 
-Creates and returns a pattern that matches pattern *patt* only when it comes after one of
-the characters in string *set* (or when there are no characters behind *patt*), skipping
-over any characters in string *skip*, which is whitespace by default.
+Returns a pattern that only matches when it comes after certain characters (or when there
+are no characters behind it).
 
 Parameters:
 - *set*:  String character set like one passed to `lpeg.S()`.
-- *patt*:  The LPeg pattern to match after a set character.
-- *skip*:  String character set to skip over. The default value is " \t\r\n\v\f" (whitespace).
+- *patt*:  LPeg pattern to match after a character in *set*.
+- *skip*:  String character set to skip over when looking backwards from *patt*. The default
+   value is " \t\r\n\v\f" (whitespace).
 
 Usage:
 
 ```lua
 local regex = lexer.after_set('+-*!%^&|=,([{', lexer.range('/'))
+   -- matches "var re = /foo/;", but not "var x = 1 / 2 / 3;"
 ```
 
 <a id="lexer.alnum"></a>
@@ -6496,7 +6492,8 @@ A pattern that matches a binary number.
 <a id="lexer.bin_num_"></a>
 ### `lexer.bin_num_`(*c*)
 
-Returns a pattern that matches a binary number, whose digits may be separated by character *c*.
+Returns a pattern that matches a binary number, whose digits may be separated by a particular
+character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6509,8 +6506,8 @@ A pattern that matches a decimal number.
 <a id="lexer.dec_num_"></a>
 ### `lexer.dec_num_`(*c*)
 
-Returns a pattern that matches a decimal number, whose digits may be separated by character
-*c*.
+Returns a pattern that matches a decimal number, whose digits may be separated by a particular
+character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6518,31 +6515,39 @@ Parameters:
 <a id="lexer.detect"></a>
 ### `lexer.detect`([*filename*[, *line*]])
 
-Returns the name of the lexer often associated with filename *filename* and/or content
-line *line*.
+Returns the name of the lexer often associated a particular filename and/or file content.
 
 Parameters:
-- *filename*:  Optional string filename. The default value is read from the
+- *filename*:  String filename to inspect. The default value is read from the
    "lexer.scintillua.filename" property.
-- *line*:  Optional string first content line, such as a shebang line. The default
-   value is read from the "lexer.scintillua.line" property.
+- *line*:  String first content line, such as a shebang line. The default value
+   is read from the "lexer.scintillua.line" property.
 
-Returns: string lexer name to pass to `load()`, or `nil` if none was detected
+Returns: string lexer name to pass to [`lexer.load()`](#lexer.load), or `nil` if none was detected
 
 <a id="lexer.detect_extensions"></a>
 ### `lexer.detect_extensions`
 
 Map of file extensions, without the '.' prefix, to their associated lexer names.
 
-This map has precedence over Scintillua's built-in map.
+Usage:
+
+```lua
+lexer.detect_extensions.luadoc = 'lua'
+```
 
 <a id="lexer.detect_patterns"></a>
 ### `lexer.detect_patterns`
 
-Map of line patterns to their associated lexer names.
+Map of first-line patterns to their associated lexer names.
 
 These are Lua string patterns, not LPeg patterns.
-This map has precedence over Scintillua's built-in map.
+
+Usage:
+
+```lua
+lexer.detect_patterns['^#!.+/zsh'] = 'bash'
+```
 
 <a id="lexer.digit"></a>
 ### `lexer.digit`
@@ -6552,14 +6557,13 @@ A pattern that matches any digit ('0'-'9').
 <a id="lexer.embed"></a>
 ### `lexer.embed`(*lexer*, *child*, *start_rule*, *end_rule*)
 
-Embeds child lexer *child* in parent lexer *lexer* using patterns *start_rule* and *end_rule*,
-which signal the beginning and end of the embedded lexer, respectively.
+Embeds a child lexer into a parent lexer.
 
 Parameters:
-- *lexer*:  The parent lexer.
-- *child*:  The child lexer.
-- *start_rule*:  The pattern that signals the beginning of the embedded lexer.
-- *end_rule*:  The pattern that signals the end of the embedded lexer.
+- *lexer*:  Parent lexer.
+- *child*:  Child lexer.
+- *start_rule*:  LPeg pattern matches the beginning of the child lexer.
+- *end_rule*:  LPeg pattern that matches the end of the child lexer.
 
 Usage:
 
@@ -6576,8 +6580,8 @@ A pattern that matches a floating point number.
 <a id="lexer.float_"></a>
 ### `lexer.float_`(*c*)
 
-Returns a pattern that matches a floating point number, whose digits may be separated by
-character *c*.
+Returns a pattern that matches a floating point number, whose digits may be separated by a
+particular character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6585,19 +6589,16 @@ Parameters:
 <a id="lexer.fold"></a>
 ### `lexer.fold`(*lexer*, *text*, *start_line*, *start_level*)
 
-Determines fold points in string *text* using lexer *lexer*, returning a table of fold levels
-assigned to line numbers.
-
-*text* starts on line number *start_line* with a beginning fold level of *start_level*
-in the buffer.
+Determines fold points in a chunk of text.
 
 Parameters:
-- *lexer*:  The lexer to fold text with.
-- *text*:  The buffer text to fold, which may be a partial chunk, single line, or full text.
-- *start_line*:  The line number *text* starts on, counting from 1.
-- *start_level*:  The fold level *text* starts with.
+- *lexer*:  Lexer to fold text with.
+- *text*:  String text to fold, which may be a partial chunk, single line, or full text.
+- *start_line*:  Line number *text* starts on, counting from 1.
+- *start_level*:  Fold level *text* starts with. It cannot be lower than `lexer.FOLD_BASE`
+   (1024).
 
-Returns: table of fold levels assigned to line numbers.
+Returns: table of line numbers mapped to fold levels
 
 Usage:
 
@@ -6608,7 +6609,7 @@ lex:fold(...) --> {[1] = 1024, [2] = 9216, [3] = 1025, [4] = 1025, [5] = 1024}
 <a id="lexer.fold_level"></a>
 ### `lexer.fold_level`
 
-Table of fold level bit-masks for line numbers starting from 1.
+Map of line numbers (starting from 1) to their fold level bit-masks.
 (Read-only)
 Fold level masks are composed of an integer level combined with any of the following bits:
 
@@ -6622,11 +6623,11 @@ Fold level masks are composed of an integer level combined with any of the follo
 <a id="lexer.get_rule"></a>
 ### `lexer.get_rule`(*lexer*, *id*)
 
-Returns the rule identified by string *id*.
+Returns a lexer's rule.
 
 Parameters:
-- *lexer*:  The lexer to fetch a rule from.
-- *id*:  The id of the rule to fetch.
+- *lexer*:  Lexer to fetch a rule from.
+- *id*:  String id of the rule to fetch.
 
 <a id="lexer.graph"></a>
 ### `lexer.graph`
@@ -6642,7 +6643,7 @@ A pattern that matches a hexadecimal number.
 ### `lexer.hex_num_`(*c*)
 
 Returns a pattern that matches a hexadecimal number, whose digits may be separated by
-character *c*.
+a particular character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6650,8 +6651,8 @@ Parameters:
 <a id="lexer.indent_amount"></a>
 ### `lexer.indent_amount`
 
-Table of indentation amounts in character columns, for line numbers starting from 1.
-
+Map of line numbers (starting from 1) to their indentation amounts, measured in character
+columns.
 (Read-only)
 
 <a id="lexer.integer"></a>
@@ -6663,7 +6664,7 @@ A pattern that matches either a decimal, hexadecimal, octal, or binary number.
 ### `lexer.integer_`(*c*)
 
 Returns a pattern that matches either a decimal, hexadecimal, octal, or binary number,
-whose digits may be separated by character *c*.
+whose digits may be separated by a particular character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6671,14 +6672,13 @@ Parameters:
 <a id="lexer.lex"></a>
 ### `lexer.lex`(*lexer*, *text*, *init_style*)
 
-Lexes string *text* (that has an initial style number of *init_style*) using lexer *lexer*,
-returning a table of tag names and positions.
+Lexes a chunk of text.
 
 Parameters:
-- *lexer*:  The lexer to lex text with.
-- *text*:  The buffer text to lex, which may be a partial chunk, single line, or full text.
-- *init_style*:  The current style. Multiple-language lexers use this to determine which
-   language to start lexing in.
+- *lexer*:  Lexer to lex text with.
+- *text*:  String text to lex, which may be a partial chunk, single line, or full text.
+- *init_style*:  Number of the text's current style. Multiple-language lexers use this to
+   determine which language to start lexing in.
 
 Returns: table of tag names and positions.
 
@@ -6691,15 +6691,15 @@ lex:lex(...) --> {'keyword', 2, 'whitespace.lua', 3, 'identifier', 7}
 <a id="lexer.line_from_position"></a>
 ### `lexer.line_from_position`(*pos*)
 
-Returns the line number (starting from 1) of the line that contains position *pos*.
+Returns a position's line number (starting from 1).
 
 Parameters:
-- *pos*:  The position to get the line number of, starting at `1`.
+- *pos*:  The position (starting from 1) to get the line number of.
 
 <a id="lexer.line_state"></a>
 ### `lexer.line_state`
 
-Table of 32-bit integer line states for line numbers starting from 1.
+Map of line numbers (starting from 1) to their 32-bit integer line states.
 
 Line states can be used by lexers for keeping track of persistent states (up to 32 states
 with 1 state per bit). For example, the output lexer uses this to mark lines that have
@@ -6708,15 +6708,15 @@ warnings or errors.
 <a id="lexer.load"></a>
 ### `lexer.load`(*name*[, *alt_name*])
 
-Initializes or loads and then returns the lexer of string name *name*.
+Initializes or loads a lexer.
 
 Scintilla calls this function in order to load a lexer. Parent lexers also call this function
 in order to load child lexers and vice-versa. The user calls this function in order to load
 a lexer when using Scintillua as a Lua library.
 
 Parameters:
-- *name*:  The name of the lexing language.
-- *alt_name*:  Optional alternate name of the lexing language. This is useful for
+- *name*:  String name of the lexing language.
+- *alt_name*:  String alternate name of the lexing language. This is useful for
    embedding the same child lexer with multiple sets of start and end tags.
 
 Returns: lexer object
@@ -6729,12 +6729,12 @@ A pattern that matches any lower case character ('a'-'z').
 <a id="lexer.modify_rule"></a>
 ### `lexer.modify_rule`(*lexer*, *id*, *rule*)
 
-Replaces in lexer *lexer* the existing rule identified by string *id* with pattern *rule*.
+Replaces a lexer's existing rule.
 
 Parameters:
-- *lexer*:  The lexer to modify.
-- *id*:  The id associated with this rule.
-- *rule*:  The LPeg pattern of the rule.
+- *lexer*:  Lexer to modify.
+- *id*:  String id of the rule to replace.
+- *rule*:  LPeg pattern of the new rule.
 
 <a id="lexer.names"></a>
 ### `lexer.names`([*path*])
@@ -6745,18 +6745,16 @@ This function is not available to lexers and requires the LuaFileSystem ([`lfs`]
 be available.
 
 Parameters:
-- *path*:  Optional ';'-delimited list of directories to search for lexers in. The
+- *path*:  String list of ';'-separated directories to search for lexers in. The
    default value is Scintillua's configured lexer path.
 
-Returns: lexer name table
-
 <a id="lexer.new"></a>
-### `lexer.new`(*name*, *opts*)
+### `lexer.new`(*name*[, *opts*])
 
-Creates a returns a new lexer with the given name.
+Creates a new lexer.
 
 Parameters:
-- *name*:  The lexer's name. Use `...` to inherit from the file's name.
+- *name*:  String lexer name. Use `...` to inherit from the file's name.
 - *opts*:  Table of lexer options. Options currently supported:
    - `lex_by_line`: Only processes whole lines of text at a time (instead of arbitrary chunks
      of text). Line lexers cannot look ahead to subsequent lines. The default value is `false`.
@@ -6767,6 +6765,8 @@ Parameters:
    - `no_user_word_lists`: Do not automatically allocate word lists that can be set by
      users. This should really only be set by non-programming languages like markup languages.
    - `inherit`: Lexer to inherit from. The default value is `nil`.
+
+Returns: lexer object
 
 Usage:
 
@@ -6794,7 +6794,7 @@ octal, or binary number.
 ### `lexer.number_`(*c*)
 
 Returns a pattern that matches a typical number, either a floating point, decimal, hexadecimal,
-octal, or binary number, and whose digits may be separated by character *c*.
+octal, or binary number, and whose digits may be separated by a particular character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6813,7 +6813,8 @@ A pattern that matches an octal number.
 <a id="lexer.oct_num_"></a>
 ### `lexer.oct_num_`(*c*)
 
-Returns a pattern that matches an octal number, whose digits may be separated by character *c*.
+Returns a pattern that matches an octal number, whose digits may be separated by a particular
+character.
 
 Parameters:
 - *c*:  Digit separator character.
@@ -6841,26 +6842,20 @@ to '~').
 <a id="lexer.range"></a>
 ### `lexer.range`(*s*[, *e*=s[, *single_line*=false[, *escapes*[, *balanced*=false]]]])
 
-Creates and returns a pattern that matches a range of text bounded by strings or patterns *s*
-and *e*.
+Returns a pattern that matches a bounded range of text.
 
 This is a convenience function for matching more complicated ranges like strings with escape
-characters, balanced parentheses, and block comments (nested or not). *e* is optional and
-defaults to *s*. *single_line* indicates whether or not the range must be on a single line;
-*escapes* indicates whether or not to allow '\\' as an escape character; and *balanced*
-indicates whether or not to handle balanced ranges like parentheses, and requires *s* and *e*
-to be different.
+characters, balanced parentheses, and block comments (nested or not).
 
 Parameters:
-- *s*:  String or pattern start of a range.
-- *e*:  Optional string or pattern end of a range. The default value is *s*.
-- *single_line*:  Optional flag indicating whether or not the range must
-   be on a single line.
-- *escapes*:  Optional flag indicating whether or not the range end may be
-   escaped by a '\\' character. The default value is `false` unless *s* and *e* are identical,
-   single-character strings. In that case, the default value is `true`.
-- *balanced*:  Optional flag indicating whether or not to match a balanced
-   range, like the "%b" Lua pattern. This flag only applies if *s* and *e* are different.
+- *s*:  String or LPeg pattern start of the range.
+- *e*:  String or LPeg pattern end of the range. The default value is *s*.
+- *single_line*:  Restrict the range to a single line.
+- *escapes*:  Allow the range end to be escaped by a '\\' character. The default
+   value is `false` unless *s* and *e* are identical, single-character strings. In that case,
+   the default value is `true`.
+- *balanced*:  Match a balanced range, like the "%b" Lua pattern. This flag
+   only applies if *s* and *e* are different.
 
 Usage:
 
@@ -6872,20 +6867,18 @@ local balanced_parens = lexer.range('(', ')', false, false, true)
 ```
 
 <a id="lexer.set_word_list"></a>
-### `lexer.set_word_list`(*lexer*, *name*, *word_list*, *append*)
+### `lexer.set_word_list`(*lexer*, *name*, *word_list*[, *append*=false])
 
-Sets in lexer *lexer* the word list identified by string or number *name* to string or
-list *word_list*, appending to any existing word list if *append* is `true`.
+Sets the words in a lexer's word list.
 
-This only has an effect if *lexer* uses [`lexer.word_match()`](#lexer.word_match) to reference the given list.
-Case-insensitivity is specified by [`lexer.word_match()`](#lexer.word_match).
+This only has an effect if the lexer uses [`lexer.word_match()`](#lexer.word_match) to reference the given list.
 
 Parameters:
-- *lexer*:  The lexer to add the given word list to.
-- *name*:  The string name or number of the word list to set.
-- *word_list*:  A table of words or a string list of words separated by spaces.
-- *append*:  Whether or not to append *word_list* to the existing word list (if any). The
-   default value is `false`.
+- *lexer*:  Lexer to add a word list to.
+- *name*:  String name or number of the word list to set.
+- *word_list*:  Table of words or a string list of words separated by
+   spaces. Case-insensitivity is specified by a [`lexer.word_match()`](#lexer.word_match) reference to this list.
+- *append*:  Append *word_list* to an existing word list (if any).
 
 <a id="lexer.space"></a>
 ### `lexer.space`
@@ -6893,15 +6886,13 @@ Parameters:
 A pattern that matches any whitespace character ('\t', '\v', '\f', '\n', '\r', space).
 
 <a id="lexer.starts_line"></a>
-### `lexer.starts_line`(*patt*, *allow_indent*)
+### `lexer.starts_line`(*patt*[, *allow_indent*=false])
 
-Creates and returns a pattern that matches pattern *patt* only at the beginning of a line,
-or after any line indentation if *allow_indent* is `true`.
+Returns a pattern that matches only at the beginning of a line.
 
 Parameters:
-- *patt*:  The LPeg pattern to match on the beginning of a line.
-- *allow_indent*:  Whether or not to consider line indentation as the start of a line. The
-   default value is `false`.
+- *patt*:  LPeg pattern to match at the beginning of a line.
+- *allow_indent*:  Allow *patt* to match after line indentation.
 
 Usage:
 
@@ -6912,21 +6903,20 @@ local preproc = lex:tag(lexer.PREPROCESSOR, lexer.starts_line(lexer.to_eol('#'))
 <a id="lexer.style_at"></a>
 ### `lexer.style_at`
 
-Table of style names at positions in the buffer starting from 1.
+Map of buffer positions (starting from 1) to their string style names.
 (Read-only)
 
 <a id="lexer.tag"></a>
 ### `lexer.tag`(*lexer*, *name*, *patt*)
 
-Creates and returns a pattern that tags pattern *patt* with name *name* in lexer *lexer*.
-
-If *name* is not a predefined tag name (`lexer.[A-Z_]+`), its Scintilla style will likely
-need to be defined by the editor or theme using this lexer.
+Returns a tagged pattern.
 
 Parameters:
-- *lexer*:  The lexer to tag the given pattern in.
-- *name*:  The name to use.
-- *patt*:  The LPeg pattern to tag.
+- *lexer*:  Lexer to tag the pattern in.
+- *name*:  String name to use for the tag. If it is not a predefined tag name
+	(`lexer.[A-Z_]+`), its Scintilla style will likely need to be defined by the editor or
+	theme using this lexer.
+- *patt*:  LPeg pattern to tag.
 
 Usage:
 
@@ -6938,16 +6928,12 @@ local addition = lex:tag('addition', '+' * lexer.word)
 <a id="lexer.to_eol"></a>
 ### `lexer.to_eol`([*prefix*[, *escape*=false]])
 
-Creates and returns a pattern that matches from string or pattern *prefix* until the end of
-the line.
-
-If *escape* is `true`, allows the '\\' character to escape the end of the line.
+Returns a pattern that matches a prefix until the end of its line.
 
 Parameters:
-- *prefix*:  Optional string or pattern prefix to start matching at. The default value
-   is any non-newline character.
-- *escape*:  Optional flag that indicates whether or not newlines can be
-   escaped by a '\\' character.
+- *prefix*:  String or pattern prefix to start matching at. The default value is any
+   non-newline character.
+- *escape*:  Allow newline escapes using a '\\' character.
 
 Usage:
 
@@ -6971,23 +6957,19 @@ of alphanumeric and underscore characters.
 <a id="lexer.word_match"></a>
 ### `lexer.word_match`([*lexer*], *word_list*[, *case_insensitive*=false])
 
-Either returns a pattern for lexer *lexer* (if given) that matches one word in the word list
-identified by string *word_list* (ignoring case if *case_sensitive* is `true`) or, if *lexer*
-is not given, creates and returns a pattern that matches any single word in list or string
-*word_list* (ignoring case if *case_insensitive* is `true`).
+Returns a pattern that matches a word in a word list.
 
 This is a convenience function for simplifying a set of ordered choice word patterns and
 potentially allowing downstream users to configure word lists.
-If there is ultimately no word list set via `set_word_list()`, no error will be raised,
-but the returned pattern will not match anything.
 
 Parameters:
-- *lexer*:  Optional lexer to match a word in a wordlist for. This parameter may be
-   omitted for lexer-agnostic matching.
-- *word_list*:  Either a string name of the word list to match from if *lexer* is given,
-   or, if *lexer* is omitted, a table of words or a string list of words separated by spaces.
-- *case_insensitive*:  Optional flag that indicates whether or not the word
-   match is case-insensitive.
+- *lexer*:  Lexer to match a word in a word list for. This parameter may be omitted
+   for lexer-agnostic matching.
+- *word_list*:  Either a string name of the word list to match from if *lexer* is given, or,
+   if *lexer* is omitted, a table of words or a string list of words separated by spaces. If a
+   word list name was given and there is ultimately no word list set via `lex:set_word_list()`,
+   no error will be raised, but the returned pattern will not match anything.
+- *case_insensitive*:  Match the word case-insensitively.
 
 Usage:
 
@@ -7576,9 +7558,9 @@ Records a buffer location in the current view's history.
 
 Parameters:
 - *filename*:  String filename, buffer type, or identifier of the buffer to store.
-- *line*:  Line number to store. If `nil`, uses the current line.
-- *column*:  Column number on line *line* to store. If `nil`, uses the current
-	column.
+- *line*:  Line number to store. If `nil`, the current line is used.
+- *column*:  Column number on line *line* to store. If `nil`, the current column
+	is used.
 - *soft*:  Skip this record when navigating backward towards it, and update
 	this record when navigating away from it.
 
@@ -9187,8 +9169,6 @@ Mimics pressing the "Replace" button.
 If any [`events.REPLACE`](#events.REPLACE) handler returns `true`, [`events.FIND`](#events.FIND) will not be emitted to mimic
 pressing the "Find Next" button.
 
-See also: [`events.REPLACE`](#events.REPLACE), [`events.FIND`](#events.FIND)
-
 <a id="ui.find.replace_all"></a>
 ### `ui.find.replace_all`()
 
@@ -9227,10 +9207,11 @@ This is primarily used for localization.
 <a id="ui.find.show_filenames_in_progressbar"></a>
 ### `ui.find.show_filenames_in_progressbar`
 
-Whether to show filenames in the find in files search progressbar.
+Show filenames in the find in files search progressbar.
 
 This can be useful for determining whether or not custom filters are working as expected.
 Showing filenames can slow down searches on computers with really fast SSDs.
+
 The default value is `false`.
 
 <a id="ui.find.whole_word"></a>

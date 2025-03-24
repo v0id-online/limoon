@@ -29,32 +29,32 @@ local run_events = {'compile_output', 'run_output', 'build_output', 'test_output
 for _, event in ipairs(run_events) do events[event:upper()] = event end
 
 --- Emitted when an executed compile command has output.
--- By default, output prints to the output buffer. In order to override this behavior, connect
--- to this event with an index of `1` and return `true`.
+-- The default behavior is to print output to the output buffer. In order to override this,
+-- connect to this event with an index of `1` and return `true`.
 --
 -- Arguments:
 -- - *output*: A chunk of string output from the command.
 -- @field _G.events.COMPILE_OUTPUT
 
 --- Emitted when an executed run command has output.
--- By default, output prints to the output buffer. In order to override this behavior, connect
--- to this event with an index of `1` and return `true`.
+-- The default behavior is to print output to the output buffer. In order to override this,
+-- connect to this event with an index of `1` and return `true`.
 --
 -- Arguments:
 -- - *output*: A chunk of string output from the command.
 -- @field _G.events.RUN_OUTPUT
 
 --- Emitted when an executed build command has output.
--- By default, output prints to the output buffer. In order to override this behavior, connect
--- to this event with an index of `1` and return `true`.
+-- The default behavior is to print output to the output buffer. In order to override this,
+-- connect to this event with an index of `1` and return `true`.
 --
 -- Arguments:
 -- - *output*: A chunk of string output from the command.
 -- @field _G.events.BUILD_OUTPUT
 
 --- Emitted when an executed test command has output.
--- By default, output prints to the output buffer. In order to override this behavior, connect
--- to this event with an index of `1` and return `true`.
+-- The default behavior is to print output to the output buffer. In order to override this,
+-- connect to this event with an index of `1` and return `true`.
 --
 -- Arguments:
 -- - *output*: A chunk of string output from the command.
@@ -68,7 +68,7 @@ local procs = {}
 -- (which are displayed in a split view) in the original view.
 local preferred_view
 
---- Returns whether or not the given buffer is the output buffer.
+--- Returns whether or not a buffer is the output buffer.
 local function is_out_buf(buf) return buf._type == _L['[Output Buffer]'] end
 
 --- Helper function for getting the output view.

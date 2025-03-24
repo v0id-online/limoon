@@ -108,7 +108,7 @@ for _, v in ipairs(find_events) do events[v:upper()] = v end
 --- Emitted when a text search wraps, either from bottom to top (when searching for a next
 -- occurrence), or from top to bottom (when searching for a previous occurrence).
 -- The default behavior is to print a statusbar notification. You can connect to this event to
--- implementing a more visual or audible notice.
+-- implement a more visual or audible notice.
 -- @field _G.events.FIND_WRAPPED (string)
 
 --- Map of directory paths to filters used when finding in files.

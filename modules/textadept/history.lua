@@ -46,7 +46,7 @@ end)
 -- Do not record positions during buffer switches when jumping backwards or forwards.
 local jumping = false
 
---- Jumps to the given record in the current view's history.
+--- Jumps to a record in the current view's history.
 -- @param record History record to jump to.
 local function jump(record)
 	jumping = true
@@ -100,9 +100,9 @@ end
 
 --- Records a buffer location in the current view's history.
 -- @param[opt=buffer.filename] filename String filename, buffer type, or identifier of the buffer to store.
--- @param[optchain] line Line number to store. If `nil`, uses the current line.
--- @param[optchain] column Column number on line *line* to store. If `nil`, uses the current
---	column.
+-- @param[optchain] line Line number to store. If `nil`, the current line is used.
+-- @param[optchain] column Column number on line *line* to store. If `nil`, the current column
+--	is used.
 -- @param[optchain=false] soft Skip this record when navigating backward towards it, and update
 --	this record when navigating away from it.
 function M.record(filename, line, column, soft)
