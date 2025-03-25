@@ -547,7 +547,7 @@ events.connect(events.MENU_CLICKED, function(menu_id)
 		-- The macOS menubar eats key shortcuts, emits menu events, and prevents keypress events.
 		-- This affects user-defined key bindings, as well as command entry key bindings.
 		-- Instead of invoking a menu item's function, emit the keypress for its shortcut.
-		events.emit(events.KEYPRESS, keys.CLEAR)
+		if not ui.command_entry.active then events.emit(events.KEYPRESS, keys.CLEAR) end
 		events.emit(events.KEYPRESS, key_shortcuts[tostring(f)])
 	end
 end)
