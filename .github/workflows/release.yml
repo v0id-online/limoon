@@ -173,7 +173,7 @@ jobs:
           prefix="https://orbitalquark.github.io/textadept"
           echoing=0
           while read line; do
-            if [[ $line == \#\#\#* ]]; then
+            if [[ $line == \#\#* ]]; then
               if [[ $echoing -eq 0 ]]; then
                 echoing=1
               else
