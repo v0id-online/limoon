@@ -37,7 +37,6 @@ local session_file = _USERHOME .. (not CURSES and '/session' or '/session_term')
 -- Textadept restores split views, opened buffers, cursor information, recent files, and bookmarks.
 -- @param[opt] filename String absolute path to the session file to load. If `nil`, the user
 --	is prompted for one.
--- @return `true` if the session file was opened and read; `nil` otherwise.
 -- @see events.SESSION_LOAD
 function M.load(filename)
 	local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
@@ -105,7 +104,6 @@ function M.load(filename)
 		}
 	end
 	session_file = filename
-	return true
 end
 -- Load session when no args are present.
 events.connect(events.ARG_NONE, function() if M.save_on_quit then M.load(session_file) end end)

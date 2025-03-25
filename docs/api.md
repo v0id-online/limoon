@@ -8191,8 +8191,6 @@ Parameters:
 - *filename*:  String absolute path to the session file to load. If `nil`, the user
 	is prompted for one.
 
-Returns: `true` if the session file was opened and read; `nil` otherwise.
-
 See also: [`events.SESSION_LOAD`](#events.SESSION_LOAD)
 
 <a id="textadept.session.save"></a>
