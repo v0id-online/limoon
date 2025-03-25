@@ -78,6 +78,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install qtbase5-dev libgtk-3-dev lua5.3 --no-install-recommends -y
 
+      - name: Install Ruby on Linux
+        if: runner.os == 'Linux' && !contains(matrix.os, 'arm')
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: docs
+
       - name: Build
         shell: bash
         run: |
@@ -92,10 +100,12 @@ jobs:
           else
             nightly="-D NIGHTLY=1"
           fi
-          if [[ ${{ runner.os }} == Linux ]]; then generate_html="-D GENERATE_HTML=1"; fi
+          if [[ ${{ runner.os }} == Linux && ${{ !contains(matrix.os, 'arm') }} = true ]]; then
+            generate_html="-D GENERATE_HTML=1"
+          fi
           cmake -S . -B build ${nightly} ${generate_html} -D CMAKE_INSTALL_PREFIX=build/install
           cmake --build build --config ${type} -j
-          if [[ ${{ runner.os }} == Linux ]]; then cmake --build build --target html; fi
+          if [[ ! -z "${generate_html}" ]]; then cmake --build build --target html; fi
           cmake --install build --config ${type}
           cmake --build build --target archive
         env:
@@ -148,14 +158,16 @@ jobs:
           # Extract HTML documentation from Linux.
           version=${{ needs.get-version.outputs.version }}
           tar xzf textadept_$version.linux.tgz --wildcards 'textadept/docs/*.html'
+          tar xzf textadept_$version.linux.tgz 'textadept/docs/assets/css/style.css'
 
           # Insert it into Windows archive.
-          zip -r textadept_$version.win.zip textadept/docs/*.html
+          zip -r textadept_$version.win.zip textadept/docs
 
           # Install it into macOS archive.
-          mkdir -p Textadept.app/Contents/Resources/docs
-          cp textadept/docs/*.html Textadept.app/Contents/Resources/docs
-          zip -r textadept_$version.macOS.zip Textadept.app/Contents/Resources/docs/*.html
+          bundle_res="Textadept.app/Contents/Resources"
+          mkdir -p $bundle_res
+          cp -r textadept/docs $bundle_res
+          zip -r textadept_$version.macOS.zip $bundle_res
         continue-on-error: true
 
       - name: Tag

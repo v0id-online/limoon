@@ -26,8 +26,9 @@ sed -i "s/\(\# Textadept\).\+\?\(Manual\|API\)/\1 $version \2/;" *.md
 pushd ../docs
 bundle install
 if [ -z "$LANG" ]; then export LANG="en_US.UTF-8"; fi
-bundle exec jekyll build --baseurl "`pwd`" --quiet
+bundle exec jekyll build --quiet
 cp _site/*.html .
+sed -i 's|href="/assets|href="assets|;' *.html
 cp -r _site/assets/css assets
-rm -r _site
+rm -rf _site vendor
 popd
