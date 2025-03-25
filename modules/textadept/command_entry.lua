@@ -206,16 +206,19 @@ end
 function M.run(label, f, keys, lang, initial_text, ...)
 	if _G.keys.mode == '_command_entry' then return end -- already in command entry
 	local args = table.pack(...)
-	if not assert_type(label, 'string/nil', 1) then label = _L['Lua command:'] end
-	if not assert_type(f, 'function/nil', 2) and not keys then
-		f, keys, lang = run_lua, lua_keys, 'lua'
-	elseif type(assert_type(keys, 'table/string/nil', 3)) == 'string' then
-		table.insert(args, 1, initial_text)
-		initial_text, lang, keys = assert_type(lang, 'string/nil', 4), keys, {}
+	if not label then
+		label, f, keys, lang = _L['Lua command:'], run_lua, lua_keys, 'lua'
 	else
-		if not keys then keys = {} end
-		assert_type(lang, 'string/nil', 4)
-		assert_type(initial_text, 'string/nil', 5)
+		assert_type(label, 'string', 1)
+		assert_type(f, 'function', 2)
+		if type(assert_type(keys, 'table/string/nil', 3)) == 'string' then
+			table.insert(args, 1, initial_text)
+			initial_text, lang, keys = assert_type(lang, 'string/nil', 4), keys, {}
+		else
+			if not keys then keys = {} end
+			assert_type(lang, 'string/nil', 4)
+			assert_type(initial_text, 'string/nil', 5)
+		end
 	end
 
 	-- Auto-define Esc and Enter keys to cancel and finish the command entry, respectively,
@@ -226,7 +229,7 @@ function M.run(label, f, keys, lang, initial_text, ...)
 			if M:auto_c_active() then return false end -- allow Enter to autocomplete
 			M.focus() -- hide
 			append_history(M:get_text())
-			if f then f(M:get_text(), table.unpack(args)) end
+			f(M:get_text(), table.unpack(args))
 		end
 	end
 	if not getmetatable(keys) then setmetatable(keys, M.editing_keys) end
