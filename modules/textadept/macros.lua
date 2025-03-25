@@ -29,7 +29,8 @@ local event_recorders = {
 		for i = 1, #ignore do if keys[key] == ignore[i] then return end end
 		macro[#macro + 1] = {events.KEYPRESS, key}
 	end, --
-	[events.MENU_CLICKED] = event_recorder(events.MENU_CLICKED),
+	[not OSX and events.MENU_CLICKED or 'menu_clicked_no_shortcut'] = event_recorder(
+		events.MENU_CLICKED), --
 	[events.CHAR_ADDED] = event_recorder(events.CHAR_ADDED),
 	[events.FIND] = event_recorder(events.FIND), --
 	[events.REPLACE] = event_recorder(events.REPLACE), --

@@ -543,6 +543,10 @@ events.connect(events.MENU_CLICKED, function(menu_id)
 	local f = items[menu_id < 1000 and menu_id or menu_id - 1000][2]
 	if not OSX or not key_shortcuts[tostring(f)] then
 		assert_type(f, 'function', 'command')()
+		-- When recording a macro on macOS, only record `events.MENU_CLICKED` if there is no key
+		-- shortcut, or else `events.KEYPRESS` will also be recorded, resulting in a duplicate
+		-- action. This undocumented event will act in place of `events.MENU_CLICKED`.
+		events.emit('menu_clicked_no_shortcut', menu_id)
 	else
 		-- The macOS menubar eats key shortcuts, emits menu events, and prevents keypress events.
 		-- This affects user-defined key bindings, as well as command entry key bindings.
