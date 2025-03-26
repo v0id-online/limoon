@@ -100,7 +100,7 @@ jobs:
           else
             nightly="-D NIGHTLY=1"
           fi
-          if [[ ${{ runner.os }} == Linux }} ]]; then generate_html="-D GENERATE_HTML=1"; fi
+          if [[ ${{ runner.os }} == Linux ]]; then generate_html="-D GENERATE_HTML=1"; fi
           cmake -S . -B build ${nightly} ${generate_html} -D CMAKE_INSTALL_PREFIX=build/install
           cmake --build build --config ${type} -j
           if [[ ! -z "${generate_html}" ]]; then cmake --build build --target html; fi
