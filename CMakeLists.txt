@@ -82,7 +82,7 @@ function(fetch name url)
 	FetchContent_Declare(${name} URL ${url} ${patch_command})
 	# Note: cannot FetchContent_MakeAvailable(${name}) here, as name must be a literal.
 endfunction()
-fetch(scintilla https://www.scintilla.org/scintilla554.tgz)
+fetch(scintilla https://www.scintilla.org/scintilla556.tgz)
 fetch(scinterm https://github.com/orbitalquark/scinterm/archive/scinterm_5.4.zip)
 fetch(scintillua https://github.com/orbitalquark/scintillua/archive/a55a519e7fc6de49b39caaf445eccbaae3db1b0b.zip)
 fetch(lua https://www.lua.org/ftp/lua-5.4.7.tar.gz)

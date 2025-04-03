@@ -68,8 +68,8 @@ test('history.back should not consider edits within history.minimum_line_distanc
 test('history.back should not be affected by reload, undo, or redo', function()
 	local contents = test.lines(1 + textadept.history.minimum_line_distance + 1)
 	local _<close> = test.tmpfile(contents, true)
-	test.type(' ')
 	local last_edit_pos = buffer.current_pos
+	test.type(' ')
 	buffer:reload() -- keeps caret at last_edit_pos, so reloaded line must not be empty
 	buffer:undo()
 	buffer:redo()

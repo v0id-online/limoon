@@ -48,6 +48,15 @@ io.detect_indentation = true
 -- The default value is `false` on Windows, and `true` on macOS, Linux, and BSD.
 io.ensure_final_newline = not WIN32
 
+--- Track file changes using line markers and buffer indicators.
+-- Changes shown are with respect to the file on disk, not the file's version control state
+-- (if it has one).
+--
+-- The terminal version only shows line markers.
+--
+-- The default value is `false`.
+io.track_changes = false
+
 --- The maximum number of files listed in the quick open list.
 -- The default value is `5000`.
 io.quick_open_max = 5000
@@ -140,6 +149,10 @@ function io.open_file(filenames)
 		buffer.filename = filename
 		buffer:set_save_point()
 		buffer:set_lexer() -- auto-detect
+		if io.track_changes then
+			buffer.change_history = buffer.CHANGE_HISTORY_ENABLED | buffer.CHANGE_HISTORY_MARKERS |
+				(not CURSES and buffer.CHANGE_HISTORY_INDICATORS or 0)
+		end
 		events.emit(events.FILE_OPENED, filename)
 
 		-- Add file to recent files list, eliminating duplicates.
@@ -162,7 +175,7 @@ local function reload(buffer)
 	local text = f:read('a')
 	if buffer.encoding then text = text:iconv('UTF-8', buffer.encoding) end
 	buffer:target_whole_document()
-	buffer:replace_target(text)
+	buffer:replace_target_minimal(text)
 	buffer:set_save_point()
 	buffer.mod_time = lfs.attributes(buffer.filename, 'modification')
 end
@@ -184,7 +197,7 @@ local function set_encoding(buffer, encoding)
 	end
 	if encoding then text = text:iconv('UTF-8', encoding) end
 	buffer:target_whole_document()
-	buffer:replace_target(text)
+	buffer:replace_target(text) -- replace_target_minimal will likely not detect changes
 	buffer:goto_pos(pos)
 	view.first_visible_line = first_visible_line
 	buffer.encoding, buffer.code_page = encoding, encoding and buffer.CP_UTF8 or 0

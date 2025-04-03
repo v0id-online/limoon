@@ -88,6 +88,9 @@ view.mouse_selection_rectangular_switch = true
 -- view.additional_carets_blink = false
 -- view.additional_carets_visible = false
 
+-- Undo and Redo.
+buffer.undo_selection_history = buffer.UNDO_SELECTION_HISTORY_ENABLED
+
 -- Scrolling.
 view:set_x_caret_policy(view.CARET_SLOP, 20)
 view:set_y_caret_policy(view.CARET_SLOP | view.CARET_STRICT | view.CARET_EVEN, 1)
@@ -190,6 +193,13 @@ view.indentation_guides = not CURSES and view.IV_LOOKBOTH or view.IV_NONE
 view:marker_define(textadept.bookmarks.MARK_BOOKMARK, view.MARK_FULLRECT)
 view:marker_define(textadept.run.MARK_WARNING, view.MARK_FULLRECT)
 view:marker_define(textadept.run.MARK_ERROR, view.MARK_FULLRECT)
+-- Change History Markers.
+if CURSES then
+	view:marker_define(view.MARKNUM_HISTORY_MODIFIED, view.MARK_FULLRECT)
+	view:marker_define(view.MARKNUM_HISTORY_SAVED, view.MARK_FULLRECT)
+	view:marker_define(view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED, view.MARK_FULLRECT)
+	view:marker_define(view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN, view.MARK_FULLRECT)
+end
 -- Arrow Folding Symbols.
 -- view:marker_define(view.MARKNUM_FOLDEROPEN, view.MARK_ARROWDOWN)
 -- view:marker_define(view.MARKNUM_FOLDER, view.MARK_ARROW)
@@ -233,6 +243,10 @@ view.indic_style[textadept.run.INDIC_WARNING] = view.INDIC_SQUIGGLE
 view.indic_style[textadept.run.INDIC_ERROR] = view.INDIC_SQUIGGLE
 view.indic_style[textadept.snippets.INDIC_PLACEHOLDER] = not CURSES and view.INDIC_DOTBOX or
 	view.INDIC_STRAIGHTBOX
+view.indic_style[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = view.INDIC_PLAIN
+view.indic_style[view.INDICATOR_HISTORY_SAVED_INSERTION] = view.INDIC_PLAIN
+view.indic_style[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_INSERTION] = view.INDIC_PLAIN
+view.indic_style[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_INSERTION] = view.INDIC_PLAIN
 
 -- Autocompletion.
 -- buffer.auto_c_separator =

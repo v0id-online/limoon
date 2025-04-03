@@ -683,7 +683,6 @@ to [`io.quick_open_filters`][]. For example, in your *~/.textadept/init.lua*:
 ```lua
 io.quick_open_max = 10000 -- support huge projects
 io.quick_open_filters['/path/to/project'] = {'/include', '/src'}
-
 ```
 
 A filter consists of a comma-separated list of glob patterns that match filenames and directories
@@ -1200,9 +1199,7 @@ textadept.run.run_commands.foo = './"%e"'
 
 textadept.run.build_commands['/path/to/project'] = 'make -C src -j4'
 textadept.run.test_commands['/path/to/project'] = 'lua tests.lua'
-textadept.run.run_project_commands['/path/to/project'] = function()
-
-end
+textadept.run.run_project_commands['/path/to/project'] = function() ... end
 ```
 
 **Tip:** you can set compile and run commands on a per-filename basis.

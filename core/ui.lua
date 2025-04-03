@@ -315,10 +315,7 @@ end)
 --- Save buffer properties.
 local function save_buffer_state()
 	-- Save view state.
-	buffer._anchor, buffer._current_pos = buffer.anchor, buffer.current_pos
-	local n = buffer.main_selection
-	buffer._anchor_virtual_space = buffer.selection_n_anchor_virtual_space[n]
-	buffer._caret_virtual_space = buffer.selection_n_caret_virtual_space[n]
+	buffer._selection_state = buffer.selection_serialized
 	buffer._top_line = view:doc_line_from_visible(view.first_visible_line)
 	buffer._x_offset = view.x_offset
 	-- Save fold state.
@@ -338,9 +335,7 @@ local function restore_buffer_state()
 	-- Restore fold state.
 	for _, line in ipairs(buffer._folds) do view:toggle_fold(line) end
 	-- Restore view state.
-	buffer:set_sel(buffer._anchor, buffer._current_pos)
-	buffer.selection_n_anchor_virtual_space[1] = buffer._anchor_virtual_space
-	buffer.selection_n_caret_virtual_space[1] = buffer._caret_virtual_space
+	buffer.selection_serialized = buffer._selection_state
 	buffer:choose_caret_x()
 	local _top_line, top_line = buffer._top_line, view.first_visible_line
 	view:line_scroll(0, view:visible_from_doc_line(_top_line) - top_line)
