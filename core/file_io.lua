@@ -149,10 +149,6 @@ function io.open_file(filenames)
 		buffer.filename = filename
 		buffer:set_save_point()
 		buffer:set_lexer() -- auto-detect
-		if io.track_changes then
-			buffer.change_history = buffer.CHANGE_HISTORY_ENABLED | buffer.CHANGE_HISTORY_MARKERS |
-				(not CURSES and buffer.CHANGE_HISTORY_INDICATORS or 0)
-		end
 		events.emit(events.FILE_OPENED, filename)
 
 		-- Add file to recent files list, eliminating duplicates.
@@ -297,6 +293,17 @@ events.connect(events.FILE_CHANGED, function(filename)
 	}
 	if button == 1 then buffer:reload() end
 end)
+
+-- Enables or disables showing change history for the current buffer.
+local function set_change_history()
+	view.change_history = (io.track_changes and buffer.filename and view.CHANGE_HISTORY_ENABLED or
+		view.CHANGE_HISTORY_DISABLED) | view.CHANGE_HISTORY_MARKERS |
+		(not CURSES and view.CHANGE_HISTORY_INDICATORS or 0)
+end
+events.connect(events.FILE_OPENED, set_change_history)
+events.connect(events.BUFFER_AFTER_SWITCH, set_change_history)
+events.connect(events.BUFFER_NEW, set_change_history)
+events.connect(events.VIEW_NEW, set_change_history)
 
 --- Closes all open buffers.
 -- If there are any unsaved buffers, the user is prompted to confirm closing without saving

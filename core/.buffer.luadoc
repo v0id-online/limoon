@@ -3520,25 +3520,25 @@
 --- A bit-mask of options for showing change history.
 -- This is a low-level field. You probably want to use the higher-level `io.track_changes` instead.
 --
--- - `buffer.CHANGE_HISTORY_DISABLED`: Do not show change history.
--- - `buffer.CHANGE_HISTORY_ENABLED`: Track change history.
--- - `buffer.CHANGE_HISTORY_MARKERS`: Display changes in the margin with markers.
--- - `buffer.CHANGE_HISTORY_INDICATORS`: Display changes in the buffer with indicators.
+-- - `view.CHANGE_HISTORY_DISABLED`: Do not show change history.
+-- - `view.CHANGE_HISTORY_ENABLED`: Track change history.
+-- - `view.CHANGE_HISTORY_MARKERS`: Display changes in the margin with markers.
+-- - `view.CHANGE_HISTORY_INDICATORS`: Display changes in the buffer with indicators.
 --
--- The default value is `buffer.CHANGE_HISTORY_DISABLED`.
--- @field change_history
+-- The default value is `view.CHANGE_HISTORY_DISABLED`.
+-- @field view.change_history
 
 --- Do not show change history.
--- @field CHANGE_HISTORY_DISABLED
+-- @field view.CHANGE_HISTORY_DISABLED
 
 --- Track change history.
--- @field CHANGE_HISTORY_ENABLED
+-- @field view.CHANGE_HISTORY_ENABLED
 
 --- Display changes in the margin with markers.
--- @field CHANGE_HISTORY_MARKERS
+-- @field view.CHANGE_HISTORY_MARKERS
 
 --- Display changes in the buffer with indicators.
--- @field CHANGE_HISTORY_INDICATORS
+-- @field view.CHANGE_HISTORY_INDICATORS
 
 --- Buffer contents, styling, or markers have changed.
 -- @field UPDATE_CONTENT

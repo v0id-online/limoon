@@ -4720,19 +4720,19 @@ The number of milliseconds the mouse must idle before generating an [`events.DWE
 
 A time of `view.TIME_FOREVER` will never generate one.
 
-<a id="buffer.change_history"></a>
-#### `buffer.change_history`
+<a id="view.change_history"></a>
+#### `view.change_history`
 
 A bit-mask of options for showing change history.
 
 This is a low-level field. You probably want to use the higher-level [`io.track_changes`](#io.track_changes) instead.
 
-- `buffer.CHANGE_HISTORY_DISABLED`: Do not show change history.
-- `buffer.CHANGE_HISTORY_ENABLED`: Track change history.
-- `buffer.CHANGE_HISTORY_MARKERS`: Display changes in the margin with markers.
-- `buffer.CHANGE_HISTORY_INDICATORS`: Display changes in the buffer with indicators.
+- `view.CHANGE_HISTORY_DISABLED`: Do not show change history.
+- `view.CHANGE_HISTORY_ENABLED`: Track change history.
+- `view.CHANGE_HISTORY_MARKERS`: Display changes in the margin with markers.
+- `view.CHANGE_HISTORY_INDICATORS`: Display changes in the buffer with indicators.
 
-The default value is `buffer.CHANGE_HISTORY_DISABLED`.
+The default value is `view.CHANGE_HISTORY_DISABLED`.
 
 <a id="buffer.delete"></a>
 #### `buffer:delete`()

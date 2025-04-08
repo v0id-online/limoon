@@ -2,6 +2,7 @@ Scintilla changes:
 
 * Handle leading whitespace in XPM images in order to prevent crashes.
 * Use Qt macros instead of keywords in header.
+* Enforce minimum width of SC_MARK_BAR.
 
 diff -r 22b6bbb36280 src/XPM.cxx
 --- a/src/XPM.cxx	Sat Sep 05 07:55:08 2020 +1000
@@ -48,3 +49,15 @@ diff -r 123ae5de5bd2 qt/ScintillaEditBase/ScintillaEditBase.h
  	void horizontalScrolled(int value);
  	void verticalScrolled(int value);
  	void horizontalRangeChanged(int max, int page);
+diff --git a/src/LineMarker.cxx b/src/LineMarker.cxx
+--- a/src/LineMarker.cxx
++++ b/src/LineMarker.cxx
+@@ -517,7 +517,7 @@ void LineMarker::Draw(Surface *surface, const PRectangle &rcWhole, const Font *f
+ 
+ 	case MarkerSymbol::Bar: {
+ 			PRectangle rcBar = rcWhole;
+-			const XYPOSITION widthBar = std::floor(rcWhole.Width() / 3.0);
++			const XYPOSITION widthBar = std::max(std::floor(rcWhole.Width() / 3.0), 4.0);
+ 			rcBar.left = centreX - std::floor(widthBar / 2.0);
+ 			rcBar.right = rcBar.left + widthBar;
+ 			surface->SetClip(rcWhole);
