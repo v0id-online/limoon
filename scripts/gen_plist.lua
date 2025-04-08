@@ -3,20 +3,25 @@
 
 -- Generates the "Info.plist" file for the macOS App bundle.
 
-local lang, exts
 local languages, extensions = {}, {}
 
 -- Read languages and extensions.
 local f = io.open('../lexers/lexer.lua')
-local types = f:read('*a'):match('M.detect_extensions = (%b{})'):sub(2)
+local types = f:read('*a'):match('local extensions = (%b{})'):sub(2)
 f:close()
-for type in types:gmatch('(.-)[%],}]+') do
-	if type:find('^%-%-') then
-		lang, exts = type:match('([^%[]+)$'), {}
-		if lang then languages[#languages + 1], extensions[lang] = lang, exts end
-	else
-		exts[#exts + 1] = type:match('^%[?\'?([^\'=]+)')
+for assignment in types:gmatch('(.-)[,}-]+') do
+	if assignment:find('^%s*$') then goto continue end
+	local ext, lang = assignment:match("^%s*%[?'?([^'= ]+)'?%]?%s*=%s*'([^']+)")
+	if not ext or not lang then
+		print('Warning: skipping ' .. assignment)
+		goto continue
 	end
+	if not languages[lang] then
+		languages[#languages + 1], languages[lang] = lang, true
+		extensions[lang] = {}
+	end
+	table.insert(extensions[lang], ext)
+	::continue::
 end
 
 -- Generate and write the XML.
@@ -54,10 +59,9 @@ xml[#xml + 1] = [[
 				<string>com.apple.xml-property-list</string>
 				<string>com.netscape.javascript-source</string>
 				<string>com.sun.java-source</string>]]
-for i = 1, #languages do
-	lang, exts = languages[i], extensions[languages[i]]
-	if #exts > 0 then
-		xml[#xml + 1] = "\t\t\t\t<string>com.textadept." .. lang:gsub(' ', '-') .. "-source</string>"
+for _, lang in ipairs(languages) do
+	if #extensions[lang] > 0 then
+		xml[#xml + 1] = "\t\t\t\t<string>com.textadept." .. lang .. "-source</string>"
 	end
 end
 xml[#xml + 1] = [[
@@ -104,21 +108,21 @@ xml[#xml + 1] = [[
 	<key>UTImportedTypeDeclarations</key>
 	<array>]]
 
-for i = 1, #languages do
-	lang, exts = languages[i], extensions[languages[i]]
+for _, lang in ipairs(languages) do
+	local exts = extensions[lang]
 	if #exts > 0 then
 		xml[#xml + 1] = "\t\t<dict>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeTagSpecification</key>"
 		xml[#xml + 1] = "\t\t\t<dict>"
 		xml[#xml + 1] = "\t\t\t\t<key>public.filename-extension</key>"
 		xml[#xml + 1] = "\t\t\t\t<array>"
-		for j = 1, #exts do xml[#xml + 1] = "\t\t\t\t\t<string>" .. exts[j] .. "</string>" end
+		for _, ext in ipairs(exts) do xml[#xml + 1] = "\t\t\t\t\t<string>" .. ext .. "</string>" end
 		xml[#xml + 1] = "\t\t\t\t</array>"
 		xml[#xml + 1] = "\t\t\t</dict>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeDescription</key>"
 		xml[#xml + 1] = "\t\t\t<string>" .. lang .. " source</string>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeIdentifier</key>"
-		xml[#xml + 1] = "\t\t\t<string>com.textadept." .. lang:gsub(' ', '-') .. "-source</string>"
+		xml[#xml + 1] = "\t\t\t<string>com.textadept." .. lang .. "-source</string>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeConformsTo</key>"
 		xml[#xml + 1] = "\t\t\t<array>"
 		xml[#xml + 1] = "\t\t\t\t<string>public.source-code</string>"
@@ -144,9 +148,9 @@ xml[#xml + 1] = [[
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>9.5beta</string>
+	<string>12.7beta</string>
 	<key>CFBundleShortVersionString</key>
-	<string>9.5 beta</string>
+	<string>12.7 beta</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 </dict>
