@@ -313,9 +313,11 @@ events.connect(events.VIEW_NEW, set_change_history)
 -- @return `true` if user did not cancel, and all buffers were closed; `nil` otherwise.
 function io.close_all_buffers()
 	events.disconnect(events.BUFFER_AFTER_SWITCH, update_modified_file)
-	while #_BUFFERS > 1 do if not buffer:close() then return nil end end
+	local canceled = (function()
+		for i = 1, #_BUFFERS do if not buffer:close() then return true end end
+	end)()
 	events.connect(events.BUFFER_AFTER_SWITCH, update_modified_file)
-	return buffer:close() -- the last one
+	if not canceled then return true end
 end
 
 -- Sets buffer io methods and the default buffer encoding.
