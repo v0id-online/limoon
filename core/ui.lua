@@ -335,7 +335,7 @@ local function restore_buffer_state()
 	-- Restore fold state.
 	for _, line in ipairs(buffer._folds) do view:toggle_fold(line) end
 	-- Restore view state.
-	buffer.selection_serialized = buffer._selection_state
+	if buffer.length > 1 then buffer.selection_serialized = buffer._selection_state end
 	buffer:choose_caret_x()
 	local _top_line, top_line = buffer._top_line, view.first_visible_line
 	view:line_scroll(0, view:visible_from_doc_line(_top_line) - top_line)
