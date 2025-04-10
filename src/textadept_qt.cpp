@@ -682,7 +682,8 @@ Textadept::Textadept(QWidget *parent) : QMainWindow{parent}, ui{new Ui::Textadep
 			scModMask(QApplication::keyboardModifiers()), -1);
 		if (button == Qt::RightButton) show_context_menu("tab_context_menu", nullptr);
 	});
-	connect(ui->tabbar, &QTabBar::currentChanged, this, [](int index) {
+	connect(ui->tabbar, &QTabBar::currentChanged, this, [this](int index) {
+		if (!ui->tabFrame->isVisible()) return; // adding or removing tabs should not trigger this
 		emit("tab_clicked", LUA_TNUMBER, index + 1, LUA_TNUMBER, Qt::LeftButton, LUA_TNUMBER,
 			scModMask(QApplication::keyboardModifiers()), -1);
 	});

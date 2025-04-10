@@ -484,8 +484,7 @@ static int buffer_index(lua_State *L) {
 		return (
 			lua_rawlen(L, -1) == 4 ? lua_pushcclosure(L, call_scintilla_lua, 1) : get_property(L), 1);
 	}
-	if (strcmp(lua_tostring(L, 2), "tab_label") == 0 &&
-		lua_todoc(L, 1) != SS(command_entry, SCI_GETDOCPOINTER, 0, 0))
+	if (strcmp(lua_tostring(L, 2), "tab_label") == 0 && !is_command_entry(lua_todoc(L, 1)))
 		return luaL_argerror(L, 3, "write-only property");
 	if (strcmp(lua_tostring(L, 2), "active") == 0 && is_command_entry(lua_todoc(L, 1)))
 		return (lua_pushboolean(L, is_command_entry_active()), 1);
@@ -513,12 +512,13 @@ static int buffer_newindex(lua_State *L) {
 	if (lua_getglobal(L, "_SCINTILLA"), lua_pushvalue(L, 2),
 		lua_rawget(L, -2) == LUA_TTABLE && lua_rawlen(L, -1) > 4)
 		return (set_property(L), 0);
-	if (strcmp(lua_tostring(L, 2), "tab_label") == 0 &&
-		lua_todoc(L, 1) != SS(command_entry, SCI_GETDOCPOINTER, 0, 0))
-		return (set_tab_label((lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_pushvalue(L, 1),
-														lua_gettable(L, -2), lua_tointeger(L, -1) - 1),
-							luaL_checkstring(L, 3)),
-			0);
+	if (strcmp(lua_tostring(L, 2), "tab_label") == 0 && !is_command_entry(lua_todoc(L, 1))) {
+		if (luaL_checkstring(L, 3) && tabs)
+			set_tab_label((lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_pushvalue(L, 1),
+											lua_gettable(L, -2), lua_tointeger(L, -1) - 1), // #_BUFFERS[buffer]
+				lua_tostring(L, 3));
+		return (lua_pushliteral(L, "_tab_label"), lua_pushvalue(L, 3), lua_rawset(L, 1), 0);
+	}
 	if (strcmp(lua_tostring(L, 2), "label") == 0 && is_command_entry(lua_todoc(L, 1)))
 		return (set_command_entry_label(luaL_checkstring(L, 3)), 0);
 	if (strcmp(lua_tostring(L, 2), "height") == 0 && is_command_entry(lua_todoc(L, 1)))
@@ -676,6 +676,15 @@ static int ui_index(lua_State *L) {
 	return (lua_rawget(L, 1), 1);
 }
 
+// Synchronizes the tabbar after switching between Scintilla views or documents.
+static void sync_tabbar(void) {
+	if (!tabs) return;
+	set_tab((lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS),
+		lua_pushdoc(lua, SS(focused_view, SCI_GETDOCPOINTER, 0, 0)), lua_gettable(lua, -2),
+		lua_replace(lua, -2), lua_tointeger(lua, -1) - 1)), // _BUFFERS[buffer]
+		lua_pop(lua, 1); // pop index
+}
+
 // `ui.__newindex` Lua metatable.
 static int ui_newindex(lua_State *L) {
 	const char *key = lua_tostring(L, 2);
@@ -698,10 +707,21 @@ static int ui_newindex(lua_State *L) {
 		luaL_argcheck(L, width > 0 && height > 0, 3, "width and height must be greater than zero");
 		return (set_size(width, height), 0);
 	}
-	if (strcmp(key, "tabs") == 0)
-		return (show_tabs((tabs = !lua_isinteger(L, 3) ? lua_toboolean(L, 3) : lua_tointeger(L, 3)) &&
-							((lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(L, -1)) > 1 || tabs > 1)),
-			0);
+	if (strcmp(key, "tabs") == 0) {
+		int show = !lua_isinteger(L, 3) ? lua_toboolean(L, 3) : lua_tointeger(L, 3);
+		int n = (lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(L, -1));
+		if (tabs && !show) {
+			show_tabs((tabs = show)); // prevent platform tab changed events
+			for (int i = 0; i < n; i++) remove_tab(0);
+			return 0;
+		} else if (!tabs && show)
+			for (int i = 1; i <= n; i++) {
+				const char *label = (lua_geti(L, -1, i), lua_getfield(L, -1, "_tab_label"),
+					lua_replace(L, -2), lua_tostring(L, -1)); // _BUFFERS[buffer]._tab_label
+				add_tab(), set_tab_label(i - 1, label), lua_pop(L, 1); // pop label
+			}
+		return (show_tabs((tabs = show) && (n > 1 || tabs > 1)), sync_tabbar(), 0);
+	}
 	return (lua_rawset(L, 1), 0);
 }
 
@@ -715,7 +735,7 @@ void move_buffer(int from, int to, bool reorder_tabs) {
 	// for i = 1, #_BUFFERS do _BUFFERS[_BUFFERS[i]] = i end
 	for (size_t i = 1; i <= lua_rawlen(lua, -1); i++)
 		lua_rawgeti(lua, -1, i), lua_pushinteger(lua, i), lua_rawset(lua, -3);
-	if (lua_pop(lua, 1), reorder_tabs) move_tab(from - 1, to - 1); // pop _BUFFERS
+	if (lua_pop(lua, 1), tabs && reorder_tabs) move_tab(from - 1, to - 1); // pop _BUFFERS
 }
 
 // `_G.move_buffer` Lua function.
@@ -881,14 +901,6 @@ static bool init_lua(int argc, char **argv) {
 	return (exit_status = 0, true);
 }
 
-// Synchronizes the tabbar after switching between Scintilla views or documents.
-static void sync_tabbar(void) {
-	set_tab((lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS),
-		lua_pushdoc(lua, SS(focused_view, SCI_GETDOCPOINTER, 0, 0)), lua_gettable(lua, -2),
-		lua_replace(lua, -2), lua_tointeger(lua, -1) - 1)), // _BUFFERS[buffer]
-		lua_pop(lua, 1); // pop index
-}
-
 // Signal that focus has changed to the given Scintilla view.
 // Generates 'view_before_switch' and 'view_after_switch' events.
 static void view_focused(SciObject *view) {
@@ -977,7 +989,7 @@ static void new_buffer(sptr_t doc) {
 		add_doc(doc), SS(focused_view, SCI_ADDREFDOCUMENT, 0, doc);
 	lua_pushdoc(lua, doc), lua_setglobal(lua, "buffer");
 	int n = (lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(lua, -1));
-	add_tab(), show_tabs(tabs && ((lua_pop(lua, 1), n) > 1 || tabs > 1)); // pop _BUFFERS
+	if (lua_pop(lua, 1), tabs) add_tab(), show_tabs(n > 1 || tabs > 1); // pop _BUFFERS
 	if (!initing) emit("buffer_new", -1);
 }
 
@@ -1005,7 +1017,7 @@ static void remove_doc(sptr_t doc) {
 			// for j = 1, #_BUFFERS do _BUFFERS[_BUFFERS[j]] = j end
 			for (size_t j = 1; j <= lua_rawlen(lua, -1); j++)
 				lua_rawgeti(lua, -1, j), lua_pushinteger(lua, j), lua_rawset(lua, -3);
-			remove_tab(i - 1), show_tabs(tabs && (lua_rawlen(lua, -1) > 1 || tabs > 1));
+			if (tabs) remove_tab(i - 1), show_tabs(lua_rawlen(lua, -1) > 1 || tabs > 1);
 			break;
 		}
 	lua_pop(lua, 1); // pop _BUFFERS

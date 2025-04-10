@@ -54,6 +54,8 @@ function M.load(filename)
 	if session.cwd then lfs.chdir(session.cwd) end
 
 	-- Unserialize buffers.
+	local tabs = ui.tabs
+	if tabs then ui.tabs = false end -- avoid repeated tab add-and-redraw
 	for _, buf in ipairs(session.buffers) do
 		if lfs.attributes(buf.filename) then
 			io.open_file(buf.filename)
@@ -64,12 +66,13 @@ function M.load(filename)
 			end
 		elseif buf.filename:find('^%[.+%]$') then
 			buffer.new()._type = buf.filename
-			buffer:set_save_point()
+			buffer:set_save_point() -- set tab label
 			events.emit(events.FILE_OPENED, buf.filename) -- close initial buffer
 		else
 			not_found[#not_found + 1] = buf.filename:iconv('UTF-8', _CHARSET)
 		end
 	end
+	ui.tabs = tabs
 
 	-- Unserialize UI state.
 	ui.maximized = session.ui.maximized
