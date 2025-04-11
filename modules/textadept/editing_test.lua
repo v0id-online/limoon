@@ -729,6 +729,37 @@ test('editing.auto_indent should not auto-indent an already indented line', func
 	test.assert_equal(indent, buffer.tab_width)
 end)
 
+test('editing.auto_indent should strip leading whitespace when breaking up lines', function()
+	buffer:append_text(test.lines{'\tword word'})
+	buffer:char_right()
+	buffer:word_right_end()
+
+	test.type('\n')
+
+	test.assert_equal(buffer:get_text(), test.lines{'\tword', '\tword'})
+end)
+
+test('editing.auto_indent should keep trailing whitespace when breaking up lines (tabs)', function()
+	buffer:add_text('\t\tword ')
+	buffer:char_left()
+
+	test.type('\n')
+
+	test.assert_equal(buffer:get_text(), test.lines{'\t\tword', '\t\t '})
+end)
+
+test('editing.auto_indent should keep trailing whitespace when breaking up lines (spaces)',
+	function()
+		local _<close> = test.mock(buffer, 'use_tabs', false)
+		local indent = string.rep(' ', buffer.tab_width)
+		buffer:add_text(indent .. 'word ')
+		buffer:char_left()
+
+		test.type('\n')
+
+		test.assert_equal(buffer:get_text(), test.lines{indent .. 'word', indent .. ' '})
+	end)
+
 test('editing.auto_indent should auto-indent for each selection', function()
 	local indented_word = '\tword'
 	buffer:append_text(test.lines{indented_word, indented_word})

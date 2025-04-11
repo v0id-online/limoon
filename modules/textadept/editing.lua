@@ -534,8 +534,19 @@ events.connect(events.CHAR_ADDED, function(code)
 		local j = line - 1
 		while j >= 1 and buffer:get_line(j):find('^[\r\n]+$') do j = j - 1 end
 		if j >= 1 then
-			buffer.line_indentation[line] = buffer.line_indentation[j]
-			local indent_pos = buffer.line_indent_position[line]
+			local indent_pos
+			if not buffer:get_line(line):find('^[ \t]+[\r\n]*$') then
+				buffer.line_indentation[line] = buffer.line_indentation[j]
+				indent_pos = buffer.line_indent_position[line]
+			else
+				-- If there is only whitespace after the caret, preserve it.
+				-- This is necessary for preventing the deletion of the snippet end indicator.
+				local level = buffer.line_indentation[j] // buffer.tab_width
+				local indent = (buffer.use_tabs and '\t' or string.rep(' ', buffer.tab_width)):rep(level)
+				local pos = buffer:position_from_line(line)
+				buffer:set_target_range(pos, pos)
+				indent_pos = pos + buffer:replace_target(indent)
+			end
 			buffer.selection_n_start[i], buffer.selection_n_end[i] = indent_pos, indent_pos
 		end
 	end
