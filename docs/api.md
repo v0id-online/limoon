@@ -5142,6 +5142,20 @@ Arguments:
 	[`view.rectangular_selection_modifier`](#view.rectangular_selection_modifier) to `view.MOD_CTRL`, the "Control" modifier is
 	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 
+<a id="events.MARGIN_RIGHT_CLICK"></a>
+### `events.MARGIN_RIGHT_CLICK`
+
+Emitted when right-clicking the mouse inside a sensitive margin.
+
+Arguments:
+- *margin*: The margin number right-clicked.
+- *position*: The position of the beginning of the clicked margin's line.
+- *modifiers*: A bit-mask of any modifier keys held down: `view.MOD_CTRL`,
+	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
+	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
+	[`view.rectangular_selection_modifier`](#view.rectangular_selection_modifier) to `view.MOD_CTRL`, the "Control" modifier is
+	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
+
 <a id="events.MENU_CLICKED"></a>
 ### `events.MENU_CLICKED`
 

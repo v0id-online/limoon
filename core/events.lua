@@ -39,6 +39,8 @@ local M = {}
 -- Arguments:
 -- - *text*: The selection's text.
 -- - *position*: The autocompleted word's beginning position.
+-- - *code*: The code of the character from `buffer.auto_c_fill_ups` that made the selection,
+--	or `0` if no character was used.
 -- @field AUTO_C_COMPLETED
 
 --- Emitted after selecting an item from an autocompletion list, but before inserting that item
@@ -48,6 +50,8 @@ local M = {}
 -- Arguments:
 -- - *text*: The selection's text.
 -- - *position*: The autocompleted word's beginning position.
+-- - *code*: The code of the character from `buffer.auto_c_fill_ups` that made the selection,
+--	or `0` if no character was used.
 -- @field AUTO_C_SELECTION
 
 --- Emitted as items are highlighted in an autocompletion or user list.
@@ -200,6 +204,17 @@ local M = {}
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
 --	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field MARGIN_CLICK
+
+--- Emitted when right-clicking the mouse inside a sensitive margin.
+-- Arguments:
+-- - *margin*: The margin number right-clicked.
+-- - *position*: The position of the beginning of the clicked margin's line.
+-- - *modifiers*: A bit-mask of any modifier keys held down: `view.MOD_CTRL`,
+--	`view.MOD_SHIFT`, `view.MOD_ALT`, and `view.MOD_META`. On macOS, the Command modifier
+--	key is reported as `view.MOD_CTRL` and Ctrl is `view.MOD_META`. Note: If you set
+--	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
+--	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
+-- @field MARGIN_RIGHT_CLICK
 
 --- Emitted after selecting a menu item.
 -- Arguments:
@@ -439,3 +454,18 @@ local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_
 for _, v in pairs(textadept_events) do M[v:upper()] = v end
 
 return M
+
+-- Unused events.
+-- - STYLE_NEEDED (position)
+-- - MODIFY_ATTEMPT_RO
+-- - KEY (ch, modifiers)
+-- - MODIFIED (position, modification_type, text, length, lines_added, line, fold_level_now,
+-- 	fold_level_prev, token, annotation_lines_added)
+-- - MACRORECORD (message, w_param, l_param)
+-- - NEED_SHOWN (position, length)
+-- - PAINTED
+-- - HOT_SPOT_CLICK (position, modifiers)
+-- - HOT_SPOT_DOUBLE_CLICK (position, modifiers)
+-- - HOT_SPOT_RELEASE_CLICK (position, modifiers)
+-- - FOCUS_IN
+-- - FOCUS_OUT
