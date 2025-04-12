@@ -398,7 +398,8 @@ end)
 
 test('editing.paste_reindent should increase incoming indent to match', function()
 	test.type('\t1\n')
-	local _<close> = test.mock(ui, 'clipboard_text', test.lines{'2', '\t3', ''})
+	local _<close> = test.mock(ui, 'get_clipboard_text',
+		function() return test.lines{'2', '\t3', ''} end)
 
 	textadept.editing.paste_reindent()
 
@@ -407,7 +408,8 @@ end)
 
 test('editing.paste_reindent should decrease incoming indent to match', function()
 	test.type('1\n')
-	local _<close> = test.mock(ui, 'clipboard_text', test.lines{'\t2', '\t\t3', ''})
+	local _<close> = test.mock(ui, 'get_clipboard_text',
+		function() return test.lines{'\t2', '\t\t3', ''} end)
 
 	textadept.editing.paste_reindent()
 
@@ -417,7 +419,8 @@ end)
 test('editing.paste_reindent should indent extra below a fold header', function()
 	local _<close> = test.tmpfile('.lua', test.lines{'if true then', 'end'}, true)
 	buffer:line_down()
-	local _<close> = test.mock(ui, 'clipboard_text', test.lines{'\t\tprint()', ''})
+	local _<close> = test.mock(ui, 'get_clipboard_text',
+		function() return test.lines{'\t\tprint()', ''} end)
 
 	textadept.editing.paste_reindent()
 
@@ -428,7 +431,8 @@ test('editing.paste_reindent should convert incoming tab indentation to spaces',
 	local _<close> = test.mock(buffer, 'use_tabs', false)
 	local _<close> = test.mock(buffer, 'tab_width', 2)
 	test.type('  1\n')
-	local _<close> = test.mock(ui, 'clipboard_text', test.lines{'\t2', '\t\t3', ''})
+	local _<close> = test.mock(ui, 'get_clipboard_text',
+		function() return test.lines{'\t2', '\t\t3', ''} end)
 
 	textadept.editing.paste_reindent()
 
@@ -439,8 +443,9 @@ test('editing.paste_reindent should convert incoming 4-space indentation to 2 sp
 	local _<close> = test.mock(buffer, 'use_tabs', false)
 	local _<close> = test.mock(buffer, 'tab_width', 2)
 	test.type('  1\n')
-	local _<close> = test.mock(ui, 'clipboard_text',
-		test.lines{string.rep(' ', 4) .. '2', string.rep(' ', 8) .. '3', ''})
+	local _<close> = test.mock(ui, 'get_clipboard_text', function()
+		return test.lines{string.rep(' ', 4) .. '2', string.rep(' ', 8) .. '3', ''}
+	end)
 
 	textadept.editing.paste_reindent()
 
@@ -449,7 +454,7 @@ end)
 
 test('editing.paste_reindent should convert incoming newlines (LF to CRLF)', function()
 	local _<close> = test.mock(buffer, 'eol_mode', buffer.EOL_CRLF)
-	local _<close> = test.mock(ui, 'clipboard_text', '1\n2')
+	local _<close> = test.mock(ui, 'get_clipboard_text', function() return '1\n2' end)
 
 	textadept.editing.paste_reindent()
 
@@ -459,7 +464,7 @@ end)
 test('editing.paste_reindent should have atomic undo', function()
 	local contents = '\t'
 	buffer:add_text(contents)
-	local _<close> = test.mock(ui, 'clipboard_text', test.lines{'1', '2'})
+	local _<close> = test.mock(ui, 'get_clipboard_text', function() return test.lines{'1', '2'} end)
 	textadept.editing.paste_reindent()
 
 	buffer:undo()

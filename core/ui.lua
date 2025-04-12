@@ -17,9 +17,6 @@ local ui = ui
 -- `textadept.menu.tab_context_menu`.
 -- @field tab_context_menu
 
---- The text on the clipboard.
--- @field clipboard_text
-
 --- The text displayed in the statusbar. (Write-only)
 -- @field statusbar_text
 
@@ -379,12 +376,8 @@ events.connect(events.BUFFER_DELETED, function()
 	view:goto_buffer(view._prev_buffer)
 end)
 
--- Properly handle clipboard text between views in curses, enables and disables mouse mode,
--- and focuses and resizes views based on mouse events.
+-- Handle mouse events and functionality in the terminal version.
 if CURSES then
-	events.connect(events.VIEW_BEFORE_SWITCH, function() ui._clipboard_text = ui.clipboard_text end)
-	events.connect(events.VIEW_AFTER_SWITCH, function() ui.clipboard_text = ui._clipboard_text end)
-
 	if not WIN32 then
 		local function enable_mouse() io.stdout:write("\x1b[?1002h"):flush() end
 		local function disable_mouse() io.stdout:write("\x1b[?1002l"):flush() end
@@ -449,6 +442,13 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- @table size
 
 -- The functions below are Lua C functions.
+
+--- Returns the text on the clipboard.
+-- The terminal version relies on `textadept.clipboard.paste_command` to retrieve the contents
+-- of the system clipboard, falling back on its own internal clipboard if necessary.
+-- @param[opt=false] internal Get the terminal version's internal clipboard text.
+-- @see buffer.copy_text
+-- @function get_clipboard_text
 
 --- Returns a split table that contains Textadept's current split view structure.
 -- This is primarily used in session saving.

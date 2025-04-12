@@ -16,6 +16,7 @@ file = {
 	'core/.ui.dialogs.luadoc',
 	'core/.view.luadoc',
 	'modules/textadept/bookmarks.lua',
+	'modules/textadept/clipboard.lua',
 	'modules/textadept/command_entry.lua',
 	'modules/textadept/editing.lua',
 	'modules/textadept/find.lua',

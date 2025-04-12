@@ -508,6 +508,8 @@
 -- @field UNDO_SELECTION_HISTORY_ENABLED
 
 --- Employ the Clipboard.
+-- The terminal version relies on the commands defined in `textadept.clipboard` in order to
+-- interact with the system clipboard, or else it uses its own internal clipboard.
 -- @section
 
 --- Cuts the selected text to the clipboard.
@@ -533,14 +535,14 @@
 -- @param end_pos End position of the range to copy.
 -- @function copy_range
 
---- Copies the given text to the clipboard.
+--- Copies text to the clipboard.
 -- @param text String text to copy.
 -- @function copy_text
 
 --- Pastes the clipboard's contents into the buffer, replacing any selected text according to
 -- `buffer.multi_paste`.
 -- @see textadept.editing.paste_reindent
--- @see ui.clipboard_text
+-- @see ui.get_clipboard_text
 -- @function paste
 
 --- Paste into multiple selections.

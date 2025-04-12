@@ -601,6 +601,14 @@ static int list_dialog_lua(lua_State *L) {
 	return list_dialog(opts, L);
 }
 
+// `ui.get_clipboard_text()` Lua function.
+static int get_clipboard_text_lua(lua_State *L) {
+	int len;
+	char *text = get_clipboard_text(&len);
+	if (text) return (lua_pushlstring(L, text, len), free(text), 1);
+	return (lua_pushliteral(L, ""), 1);
+}
+
 // Pushes the given Scintilla view onto the Lua stack.
 // The view must have previously been added with `add_view()`.
 static void lua_pushview(lua_State *L, SciObject *view) {
@@ -658,12 +666,6 @@ static int suspend_lua(lua_State *L) { return (suspend(), 0); }
 // `ui.__index` Lua metamethod.
 static int ui_index(lua_State *L) {
 	const char *key = lua_tostring(L, 2);
-	if (strcmp(key, "clipboard_text") == 0) {
-		int len;
-		char *text = get_clipboard_text(&len);
-		if (text) return (lua_pushlstring(L, text, len), free(text), 1);
-		return (lua_pushliteral(L, ""), 1);
-	}
 	if (strcmp(key, "maximized") == 0) return (lua_pushboolean(L, is_maximized()), 1);
 	if (strcmp(key, "size") == 0) {
 		int width, height;
@@ -689,8 +691,6 @@ static void sync_tabbar(void) {
 static int ui_newindex(lua_State *L) {
 	const char *key = lua_tostring(L, 2);
 	if (strcmp(key, "title") == 0) return (set_title(lua_tostring(L, 3)), 0);
-	if (strcmp(key, "clipboard_text") == 0)
-		return (SS(focused_view, SCI_COPYTEXT, lua_rawlen(L, 3), (sptr_t)luaL_checkstring(L, 3)), 0);
 	if (strcmp(key, "statusbar_text") == 0 || strcmp(key, "buffer_statusbar_text") == 0)
 		return (set_statusbar_text(*key == 's' ? 0 : 1, lua_tostring(L, 3)), 0);
 	if (strcmp(key, "menubar") == 0) {
@@ -874,6 +874,7 @@ static bool init_lua(int argc, char **argv) {
 	lua_pushcfunction(L, progress_dialog_lua), lua_setfield(L, -2, "progress");
 	lua_pushcfunction(L, list_dialog_lua), lua_setfield(L, -2, "list");
 	lua_setfield(L, -2, "dialogs");
+	lua_pushcfunction(L, get_clipboard_text_lua), lua_setfield(L, -2, "get_clipboard_text");
 	lua_pushcfunction(L, get_split_table), lua_setfield(L, -2, "get_split_table");
 	lua_pushcfunction(L, goto_view), lua_setfield(L, -2, "goto_view");
 	lua_pushcfunction(L, menu), lua_setfield(L, -2, "menu");

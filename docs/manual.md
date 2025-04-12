@@ -1542,7 +1542,6 @@ Liberation Mono), and lacks some GUI features due to the terminal's constraints:
   supports. Unrecognized colors default to white.
 - Not all key sequences are recognized properly, such as `Shift+Arrow` for making selections.
 - No style settings like font name, font size, or italics.
-- No X selection, primary or secondary, integration with the clipboard.
 - No zoom.
 
 [`buffer:register_image()`]: api.html#buffer.register_image

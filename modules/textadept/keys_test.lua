@@ -33,7 +33,7 @@ test('ctrl+k should cut to EOL with empty selection', function()
 	test.type('ctrl+k')
 
 	test.assert_equal(buffer:get_text(), ' ')
-	test.assert_equal(ui.clipboard_text, text)
+	test.assert_equal(ui.get_clipboard_text(), text)
 end)
 if not OSX or CURSES then skip('ctrl+k is not defined') end
 

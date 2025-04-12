@@ -13,19 +13,20 @@
 11. [string](#string)
 12. [textadept](#textadept)
 13. [textadept.bookmarks](#textadept.bookmarks)
-14. [textadept.editing](#textadept.editing)
-15. [textadept.history](#textadept.history)
-16. [textadept.keys](#textadept.keys)
-17. [textadept.macros](#textadept.macros)
-18. [textadept.menu](#textadept.menu)
-19. [textadept.run](#textadept.run)
-20. [textadept.session](#textadept.session)
-21. [textadept.snippets](#textadept.snippets)
-22. [ui](#ui)
-23. [ui.command_entry](#ui.command_entry)
-24. [ui.dialogs](#ui.dialogs)
-25. [ui.find](#ui.find)
-26. [view](#the-view-module)
+14. [textadept.clipboard](#textadept.clipboard)
+15. [textadept.editing](#textadept.editing)
+16. [textadept.history](#textadept.history)
+17. [textadept.keys](#textadept.keys)
+18. [textadept.macros](#textadept.macros)
+19. [textadept.menu](#textadept.menu)
+20. [textadept.run](#textadept.run)
+21. [textadept.session](#textadept.session)
+22. [textadept.snippets](#textadept.snippets)
+23. [ui](#ui)
+24. [ui.command_entry](#ui.command_entry)
+25. [ui.dialogs](#ui.dialogs)
+26. [ui.find](#ui.find)
+27. [view](#the-view-module)
 
 <a id="_G"></a>
 ## The `_G` module
@@ -1166,6 +1167,8 @@ The default value is `buffer.UNDO_SELECTION_HISTORY_ENABLED`.
 ### Employ the Clipboard
 
 
+The terminal version relies on the commands defined in [`textadept.clipboard`](#textadept.clipboard) in order to
+interact with the system clipboard, or else it uses its own internal clipboard.
 <a id="buffer.cut"></a>
 #### `buffer:cut`()
 
@@ -1206,7 +1209,7 @@ Parameters:
 <a id="buffer.copy_text"></a>
 #### `buffer:copy_text`(*text*)
 
-Copies the given text to the clipboard.
+Copies text to the clipboard.
 
 Parameters:
 - *text*:  String text to copy.
@@ -1217,7 +1220,7 @@ Parameters:
 Pastes the clipboard's contents into the buffer, replacing any selected text according to
 [`buffer.multi_paste`](#buffer.multi_paste).
 
-See also: [`textadept.editing.paste_reindent`](#textadept.editing.paste_reindent), [`ui.clipboard_text`](#ui.clipboard_text)
+See also: [`textadept.editing.paste_reindent`](#textadept.editing.paste_reindent), [`ui.get_clipboard_text`](#ui.get_clipboard_text)
 
 <a id="buffer.multi_paste"></a>
 #### `buffer.multi_paste`
@@ -7350,6 +7353,36 @@ Toggles a bookmark on the current line.
 
 
 
+<a id="textadept.clipboard"></a>
+## The `textadept.clipboard` module
+
+Allows the terminal version's buffer clipboard functions to operate on the system clipboard.
+
+This module is only enabled in the terminal version.
+
+<a id="textadept.clipboard.copy_command"></a>
+### `textadept.clipboard.copy_command`
+
+The command to modify the system clipboard's contents.
+
+The default values are:
+- Windows: `clip`
+- macOS: `pbcopy`
+- Linux/BSD: `xsel -n -b -i` if it exists, or `wl-copy -f` otherwise. Note: commands should
+	not fork.
+
+<a id="textadept.clipboard.paste_command"></a>
+### `textadept.clipboard.paste_command`
+
+The command to retrieve the system clipboard's contents.
+
+The default values are:
+- Windows: `powershell get-clipboard`
+- macOS: `pbpaste`
+- Linux/BSD: `xsel -b -o` if it exists, or `wl-paste -n` otherwise.
+
+
+
 <a id="textadept.editing"></a>
 ## The `textadept.editing` module
 
@@ -8629,11 +8662,6 @@ The default value is `true`.
 The text displayed in the buffer statusbar.
 (Write-only)
 
-<a id="ui.clipboard_text"></a>
-### `ui.clipboard_text`
-
-The text on the clipboard.
-
 <a id="ui.context_menu"></a>
 ### `ui.context_menu`
 
@@ -8641,6 +8669,19 @@ The buffer's context menu, a [`ui.menu()`](#ui.menu).
 
 This is a low-level field. You probably want to use the higher-level
 [`textadept.menu.context_menu`](#textadept.menu.context_menu).
+
+<a id="ui.get_clipboard_text"></a>
+### `ui.get_clipboard_text`([*internal*=false])
+
+Returns the text on the clipboard.
+
+The terminal version relies on [`textadept.clipboard.paste_command`](#textadept.clipboard.paste_command) to retrieve the contents
+of the system clipboard, falling back on its own internal clipboard if necessary.
+
+Parameters:
+- *internal*:  Get the terminal version's internal clipboard text.
+
+See also: [`buffer.copy_text`](#buffer.copy_text)
 
 <a id="ui.get_split_table"></a>
 ### `ui.get_split_table`()

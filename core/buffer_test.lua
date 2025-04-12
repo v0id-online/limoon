@@ -61,7 +61,8 @@ local exceptions = {
 	[file('core/init.lua')] = {'env.view'},
 	[file('core/lexer.lua')] = {'lexer.style_at', 'lexer.fold_level', 'lexer.line_from_position'},
 	[file('core/ui.lua')] = {'view:goto_pos'}, --
-	[file('modules/textadept/editing.lua')] = {'p:close'}, --
+	[file('modules/textadept/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
+	[file('modules/textadept/editing.lua')] = {'proc:close'}, --
 	[file('modules/textadept/find.lua')] = {
 		'ff_buffer.line_end_position', 'ff_buffer.line_count', 'ff_buffer.indicator_current',
 		'ff_buffer:indicator_fill_range'

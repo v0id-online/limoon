@@ -287,7 +287,7 @@ end
 -- and the indentation of the current and preceding lines.
 function M.paste_reindent()
 	-- Normalize EOLs and strip leading indentation from clipboard text.
-	local text = ui.clipboard_text
+	local text = ui.get_clipboard_text()
 	if not buffer.encoding then text = text:iconv('CP1252', 'UTF-8') end
 	if buffer.eol_mode == buffer.EOL_CRLF then
 		text = text:gsub('^\n', '\r\n'):gsub('([^\r])\n', '%1\r\n')
@@ -375,11 +375,11 @@ function M.filter_through(command)
 		inout = table.concat(inout, newline) .. newline
 	end
 	for i = 1, #commands do
-		local p = assert(os.spawn(commands[i]:match('^%s*(.-)%s*$')))
-		p:write(inout)
-		p:close()
-		inout = p:read('a') or ''
-		if p:wait() ~= 0 then
+		local proc = assert(os.spawn(commands[i]:match('^%s*(.-)%s*$')))
+		proc:write(inout)
+		proc:close()
+		inout = proc:read('a') or ''
+		if proc:wait() ~= 0 then
 			ui.statusbar_text = string.format('"%s" %s', commands[i], _L['returned non-zero status'])
 			return
 		end
