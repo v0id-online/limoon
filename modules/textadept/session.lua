@@ -59,7 +59,8 @@ function M.load(filename)
 	for _, buf in ipairs(session.buffers) do
 		if lfs.attributes(buf.filename) then
 			io.open_file(buf.filename)
-			buffer:set_sel(buf.anchor, buf.current_pos)
+			if not buf.selection then buf.selection = buf.anchor - 1 .. '-' .. buf.current_pos - 1 end
+			buffer.selection_serialized = buf.selection
 			view.first_visible_line = buf.top_line
 			for _, line in ipairs(buf.bookmarks) do
 				buffer:marker_add(line, textadept.bookmarks.MARK_BOOKMARK)
@@ -154,8 +155,7 @@ function M.save(filename)
 		local current = buffer == view.buffer
 		session.buffers[#session.buffers + 1] = {
 			filename = buffer.filename or buffer._type,
-			anchor = current and buffer.anchor or buffer._anchor or 1,
-			current_pos = current and buffer.current_pos or buffer._current_pos or 1,
+			selection = current and buffer.selection_serialized or buffer._selection or '0',
 			top_line = current and view.first_visible_line or buffer._top_line or 1
 		}
 		local bookmarks = {}
