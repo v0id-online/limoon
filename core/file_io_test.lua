@@ -385,7 +385,7 @@ test('buffer:save_as should emit a distinct events.FILE_AFTER_SAVE', function()
 
 	buffer:save_as(f.filename)
 
-	test.assert_equal(after_save.called, 2) -- TODO: ideally this would only be called once
+	test.assert_equal(after_save.called, true)
 	test.assert_equal(after_save.args, {f.filename, true})
 end)
 

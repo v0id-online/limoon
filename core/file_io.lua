@@ -201,7 +201,7 @@ local function set_encoding(buffer, encoding)
 end
 
 -- LuaDoc is in core/.buffer.luadoc.
-local function save(buffer)
+local function save(buffer, no_emit)
 	if not buffer then buffer = _G.buffer end
 	if not buffer.filename then return buffer:save_as() end
 	events.emit(events.FILE_BEFORE_SAVE, buffer.filename)
@@ -215,7 +215,7 @@ local function save(buffer)
 	if buffer ~= _G.buffer then events.emit(events.SAVE_POINT_REACHED, buffer) end -- update tab label
 	buffer.mod_time = lfs.attributes(buffer.filename, 'modification')
 	if buffer._type then buffer._type = nil end
-	events.emit(events.FILE_AFTER_SAVE, buffer.filename)
+	if not no_emit then events.emit(events.FILE_AFTER_SAVE, buffer.filename) end
 	return true
 end
 
@@ -228,7 +228,7 @@ local function save_as(buffer, filename)
 		if not filename then return end
 	end
 	buffer.filename = filename
-	buffer:save()
+	buffer:save(true)
 	buffer:set_lexer() -- auto-detect
 	events.emit(events.FILE_AFTER_SAVE, filename, true)
 	return true
