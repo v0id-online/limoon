@@ -86,8 +86,7 @@ local function write_list(f, fmt, list, name)
 				-- Prepend module name to identifier if necessary.
 				value = name .. '.' .. value
 			else
-				-- TODO: cannot link to fields, functions, or tables in `_G`?
-				value = value:gsub('^_G%.', '')
+				value = value:gsub('^_G%.', '') -- `_G` anchors do not have this prefix
 			end
 		end
 		if fmt == RETURN then value = link_known_symbols(value) end

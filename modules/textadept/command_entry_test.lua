@@ -354,5 +354,3 @@ test('ui.command_entry should emit events.COMMAND_TEXT_CHANGED when its text cha
 
 	test.assert_equal(changed.called, true)
 end)
-
--- TODO: textadept.menu.menubar['Tools/Language Server/Show Documentation'][2]()

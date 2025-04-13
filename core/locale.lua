@@ -10,7 +10,7 @@ local M = {}
 
 local locale_file = _USERHOME .. '/locale.conf'
 if not lfs.attributes(locale_file) then
-	local lang = (os.getenv('LANG') or ''):match('^[^_.@]+') -- TODO: LC_MESSAGES?
+	local lang = (os.getenv('LANG') or ''):match('^[^_.@]+')
 	if lang then locale_file = string.format('%s/core/locales/locale.%s.conf', _HOME, lang) end
 end
 if not lfs.attributes(locale_file) then locale_file = _HOME .. '/core/locale.conf' end

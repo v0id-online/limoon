@@ -312,7 +312,7 @@ local function find_in_files()
 			if i > #filenames then return nil end
 			local f<close> = io.open(filenames[i], 'rb')
 			buffer:target_whole_document()
-			buffer:replace_target(f:read('a'))
+			buffer:replace_target(f:read('a')) -- TODO: this assumes the file is UTF-8-encoded
 			local binary = nil -- determine lazily for performance reasons
 			buffer:target_whole_document()
 			while buffer:search_in_target(text) ~= -1 do
