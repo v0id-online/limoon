@@ -5044,6 +5044,16 @@ Arguments:
 
 See also: [`ui.find.find_next`](#ui.find.find_next), [`ui.find.find_prev`](#ui.find.find_prev)
 
+<a id="events.FIND_PANE_HIDE"></a>
+### `events.FIND_PANE_HIDE`
+
+Emitted when Textadept hides the find & replace pane.
+
+<a id="events.FIND_PANE_SHOW"></a>
+### `events.FIND_PANE_SHOW`
+
+Emitted when Textadept shows the find & replace pane.
+
 <a id="events.FIND_RESULT_FOUND"></a>
 ### `events.FIND_RESULT_FOUND`
 

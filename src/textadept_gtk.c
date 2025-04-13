@@ -53,7 +53,8 @@ static bool focus_lost(GtkWidget *_, GdkEvent *__, void *___) {
 static bool window_keypress(GtkWidget *_, GdkEventKey *event, void *__) {
 	if (event->keyval == GDK_KEY_Escape && gtk_widget_get_visible(findbox) &&
 		!gtk_widget_has_focus(command_entry))
-		return (gtk_widget_grab_focus(focused_view), gtk_widget_hide(findbox), true);
+		return (gtk_widget_grab_focus(focused_view), gtk_widget_hide(findbox),
+			emit("find_pane_hide", -1), true);
 	return false;
 }
 
@@ -415,11 +416,10 @@ void set_button_label(FindButton *btn, const char *s) { gtk_button_set_label(GTK
 void set_option_label(FindOption *opt, const char *s) { gtk_button_set_label(GTK_BUTTON(opt), s); }
 void focus_find(void) {
 	if (!gtk_widget_has_focus(find_entry) && !gtk_widget_has_focus(repl_entry))
-		gtk_widget_show(findbox), gtk_widget_grab_focus(find_entry);
+		gtk_widget_show(findbox), gtk_widget_grab_focus(find_entry), emit("find_pane_show", -1);
 	else
-		gtk_widget_grab_focus(focused_view), gtk_widget_hide(findbox);
+		gtk_widget_grab_focus(focused_view), gtk_widget_hide(findbox), emit("find_pane_hide", -1);
 }
-bool is_find_active(void) { return gtk_widget_get_visible(findbox); }
 
 void focus_command_entry(void) {
 	if (!gtk_widget_get_visible(command_entry_box))

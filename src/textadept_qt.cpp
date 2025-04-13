@@ -253,11 +253,10 @@ void set_option_label(FindOption *option, const char *text) {
 void focus_find() {
 	if (!ta->ui->findCombo->hasFocus() && !ta->ui->replaceCombo->hasFocus())
 		ta->ui->findBox->show(), ta->ui->findCombo->setFocus(),
-			ta->ui->findCombo->lineEdit()->selectAll();
+			ta->ui->findCombo->lineEdit()->selectAll(), emit("find_pane_show", -1);
 	else
-		SCI(focused_view)->setFocus(), ta->ui->findBox->hide();
+		SCI(focused_view)->setFocus(), ta->ui->findBox->hide(), emit("find_pane_hide", -1);
 }
-bool is_find_active() { return ta->ui->findBox->isVisible(); }
 
 void focus_command_entry() {
 	if (!ta->ui->commandEntryFrame->isVisible())
@@ -694,7 +693,7 @@ void Textadept::closeEvent(QCloseEvent *ev) {
 
 void Textadept::keyPressEvent(QKeyEvent *ev) {
 	if (ev->key() == Qt::Key_Escape && ui->findBox->isVisible() && !SCI(command_entry)->hasFocus())
-		SCI(focused_view)->setFocus(), ui->findBox->hide(), ev->ignore();
+		SCI(focused_view)->setFocus(), ui->findBox->hide(), ev->ignore(), emit("find_pane_hide", -1);
 }
 
 // The Textadept application.

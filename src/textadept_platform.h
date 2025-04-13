@@ -184,8 +184,6 @@ void set_option_label(FindOption *option, const char *text);
  * hide the pane and refocus the focused view.
  */
 void focus_find(void);
-/** Returns whether or not the find & replace pane is active. */
-bool is_find_active(void);
 
 /** Asks the platform to toggle the command entry between active and hidden.
  * The command entry should never be unfocused and visible.

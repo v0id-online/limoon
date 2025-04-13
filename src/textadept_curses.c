@@ -334,7 +334,7 @@ static int find_keypress(EObjectType _, void *object, void *data, chtype key) {
 void focus_find(void) {
 	if (findbox) return; // already active
 	WINDOW *win = scintilla_get_window(focused_view);
-	wresize(win, getmaxy(win) - 2, COLS);
+	wresize(win, getmaxy(win) - 2, COLS), emit("find_pane_show", -1);
 	findbox = initCDKScreen(newwin(2, 0, LINES - 3, 0)), eraseCDKScreen(findbox);
 	int b_width = (int)(fmax(strlen(button_labels[0]), strlen(button_labels[1])) +
 		fmax(strlen(button_labels[2]), strlen(button_labels[3])) + 3);
@@ -381,10 +381,8 @@ void focus_find(void) {
 	destroyCDKEntry(find_entry), destroyCDKEntry(repl_entry);
 	destroyCDKButtonbox(buttonbox), destroyCDKButtonbox(optionbox);
 	delwin(findbox->window), destroyCDKScreen(findbox), findbox = NULL;
-	wresize(win, getmaxy(win) + 2, COLS);
+	wresize(win, getmaxy(win) + 2, COLS), emit("find_pane_hide", -1);
 }
-
-bool is_find_active(void) { return findbox != NULL; }
 
 // Resizes and repositions the command entry, taking label width into account.
 static void resize_command_entry(void) {

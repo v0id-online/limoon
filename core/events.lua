@@ -151,6 +151,12 @@ local M = {}
 -- - *text*: The error message text.
 -- @field ERROR
 
+--- Emitted when Textadept shows the find & replace pane.
+-- @field FIND_PANE_SHOW
+
+--- Emitted when Textadept hides the find & replace pane.
+-- @field FIND_PANE_HIDE
+
 --- Emitted to find text.
 -- `ui.find` contains active find options.
 --
@@ -449,7 +455,7 @@ end)
 -- Set event constants (events are numeric ID keys).
 for k, v in pairs(_SCINTILLA) do if type(k) == 'number' then M[v[1]:upper()] = v[1] end end
 -- LuaFormatter off
-local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
+local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
 -- LuaFormatter on
 for _, v in pairs(textadept_events) do M[v:upper()] = v end
 

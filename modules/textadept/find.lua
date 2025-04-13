@@ -37,7 +37,9 @@ local M = ui.find
 -- @field entry_font
 
 --- Whether or not the Find & Replace pane is active.
--- @field active
+M.active = false
+events.connect(events.FIND_PANE_SHOW, function() M.active = true end)
+events.connect(events.FIND_PANE_HIDE, function() M.active = false end)
 
 --- The text of the "Find" label. (Write-only)
 -- This is primarily used for localization.
@@ -130,7 +132,7 @@ local preferred_view
 -- find text for incremental find (if text has changed, the user is still typing; if text is
 -- the same, the user clicked "Find Next" or "Find Prev"). Keep track of repl_text for non-"In
 -- files" in order to restore it from filter text as necessary.
-local find_text, found_text, repl_text = nil, nil, ui.find.replace_entry_text
+local find_text, found_text, repl_text = nil, nil, M.replace_entry_text
 
 --- Returns a reasonable initial directory for use with Find in Files.
 local function ff_dir()
@@ -153,10 +155,16 @@ function M.focus(options)
 		local filter = M.find_in_files_filters[ff_dir()] or lfs.default_filter
 		M.replace_entry_text = type(filter) == 'string' and filter or table.concat(filter, ',')
 	elseif M.replace_entry_text ~= repl_text then
+		-- Note: this is here because the find & replace pane does not hide on focus lost, so it is
+		-- possible to start with find in files, change focus, and then start normal find.
 		M.replace_entry_text = repl_text -- restore
 	end
 	orig_focus()
 end
+-- Restore "In Files" filter with original replacement text.
+events.connect(events.FIND_PANE_HIDE, function()
+	if M.in_files then M.in_files, M.replace_entry_text = false, repl_text end
+end)
 
 --- Returns a bit-mask of search flags to use in Scintilla search functions based on the checkboxes
 -- in the find box.
@@ -227,7 +235,7 @@ local function find(text, next, flags, no_wrap, wrapped)
 	end
 	-- Track find text and found text for "replace all" and incremental find.
 	find_text, found_text = text, buffer:get_sel_text()
-	repl_text = ui.find.replace_entry_text -- save for ui.find.focus()
+	repl_text = M.replace_entry_text -- save for ui.find.focus()
 
 	-- If nothing was found, wrap the search.
 	if pos == -1 and not no_wrap then
@@ -258,12 +266,7 @@ local function find_in_files()
 		M.find_in_files_filters[dir], M.find_in_files_filters[ff_dir()] = t, t
 	end
 	local filter = M.find_in_files_filters[dir] or lfs.default_filter
-	if not CURSES and ui.find.active then
-		ui.find.in_files = false
-		orig_focus() -- attempt to hide
-		ui.update() -- register widget focus/visibility changes
-		if ui.find.active then orig_focus() end -- hide
-	end
+	if not CURSES and M.active then orig_focus() end -- hide automatically
 
 	if buffer._type ~= _L['[Files Found Buffer]'] then preferred_view = view end
 
@@ -357,7 +360,7 @@ end)
 -- Search incrementally as find text changes.
 -- Note: do not call ui.find.find_next() since that saves find history.
 events.connect(events.FIND_TEXT_CHANGED, function()
-	if M.incremental then events.emit(events.FIND, ui.find.find_entry_text, true) end
+	if M.incremental then events.emit(events.FIND, M.find_entry_text, true) end
 end)
 
 -- Count and optionally highlight all found occurrences.
@@ -381,7 +384,7 @@ events.connect(events.FIND_RESULT_FOUND, function(text, wrapped)
 	ui.statusbar_text = message
 	-- For regex searches, `buffer.tag` was clobbered. It needs to be filled in again for any
 	-- subsequent replace operations that need it.
-	if ui.find.regex then
+	if M.regex then
 		buffer:set_target_range(buffer.selection_start, buffer.length + 1)
 		buffer:search_in_target(text)
 	end
@@ -389,6 +392,13 @@ end)
 
 -- Notify via statusbar if a search wrapped.
 events.connect(events.FIND_WRAPPED, function() ui.statusbar_text = _L['Search wrapped'] end)
+
+-- Ensure the caret is scrolled into view after finishing an incremental find.
+-- This is really only needed when no match was ultimately found, but partial matches scrolled
+-- the caret out of view.
+events.connect(events.FIND_PANE_HIDE, function()
+	if M.incremental and incremental_orig_pos then view:scroll_caret() end
+end)
 
 local P, V, C, upper, lower = lpeg.P, lpeg.V, lpeg.C, string.upper, string.lower
 local esc = {b = '\b', f = '\f', n = '\n', r = '\r', t = '\t', v = '\v'}

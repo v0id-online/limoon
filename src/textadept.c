@@ -265,7 +265,6 @@ static int find_index(lua_State *L) {
 	if (strcmp(key, "whole_word") == 0) return (lua_pushboolean(L, is_checked(whole_word)), 1);
 	if (strcmp(key, "regex") == 0) return (lua_pushboolean(L, is_checked(regex)), 1);
 	if (strcmp(key, "in_files") == 0) return (lua_pushboolean(L, is_checked(in_files)), 1);
-	if (strcmp(key, "active") == 0) return (lua_pushboolean(L, is_find_active()), 1);
 	return (lua_rawget(L, 1), 1);
 }
 
