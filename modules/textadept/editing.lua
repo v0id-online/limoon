@@ -151,13 +151,15 @@ args.register('-l', '--line', 1, function(line) M.goto_line(tonumber(line) or li
 -- lines are selected.
 -- As long as any part of a line is selected, the entire line is eligible for joining.
 function M.join_lines()
-	buffer:target_from_selection()
-	buffer:line_end()
-	local line = buffer:line_from_position(buffer.target_start)
-	if line == buffer:line_from_position(buffer.target_end) then
-		buffer.target_end = buffer:position_from_line(line + 1)
-	end
+	local s_line = buffer:line_from_position(buffer.selection_start)
+	local e_line = buffer:line_from_position(buffer.selection_end)
+	if e_line == s_line then e_line = e_line + 1 end
+	buffer:begin_undo_action()
+	for i = s_line + 1, e_line do buffer.line_indentation[i] = 0 end
+	buffer:set_target_range(buffer:position_from_line(s_line), buffer:position_from_line(e_line))
 	buffer:lines_join()
+	buffer:line_end()
+	buffer:end_undo_action()
 end
 
 --- Encloses the selected text within delimiters, or encloses the current word if no text is

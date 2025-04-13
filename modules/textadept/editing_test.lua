@@ -161,7 +161,27 @@ test('editing.join_lines should join the current line with the one below', funct
 	textadept.editing.join_lines()
 
 	test.assert_equal(buffer:get_text(), '1 2')
-	test.assert_equal(buffer.current_pos, 2)
+	test.assert_equal(buffer.current_pos, 4)
+end)
+
+test('editing.join_lines should strip leading indentation', function()
+	buffer:append_text(test.lines{'1', '\t2', '\t3'})
+	buffer:line_down_extend()
+
+	textadept.editing.join_lines()
+
+	test.assert_equal(buffer:get_text(), test.lines{'1 2', '\t3'})
+end)
+
+test('editing.join_lines should have atomic undo', function()
+	local lines = test.lines{'1', '\t2', '\t3'}
+	buffer:append_text(lines)
+	buffer:select_all()
+	textadept.editing.join_lines()
+
+	buffer:undo()
+
+	test.assert_equal(buffer:get_text(), lines)
 end)
 
 test('editing.enclose should wrap the current word with given delimiters', function()
