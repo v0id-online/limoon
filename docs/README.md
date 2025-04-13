@@ -148,7 +148,7 @@ Compiling Textadept from source requires the following:
 	- [Microsoft Visual Studio][] 2019+
 	- [Clang][] 13+
 - A UI toolkit (at least one of the following):
-	- [Qt][] 5.12+ development libraries for the GUI version
+	- [Qt][] 5.15+ development libraries for the GUI version
 	- [GTK][] 2.24+ development libraries for the GUI version
 	- [ncurses][](w) development libraries (wide character support) for the terminal version
 

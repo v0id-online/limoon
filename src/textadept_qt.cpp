@@ -492,10 +492,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 	QItemSelectionModel *selection = treeView->selectionModel();
 	QObject::connect(
 		lineEdit, &QLineEdit::textChanged, &filter, [&filter, &selection](const QString &text) {
-			// TODO: Qt 5.15 introduced QRegularExpression::escape().
-			// QString re = QRegularExpression::escape(text).replace("\\ ", ".*");
-			QString re =
-				QString{text}.replace(QRegularExpression{"([^A-Za-z0-9_])"}, "\\\\1").replace("\\ ", ".*");
+			QString re = QRegularExpression::escape(text).replace("\\ ", ".*");
 			filter.setFilterRegularExpression(
 				QRegularExpression{re, QRegularExpression::CaseInsensitiveOption});
 			selection->setCurrentIndex(
@@ -550,26 +547,7 @@ bool spawn(lua_State *L, Process *proc, int /*index*/, const char *cmd, const ch
 	cmd = full_cmd.c_str();
 #endif
 	// Construct argv from cmd and envp from envi.
-	// TODO: Qt 5.15 introduced QProcess::splitCommand().
-	// QStringList args = QProcess::splitCommand(QString{cmd}).
-	QStringList args;
-	const char *p = cmd;
-	while (*p) {
-		while (*p == ' ') p++;
-		std::string arg;
-		do {
-			const char *s = p;
-			while (*p && *p != ' ' && *p != '"' && *p != '\'') p++;
-			arg.append(s, p - s);
-			if (*p == '"' || *p == '\'') {
-				s = p + 1;
-				for (char q = *p++; *p && (*p != q || *(p - 1) == '\\'); p++) {}
-				arg.append(s, p - s);
-				if (*p == '"' || *p == '\'') p++;
-			}
-		} while (*p && *p != ' ');
-		args.append(arg.c_str());
-	}
+	QStringList args = QProcess::splitCommand(QString{cmd});
 	QProcessEnvironment env;
 	if (envi)
 		for (int i = (lua_pushnil(L), 0); lua_next(L, envi); lua_pop(L, 1), i++) {
