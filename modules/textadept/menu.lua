@@ -32,6 +32,9 @@ local menu_buffer_functions = {'undo','redo','cut','copy','paste','selection_dup
 for _, f in ipairs(menu_buffer_functions) do buffer[f] = buffer[f] end
 view.zoom_in, view.zoom_out = view.zoom_in, view.zoom_out
 
+-- Forward-declare these, mostly for `show_keys()`.
+local key_shortcuts, menu_items, contextmenu_items
+
 --- Restores the previous non-selected caret position.
 local function deselect()
 	if buffer.selection_empty or not buffer._deselect_pos then return end
@@ -41,6 +44,7 @@ events.connect(events.UPDATE_UI, function(updated)
 	if not updated or updated & 3 == 0 or not buffer.selection_empty then return end
 	buffer._deselect_pos = buffer.current_pos
 end)
+
 --- Wrapper around `buffer:upper_case()` and `buffer:lower_case()`.
 local function change_case(upper)
 	local select, pos = buffer.selection_empty, buffer.current_pos
@@ -48,22 +52,57 @@ local function change_case(upper)
 	buffer[upper and 'upper_case' or 'lower_case'](buffer)
 	if select then buffer:goto_pos(pos) end
 end
+
+local press_any_key = _L['Press any key or Esc to cancel...']
+--- Show the key shortcut and assigned command (if any) for the next keypress.
+local function show_keys() keys.mode, ui.statusbar_text = '_show_keys', press_any_key end
+keys._show_keys = setmetatable({esc = function() keys.mode = nil end}, {
+	__index = function(t, k)
+		return function()
+			local key = k:gsub('[\b\t\n]', {['\b'] = '\\b', ['\t'] = '\\t', ['\n'] = '\\n'})
+			local command = keys[key] and _L['Unknown'] or _L['Unassigned']
+			for _, item in ipairs(menu_items) do
+				if key_shortcuts[tostring(item[2])] == key then
+					command = item[1]:gsub('[_&]([^_&])', '%1') -- no longer 'Unknown'
+					break
+				end
+			end
+			ui.statusbar_text = string.format('%s (%s) - %s', key, command, press_any_key)
+		end
+	end
+})
+
+-- Show character and style information at the caret position.
+local function show_style()
+	local char = buffer:text_range(buffer.current_pos, buffer:position_after(buffer.current_pos))
+	if char == '' then return end -- end of buffer
+	local bytes = string.rep(' 0x%X', #char):format(char:byte(1, #char))
+	local style = buffer.style_at[buffer.current_pos]
+	local style_name = buffer:name_of_style(style):gsub('%.', '_')
+	local text = string.format("'%s' (U+%04X:%s)\n%s %s\n%s %s (%d)", char, utf8.codepoint(char),
+		bytes, _L['Lexer'], buffer:get_lexer(true), _L['Style'], style_name, style)
+	view:call_tip_show(buffer.current_pos, text)
+end
+
 --- Wrapper around `buffer.tab_width`.
 local function set_indentation(i)
 	buffer.tab_width = i
 	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
 end
+
 --- Wrapper around `buffer.eol_mode`.
 local function set_eol_mode(mode)
 	buffer.eol_mode = mode
 	buffer:convert_eols(mode)
 	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
 end
+
 --- Wrapper around `buffer:set_encoding()`.
 local function set_encoding(encoding)
 	buffer:set_encoding(encoding)
 	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
 end
+
 --- Opens a URL in the user's default web browser.
 local function open_page(url)
 	local cmd = (WIN32 and 'start ""') or (OSX and 'open') or 'xdg-open'
@@ -227,20 +266,9 @@ local default_menubar = {
 			SEPARATOR, --
 			{_L['Complete Trigger Word'], function() textadept.editing.autocomplete('snippet') end}
 		}, --
-		SEPARATOR, {
-			_L['Show Style'], function()
-				local char =
-					buffer:text_range(buffer.current_pos, buffer:position_after(buffer.current_pos))
-				if char == '' then return end -- end of buffer
-				local bytes = string.rep(' 0x%X', #char):format(char:byte(1, #char))
-				local style = buffer.style_at[buffer.current_pos]
-				local style_name = buffer:name_of_style(style):gsub('%.', '_')
-				local text = string.format("'%s' (U+%04X:%s)\n%s %s\n%s %s (%d)", char,
-					utf8.codepoint(char), bytes, _L['Lexer'], buffer:get_lexer(true), _L['Style'], style_name,
-					style)
-				view:call_tip_show(buffer.current_pos, text)
-			end
-		}
+		SEPARATOR, --
+		{_L['Show Keys...'], show_keys}, --
+		{_L['Show Style'], show_style}
 	}, {
 		title = _L['Buffer'], --
 		{_L['Next Buffer'], function() view:goto_buffer(1) end},
@@ -381,8 +409,6 @@ local default_tab_context_menu = {
 
 --- Table of proxy tables for menus.
 local proxies = {}
-
-local key_shortcuts, menu_items, contextmenu_items
 
 local SHIFT, CTRL, ALT, META = view.MOD_SHIFT, view.MOD_CTRL, view.MOD_ALT, view.MOD_META
 local ignore = {[0xFE20] = true, [0x01000002] = true}
@@ -551,7 +577,9 @@ events.connect(events.MENU_CLICKED, function(menu_id)
 		-- The macOS menubar eats key shortcuts, emits menu events, and prevents keypress events.
 		-- This affects user-defined key bindings, as well as command entry key bindings.
 		-- Instead of invoking a menu item's function, emit the keypress for its shortcut.
-		if not ui.command_entry.active then events.emit(events.KEYPRESS, keys.CLEAR) end
+		if not ui.command_entry.active and not keys.mode then
+			events.emit(events.KEYPRESS, keys.CLEAR)
+		end
 		events.emit(events.KEYPRESS, key_shortcuts[tostring(f)])
 	end
 end)

@@ -42,8 +42,11 @@
 -- (`Shift+,` inserts a `<`), Textadept recognizes the key binding as `Ctrl+<`. This allows
 -- key bindings to be language and layout agnostic. For key values greater than 255, Textadept
 -- uses the `keys.KEYSYMS` lookup table. Therefore, `Ctrl+Right Arrow` has the key sequence
--- `ctrl+right`. Uncommenting the `print()` statements in *core/keys.lua* causes Textadept to
--- print key sequences to standard out (stdout) for inspection.
+-- `ctrl+right`.
+--
+-- Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
+-- sequences in the statusbar, along with their assigned commands, if any. For sequences with
+-- a trailing "0x*XXXX*", that number can be aliased to a string representation in `keys.KEYSYMS`.
 --
 -- ### Commands
 --
@@ -57,6 +60,7 @@
 -- 	buffer:add_text(';')
 -- 	buffer:new_line()
 -- end
+-- keys['0x1234'] = function() ... end -- key code not in keys.KEYSYMS
 -- ```
 --
 -- Textadept handles `buffer` and `view` references properly in this context; it will use the
@@ -129,12 +133,14 @@ local CTRL, ALT, CMD, SHIFT = 'ctrl+', not CURSES and 'alt+' or 'meta+', 'cmd+',
 M.CLEAR = 'esc'
 
 --- Lookup table for string representations of key codes higher than 255.
--- Key codes can be identified by temporarily uncommenting the `print()` statements in
--- *core/keys.lua*.
--- Recognized codes are: esc, \b, \t, \n, down, up, left, right, home, end, pgup, pgdn, del,
--- ins, and f1-f12.
+-- Recognized codes are: esc, \b, \t, \n, down, up, left, right, home, end, pgup, pgdn, del, ins,
+-- and f1-f12. Unrecognized key codes can be identified using the "Tools > Show Keys..." menu
+-- item and start with "0x".
+--
 -- The GUI version also recognizes: menu, kpenter, kphome, kpend, kpleft, kpup, kpright, kpdown,
 -- kppgup, kppgdn, kpmul, kpadd, kpsub, kpdiv, kpdec, and kp0-kp9.
+-- @usage keys.KEYSYMS[0x1234] = 'symbol'
+-- @usage keys['ctrl+symbol'] = function() ... end
 -- @table KEYSYMS
 
 -- LuaFormatter off
@@ -150,12 +156,12 @@ events.connect(events.KEY, function(code, modifiers)
 	if OSX and not CURSES then ctrl, cmd = cmd, ctrl end -- swap
 	-- print(code, M.KEYSYMS[code], shift and 'shift', ctrl and 'ctrl', alt and 'alt', cmd and 'cmd')
 	local key = code >= 32 and code < 256 and string.char(code) or M.KEYSYMS[code]
-	if not key then return end
-	if QT and not shift and code < 256 then key = key:lower() end -- Qt always give uppercase codes
+	if key and QT and not shift and code < 256 then key = key:lower() end -- Qt gives uppercase codes
 	-- Since printable characters are uppercased, disable shift.
 	if shift and code >= 32 and code < 256 then shift = false end
 	-- For composed keys on macOS, ignore alt.
 	if (OSX and not CURSES) and alt and code < 256 then alt = false end
+	if not key then key = string.format("'0x%X'", code) end
 	return events.emit(events.KEYPRESS,
 		string.format('%s%s%s%s%s', ctrl and CTRL or '', alt and ALT or '', cmd and OSX and CMD or '',
 			shift and SHIFT or '', key))

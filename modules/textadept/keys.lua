@@ -116,8 +116,8 @@
 -- Alt+. | ^. | M-. | Play recorded macro
 -- None | None | None | Save recorded macro
 -- None | None | None | Load saved macro
--- Ctrl+Alt+U | ⌘⇧U | M-U | Quickly open `_USERHOME`
--- Ctrl+Alt+H | ⌘⇧H | M-H | Quickly open `_HOME`
+-- Ctrl+Alt+U | ^⌘U | M-U | Quickly open `_USERHOME`
+-- Ctrl+Alt+H | ^⌘H | M-H | Quickly open `_HOME`
 -- None | None | None | Quickly open current directory
 -- Ctrl+Shift+O | ⌘⇧O | M-^O | Quickly open current project
 -- None | None | None | Insert snippet...
@@ -125,6 +125,7 @@
 -- Shift+Tab | ⇧⇥ | S-Tab | Previous snippet placeholder
 -- Esc | Esc | Esc | Cancel snippet
 -- None | None | None | Complete trigger word
+-- Ctrl+Shift+H | ⌘⇧H | M-S-H | Show typed keys in statusbar
 -- None | None | None | Show style
 -- **Buffer**| | |
 -- Ctrl+Tab<br/>Ctrl+PgDn | ^⇥<br/>⌘⇟ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
@@ -261,14 +262,14 @@ local M = {}
 -- Windows, Linux, and BSD key bindings.
 --
 -- Unassigned keys:
--- ctrl:  EGhHiIJNQtY_(){;:'",<.>?\s
+-- ctrl:  EGhiIJNQtY_(){;:'",<.>?\s
 -- alt: -_=+)]}\|;:/?\s\n
 -- ctrl+alt: aAbBcCDFHiIjJlLmMnNoOpPqQsSTUvVxXyYzZ()[]{}\;:'",<.>/?\s\t\n
 --
 -- macOS key bindings.
 --
 -- Unassigned keys:
--- cmd:  EGhHiIJNQtY_(){;:'"<.>?\s
+-- cmd:  EGhiIJNQtY_(){;:'"<.>?\s
 -- ctrl: cCDgGHiIjJKLmMoOqQrRsStTuUvVwWxXyYzZ-_=+)]}\|;:/?\s\n
 -- ctrl+cmd: aAbBcCDFHiIjJlLmMnNoOpPqQsSTUvVxXyYzZ()[]{}\;:'",<.>/?\s\t\n
 --
@@ -287,7 +288,7 @@ local M = {}
 --
 -- Unassigned keys:
 -- ctrl: t\s
--- meta: aAbBcCDHiIjJlLMnNoOpPQUvVxXyYzZ);:?\s
+-- meta: aAbBcCDiIjJlLMnNoOpPQUvVxXyYzZ);:?\s
 -- ctrl+meta:  eghijnqy_]\^
 --
 -- Note: meta+[befhstv] may be used by Linux/BSD GUI terminals for menu access.
@@ -429,6 +430,7 @@ local bindings = {
 	[textadept.snippets.cancel] = {'esc', 'esc', 'esc'},
 	-- TODO: m('Tools/Snippets/Complete Trigger Word')
 	-- Other.
+	[m('Tools/Show Keys...')] = {'ctrl+H', 'cmd+H', 'meta+H'},
 	-- TODO: m('Tools/Show Style')
 	
 	-- Buffer.

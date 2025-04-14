@@ -220,6 +220,16 @@ test('Tools > Snippets > Complete Trigger Word should do so', function()
 		'should have used valid autocompleter')
 end)
 
+test('Tools > Show Keys... should show typed keys in the statusbar', function()
+	local _<close> = test.defer(function() test.type('esc') end)
+	click('Tools/Show Keys...')
+
+	test.type('\t')
+
+	test.assert_equal(keys.mode, '_show_keys')
+	-- TODO: how to assert ui.statusbar_text was written to? Cannot mock it.
+end)
+
 test('Tools > Show Style should show a calltip with style info at the current position', function()
 	local call_tip_show = test.stub()
 	local _<close> = test.mock(view, 'call_tip_show', call_tip_show)

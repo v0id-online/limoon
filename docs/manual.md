@@ -1133,9 +1133,14 @@ name. You can assign key sequences to tables of key bindings to create key chain
 Textadept ignores all key bindings outside that mode until the mode is unset (e.g. Vim-style
 modal editing). The [keys documentation][] describes all of this in more detail.
 
+**Tip**: you can query a key binding's sequence and see if it has an assigned command via
+`Ctrl+Shift+H` on Windows and Linux/BSD, `⌘⇧H` on macOS, and `M-S-H` in the terminal
+version. While this mode is active, the statusbar shows typed key sequences and their assigned
+commands, if any. Pressing `Esc` deactivates the mode.
+
 [`keys`]: api.html#keys
 [`keys.KEYSYMS`]: api.html#keys.KEYSYMS
-[keys documentation]: api.html#keys
+[keys documentation]: api.html#the-keys-module
 
 ## Compile, Run, Build, and Test
 

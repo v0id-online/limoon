@@ -5687,8 +5687,11 @@ English keyboard, since the combination of `Ctrl+Shift+,` has the key sequence `
 (`Shift+,` inserts a `<`), Textadept recognizes the key binding as `Ctrl+<`. This allows
 key bindings to be language and layout agnostic. For key values greater than 255, Textadept
 uses the [`keys.KEYSYMS`](#keys.KEYSYMS) lookup table. Therefore, `Ctrl+Right Arrow` has the key sequence
-`ctrl+right`. Uncommenting the `print()` statements in *core/keys.lua* causes Textadept to
-print key sequences to standard out (stdout) for inspection.
+`ctrl+right`.
+
+Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
+sequences in the statusbar, along with their assigned commands, if any. For sequences with
+a trailing "0x*XXXX*", that number can be aliased to a string representation in [`keys.KEYSYMS`](#keys.KEYSYMS).
 
 ### Commands
 
@@ -5702,6 +5705,7 @@ keys.c['shift+\n'] = function() -- language-specific key
 	buffer:add_text(';')
 	buffer:new_line()
 end
+keys['0x1234'] = function() ... end -- key code not in keys.KEYSYMS
 ```
 
 Textadept handles [`buffer`](#buffer) and [`view`](#view) references properly in this context; it will use the
@@ -5765,12 +5769,19 @@ The default value is `'esc'` for the `Esc` key.
 
 Lookup table for string representations of key codes higher than 255.
 
-Key codes can be identified by temporarily uncommenting the `print()` statements in
-*core/keys.lua*.
-Recognized codes are: esc, \b, \t, \n, down, up, left, right, home, end, pgup, pgdn, del,
-ins, and f1-f12.
+Recognized codes are: esc, \b, \t, \n, down, up, left, right, home, end, pgup, pgdn, del, ins,
+and f1-f12. Unrecognized key codes can be identified using the "Tools > Show Keys..." menu
+item and start with "0x".
+
 The GUI version also recognizes: menu, kpenter, kphome, kpend, kpleft, kpup, kpright, kpdown,
 kppgup, kppgdn, kpmul, kpadd, kpsub, kpdiv, kpdec, and kp0-kp9.
+
+Usage:
+
+```lua
+keys.KEYSYMS[0x1234] = 'symbol'
+keys['ctrl+symbol'] = function() ... end
+```
 
 <a id="keys.keychain"></a>
 ### `keys.keychain`
@@ -7840,8 +7851,8 @@ Alt+, | ^, | M-, | Start/stop recording macro
 Alt+. | ^. | M-. | Play recorded macro
 None | None | None | Save recorded macro
 None | None | None | Load saved macro
-Ctrl+Alt+U | ⌘⇧U | M-U | Quickly open [`_USERHOME`](#_USERHOME)
-Ctrl+Alt+H | ⌘⇧H | M-H | Quickly open [`_HOME`](#_HOME)
+Ctrl+Alt+U | ^⌘U | M-U | Quickly open [`_USERHOME`](#_USERHOME)
+Ctrl+Alt+H | ^⌘H | M-H | Quickly open [`_HOME`](#_HOME)
 None | None | None | Quickly open current directory
 Ctrl+Shift+O | ⌘⇧O | M-^O | Quickly open current project
 None | None | None | Insert snippet...
@@ -7849,6 +7860,7 @@ Tab | ⇥ | Tab | Expand snippet or next placeholder
 Shift+Tab | ⇧⇥ | S-Tab | Previous snippet placeholder
 Esc | Esc | Esc | Cancel snippet
 None | None | None | Complete trigger word
+Ctrl+Shift+H | ⌘⇧H | M-S-H | Show typed keys in statusbar
 None | None | None | Show style
 **Buffer**| | |
 Ctrl+Tab<br/>Ctrl+PgDn | ^⇥<br/>⌘⇟ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
