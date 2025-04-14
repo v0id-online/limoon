@@ -5138,6 +5138,19 @@ setting up language-specific editing features for source files.
 Arguments:
 - *name*: The language lexer's name.
 
+Usage:
+
+```lua
+events.connect(events.LEXER_LOADED, function(name)
+	if name ~= 'lua' then return end
+	-- Use Lua 5.1 keywords instead of Lua 5.2+ keywords.
+	buffer.lexer:set_word_list(lexer.KEYWORD, {
+		'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'if', 'in',
+		'local', 'or', 'nil', 'not', 'repeat', 'return', 'then', 'true', 'until', 'while'
+	})
+end)
+```
+
 <a id="events.MARGIN_CLICK"></a>
 ### `events.MARGIN_CLICK`
 
