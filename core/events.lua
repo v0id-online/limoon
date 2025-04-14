@@ -161,7 +161,6 @@ local M = {}
 -- `ui.find` contains active find options.
 --
 -- Arguments:
---
 -- - *text*: The text to search for.
 -- - *next*: Whether or not to search forward instead of backward.
 -- @see ui.find.find_next

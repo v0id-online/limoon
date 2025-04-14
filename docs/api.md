@@ -3414,7 +3414,6 @@ Returns the default text shown next to folded lines.
 Map of line numbers to their fold level bit-masks.
 
 Fold level bit-masks comprise an integer level combined with any of the following bit flags:
-
 - `buffer.FOLDLEVELBASE`: The initial fold level.
 - `buffer.FOLDLEVELWHITEFLAG`: The line is blank.
 - `buffer.FOLDLEVELHEADERFLAG`: The line is a header, or fold point.
@@ -4092,7 +4091,6 @@ The default value is `true`.
 Enable virtual space, allowing the caret to move into the space past end of line characters.
 
 This is either `buffer.VS_NONE` (disable virtual space) or a bit-mask of the following options:
-
 - `buffer.VS_RECTANGULARSELECTION`: Enable virtual space only for rectangular selections.
 - `buffer.VS_USERACCESSIBLE`: Enable virtual space outside of rectangular selections.
 - `buffer.VS_NOWRAPLINESTART`: Prevent the caret from wrapping to the previous line via
@@ -5038,7 +5036,6 @@ Emitted to find text.
 [`ui.find`](#ui.find) contains active find options.
 
 Arguments:
-
 - *text*: The text to search for.
 - *next*: Whether or not to search forward instead of backward.
 
@@ -5510,7 +5507,6 @@ The default list contains UTF-8, ASCII, CP1252, and UTF-16.
 
 You should add to this list if you work with files encoded in something else. Valid encodings
 are [GNU iconv's encodings][], and include:
-
 - European: ASCII, ISO-8859-{1,2,3,4,5,7,9,10,13,14,15,16}, KOI8-R,
 	KOI8-U, KOI8-RU, CP{1250,1251,1252,1253,1254,1257}, CP{850,866,1131},
 	Mac{Roman,CentralEurope,Iceland,Croatian,Romania}, Mac{Cyrillic,Ukraine,Greek,Turkish},
@@ -5650,7 +5646,6 @@ Manages key bindings in Textadept.
 ### Key Bindings Overview
 
 Define key bindings in the global [`keys`](#keys) table in key-value pairs. Each pair consists of either:
-
 - A string key sequence and its associated command.
 - A string lexer name and its table of key sequences and commands. These are called
 	language-specific keys.
@@ -7290,7 +7285,6 @@ Returns text converted from one encoding to another, or raises an error if the c
 failed.
 
 Valid encodings are [GNU libiconv's encodings][], and include:
-
 - European: ASCII, ISO-8859-{1,2,3,4,5,7,9,10,13,14,15,16}, KOI8-R,
 	KOI8-U, KOI8-RU, CP{1250,1251,1252,1253,1254,1257}, CP{850,866,1131},
 	Mac{Roman,CentralEurope,Iceland,Croatian,Romania}, Mac{Cyrillic,Ukraine,Greek,Turkish},
@@ -7420,7 +7414,6 @@ The word highlight indicator number.
 Map of image names to registered image numbers.
 
 Fields:
-
 - `CLASS`:  The image number for classes.
 - `NAMESPACE`:  The image number for namespaces.
 - `METHOD`:  The image number for methods.
@@ -7507,7 +7500,6 @@ If any completion contains a space character, the function should change
 but the function may change [`buffer.auto_c_order`](#buffer.auto_c_order) if it wants to control sort order.
 
 Fields:
-
 - `word`: Autocompletion function for words from the current buffer, or all open buffers if
  [`textadept.editing.autocomplete_all_words`](#textadept.editing.autocomplete_all_words) is `true`.
  [`buffer.word_chars`](#buffer.word_chars) contains the set of characters that constitute words.
@@ -7749,7 +7741,6 @@ is replaced by "Control" (^). The only exception is for word- and paragraph-base
 keys, which use "Alt" (⌥) instead of "Command" (⌘), as is customary on macOS.
 
 In general, bindings for the terminal version are the same as for Windows/Linux/BSD except:
-
 - Most "Ctrl+Shift+*key*" combinations become "M-^*key*" since most terminals recognize few,
 	if any, "Ctrl+Shift" key sequences.
 - Most "Ctrl+*symbol*" combinations become "M-*symbol*" since most terminals recognize only
@@ -8174,7 +8165,6 @@ Map of filenames, file extensions, and lexer names to their associated "compile"
 command line strings or functions that return such strings.
 
 Command line strings may have the following macros:
-
 - `%f`: The file's name, including its extension.
 - `%e`: The file's name, excluding its extension.
 - `%d`: The file's directory path.
@@ -8220,7 +8210,6 @@ Map of filenames, file extensions, and lexer names to their associated "run" she
 line strings or functions that return strings.
 
 Command line strings may have the following macros:
-
 - `%f`: The file's name, including its extension.
 - `%e`: The file's name, excluding its extension.
 - `%d`: The file's directory path.
@@ -8377,7 +8366,6 @@ Snippets for Textadept.
 
 Define snippets in the global [`snippets`](#snippets) table in key-value pairs. Each pair consists of
 either:
-
 - A string trigger word and its snippet text.
 - A string lexer name with a table of trigger words and snippet texts.
 
@@ -8504,7 +8492,6 @@ Transforms use the "${*n*/*regex*/*format*/*options*}" syntax, where *regex* is 
 expression][] (regex) to match against the content of placeholder *n*, *format* is a formatted
 replacement for matched content, and *options* are regex options to use when matching. *format*
 may contain any of the following:
-
 - Plain text.
 - "$*m*" and "${*m*}" sequences, which represent the content of the *m*th capture (*m*=0 is
 	the entire match for this and all subsequent sequences).
@@ -8520,7 +8507,6 @@ may contain any of the following:
 	of capture *m* is empty. Otherwise, capture *m* is mirrored.
 
 *options* may include any of the following letters:
-
 - g: Replace all instances of matched text, not just the first one.
 
 For example, the following snippet defines an attribute along with its getter and setter functions:
@@ -8552,7 +8538,6 @@ Use "\\|" to represent a literal '\|'.
 ### Migrating Legacy Snippets
 
 Legacy snippets used the following syntax:
-
 - "%*n*" for tab stops and mirrors.
 - "%*n*(*default*)" for default placeholders.
 - "%*n*<*Lua code*>" for Lua transforms, where *n* is optional.
@@ -8634,7 +8619,6 @@ snippets.
 Map of format method names to their functions for text captured in placeholder transforms.
 
 Fields:
-
 - `upcase`:  Uppercases the captured text.
 - `downcase`:  Lowercases the captured text.
 - `capitalize`:  Capitalizes the captured text.
@@ -8647,7 +8631,6 @@ Map of snippet variable names to string values or functions that return string v
 Each time a snippet is inserted, this map is used to set its variables.
 
 Fields:
-
 - `TM_SELECTED_TEXT`:  The currently selected text, if any.
 - `TM_CURRENT_LINE`:  The contents of the current line.
 - `TM_CURRENT_WORD`:  The word under the caret, if any.

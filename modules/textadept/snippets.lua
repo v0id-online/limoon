@@ -6,7 +6,6 @@
 --
 -- Define snippets in the global `snippets` table in key-value pairs. Each pair consists of
 -- either:
---
 -- - A string trigger word and its snippet text.
 -- - A string lexer name with a table of trigger words and snippet texts.
 --
@@ -133,7 +132,6 @@
 -- expression][] (regex) to match against the content of placeholder *n*, *format* is a formatted
 -- replacement for matched content, and *options* are regex options to use when matching. *format*
 -- may contain any of the following:
---
 -- - Plain text.
 -- - "$*m*" and "${*m*}" sequences, which represent the content of the *m*th capture (*m*=0 is
 --	the entire match for this and all subsequent sequences).
@@ -149,7 +147,6 @@
 --	of capture *m* is empty. Otherwise, capture *m* is mirrored.
 --
 -- *options* may include any of the following letters:
---
 -- - g: Replace all instances of matched text, not just the first one.
 --
 -- For example, the following snippet defines an attribute along with its getter and setter functions:
@@ -181,7 +178,6 @@
 -- ### Migrating Legacy Snippets
 --
 -- Legacy snippets used the following syntax:
---
 -- - "%*n*" for tab stops and mirrors.
 -- - "%*n*(*default*)" for default placeholders.
 -- - "%*n*<*Lua code*>" for Lua transforms, where *n* is optional.

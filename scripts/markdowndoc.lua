@@ -19,7 +19,7 @@ local TABLE = '<a id="%s"></a>\n%s `%s`\n\n'
 local TFIELD = '- `%s`: %s\n'
 local titles = {
 	[PARAM] = 'Parameters:\n', [USAGE] = 'Usage:\n\n', [RETURN] = 'Returns: ', [SEE] = 'See also: ',
-	[TFIELD] = 'Fields:\n\n'
+	[TFIELD] = 'Fields:\n'
 }
 
 -- Parse command line options for defining non-LDoc behavior.

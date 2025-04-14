@@ -178,7 +178,6 @@ end
 --- Map of filenames, file extensions, and lexer names to their associated "compile" shell
 -- command line strings or functions that return such strings.
 -- Command line strings may have the following macros:
---
 -- - `%f`: The file's name, including its extension.
 -- - `%e`: The file's name, excluding its extension.
 -- - `%d`: The file's directory path.
@@ -207,7 +206,6 @@ end
 --- Map of filenames, file extensions, and lexer names to their associated "run" shell command
 -- line strings or functions that return strings.
 -- Command line strings may have the following macros:
---
 -- - `%f`: The file's name, including its extension.
 -- - `%e`: The file's name, excluding its extension.
 -- - `%d`: The file's directory path.

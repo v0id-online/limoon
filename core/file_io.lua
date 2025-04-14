@@ -69,7 +69,6 @@ io.recent_files = {}
 --
 -- You should add to this list if you work with files encoded in something else. Valid encodings
 -- are [GNU iconv's encodings][], and include:
---
 -- - European: ASCII, ISO-8859-{1,2,3,4,5,7,9,10,13,14,15,16}, KOI8-R,
 --	KOI8-U, KOI8-RU, CP{1250,1251,1252,1253,1254,1257}, CP{850,866,1131},
 --	Mac{Roman,CentralEurope,Iceland,Croatian,Romania}, Mac{Cyrillic,Ukraine,Greek,Turkish},

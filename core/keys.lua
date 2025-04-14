@@ -5,7 +5,6 @@
 -- ### Key Bindings Overview
 --
 -- Define key bindings in the global `keys` table in key-value pairs. Each pair consists of either:
---
 -- - A string key sequence and its associated command.
 -- - A string lexer name and its table of key sequences and commands. These are called
 --	language-specific keys.

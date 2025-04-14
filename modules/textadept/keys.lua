@@ -14,7 +14,6 @@
 -- keys, which use "Alt" (⌥) instead of "Command" (⌘), as is customary on macOS.
 --
 -- In general, bindings for the terminal version are the same as for Windows/Linux/BSD except:
---
 -- - Most "Ctrl+Shift+*key*" combinations become "M-^*key*" since most terminals recognize few,
 --	if any, "Ctrl+Shift" key sequences.
 -- - Most "Ctrl+*symbol*" combinations become "M-*symbol*" since most terminals recognize only

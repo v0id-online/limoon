@@ -2282,7 +2282,6 @@
 
 --- Map of line numbers to their fold level bit-masks.
 -- Fold level bit-masks comprise an integer level combined with any of the following bit flags:
---
 -- - `buffer.FOLDLEVELBASE`: The initial fold level.
 -- - `buffer.FOLDLEVELWHITEFLAG`: The line is blank.
 -- - `buffer.FOLDLEVELHEADERFLAG`: The line is a header, or fold point.
@@ -2889,7 +2888,6 @@
 
 --- Enable virtual space, allowing the caret to move into the space past end of line characters.
 -- This is either `buffer.VS_NONE` (disable virtual space) or a bit-mask of the following options:
---
 -- - `buffer.VS_RECTANGULARSELECTION`: Enable virtual space only for rectangular selections.
 -- - `buffer.VS_USERACCESSIBLE`: Enable virtual space outside of rectangular selections.
 -- - `buffer.VS_NOWRAPLINESTART`: Prevent the caret from wrapping to the previous line via
