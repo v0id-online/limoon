@@ -5687,6 +5687,7 @@ uses the [`keys.KEYSYMS`](#keys.KEYSYMS) lookup table. Therefore, `Ctrl+Right Ar
 Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
 sequences in the statusbar, along with their assigned commands, if any. For sequences with
 a trailing "0x*XXXX*", that number can be aliased to a string representation in [`keys.KEYSYMS`](#keys.KEYSYMS).
+For your convenience, Textadept copies key sequences to the clipboard.
 
 ### Commands
 

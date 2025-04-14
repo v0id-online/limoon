@@ -228,6 +228,7 @@ test('Tools > Show Keys... should show typed keys in the statusbar', function()
 
 	test.assert_equal(keys.mode, '_show_keys')
 	-- TODO: how to assert ui.statusbar_text was written to? Cannot mock it.
+	test.assert_equal(ui.get_clipboard_text(), '\\t')
 end)
 
 test('Tools > Show Style should show a calltip with style info at the current position', function()

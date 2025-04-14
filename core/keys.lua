@@ -46,6 +46,7 @@
 -- Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
 -- sequences in the statusbar, along with their assigned commands, if any. For sequences with
 -- a trailing "0x*XXXX*", that number can be aliased to a string representation in `keys.KEYSYMS`.
+-- For your convenience, Textadept copies key sequences to the clipboard.
 --
 -- ### Commands
 --
@@ -160,7 +161,7 @@ events.connect(events.KEY, function(code, modifiers)
 	if shift and code >= 32 and code < 256 then shift = false end
 	-- For composed keys on macOS, ignore alt.
 	if (OSX and not CURSES) and alt and code < 256 then alt = false end
-	if not key then key = string.format("'0x%X'", code) end
+	if not key then key = string.format('0x%X', code) end
 	return events.emit(events.KEYPRESS,
 		string.format('%s%s%s%s%s', ctrl and CTRL or '', alt and ALT or '', cmd and OSX and CMD or '',
 			shift and SHIFT or '', key))

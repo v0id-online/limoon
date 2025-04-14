@@ -1136,7 +1136,8 @@ modal editing). The [keys documentation][] describes all of this in more detail.
 **Tip**: you can query a key binding's sequence and see if it has an assigned command via
 `Ctrl+Shift+H` on Windows and Linux/BSD, `⌘⇧H` on macOS, and `M-S-H` in the terminal
 version. While this mode is active, the statusbar shows typed key sequences and their assigned
-commands, if any. Pressing `Esc` deactivates the mode.
+commands, if any. Textadept also copies the sequence to the clipboard. Pressing `Esc` deactivates
+the mode.
 
 [`keys`]: api.html#keys
 [`keys.KEYSYMS`]: api.html#keys.KEYSYMS

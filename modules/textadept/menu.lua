@@ -68,6 +68,7 @@ keys._show_keys = setmetatable({esc = function() keys.mode = nil end}, {
 				end
 			end
 			ui.statusbar_text = string.format('%s (%s) - %s', key, command, press_any_key)
+			buffer:copy_text(key)
 		end
 	end
 })
