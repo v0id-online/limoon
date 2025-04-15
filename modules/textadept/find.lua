@@ -272,7 +272,8 @@ local function find_in_files()
 
 	ui.print_to(_L['[Files Found Buffer]'], _L['Find:']:gsub('[_&]', '') .. ' ' .. M.find_entry_text):line_up()
 	local top_line, screen_lines = buffer:line_from_position(buffer.current_pos), view.lines_on_screen
-	--- Appends line *line* to the files found buffer, scrolling it down until
+	--- Appends a line to the files found buffer, scrolling it down until the view is full.
+	-- @param line String line to append.
 	local function append(line)
 		if line then buffer:append_text(line) end
 		buffer:append_text('\n')
@@ -336,7 +337,6 @@ local function find_in_files()
 			end
 			buffer:clear_all()
 			buffer:empty_undo_buffer()
-			view:scroll_caret() -- [Files Found Buffer]
 			i = i + 1
 			return (i - 1) * 100 / #filenames, show_names and utf8_filenames[i] or nil
 		end
