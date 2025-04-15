@@ -29,6 +29,7 @@ test('ui.get_clipboard_text should use the system clipboard', function()
 	test.assert_equal(ui.get_clipboard_text(), text)
 end)
 if not CURSES then skip('the GUI version uses the system clipboard') end
+if BSD and os.getenv('CI') == 'true' then skip('X is not running on CI') end
 
 test('ui.get_clipboard_text should fall back on using its own internal clipboard', function()
 	copy('system' .. math.random())
@@ -47,6 +48,7 @@ test('buffer.copy_text should use the system clipboard', function()
 	test.assert_equal(ui.get_clipboard_text(), text)
 end)
 if not CURSES then skip('the GUI version uses the system clipboard') end
+if BSD and os.getenv('CI') == 'true' then skip('X is not running on CI') end
 
 test('buffer.paste should use the system clipboard', function()
 	local text = 'text' .. math.random()
@@ -57,3 +59,4 @@ test('buffer.paste should use the system clipboard', function()
 	test.assert_equal(buffer:get_text(), text)
 end)
 if not CURSES then skip('the GUI version uses the system clipboard') end
+if BSD and os.getenv('CI') == 'true' then skip('X is not running on CI') end

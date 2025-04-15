@@ -30,7 +30,7 @@ local get_scintilla_clipboard = ui.get_clipboard_text
 function ui.get_clipboard_text(internal)
 	if internal then return get_scintilla_clipboard() end
 	local ok, proc = pcall(os.spawn, M.paste_command)
-	local text = ok and proc:read('a') or get_scintilla_clipboard()
+	local text = ok and proc and proc:read('a') or get_scintilla_clipboard()
 	if ok and WIN32 then text = text:gsub('\r?\n$', '') end -- powershell appends a trailing newline
 	return text
 end

@@ -326,7 +326,7 @@ jobs:
           environment_variables: TEXTADEPT_HOME
           sync_files: false
           shutdown_vm: false
-          run: sudo pkg install -y cmake ninja qt5 ncurses xsel-conrad
+          run: sudo pkg install -y cmake ninja qt5 ncurses
 
       - name: Build
         uses: cross-platform-actions/action@v0.25.0
