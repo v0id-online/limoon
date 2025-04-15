@@ -49,8 +49,8 @@
 -- **Edit**| | |
 -- Ctrl+Z<br/>Alt+Bksp | ⌘Z | ^Z<sup>b</sup><br/>M-Bksp | Undo
 -- Ctrl+Y<br/>Ctrl+Shift+Z | ⌘⇧Z<br/>⌘Y | ^Y<br/>M-^Z | Redo
--- Ctrl+X<br/>Shift+Del | ⌘X<br/>⇧⌦ | ^X<br/>S-Del | Cut
--- Ctrl+C<br/>Ctrl+Ins | ⌘C | ^C | Copy
+-- Ctrl+X<br/>Shift+Del | ⌘X<br/>⇧⌦ | ^X<br/>S-Del | Cut selection/line
+-- Ctrl+C<br/>Ctrl+Ins | ⌘C | ^C | Copy selection/line
 -- Ctrl+V<br/>Shift+Ins | ⌘V | ^V<br/>S-Ins | Paste
 -- Ctrl+Shift+V | ⌘⇧V | M-^V | Paste Reindent
 -- Ctrl+Shift+D | ⌘⇧D | M-^D | Duplicate line/selection
@@ -337,8 +337,8 @@ local bindings = {
 	-- Edit.
 	[buffer.undo] = {'ctrl+z', 'cmd+z', 'ctrl+z'},
 	[buffer.redo] = {{'ctrl+y', 'ctrl+Z'}, {'cmd+Z', 'cmd+y'}, {'ctrl+y', 'ctrl+meta+z'}},
-	[buffer.cut] = {'ctrl+x', 'cmd+x', 'ctrl+x'}, --
-	[buffer.copy] = {'ctrl+c', 'cmd+c', 'ctrl+c'}, --
+	[buffer.cut_allow_line] = {'ctrl+x', 'cmd+x', 'ctrl+x'},
+	[buffer.copy_allow_line] = {'ctrl+c', 'cmd+c', 'ctrl+c'},
 	[buffer.paste] = {'ctrl+v', 'cmd+v', 'ctrl+v'},
 	[textadept.editing.paste_reindent] = {'ctrl+V', 'cmd+V', 'ctrl+meta+v'},
 	[buffer.selection_duplicate] = {'ctrl+D', 'cmd+D', 'ctrl+meta+d'},

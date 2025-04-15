@@ -1178,10 +1178,28 @@ Multiple selections are copied in order, separated by [`buffer.copy_separator`](
 selections are copied from top to bottom with end of line characters. Virtual space is
 not copied.
 
+<a id="buffer.cut_allow_line"></a>
+#### `buffer:cut_allow_line`()
+
+Cuts the selected text to the clipboard or, if no text is selected, cuts the current line.
+
+Multiple selections are copied in order, separated by [`buffer.copy_separator`](#buffer.copy_separator). Rectangular
+selections are copied from top to bottom with end of line characters. Virtual space is
+not copied.
+
 <a id="buffer.copy"></a>
 #### `buffer:copy`()
 
 Copies the selected text to the clipboard.
+
+Multiple selections are copied in order, separated by [`buffer.copy_separator`](#buffer.copy_separator). Rectangular
+selections are copied from top to bottom with end of line characters. Virtual space is
+not copied.
+
+<a id="buffer.copy_allow_line"></a>
+#### `buffer:copy_allow_line`()
+
+Copies the selected text to the clipboard or, if no text is selected, copies the entire line.
 
 Multiple selections are copied in order, separated by [`buffer.copy_separator`](#buffer.copy_separator). Rectangular
 selections are copied from top to bottom with end of line characters. Virtual space is
@@ -7790,8 +7808,8 @@ Ctrl+Q | ⌘Q | ^Q<br/>M-Q<sup>a</sup> | Quit
 **Edit**| | |
 Ctrl+Z<br/>Alt+Bksp | ⌘Z | ^Z<sup>b</sup><br/>M-Bksp | Undo
 Ctrl+Y<br/>Ctrl+Shift+Z | ⌘⇧Z<br/>⌘Y | ^Y<br/>M-^Z | Redo
-Ctrl+X<br/>Shift+Del | ⌘X<br/>⇧⌦ | ^X<br/>S-Del | Cut
-Ctrl+C<br/>Ctrl+Ins | ⌘C | ^C | Copy
+Ctrl+X<br/>Shift+Del | ⌘X<br/>⇧⌦ | ^X<br/>S-Del | Cut selection/line
+Ctrl+C<br/>Ctrl+Ins | ⌘C | ^C | Copy selection/line
 Ctrl+V<br/>Shift+Ins | ⌘V | ^V<br/>S-Ins | Paste
 Ctrl+Shift+V | ⌘⇧V | M-^V | Paste Reindent
 Ctrl+Shift+D | ⌘⇧D | M-^D | Duplicate line/selection

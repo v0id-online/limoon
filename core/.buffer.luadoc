@@ -518,11 +518,23 @@
 -- not copied.
 -- @function cut
 
+--- Cuts the selected text to the clipboard or, if no text is selected, cuts the current line.
+-- Multiple selections are copied in order, separated by `buffer.copy_separator`. Rectangular
+-- selections are copied from top to bottom with end of line characters. Virtual space is
+-- not copied.
+-- @function cut_allow_line
+
 --- Copies the selected text to the clipboard.
 -- Multiple selections are copied in order, separated by `buffer.copy_separator`. Rectangular
 -- selections are copied from top to bottom with end of line characters. Virtual space is
 -- not copied.
 -- @function copy
+
+--- Copies the selected text to the clipboard or, if no text is selected, copies the entire line.
+-- Multiple selections are copied in order, separated by `buffer.copy_separator`. Rectangular
+-- selections are copied from top to bottom with end of line characters. Virtual space is
+-- not copied.
+-- @function copy_allow_line
 
 --- Cuts the current line to the clipboard.
 -- @function line_cut
@@ -3706,11 +3718,9 @@
 -- - clear_cmd_key
 -- - clear_selections
 -- - clear_tab_stops
--- - copy_allow_line
 -- - count_code_units
 -- - create_document
 -- - create_loader
--- - cut_allow_line
 -- - describe_property
 -- - describe_key_word_sets
 -- - description_of_style
