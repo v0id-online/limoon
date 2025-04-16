@@ -24,6 +24,87 @@
 -- @module events
 local M = {}
 
+--- Map of event names to tables of handler functions.
+-- Handler tables are auto-created as needed.
+-- @table handlers
+-- @local
+local handlers = setmetatable({}, {
+	__index = function(t, k)
+		t[k] = {}
+		return t[k]
+	end
+})
+
+--- Adds an event handler.
+-- @param event String event name to handle. It does not need to have been previously defined.
+-- @param f Handler function. If it returns a non-`nil` value, subsequent handlers for *event*
+--	will not be invoked when that event is emitted.
+-- @param[opt] index Index to insert the handler at (typically 1 or none). If none is given,
+--	*f* is appended to the list of handlers for *event*.
+function M.connect(event, f, index)
+	assert_type(index, 'number/nil', 3)
+	M.disconnect(assert_type(event, 'string', 1), assert_type(f, 'function', 2)) -- in case it exists
+	table.insert(handlers[event], index or #handlers[event] + 1, f)
+end
+
+--- Removes an event handler.
+-- @param event String event name to remove a handler for.
+-- @param f Handler function to remove.
+function M.disconnect(event, f)
+	assert_type(f, 'function', 2)
+	for i = 1, #handlers[assert_type(event, 'string', 1)] do
+		if handlers[event][i] == f then
+			table.remove(handlers[event], i)
+			break
+		end
+	end
+end
+
+local error_emitted = false
+--- Sequentially invoke all of an event's handler functions.
+-- If any handler returns a non-`nil` value, subsequent handlers will not be called. This is
+-- useful for stopping the propagation of an event like a keypress after it has been handled,
+-- or for passing back values from handlers.
+-- @param event String event name. It does not need to have been previously defined.
+-- @param[opt] ... Arguments passed to each handler.
+-- @return the first non-`nil` value returned by a handler, if any
+function M.emit(event, ...)
+	local event_handlers = handlers[assert_type(event, 'string', 1)]
+	local i = 1
+	while i <= #event_handlers do
+		local handler = event_handlers[i]
+		local ok, result = pcall(handler, ...)
+		if not ok then
+			if not error_emitted then
+				error_emitted = true
+				M.emit(M.ERROR, result)
+				error_emitted = false
+			else
+				io.stderr:write(result) -- prevent infinite loop
+			end
+		end
+		if result ~= nil then return result end
+		if event_handlers[i] == handler then i = i + 1 end -- M.disconnect() may have removed handler
+	end
+end
+
+-- Handles Scintilla notifications.
+M.connect('SCN', function(notification)
+	local iface = _SCINTILLA[notification.code]
+	local args = {}
+	for i = 2, #iface do args[i - 1] = notification[iface[i]] end
+	return M.emit(iface[1], table.unpack(args))
+end)
+
+-- Set event constants (events are numeric ID keys).
+for k, v in pairs(_SCINTILLA) do if type(k) == 'number' then M[v[1]:upper()] = v[1] end end
+-- LuaFormatter off
+local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
+-- LuaFormatter on
+for _, v in pairs(textadept_events) do M[v:upper()] = v end
+
+return M
+
 --- Emitted when macOS tells Textadept to open a file.
 -- Arguments:
 -- - *uri*: The UTF-8-encoded URI to open.
@@ -377,90 +458,8 @@ local M = {}
 -- @see view.zoom_out
 -- @field ZOOM
 
---- Map of event names to tables of handler functions.
--- Handler tables are auto-created as needed.
--- @table handlers
--- @local
-local handlers = setmetatable({}, {
-	__index = function(t, k)
-		t[k] = {}
-		return t[k]
-	end
-})
-
---- Adds an event handler.
--- @param event String event name to handle. It does not need to have been previously defined.
--- @param f Handler function. If it returns a non-`nil` value, subsequent handlers for *event*
---	will not be invoked when that event is emitted.
--- @param[opt] index Index to insert the handler at (typically 1 or none). If none is given,
---	*f* is appended to the list of handlers for *event*.
-function M.connect(event, f, index)
-	assert_type(event, 'string', 1)
-	assert_type(f, 'function', 2)
-	assert_type(index, 'number/nil', 3)
-	M.disconnect(event, f) -- in case it already exists
-	table.insert(handlers[event], index or #handlers[event] + 1, f)
-end
-
---- Removes an event handler.
--- @param event String event name to remove a handler for.
--- @param f Handler function to remove.
-function M.disconnect(event, f)
-	assert_type(f, 'function', 2)
-	for i = 1, #handlers[assert_type(event, 'string', 1)] do
-		if handlers[event][i] == f then
-			table.remove(handlers[event], i)
-			break
-		end
-	end
-end
-
-local error_emitted = false
---- Sequentially invoke all of an event's handler functions.
--- If any handler returns a non-`nil` value, subsequent handlers will not be called. This is
--- useful for stopping the propagation of an event like a keypress after it has been handled,
--- or for passing back values from handlers.
--- @param event String event name. It does not need to have been previously defined.
--- @param[opt] ... Arguments passed to each handler.
--- @return the first non-`nil` value returned by a handler, if any
-function M.emit(event, ...)
-	local event_handlers = handlers[assert_type(event, 'string', 1)]
-	local i = 1
-	while i <= #event_handlers do
-		local handler = event_handlers[i]
-		local ok, result = pcall(handler, ...)
-		if not ok then
-			if not error_emitted then
-				error_emitted = true
-				M.emit(M.ERROR, result)
-				error_emitted = false
-			else
-				io.stderr:write(result) -- prevent infinite loop
-			end
-		end
-		if result ~= nil then return result end
-		if event_handlers[i] == handler then i = i + 1 end -- unless M.disconnect()
-	end
-end
-
--- Handles Scintilla notifications.
-M.connect('SCN', function(notification)
-	local iface = _SCINTILLA[notification.code]
-	local args = {}
-	for i = 2, #iface do args[i - 1] = notification[iface[i]] end
-	return M.emit(iface[1], table.unpack(args))
-end)
-
--- Set event constants (events are numeric ID keys).
-for k, v in pairs(_SCINTILLA) do if type(k) == 'number' then M[v[1]:upper()] = v[1] end end
--- LuaFormatter off
-local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
--- LuaFormatter on
-for _, v in pairs(textadept_events) do M[v:upper()] = v end
-
-return M
-
--- Unused events.
+-- Undocumented events.
+-- src/textadept.c does not pass all of the listed event parameters.
 -- - STYLE_NEEDED (position)
 -- - MODIFY_ATTEMPT_RO
 -- - KEY (ch, modifiers)

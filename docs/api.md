@@ -172,7 +172,7 @@ Asserts a value is truthy or raises an error.
 
 Parameters:
 - *v*:  Value to assert is not `false` or `nil`.
-- *message*:  Message to show on error. Not required to be a string.
+- *message*:  Message to show on error. It need not be a string.
 - *...*:  If *message* is a format string, these arguments are passed to
 	`string.format()` and the result is the error message to show.
 

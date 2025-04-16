@@ -1,5 +1,4 @@
 -- Copyright 2007-2025 Mitchell. See LICENSE.
--- This is a DUMMY FILE used for making LuaDoc for Buffers and Views.
 
 --- A Textadept buffer or view object.
 --
@@ -8,6 +7,40 @@
 --
 -- ### Contents
 -- @classmod buffer
+
+--- Replacement for original `buffer:text_range()`, which has a C struct for an argument.
+local function text_range(buffer, start_pos, end_pos)
+	local target_start, target_end = buffer.target_start, buffer.target_end
+	buffer:set_target_range(math.max(1, assert_type(start_pos, 'number', 2)),
+		math.min(assert_type(end_pos, 'number', 3), buffer.length + 1))
+	local text = buffer.target_text
+	buffer:set_target_range(target_start, target_end) -- restore
+	return text
+end
+events.connect(events.BUFFER_NEW, function() buffer.text_range = text_range end, 1)
+
+-- Implement `events.BUFFER_{BEFORE,AFTER}_REPLACE_TEXT` as a convenience in lieu of the
+-- undocumented `events.MODIFIED`.
+local DELETE, INSERT, UNDOREDO = _SCINTILLA.MOD_BEFOREDELETE, _SCINTILLA.MOD_INSERTTEXT,
+	_SCINTILLA.MULTILINEUNDOREDO
+--- Helper function for emitting `events.BUFFER_AFTER_REPLACE_TEXT` after a full-buffer undo/redo
+-- operation, e.g. after reloading buffer contents and then performing an undo.
+local function emit_after_replace_text()
+	events.disconnect(events.UPDATE_UI, emit_after_replace_text)
+	events.emit(events.BUFFER_AFTER_REPLACE_TEXT)
+end
+-- Emits events prior to and after replacing buffer text.
+events.connect(events.MODIFIED, function(position, mod, text, length)
+	if mod & (DELETE | INSERT) == 0 or length ~= buffer.length then return end
+	if mod & (INSERT | UNDOREDO) == INSERT | UNDOREDO then
+		-- Cannot emit BUFFER_AFTER_REPLACE_TEXT here because Scintilla will do things like update
+		-- the selection afterwards, which could undo what event handlers do.
+		events.connect(events.UPDATE_UI, emit_after_replace_text)
+		return
+	end
+	events.emit(mod & DELETE > 0 and events.BUFFER_BEFORE_REPLACE_TEXT or
+		events.BUFFER_AFTER_REPLACE_TEXT)
+end)
 
 --- Buffer and View Introduction.
 -- Internally, Textadept uses the [Scintilla][] editing component for editing text. It breaks

@@ -235,27 +235,27 @@ f:write('\n\n}\n\n')
 f:write([[
 local marker_number, indic_number, list_type, image_type = 0, 0, 0, 0
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 function M.new_marker_number()
   assert(marker_number < M.MARKER_MAX, 'too many markers in use')
   marker_number = marker_number + 1
   return marker_number
 end
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 function M.new_indic_number()
   assert(indic_number < M.INDICATOR_MAX, 'too many indicators in use')
   indic_number = indic_number + 1
   return indic_number
 end
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 function M.new_user_list_type()
   list_type = list_type + 1
   return list_type
 end
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 function M.new_image_type()
   image_type = image_type + 1
   return image_type

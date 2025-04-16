@@ -9,9 +9,7 @@ package.cpath = table.concat({
 	string.format('%s/modules/?.%s', _HOME, not WIN32 and 'so' or 'dll'), package.cpath
 }, ';')
 
--- Populate initial `_G.buffer` with temporarily exported io functions now that it exists. This
--- is needed for menus and key bindings.
-for name, f in pairs(io) do if name:find('^_') then buffer[name:sub(2)], io[name] = f, nil end end
+events.emit('pre_init') -- allow core modules to operate on the first buffer and view
 
 textadept = require('textadept')
 

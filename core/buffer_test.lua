@@ -30,10 +30,10 @@ test('read/write-only properties should raise errors at the appropriate times', 
 	test.assert_raises(write_only_property, 'write-only property')
 end)
 
---- Load buffer and view API from .buffer.luadoc.
+--- Load buffer and view API.
 local function load_props()
 	local buffer_props, view_props = {}, {}
-	for line in io.lines(_HOME .. '/core/.buffer.luadoc') do
+	for line in io.lines(_HOME .. '/core/buffer.lua') do
 		if line:find('@field view%.') then
 			view_props[line:match('@field view%.([%w_]+)')] = true
 		elseif line:find('@table view%.') then
@@ -58,9 +58,10 @@ local function file(filename) return ((_HOME .. '/' .. filename):gsub('\\', '/')
 local ignore_ids = {_G = true, M = true, _SCINTILLA = true, snippets = true}
 local ignore_exprs = {['ui.size'] = true}
 local exceptions = {
-	[file('core/init.lua')] = {'env.view'},
+	[file('core/buffer.lua')] = {'buf:select_all', 'buf:replace_sel'},
 	[file('core/lexer.lua')] = {'lexer.style_at', 'lexer.fold_level', 'lexer.line_from_position'},
-	[file('core/ui.lua')] = {'view:goto_pos'}, --
+	[file('core/ui.lua')] = {'view:document_end'}, --
+	[file('core/view.lua')] = {'env.view'},
 	[file('modules/textadept/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
 	[file('modules/textadept/editing.lua')] = {'proc:close'}, --
 	[file('modules/textadept/find.lua')] = {

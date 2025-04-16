@@ -76,6 +76,16 @@ test('ui.print_silent_to should print to a buffer without switching to it', func
 	test.assert_equal(#_VIEWS, 1)
 end)
 
+test('ui.print_silent_to should scroll the hidden buffer', function()
+	local type = '[Typed Buffer]'
+
+	local buf = ui.print_silent_to(type, test.lines(100))
+	view:goto_buffer(buf)
+
+	test.assert_equal(buffer.current_pos, buffer.length + 1)
+	test.assert(view.first_visible_line > 0, 'should have scrolled view')
+end)
+
 test('ui.print_silent_to should scroll any views showing the print buffer', function()
 	local type = '[Typed Buffer]'
 	view:split()

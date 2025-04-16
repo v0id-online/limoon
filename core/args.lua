@@ -55,11 +55,8 @@ local function process(arg, no_emit_arg_none)
 			i = i + option.narg
 		else
 			local filename = lfs.abspath(arg[i], arg[-1] or lfs.currentdir())
-			if lfs.attributes(filename, 'mode') ~= 'directory' then
-				io.open_file(filename)
-			else
-				lfs.chdir(filename)
-			end
+			local f = lfs.attributes(filename, 'mode') ~= 'directory' and io.open_file or lfs.chdir
+			f(filename)
 			no_args = false
 		end
 		i = i + 1
@@ -83,10 +80,9 @@ for i, option in ipairs(arg) do
 		_USERHOME = arg[i + 1]
 		break
 	elseif option == '-t' or option == '--test' then
-		-- Run unit tests using a temporary _USERHOME (deleting it when done).
-		local dir = os.tmpname()
-		if not WIN32 then os.remove(dir) end
-		_USERHOME = dir
+		-- Run unit tests using a temporary _USERHOME, which will ultimately be deleted.
+		_USERHOME = os.tmpname()
+		if not WIN32 then os.remove(_USERHOME) end -- created as a file on *nix
 		break
 	end
 end
@@ -114,9 +110,9 @@ M.register('-h', '--help', 0, function()
 	table.sort(list, function(a, b) return a:match('^%-*(.*)$') < b:match('^%-*(.*)$') end)
 	for _, name in ipairs(list) do
 		local option = options[name]
-		print(string.format('  %s [%d args]: %s', name, option.narg, option.description))
+		print(string.format('  %s [%d arg(s)]: %s', name, option.narg, option.description))
 	end
-	timeout(0.01, function() quit(0, false) end)
+	timeout(0.01, quit, 0, false)
 	return true
 end, 'Shows this')
 
@@ -124,7 +120,7 @@ end, 'Shows this')
 M.register('-v', '--version', 0, function()
 	if CURSES then return end -- not supported
 	print(_RELEASE .. '\n' .. _COPYRIGHT)
-	timeout(0.01, function() quit(0, false) end)
+	timeout(0.01, quit, 0, false)
 	return true
 end, 'Prints Textadept version and copyright')
 
@@ -143,7 +139,7 @@ M.register('-t', '--test', 1, function(tags)
 
 	events.connect(events.INITIALIZED, function()
 		local arg = {}
-		for tag in (tags or ''):gmatch('[^,]+') do arg[#arg + 1] = tag end
+		if tags then for tag in tags:gmatch('[^,]+') do arg[#arg + 1] = tag end end
 		assert(loadfile(_HOME .. '/test/test.lua', 't', setmetatable({arg = arg}, {__index = _G})))()
 	end)
 
@@ -156,6 +152,6 @@ M.register('-t', '--test', 1, function(tags)
 	end)
 
 	return true
-end, 'Runs unit tests indicated by comma-separated list of tags (or all)')
+end, 'Runs unit tests indicated by comma-separated list of tags (or all tests)')
 
 return M

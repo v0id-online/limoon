@@ -5,13 +5,13 @@
 
 --- Asserts a value is truthy or raises an error.
 -- @param v Value to assert is not `false` or `nil`.
--- @param[opt='assertion failed!'] message Message to show on error. Not required to be a string.
+-- @param[opt='assertion failed!'] message Message to show on error. It need not be a string.
 -- @param[optchain] ... If *message* is a format string, these arguments are passed to
 --	`string.format()` and the result is the error message to show.
 -- @return *v*
 function assert(v, message, ...)
 	if v then return v end
-	if type(message) == 'string' and message:find('%%') then message = string.format(message, ...) end
+	if type(message) == 'string' and message:find('%%') then message = message:format(...) end
 	error(message or 'assertion failed!', 2)
 end
 
@@ -27,7 +27,7 @@ end
 -- @return *v*
 function assert_type(v, expected_type, narg)
 	if type(v) == expected_type then return v end
-	-- Note: do not use assert for performance reasons.
+	-- Note: do not use assert for performance reasons (avoid constructing formatted strings).
 	if type(expected_type) ~= 'string' then
 		error(string.format("bad argument #2 to '%s' (string expected, got %s)",
 			debug.getinfo(1, 'n').name, type(expected_type)), 2)

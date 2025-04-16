@@ -19,7 +19,7 @@ lfs.default_filter = {--[[Extensions]]'!.a','!.bmp','!.bz2','!.class','!.dll','!
 -- @param n
 -- @param include_dirs
 -- @param seen Utility table that holds directories seen. If there is a duplicate, stop walking
---	down that path (it's probably a recursive symlink).
+--	down that path (it is probably a recursive symlink).
 -- @param level Utility value indicating the directory level this function is at.
 local function walk(dir, filter, n, include_dirs, seen, level)
 	if not seen then seen = {} end
@@ -30,19 +30,17 @@ local function walk(dir, filter, n, include_dirs, seen, level)
 		local filename = dir .. (dir ~= '/' and '/' or '') .. basename
 		local mode = lfs.attributes(filename, 'mode')
 		if mode ~= 'directory' and mode ~= 'file' then goto continue end
-		local include
+		local include = filter.match_any
 		if mode == 'file' then
 			local ext = filename:match('[^.]+$')
-			if ext and not filter.exts[ext] then goto continue end
-			include = filter.consider_any or ext ~= nil
-		elseif mode == 'directory' then
-			include = filter.consider_any
+			if ext and not filter.exts[ext] then goto continue end -- ext is rejected
+			if not include then include = ext ~= nil end -- ext is accepted
 		end
 		for _, patt in ipairs(filter) do
 			-- Treat exclusive patterns as logical AND.
 			if patt:find('^!') and filename:find(patt:sub(2)) then goto continue end
 			-- Treat inclusive patterns as logical OR.
-			include = include or (not patt:find('^!') and filename:find(patt))
+			if not include then include = (not patt:find('^!') and filename:find(patt)) end
 		end
 		if not include then goto continue end
 		local os_filename = not WIN32 and filename or filename:gsub('/', sep)
@@ -77,27 +75,25 @@ function lfs.walk(dir, filter, n, include_dirs)
 	assert(lfs.attributes(dir, 'mode') == 'directory', 'directory not found: %s', dir)
 	if not assert_type(filter, 'string/table/nil', 2) then filter = lfs.default_filter end
 	assert_type(n, 'number/nil', 3)
-	-- Process the given filter into something that can match files more easily and/or quickly. For
-	-- example, convert '.ext' shorthand to '%.ext$', substitute '/' with '[/\\]', and enable
-	-- hash lookup for file extensions to include or exclude.
-	local processed_filter = {
-		consider_any = true, exts = setmetatable({}, {__index = function() return true end})
-	}
+	-- Process the given filter into something that can match files more easily and/or
+	-- quickly. For example, substitute '/' with '[/\\]', and enable hash lookup for file
+	-- extensions to include or exclude. Initially allow any extension.
+	local filt = {match_any = true, exts = setmetatable({}, {__index = function() return true end})}
 	for _, patt in ipairs(type(filter) == 'table' and filter or {filter}) do
-		patt = patt:gsub('[.+%()-]', '%%%0'):gsub('%?', '.'):gsub('%*', '.-')
+		patt = patt:gsub('[.+%()-]', '%%%0'):gsub('%?', '.'):gsub('%*', '.-') -- shell patterns
 		patt = patt:gsub('/([^\\])', '[/\\]%1') -- '/' to '[/\\]'
 		local include = not patt:find('^!')
 		local ext = patt:match('^!?%%.([^.]+)$')
 		if ext then
-			processed_filter.exts[ext] = include
-			if include then setmetatable(processed_filter.exts, nil) end
+			filt.exts[ext] = include
+			if include then setmetatable(filt.exts, nil) end -- disallow any extension
 		else
-			if include then processed_filter.consider_any = false end
-			processed_filter[#processed_filter + 1] = patt
+			if include then filt.match_any = false end
+			filt[#filt + 1] = patt
 		end
 	end
-	local co = coroutine.create(function() walk(dir, processed_filter, n, include_dirs) end)
-	return function() return select(2, coroutine.resume(co)) end
+	local co = coroutine.create(walk)
+	return function() return select(2, coroutine.resume(co, dir, filt, n, include_dirs)) end
 end
 
 --- Returns the absolute path to a filename.
@@ -107,15 +103,13 @@ end
 --	value is Textadept's current working directory.
 function lfs.abspath(filename, prefix)
 	assert_type(filename, 'string', 1)
-	assert_type(prefix, 'string/nil', 2)
 	if WIN32 then filename = filename:gsub('/', '\\'):gsub('^%l:[/\\]', string.upper) end
 	if not filename:find(not WIN32 and '^/' or '^%a:[/\\]') and not (WIN32 and filename:find('^\\\\')) then
-		if not prefix then prefix = lfs.currentdir() end
+		if not assert_type(prefix, 'string/nil', 2) then prefix = lfs.currentdir() end
 		filename = prefix .. (not WIN32 and '/' or '\\') .. filename
 	end
 	filename = filename:gsub('%f[^/\\]%.[/\\]', '') -- clean up './'
-	while filename:find('[^/\\]+[/\\]%.%.[/\\]') do
-		filename = filename:gsub('[^/\\]+[/\\]%.%.[/\\]', '', 1) -- clean up '../'
-	end
+	local n
+	repeat filename, n = filename:gsub('[^/\\]+[/\\]%.%.[/\\]', '', 1) until n == 0 -- clean up '../'
 	return filename
 end

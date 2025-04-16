@@ -7,10 +7,11 @@ local M = dofile(_HOME .. '/lexers/lexer.lua')
 -- The default value contains *~/.textadept/lexers/* and Textadept's *lexers/* directory.
 _G._LEXERPATH = string.format('%s/lexers;%s/lexers', _USERHOME, _HOME)
 
-M.property = setmetatable({}, {__index = function() return '' end}) -- avoid auto-initialization
-M.FOLD_BASE, M.FOLD_HEADER, M.FOLD_BLANK = 0x400, 0x2000, 0x1000 -- set in auto-initialization
-local names = M.names
-M.names = function(path) return names(path or _LEXERPATH) end
+-- Textadept uses Scintillua as a stand-alone Lua library but avoids Scintillua's
+-- auto-initialization routines by predefining `lexer.property`. However, some constants are
+-- left undefined, so define them here.
+M.property = {['scintillua.lexers'] = _LEXERPATH}
+M.FOLD_BASE, M.FOLD_HEADER, M.FOLD_BLANK = 0x400, 0x2000, 0x1000
 
 --- Emitted after loading a language lexer.
 -- This is useful for automatically loading language modules as source files are opened, or
@@ -28,7 +29,7 @@ M.names = function(path) return names(path or _LEXERPATH) end
 --	end)
 _G.events.LEXER_LOADED = 'lexer_loaded'
 
--- LuaDoc is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 local function get_lexer(buffer, current)
 	if not current then return buffer.lexer_language end
 	local style_at, name_of_style = buffer.style_at, buffer.name_of_style
@@ -42,12 +43,12 @@ local function get_lexer(buffer, current)
 	return buffer.lexer_language
 end
 
--- LuaDoc is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 -- Note: cannot use `M.` references here since these buffer functions persist through reset
 -- (thus referencing the original, unreset `M` upvalue).
 local function set_lexer(buffer, name)
 	if not assert_type(name, 'string/nil', 2) then
-		name = lexer.detect(buffer.filename or '', buffer:get_line(1):sub(1, 128)) or 'text'
+		name = lexer.detect(buffer.filename or '', buffer:get_line(1)) or 'text'
 	end
 
 	-- Setup the lexer.
@@ -82,19 +83,19 @@ local function set_lexer(buffer, name)
 	events.emit(events.UPDATE_UI, buffer.UPDATE_CONTENT) -- for updating statusbar
 end
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 local function name_of_style(buffer, style_num)
 	local lexer = rawget(buffer, 'lexer')
 	return lexer and lexer._TAGS[assert_type(style_num, 'number', 2)] or 'Unknown'
 end
 
--- Documentation is in core/.buffer.luadoc.
+-- Documentation is in core/buffer.lua.
 local function style_of_name(buffer, name)
 	local lexer = rawget(buffer, 'lexer')
 	return lexer and lexer._TAGS[assert_type(name, 'string', 2):gsub('_', '.')] or view.STYLE_DEFAULT
 end
 
---- Performs syntax highlighting in buffer *buffer* from *start_pos* to *end_pos*.
+--- Performs syntax highlighting.
 -- Start from the beginning of the current style so the lexer can match the tag.
 -- For multilang lexers, start at whitespace since embedded languages have whitespace.[lang]
 -- styles. This is so the lexer can start matching child languages instead of parent ones
@@ -147,11 +148,10 @@ events.connect(events.STYLE_NEEDED, function(end_pos, buffer)
 	mutex = true
 	if rawget(buffer, 'lexer') then ok, errmsg = pcall(highlight, buffer, start_pos, end_pos) end
 	mutex = nil
-	if not ok then
-		buffer:start_styling(start_pos, 0)
-		buffer:set_styling(end_pos - start_pos, view.STYLE_DEFAULT)
-		if errmsg then error(errmsg, 2) end
-	end
+	if ok then return end
+	buffer:start_styling(start_pos, 0)
+	buffer:set_styling(end_pos - start_pos, view.STYLE_DEFAULT)
+	if errmsg then error(errmsg, 2) end
 end)
 
 -- Gives new buffers lexer-specific functions and sets a default lexer (or resets the current

@@ -10,21 +10,20 @@ local M = {}
 
 local locale_file = _USERHOME .. '/locale.conf'
 if not lfs.attributes(locale_file) then
-	local lang = (os.getenv('LANG') or ''):match('^[^_.@]+')
+	local lang = (os.getenv('LANG') or ''):match('^[^_.@]+') -- TODO: support territory (e.g. pt_BR)
 	if lang then locale_file = string.format('%s/core/locales/locale.%s.conf', _HOME, lang) end
 end
 if not lfs.attributes(locale_file) then locale_file = _HOME .. '/core/locale.conf' end
-local f<close> = assert(io.open(locale_file, 'rb'), '"core/locale.conf" not found')
-for line in f:lines() do
-	-- Any line that starts with a non-word character except '[' is considered a comment.
-	if not line:find('^%s*[%w_%[]') then goto continue end
-	local id, str = line:match('^(.-)%s*=%s*(.-)\r?$')
-	if id and str and assert(not M[id], 'duplicate locale key "%s"', id) then
-		M[id] = GTK and str or str:gsub('_', QT and '&' or '')
-	end
+for line in io.lines(locale_file) do
+	-- Localization entries must start with a word or '['.
+	local id, str = line:match('^([%w_%[].-)%s*=%s*(.-)\r?$')
+	if not id then goto continue end
+	assert(not M[id], 'duplicate locale key: %s', id)
+	M[id] = GTK and str or str:gsub('_', QT and '&' or '')
 	::continue::
 end
 
-setmetatable(M, {__index = function(_, k) return k end})
-if QT then getmetatable(M).__newindex = function(t, k, v) rawset(t, k, v:gsub('_', '&')) end end
-return M
+return setmetatable(M, {
+	__index = function(_, k) return k end,
+	__newindex = QT and function(t, k, v) rawset(t, k, v:gsub('_', '&')) end or nil
+})

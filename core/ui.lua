@@ -4,35 +4,6 @@
 -- @module ui
 local ui = ui
 
---- The title text of Textadept's window. (Write-only)
--- @field title
-
---- The buffer's context menu, a `ui.menu()`.
--- This is a low-level field. You probably want to use the higher-level
--- `textadept.menu.context_menu`.
--- @field context_menu
-
---- The context menu for the buffer's tab, a `ui.menu()`.
--- This is a low-level field. You probably want to use the higher-level
--- `textadept.menu.tab_context_menu`.
--- @field tab_context_menu
-
---- The text displayed in the statusbar. (Write-only)
--- @field statusbar_text
-
---- The text displayed in the buffer statusbar. (Write-only)
--- @field buffer_statusbar_text
-
---- Whether or not Textadept's window is maximized.
--- This field is always `false` in the terminal version.
--- @field maximized
-
---- Display the tab bar when multiple buffers are open.
--- The default value is `true` in the GUI version, and `false` in the terminal version.
--- A third option, `ui.SHOW_ALL_TABS` may be used to always show the tab bar, even if only one
--- buffer is open.
--- @field tabs
-
 --- Option for `ui.tabs` that always shows the tab bar, even if only one buffer is open.
 ui.SHOW_ALL_TABS = 2 -- ui.tabs options must be greater than 1
 if CURSES then ui.tabs = false end -- not supported right now
@@ -91,16 +62,17 @@ local function print_to(buffer_type, silent, ...)
 	elseif print_view and not silent then
 		ui.goto_view(print_view)
 	end
-	local prev_line_count = buffer.line_count
 	buffer:append_text(table.concat{...})
-	buffer:goto_pos(buffer.length + 1)
+	buffer:document_end()
 	buffer:set_save_point()
-	if silent then set_tab_label(buffer) end -- events.SAVE_POINT_REACHED does not pass this buffer
-	for _, view in ipairs(_VIEWS) do
-		-- Scroll all views showing this buffer (if any).
-		if view.buffer == buffer and view ~= _G.view then view:goto_pos(buffer.length + 1) end
+	if silent then
+		buffer._selection, buffer._top_line = buffer.selection_serialized, buffer.line_count -- scroll
+		set_tab_label(buffer) -- events.SAVE_POINT_REACHED does not pass this buffer
 	end
-	buffer._folds = nil -- reset buffer state
+	-- Scroll all views showing this buffer (if any).
+	for _, view in ipairs(_VIEWS) do
+		if view.buffer == buffer and view ~= _G.view then view:document_end() end
+	end
 	return buffer
 end
 
@@ -113,8 +85,8 @@ end
 -- @return the typed buffer printed to
 -- @usage ui.print_to('[Typed Buffer]', message)
 function ui.print_to(type, message)
-	if not assert_type(message, 'string/nil', 2) then message = '' end
-	return print_to(assert_type(type, 'string', 1), false, message, '\n')
+	return print_to(assert_type(type, 'string', 1), false,
+		assert_type(message, 'string/nil', 2) or '', '\n')
 end
 
 --- Prints a message to a typed buffer (creating it if necessary) without switching to it.
@@ -122,8 +94,8 @@ end
 -- @param message String message to print.
 -- @return the typed buffer printed to
 function ui.print_silent_to(type, message)
-	if not assert_type(message, 'string/nil', 2) then message = '' end
-	return print_to(assert_type(type, 'string', 1), true, message, '\n')
+	return print_to(assert_type(type, 'string', 1), true, assert_type(message, 'string/nil', 2) or '',
+		'\n')
 end
 
 --- Helper function for printing to the output buffer.
@@ -160,29 +132,23 @@ function ui.output_silent(...) return output_to(true, ...) end
 function ui.print(...)
 	local args = table.pack(...)
 	for i = 1, args.n do args[i] = tostring(args[i]) end
-	ui.output(table.concat(args, '\t') .. '\n')
+	ui.output(table.concat(args, '\t'), '\n')
 end
 
 --- Buffer z-order list (most recently accessed buffer on top).
 local buffers_zorder = {}
 
--- Adds new buffers to the z-order list.
-events.connect(events.BUFFER_NEW, function()
-	if buffer ~= ui.command_entry then table.insert(buffers_zorder, 1, buffer) end
-end)
-
 --- Updates the z-order list.
 local function update_zorder()
-	local i = 1
-	while i <= #buffers_zorder do
+	for i = #buffers_zorder, 1, -1 do
 		if buffers_zorder[i] == buffer or not _BUFFERS[buffers_zorder[i]] then
 			table.remove(buffers_zorder, i)
-		else
-			i = i + 1
 		end
 	end
 	table.insert(buffers_zorder, 1, buffer)
 end
+events.connect(events.BUFFER_NEW,
+	function() if buffer ~= ui.command_entry then update_zorder() end end)
 events.connect(events.BUFFER_AFTER_SWITCH, update_zorder)
 events.connect(events.VIEW_AFTER_SWITCH, update_zorder)
 events.connect(events.BUFFER_DELETED, update_zorder)
@@ -224,9 +190,7 @@ function ui.goto_file(filename, split, preferred_view, sloppy)
 	local patt = string.format('%s%s$', not sloppy and '^' or '',
 		not sloppy and filename or filename:match('[^/\\]+$')) -- TODO: escape filename properly
 	if WIN32 then
-		patt = patt:gsub('%a', function(letter)
-			return string.format('[%s%s]', letter:upper(), letter:lower())
-		end)
+		patt = patt:gsub('%a', function(c) return string.format('[%s%s]', c:upper(), c:lower()) end)
 	end
 	if #_VIEWS == 1 and split and not (view.buffer.filename or ''):find(patt) then
 		view:split()
@@ -251,8 +215,10 @@ function ui.goto_file(filename, split, preferred_view, sloppy)
 	io.open_file(filename)
 end
 
+local CONTENT_OR_SELECTION = 3 -- buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION
+
 -- Ensure title, statusbar, etc. are updated for new views.
-events.connect(events.VIEW_NEW, function() events.emit(events.UPDATE_UI, 3) end)
+events.connect(events.VIEW_NEW, function() events.emit(events.UPDATE_UI, CONTENT_OR_SELECTION) end)
 
 -- Switches between buffers when a tab is clicked.
 events.connect(events.TAB_CLICKED, function(index) view:goto_buffer(_BUFFERS[index]) end)
@@ -282,7 +248,7 @@ events.connect(events.URI_DROPPED, function(utf8_uris)
 	for utf8_path in utf8_uris:gmatch('file://([^\r\n]+)') do
 		local path = utf8_path:gsub('%%(%x%x)', function(hex) return string.char(tonumber(hex, 16)) end)
 			:iconv(_CHARSET, 'UTF-8')
-		-- In WIN32, ignore a leading '/', but not '//' (network path).
+		-- On Windows, ignore a leading '/', but not '//' (network path).
 		if WIN32 and not path:match('^//') then path = path:sub(2, -1) end
 		local mode = lfs.attributes(path, 'mode')
 		if mode and mode ~= 'directory' then io.open_file(path) end
@@ -294,7 +260,7 @@ events.connect(events.APPLEEVENT_ODOC,
 
 -- Sets buffer statusbar text.
 events.connect(events.UPDATE_UI, function(updated)
-	if not updated or updated & 3 == 0 then return end -- ignore scrolling
+	if not updated or updated & CONTENT_OR_SELECTION == 0 then return end -- ignore scrolling
 	local text = not CURSES and '%s %d/%d    %s %d    %s    %s    %s    %s' or
 		'%s %d/%d  %s %d  %s  %s  %s  %s'
 	local pos = buffer.current_pos
@@ -316,19 +282,16 @@ local function save_buffer_state()
 	buffer._top_line = view:doc_line_from_visible(view.first_visible_line)
 	buffer._x_offset = view.x_offset
 	-- Save fold state.
-	local folds, i = {}, view:contracted_fold_next(1)
-	while i >= 1 do folds[#folds + 1], i = i, view:contracted_fold_next(i + 1) end
-	buffer._folds = folds
+	buffer._folds = {}
+	local i = view:contracted_fold_next(1)
+	while i >= 1 do buffer._folds[#buffer._folds + 1], i = i, view:contracted_fold_next(i + 1) end
 end
 events.connect(events.BUFFER_BEFORE_SWITCH, save_buffer_state)
 events.connect(events.BUFFER_BEFORE_REPLACE_TEXT, save_buffer_state)
 
 --- Restore buffer properties.
 local function restore_buffer_state()
-	if not buffer._folds then
-		if buffer._type == _L['[Output Buffer]'] then buffer:goto_line(buffer.line_count) end
-		return
-	end
+	if not buffer._folds then return end
 	-- Restore fold state.
 	for _, line in ipairs(buffer._folds) do view:toggle_fold(line) end
 	-- Restore view state.
@@ -336,7 +299,7 @@ local function restore_buffer_state()
 	buffer:choose_caret_x()
 	local _top_line, top_line = buffer._top_line, view.first_visible_line
 	view:line_scroll(0, view:visible_from_doc_line(_top_line) - top_line)
-	view.x_offset = buffer._x_offset or 0
+	view.x_offset = buffer._x_offset
 end
 events.connect(events.BUFFER_AFTER_SWITCH, restore_buffer_state)
 events.connect(events.BUFFER_AFTER_REPLACE_TEXT, restore_buffer_state)
@@ -344,7 +307,7 @@ events.connect(events.BUFFER_AFTER_REPLACE_TEXT, restore_buffer_state)
 --- Updates titlebar and statusbar.
 local function update_bars()
 	set_title()
-	events.emit(events.UPDATE_UI, 3)
+	events.emit(events.UPDATE_UI, CONTENT_OR_SELECTION)
 end
 events.connect(events.BUFFER_NEW, update_bars)
 events.connect(events.BUFFER_AFTER_SWITCH, update_bars)
@@ -381,7 +344,7 @@ if CURSES then
 	if not WIN32 then
 		local function enable_mouse() io.stdout:write("\x1b[?1002h"):flush() end
 		local function disable_mouse() io.stdout:write("\x1b[?1002l"):flush() end
-		enable_mouse()
+		events.connect(events.INITIALIZED, enable_mouse)
 		events.connect(events.SUSPEND, disable_mouse)
 		events.connect(events.RESUME, enable_mouse)
 		events.connect(events.QUIT, disable_mouse)
@@ -405,6 +368,7 @@ if CURSES then
 	end
 
 	local resize
+	-- Focus a clicked view, or resize the views connected to a clicked-and-dragged splitter bar.
 	events.connect(events.MOUSE, function(event, button, modifiers, y, x)
 		if event == view.MOUSE_RELEASE or button ~= 1 then return end
 		if event == view.MOUSE_PRESS then
@@ -430,6 +394,37 @@ end
 local function textbox(text) ui.dialogs.message{title = _L['Initialization Error'], text = text} end
 events.connect(events.ERROR, textbox)
 events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, textbox) end)
+
+-- The fields below were defined in C.
+
+--- The title text of Textadept's window. (Write-only)
+-- @field title
+
+--- The buffer's context menu, a `ui.menu()`.
+-- This is a low-level field. You probably want to use the higher-level
+-- `textadept.menu.context_menu`.
+-- @field context_menu
+
+--- The context menu for the buffer's tab, a `ui.menu()`.
+-- This is a low-level field. You probably want to use the higher-level
+-- `textadept.menu.tab_context_menu`.
+-- @field tab_context_menu
+
+--- The text displayed in the statusbar. (Write-only)
+-- @field statusbar_text
+
+--- The text displayed in the buffer statusbar. (Write-only)
+-- @field buffer_statusbar_text
+
+--- Whether or not Textadept's window is maximized.
+-- This field is always `false` in the terminal version.
+-- @field maximized
+
+--- Display the tab bar when multiple buffers are open.
+-- The default value is `true` in the GUI version, and `false` in the terminal version.
+-- A third option, `ui.SHOW_ALL_TABS` may be used to always show the tab bar, even if only one
+-- buffer is open.
+-- @field tabs
 
 -- The tables below were defined in C.
 

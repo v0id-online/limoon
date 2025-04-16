@@ -126,7 +126,6 @@ local M = {}
 -- - *key*: The string representation of the [key sequence](#key-sequences).
 -- @field _G.events.KEYPRESS
 
-local CTRL, ALT, CMD, SHIFT = 'ctrl+', not CURSES and 'alt+' or 'meta+', 'cmd+', 'shift+'
 --- The key that clears the current key chain.
 -- It cannot be part of a key chain.
 -- The default value is `'esc'` for the `Esc` key.
@@ -147,24 +146,25 @@ M.CLEAR = 'esc'
 M.KEYSYMS = {--[[From Scintilla.h for CURSES]][7]='esc',[8]='\b',[9]='\t',[13]='\n',--[[From curses.h]][263]='\b',[343]='\n',--[[From Scintilla.h for CURSES]][300]='down',[301]='up',[302]='left',[303]='right',[304]='home',[305]='end',[306]='pgup',[307]='pgdn',[308]='del',[309]='ins',--[[From <gdk/gdkkeysyms.h>]][0xFE20]='\t'--[[backtab; will be 'shift'ed]],[0xFF08]='\b',[0xFF09]='\t',[0xFF0D]='\n',[0xFF1B]='esc',[0xFFFF]='del',[0xFF50]='home',[0xFF51]='left',[0xFF52]='up',[0xFF53]='right',[0xFF54]='down',[0xFF55]='pgup',[0xFF56]='pgdn',[0xFF57]='end',[0xFF63]='ins',[0xFF67]='menu',[0xFF8D]='kpenter',[0xFF95]='kphome',[0xFF9C]='kpend',[0xFF96]='kpleft',[0xFF97]='kpup',[0xFF98]='kpright',[0xFF99]='kpdown',[0xFF9A]='kppgup',[0xFF9B]='kppgdn',[0xFFAA]='kpmul',[0xFFAB]='kpadd',[0xFFAD]='kpsub',[0xFFAF]='kpdiv',[0xFFAE]='kpdec',[0xFFB0]='kp0',[0xFFB1]='kp1',[0xFFB2]='kp2',[0xFFB3]='kp3',[0xFFB4]='kp4',[0xFFB5]='kp5',[0xFFB6]='kp6',[0xFFB7]='kp7',[0xFFB8]='kp8',[0xFFB9]='kp9',[0xFFBE]='f1',[0xFFBF]='f2',[0xFFC0]='f3',[0xFFC1]='f4',[0xFFC2]='f5',[0xFFC3]='f6',[0xFFC4]='f7',[0xFFC5]='f8',[0xFFC6]='f9',[0xFFC7]='f10',[0xFFC8]='f11',[0xFFC9]='f12',--[[From Qt]][0x01000000]='esc',[0x01000001]='\t',[0x01000002]='\t'--[[backtab; will be 'shift'ed]],[0x01000003]='\b',[0x01000004]='\n',[0x01000005]='kpenter',[0x01000006]='ins',[0x01000007]='del',[0x01000010]='home',[0x01000011]='end',[0x01000012]='left',[0x01000013]='up',[0x01000014]='right',[0x01000015]='down',[0x01000016]='pgup',[0x01000017]='pgdn',[0x01000030]='f1',[0x01000031]='f2',[0x01000032]='f3',[0x01000033]='f4',[0x01000034]='f5',[0x01000035]='f6',[0x01000036]='f7',[0x01000037]='f8',[0x01000038]='f9',[0x01000039]='f10',[0x0100003a]='f11',[0x0100003b]='f12',[0x01000055]='menu'}
 -- LuaFormatter on
 
-local MOD_SHIFT, MOD_CTRL, MOD_ALT, MOD_META = _SCINTILLA.MOD_SHIFT, _SCINTILLA.MOD_CTRL,
-	_SCINTILLA.MOD_ALT, _SCINTILLA.MOD_META
+local SHIFT, CTRL, ALT, META = _SCINTILLA.MOD_SHIFT, _SCINTILLA.MOD_CTRL, _SCINTILLA.MOD_ALT,
+	_SCINTILLA.MOD_META
 -- Converts raw key events into key sequences and emits `events.KEYPRESS`.
-events.connect(events.KEY, function(code, modifiers)
-	local shift, ctrl, alt, cmd = modifiers & MOD_SHIFT > 0, modifiers & MOD_CTRL > 0,
-		modifiers & MOD_ALT > 0, modifiers & MOD_META > 0
+events.connect(events.KEY, function(code, mods)
+	local shift, ctrl, alt, cmd = mods & SHIFT > 0, mods & CTRL > 0, mods & ALT > 0, mods & META > 0
 	if OSX and not CURSES then ctrl, cmd = cmd, ctrl end -- swap
-	-- print(code, M.KEYSYMS[code], shift and 'shift', ctrl and 'ctrl', alt and 'alt', cmd and 'cmd')
 	local key = code >= 32 and code < 256 and string.char(code) or M.KEYSYMS[code]
-	if key and QT and not shift and code < 256 then key = key:lower() end -- Qt gives uppercase codes
+	-- Qt always reports upper-case key codes.
+	if key and QT and not shift and code < 256 then key = key:lower() end
 	-- Since printable characters are uppercased, disable shift.
 	if shift and code >= 32 and code < 256 then shift = false end
 	-- For composed keys on macOS, ignore alt.
 	if (OSX and not CURSES) and alt and code < 256 then alt = false end
+	-- Report unrecognized codes in hex.
 	if not key then key = string.format('0x%X', code) end
+	-- Emit the keypress.
 	return events.emit(events.KEYPRESS,
-		string.format('%s%s%s%s%s', ctrl and CTRL or '', alt and ALT or '', cmd and OSX and CMD or '',
-			shift and SHIFT or '', key))
+		string.format('%s%s%s%s%s', ctrl and 'ctrl+' or '', alt and 'alt+' or '',
+			cmd and OSX and 'cmd+' or '', shift and 'shift+' or '', key))
 end)
 
 --- The current key sequence.
@@ -207,9 +207,7 @@ end
 
 -- Handles Textadept keypresses, executing commands based on a mode or lexer as necessary.
 events.connect(events.KEYPRESS, function(key)
-	-- print(key)
 	ui.statusbar_text = ''
-	-- if CURSES then ui.statusbar_text = string.format('"%s"', key) end
 	local in_chain = #keychain > 0
 	if in_chain and key == M.CLEAR then
 		clear_key_seq()
