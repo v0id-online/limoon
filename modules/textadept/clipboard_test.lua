@@ -33,7 +33,7 @@ if BSD and os.getenv('CI') == 'true' then skip('X is not running on CI') end
 
 test('ui.get_clipboard_text should fall back on using its own internal clipboard', function()
 	copy('system' .. math.random())
-	local _<close> = test.mock(textadept.clipboard, 'copy_command', nil)
+	local _<close> = test.mock(textadept.clipboard, 'copy_command', 'does-not-exist')
 	local text = 'internal' .. math.random()
 	buffer:copy_text(text)
 

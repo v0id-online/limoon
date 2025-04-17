@@ -1,11 +1,11 @@
 -- Copyright 2025 Mitchell. See LICENSE.
 
+if not CURSES then return nil end
+
 --- Allows the terminal version's buffer clipboard functions to operate on the system clipboard.
 -- This module is only enabled in the terminal version.
 -- @module textadept.clipboard
 local M = {}
-
-if not CURSES then return nil end
 
 --- The command to retrieve the system clipboard's contents.
 -- The default values are:
@@ -29,9 +29,9 @@ local get_scintilla_clipboard = ui.get_clipboard_text
 -- Documentation is in core/ui.lua.
 function ui.get_clipboard_text(internal)
 	if internal then return get_scintilla_clipboard() end
-	local ok, proc = pcall(os.spawn, M.paste_command)
-	local text = ok and proc and proc:read('a') or get_scintilla_clipboard()
-	if ok and WIN32 then text = text:gsub('\r?\n$', '') end -- powershell appends a trailing newline
+	local proc = os.spawn(M.paste_command)
+	local text = proc and proc:read('a') or get_scintilla_clipboard()
+	if proc and WIN32 then text = text:gsub('\r?\n$', '') end -- powershell appends a trailing newline
 	return text
 end
 
@@ -44,8 +44,8 @@ local function enable_system_clipboard()
 	for _, name in ipairs(orig) do
 		buffer[name] = function(...)
 			orig[name](...) -- copy to internal clipboard
-			local ok, proc = pcall(os.spawn, M.copy_command)
-			if not ok then return end
+			local proc = os.spawn(M.copy_command)
+			if not proc then return end
 			proc:write(ui.get_clipboard_text(true)) -- copy internal clipboard to system clipboard
 			proc:close()
 			if WIN32 or OSX then
