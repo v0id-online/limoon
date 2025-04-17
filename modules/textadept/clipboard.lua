@@ -25,7 +25,6 @@ M.copy_command = OSX and 'pbcopy' or WIN32 and 'clip' or 'xsel -n -b -i'
 if not OSX and not WIN32 and not os.execute('xsel') then M.paste_command = 'wl-copy -f' end
 
 local get_scintilla_clipboard = ui.get_clipboard_text
-
 -- Documentation is in core/ui.lua.
 function ui.get_clipboard_text(internal)
 	if internal then return get_scintilla_clipboard() end
@@ -35,7 +34,10 @@ function ui.get_clipboard_text(internal)
 	return text
 end
 
-local orig = {'cut', 'copy', 'line_cut', 'line_copy', 'copy_range', 'copy_text', 'cut_allow_line'}
+-- LuaFormatter off
+--- Map of function names to their original buffer functions that operate on the internal clipboard.
+local orig = {'cut','copy','line_cut','line_copy','copy_range','copy_text','cut_allow_line','copy_allow_line'}
+-- LuaFormatter on
 for _, name in ipairs(orig) do orig[name] = buffer[name] end
 local orig_paste = buffer.paste
 
