@@ -93,9 +93,8 @@ buffer.undo_selection_history = buffer.UNDO_SELECTION_HISTORY_ENABLED
 view:set_x_caret_policy(view.CARET_SLOP, 20)
 view:set_y_caret_policy(view.CARET_SLOP | view.CARET_STRICT | view.CARET_EVEN, 1)
 view:set_visible_policy(view.VISIBLE_SLOP | view.VISIBLE_STRICT, 5)
--- view.h_scroll_bar = CURSES
+-- view.h_scroll_bar = false
 -- view.v_scroll_bar = false
-if CURSES and not (WIN32 or LINUX) then view.v_scroll_bar = false end
 view.scroll_width = 1
 local function reset_scroll_width() _G.view.scroll_width = 1 end
 events.connect(events.BUFFER_NEW, reset_scroll_width)
@@ -105,13 +104,12 @@ view.scroll_width_tracking = true
 -- view.end_at_last_line = false
 
 -- Whitespace.
-view.view_ws = view.WS_INVISIBLE
+-- view.view_ws = view.WS_VISIBLEONLYININDENT
 -- view.whitespace_size =
 -- view.extra_ascent =
 -- view.extra_descent =
 
 -- Line Endings.
-buffer.eol_mode = WIN32 and buffer.EOL_CRLF or buffer.EOL_LF
 -- view.view_eol = true
 
 -- Styling.
@@ -145,7 +143,6 @@ events.connect(events.FOCUS, restore_caret_line_visible_always)
 -- view.margin_left =
 -- view.margin_right =
 -- Line Number Margin.
-view.margin_type_n[1] = view.MARGIN_NUMBER
 local function resize_line_number_margin(shrinkable)
 	-- This needs to be evaluated dynamically since themes/styles can change.
 	local buffer, view = _G.buffer, _G.view
@@ -165,9 +162,7 @@ view.margin_width_n[3] = not CURSES and 12 or 1
 view.margin_mask_n[3] = view.MASK_FOLDERS
 -- Other Margins.
 for i = 2, view.margins do
-	view.margin_type_n[i] = view.MARGIN_SYMBOL
 	view.margin_sensitive_n[i], view.margin_cursor_n[i] = true, view.CURSORARROW
-	if i > 3 then view.margin_width_n[i] = 0 end
 end
 
 -- Annotations.
@@ -181,11 +176,12 @@ view.eol_annotation_visible = view.EOLANNOTATION_BOXED
 -- buffer.punctuation_chars =
 
 -- Tabs and Indentation Guides.
--- Note: tab and indentation settings apply to individual buffers.
-buffer.tab_width, buffer.use_tabs = 8, true
+-- buffer.tab_width = 4
+-- buffer.use_tabs = false
 -- buffer.indent = 2
-buffer.tab_indents, buffer.back_space_un_indents = true, true
-view.indentation_guides = not CURSES and view.IV_LOOKBOTH or view.IV_NONE
+-- buffer.tab_indents = false
+buffer.back_space_un_indents = true
+if not CURSES then view.indentation_guides = view.IV_LOOKBOTH end
 
 -- Margin Markers.
 view:marker_define(textadept.bookmarks.MARK_BOOKMARK, view.MARK_FULLRECT)
@@ -274,7 +270,7 @@ view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
 view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED
 
 -- Line Wrapping.
-view.wrap_mode = view.WRAP_NONE
+-- view.wrap_mode = view.WRAP_WHITESPACE
 -- view.wrap_visual_flags = view.WRAPVISUALFLAG_MARGIN
 -- view.wrap_visual_flags_location = view.WRAPVISUALFLAGLOC_END_BY_TEXT
 -- view.wrap_indent_mode = view.WRAPINDENT_SAME
@@ -286,7 +282,7 @@ view.layout_threads = 1000 -- will be reduced to system specs
 -- view.edge_column = 80
 
 -- Accessibility.
-view.accessibility = view.ACCESSIBILITY_DISABLED
+-- view.accessibility = view.ACCESSIBILITY_DISABLED
 
 -- Notifications.
 if QT and WIN32 then view.mouse_dwell_time = 500 end -- only different here for some reason
@@ -328,17 +324,4 @@ events.connect(events.VIEW_NEW, function()
 	for _, prop in ipairs(buffer_props) do buffer_props[prop] = _G.buffer[prop] end
 	load_buffer_settings()
 	for _, prop in ipairs(buffer_props) do _G.buffer[prop] = buffer_props[prop] end
-end, 1)
-
--- On reset, cycle through buffers and views, simulating `events.BUFFER_NEW` and `events.VIEW_NEW`
--- events to update settings, themes, colors, and styles.
-events.connect(events.RESET_AFTER, function()
-	for i = 1, #_BUFFERS do
-		events.emit(events.BUFFER_NEW)
-		view:goto_buffer(1)
-	end
-	for i = 1, #_VIEWS do
-		events.emit(events.VIEW_NEW)
-		ui.goto_view(1)
-	end
 end, 1)

@@ -776,7 +776,17 @@ static int reset(lua_State *L) {
 	lua_pushdoc(L, SS(focused_view, SCI_GETDOCPOINTER, 0, 0)), lua_setglobal(L, "buffer");
 	lua_pushnil(L), lua_setglobal(L, "arg");
 	run_file("init.lua"), emit("initialized", -1);
-	lua_getfield(L, LUA_REGISTRYINDEX, ARG), lua_setglobal(L, "arg");
+	// Cycle through buffers and views, simulating "buffer_new" and "view_new" events to
+	// update settings, themes, colors, and styles.
+	int n = (lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(L, -1));
+	for (int i = 1; i <= n; i++)
+		emit("buffer_new", -1), lua_pushview(L, focused_view), lua_getfield(L, -1, "goto_buffer"),
+			lua_insert(L, -2), lua_pushnumber(L, 1), lua_call(L, 2, 0); // view:goto_buffer(1)
+	n = (lua_getfield(L, LUA_REGISTRYINDEX, VIEWS), lua_rawlen(L, -1));
+	for (int i = 1; i <= n; i++)
+		emit("view_new", -1), lua_getglobal(L, "ui"), lua_getfield(L, -1, "goto_view"),
+			lua_replace(L, -2), lua_pushnumber(L, 1), lua_call(L, 1, 0); // ui.goto_view(1)
+	lua_getfield(L, LUA_REGISTRYINDEX, ARG), lua_setglobal(L, "arg"); // restore
 	return (emit("reset_after", LUA_TTABLE, persist_ref, -1), 0); // emit will unref
 }
 
