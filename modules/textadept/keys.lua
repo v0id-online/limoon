@@ -171,7 +171,7 @@
 -- Ctrl+Alt+Up | ^⌘⇡ | M-Up | Scroll line up
 -- Alt+PgUp | ^⇞ | N/A | Scroll page up
 -- Alt+PgDn | ^⇟ | N/A | Scroll page down
--- Menu<br/> Shift+F10<sup>d</sup> | N/A | N/A | Show context menu
+-- Menu<br/> Shift+F10<sup>d</sup> | ^↩ | N/A | Show context menu
 -- Ctrl+Alt+Shift+R *c* | ^⌘⇧R *c* | M-S-R *c* | Save macro to alphanumeric register *c*
 -- Ctrl+Alt+R *c* | ^⌘R *c* | M-R *c* | Load and play macro from alphanumeric register *c*
 -- **Movement**| | |
@@ -269,7 +269,7 @@ local M = {}
 --
 -- Unassigned keys:
 -- cmd:  EGhiIJNQtY_(){;:'"<.>?\s
--- ctrl: cCDgGHiIjJKLmMoOqQrRsStTuUvVwWxXyYzZ-_=+)]}\|;:/?\s\n
+-- ctrl: cCDgGHiIjJKLmMoOqQrRsStTuUvVwWxXyYzZ-_=+)]}\|;:/?\s
 -- ctrl+cmd: aAbBcCDFHiIjJlLmMnNoOpPqQsSTUvVxXyYzZ()[]{}\;:'",<.>/?\s\t\n
 --
 -- Curses key bindings.
@@ -306,9 +306,6 @@ local function start_new_line(above)
 	buffer:new_line()
 	if above and line == 1 then buffer:line_up() end
 end
-
---- Shows the popup context menu.
-local function show_context_menu() ui.popup_menu(ui.context_menu) end
 
 --- Returns the macro register key chain for a macro function (save or play).
 -- Non-alphanumeric keys are invalid registers.
@@ -488,8 +485,9 @@ keys.assign_platform_bindings{
 	[function() view:line_scroll(0, -view.lines_on_screen) end] = {'alt+pgup', 'ctrl+pgup', nil},
 	[start_new_line] = {'shift+\n', 'shift+\n', nil},
 	[function() start_new_line(true) end] = {'ctrl+shift+\n', 'cmd+shift+\n', nil},
-	[show_context_menu] = {'menu', nil, nil},
-	[macro_register(textadept.macros.save)] = {'ctrl+alt+R', 'ctrl+cmd+R', 'meta+R'},
+	[function() ui.popup_menu(ui.context_menu) end] = {
+		{'menu', (WIN32 or GTK) and 'shift+f10' or nil}, 'ctrl+\n', nil
+	}, [macro_register(textadept.macros.save)] = {'ctrl+alt+R', 'ctrl+cmd+R', 'meta+R'},
 	[macro_register(textadept.macros.play)] = {'ctrl+alt+r', 'ctrl+cmd+r', 'meta+r'},
 
 	-- Unbound keys are handled by Scintilla, but when playing back a macro, this is not possible.
@@ -547,7 +545,5 @@ keys.assign_platform_bindings{
 	[function() buffer.selection_mode = 0 end] = {nil, nil, 'ctrl+^'},
 	[buffer.swap_main_anchor_caret] = {nil, nil, 'ctrl+]'}
 }
-
-if WIN32 or GTK then keys['shift+f10'] = show_context_menu end
 
 return M

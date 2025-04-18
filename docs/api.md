@@ -7951,7 +7951,7 @@ Ctrl+Alt+Down | ^⌘⇣ | M-Down | Scroll line down
 Ctrl+Alt+Up | ^⌘⇡ | M-Up | Scroll line up
 Alt+PgUp | ^⇞ | N/A | Scroll page up
 Alt+PgDn | ^⇟ | N/A | Scroll page down
-Menu<br/> Shift+F10<sup>d</sup> | N/A | N/A | Show context menu
+Menu<br/> Shift+F10<sup>d</sup> | ^↩ | N/A | Show context menu
 Ctrl+Alt+Shift+R *c* | ^⌘⇧R *c* | M-S-R *c* | Save macro to alphanumeric register *c*
 Ctrl+Alt+R *c* | ^⌘R *c* | M-R *c* | Load and play macro from alphanumeric register *c*
 **Movement**| | |
