@@ -231,6 +231,29 @@ events.connect(events.KEYPRESS, function(key)
 	-- PROPAGATE otherwise.
 end)
 
+local plat = CURSES and 3 or OSX and 2 or 1
+--- Assigns key bindings for the current platform based on a map of commands to lists of their
+-- platform-specific key sequences.
+-- @param[opt=keys] keys Table to assign key bindings in.
+-- @param bindings Map of Lua functions to tables of key sequences for Windows/Linux/BSD, macOS,
+--	and the terminal version, in that order. A platform key sequence may itself be a table
+--	of sequences in order to assign multiple sequences to the same command.
+-- @usage keys.assign_platform_bindings{
+--		[buffer.new] = {'ctrl+n', 'cmd+n', 'ctrl+n'}
+--		[buffer.line_down] = {'down', {'down', 'ctrl+n'}, 'down'},
+--	}
+function M.assign_platform_bindings(keys, bindings)
+	if not bindings then keys, bindings = _G.keys, keys end
+	for f, plat_keys in pairs(bindings) do
+		local key = plat_keys[plat]
+		if type(key) == 'string' then
+			keys[key] = f
+		elseif type(key) == 'table' then
+			for _, key in ipairs(key) do keys[key] = f end
+		end
+	end
+end
+
 --- Textadept's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
 -- Language-specific keys are in subtables assigned to lexer names.
 -- @usage keys['ctrl+n'] = buffer.new

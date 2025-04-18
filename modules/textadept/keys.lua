@@ -319,7 +319,7 @@ local function macro_register(f)
 end
 
 -- Bindings for Windows/Linux/BSD, macOS, Terminal.
-local bindings = {
+keys.assign_platform_bindings{
 	-- File.
 	[buffer.new] = {'ctrl+n', 'cmd+n', 'ctrl+n'}, --
 	[io.open_file] = {'ctrl+o', 'cmd+o', 'ctrl+o'},
@@ -547,16 +547,6 @@ local bindings = {
 	[function() buffer.selection_mode = 0 end] = {nil, nil, 'ctrl+^'},
 	[buffer.swap_main_anchor_caret] = {nil, nil, 'ctrl+]'}
 }
-
-local keys, plat = keys, CURSES and 3 or OSX and 2 or 1
-for f, plat_keys in pairs(bindings) do
-	local key = plat_keys[plat]
-	if type(key) == 'string' then
-		keys[key] = f
-	elseif type(key) == 'table' then
-		for _, key in ipairs(key) do keys[key] = f end
-	end
-end
 
 if WIN32 or GTK then keys['shift+f10'] = show_context_menu end
 

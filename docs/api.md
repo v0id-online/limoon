@@ -5810,6 +5810,27 @@ keys.KEYSYMS[0x1234] = 'symbol'
 keys['ctrl+symbol'] = function() ... end
 ```
 
+<a id="keys.assign_platform_bindings"></a>
+### `keys.assign_platform_bindings`([*keys*=keys], *bindings*)
+
+Assigns key bindings for the current platform based on a map of commands to lists of their
+platform-specific key sequences.
+
+Parameters:
+- *keys*:  Table to assign key bindings in.
+- *bindings*:  Map of Lua functions to tables of key sequences for Windows/Linux/BSD, macOS,
+	and the terminal version, in that order. A platform key sequence may itself be a table
+	of sequences in order to assign multiple sequences to the same command.
+
+Usage:
+
+```lua
+keys.assign_platform_bindings{
+	[buffer.new] = {'ctrl+n', 'cmd+n', 'ctrl+n'}
+	[buffer.line_down] = {'down', {'down', 'ctrl+n'}, 'down'},
+}
+```
+
 <a id="keys.keychain"></a>
 ### `keys.keychain`
 
@@ -7671,7 +7692,7 @@ Selects the current word.
 If that word is already selected, its next occurrence will be selected as a multiple selection.
 
 Parameters:
-- *all*:  Select all occurrences of the current  word.
+- *all*:  Select all occurrences of the current word.
 
 See also: [`buffer.word_chars`](#buffer.word_chars)
 

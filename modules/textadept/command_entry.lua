@@ -54,18 +54,18 @@ end
 
 M.editing_keys = {__index = {}}
 
---- Fill in default key bindings for Windows/Linux, macOS, Terminal.
-local bindings = {
+-- Fill in default key bindings for Windows/Linux/BSD, macOS, Terminal.
+keys.assign_platform_bindings(M.editing_keys.__index, {
 	-- Note: cannot use `M.cut`, `M.copy`, etc. since M is never considered the global buffer.
 	[function() M:undo() end] = {'ctrl+z', 'cmd+z', 'ctrl+z'},
 	[function() M:redo() end] = {{'ctrl+y', 'ctrl+Z'}, {'cmd+Z', 'cmd+y'}, {'ctrl+y', 'ctrl+meta+z'}},
-	[function() M:cut() end] = {'ctrl+x', 'cmd+x', 'ctrl+x'},
-	[function() M:copy() end] = {'ctrl+c', 'cmd+c', 'ctrl+c'},
+	[function() M:cut_allow_line() end] = {'ctrl+x', 'cmd+x', 'ctrl+x'},
+	[function() M:copy_allow_line() end] = {'ctrl+c', 'cmd+c', 'ctrl+c'},
 	[function() M:paste() end] = {'ctrl+v', 'cmd+v', 'ctrl+v'},
 	[function() M:select_all() end] = {'ctrl+a', 'cmd+a', 'ctrl+a'},
 	[function() cycle_history(true) end] = {'up', 'up', 'up'},
 	[cycle_history] = {'down', 'down', 'down'},
-	-- Movement keys.
+	-- Extra movement keys (in addition to Scintilla's defaults).
 	[function() M:char_right() end] = {nil, 'ctrl+f', 'ctrl+f'},
 	[function() M:char_left() end] = {nil, 'ctrl+b', 'ctrl+b'},
 	[function() M:word_right() end] = {nil, 'alt+right', nil},
@@ -73,16 +73,7 @@ local bindings = {
 	[function() M:vc_home() end] = {nil, {'ctrl+a', 'cmd+left'}, nil},
 	[function() M:line_end() end] = {nil, {'ctrl+e', 'cmd+right'}, 'ctrl+e'},
 	[function() M:clear() end] = {nil, {'del', 'ctrl+d'}, 'ctrl+d'}
-}
-local plat = CURSES and 3 or OSX and 2 or 1
-for f, plat_keys in pairs(bindings) do
-	local key = plat_keys[plat]
-	if type(key) == 'string' then
-		M.editing_keys.__index[key] = f
-	elseif type(key) == 'table' then
-		for _, key in ipairs(key) do M.editing_keys.__index[key] = f end
-	end
-end
+})
 
 --- Environment for abbreviated Lua commands.
 -- @table env
