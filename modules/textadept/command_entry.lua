@@ -166,11 +166,6 @@ local function complete_lua()
 	M:auto_c_show(#part, table.concat(cmpls, ' '))
 end
 
---- Mode for entering Lua commands.
-local lua_keys = {['\t'] = complete_lua}
-
-local prev_key_mode
-
 --- Appends to the history for the current or most recent command entry mode.
 -- @param text String text to append to history.
 local function append_history(text)
@@ -198,7 +193,7 @@ function M.run(label, f, keys, lang, initial_text, ...)
 	if _G.keys.mode == '_command_entry' then return end -- already in command entry
 	local args = table.pack(...)
 	if not label then
-		label, f, keys, lang = _L['Lua command:'], run_lua, lua_keys, 'lua'
+		label, f, keys, lang = _L['Lua command:'], run_lua, {['\t'] = complete_lua}, 'lua'
 	else
 		assert_type(label, 'string', 1)
 		assert_type(f, 'function', 2)
@@ -214,37 +209,30 @@ function M.run(label, f, keys, lang, initial_text, ...)
 
 	-- Auto-define Esc and Enter keys to cancel and finish the command entry, respectively,
 	-- and connect to keybindings in `ui.command_entry.editing_keys`.
-	if not keys['esc'] then keys['esc'] = M.focus end -- hide
-	if not keys['\n'] then
-		keys['\n'] = function()
-			if M:auto_c_active() then return false end -- allow Enter to autocomplete
-			M.focus() -- hide
-			append_history(M:get_text())
-			f(M:get_text(), table.unpack(args))
-		end
+	local key_mode = _G.keys.mode
+	local hide = function()
+		_G.keys.mode = key_mode
+		M.focus()
+	end
+	keys['esc'], keys['\n'] = hide, function()
+		if M:auto_c_active() then return false end -- allow Enter to autocomplete
+		hide()
+		append_history(M:get_text())
+		f(M:get_text(), table.unpack(args))
 	end
 	if not getmetatable(keys) then setmetatable(keys, M.editing_keys) end
 
 	-- Setup and open the command entry.
+	M.label = label
 	history.mode = f
 	if initial_text then append_history(initial_text) end -- cycling will be incorrect otherwise
 	local mode_history = history[history.mode]
 	M:set_text(mode_history and mode_history[mode_history.pos] or '')
-	M:select_all()
-	if initial_text then M:line_end() end
-	prev_key_mode = _G.keys.mode -- save before M.focus()
-	M.label = label
-	M.focus()
+	M[initial_text and 'line_end' or 'select_all'](M)
 	M:set_lexer(lang or 'text')
+	M.focus()
 	M.height = M:text_height(1)
 	_G.keys._command_entry, _G.keys.mode = keys, '_command_entry'
-end
-
--- Redefine ui.command_entry.focus() to clear any current key mode on hide/show.
-local orig_focus = M.focus
-M.focus = function()
-	keys.mode = prev_key_mode
-	orig_focus()
 end
 
 -- Configure the command entry's default properties.
