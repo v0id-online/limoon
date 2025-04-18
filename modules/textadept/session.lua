@@ -65,10 +65,6 @@ function M.load(filename)
 			for _, line in ipairs(buf.bookmarks) do
 				buffer:marker_add(line, textadept.bookmarks.MARK_BOOKMARK)
 			end
-		elseif buf.filename:find('^%[.+%]$') then
-			buffer.new()._type = buf.filename
-			buffer:set_save_point() -- set tab label
-			events.emit(events.FILE_OPENED, buf.filename) -- close initial buffer
 		else
 			not_found[#not_found + 1] = buf.filename:iconv('UTF-8', _CHARSET)
 		end
@@ -151,10 +147,10 @@ function M.save(filename)
 	-- Serialize buffers.
 	session.buffers = {}
 	for _, buffer in ipairs(_BUFFERS) do
-		if not buffer.filename and not buffer._type then goto continue end
+		if not buffer.filename then goto continue end
 		local current = buffer == view.buffer
 		session.buffers[#session.buffers + 1] = {
-			filename = buffer.filename or buffer._type,
+			filename = buffer.filename,
 			selection = current and buffer.selection_serialized or buffer._selection or '0',
 			top_line = current and view.first_visible_line or buffer._top_line or 1
 		}

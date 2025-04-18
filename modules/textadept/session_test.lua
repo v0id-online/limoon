@@ -146,17 +146,6 @@ test('sessions should save recent files', function()
 	test.assert_equal(io.recent_files, {f.filename})
 end)
 
-test('sessions should save typed buffers', function()
-	local sf<close> = test.tmpfile()
-	ui.output()
-
-	textadept.session.save(sf.filename)
-	buffer:close()
-	textadept.session.load(sf.filename)
-
-	test.assert_equal(buffer._type, _L['[Output Buffer]'])
-end)
-
 -- TODO: loading a new session will save the current session under the previous session name.
 -- This leaves a temporary file on disk.
 test('session.load should not load if there are unsaved files and the user cancels #skip',
