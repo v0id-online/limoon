@@ -78,7 +78,7 @@ jobs:
           elif [[ "${{ github.event.inputs.nightly }}" = true ]]; then
             version=nightly
           else
-            version=`grep -m1 _RELEASE core/init.lua | grep -o "[0-9.]\+[^']*" | tr ' ' '_'`
+            version=$(grep -m1 _RELEASE core/init.lua | grep -o "[0-9.]\+[^']*" | tr ' ' '_')
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
@@ -140,7 +140,7 @@ jobs:
           else
             nightly="-D NIGHTLY=1"
           fi
-          if [[ ${{ runner.os }} == Linux ]]; then generate_html="-D GENERATE_HTML=1"; fi
+          if [[ ${{ runner.os }} = Linux ]]; then generate_html="-D GENERATE_HTML=1"; fi
           cmake -S . -B build ${nightly} ${generate_html} -D CMAKE_INSTALL_PREFIX=build/install
           cmake --build build --config ${type} -j
           if [[ ! -z "${generate_html}" ]]; then cmake --build build --target html; fi
@@ -166,7 +166,7 @@ jobs:
           mkdir textadept-modules
           modules="debugger export file_diff format lsp lua_repl open_file_mode scratch spellcheck"
           for module in $modules; do
-            gh_name="`echo -n $module | sed -e 's/_/-/g;'`"
+            gh_name="$(echo -n $module | sed -e 's/_/-/g;')"
             gh_prefix="https://github.com/orbitalquark/textadept-$gh_name"
             wget $gh_prefix/releases/download/latest/$module.zip
             unzip -d textadept-modules $module.zip
@@ -218,12 +218,12 @@ jobs:
         run: |
           echo -n "Textadept " > log.md
           echo -n "${{ needs.get-version.outputs.version }} " | tr '_' ' ' >> log.md
-          echo \(`date +"%d %b %Y"`\) >> log.md
+          echo \($(date +"%d %b %Y")\) >> log.md
           if [[ ${{ needs.get-version.outputs.version }} = nightly ]]; then exit 0; fi
           prefix="https://orbitalquark.github.io/textadept"
           echoing=0
           while read line; do
-            if [[ $line == \#\#* ]]; then
+            if [[ $line = \#\#* ]]; then
               if [[ $echoing -eq 0 ]]; then
                 echoing=1
               else

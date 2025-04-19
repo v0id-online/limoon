@@ -6,7 +6,7 @@
 delete_previous_coverage=
 
 cd ..
-export TEXTADEPT_HOME=`pwd`
+export TEXTADEPT_HOME=$(pwd)
 if [[ ! -z "$delete_previous_coverage" ]]; then
 	find build -name "*.gcda" -delete
 	rm luacov.*.out
