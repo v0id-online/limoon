@@ -55,6 +55,7 @@ local function print_to(buffer_type, silent, ...)
 			local prev_buffer = _G.buffer
 			buffer = _G.buffer.new()
 			buffer._type = buffer_type
+			buffer.undo_collection = false
 			if silent then view:goto_buffer(prev_buffer) end
 		else
 			view:goto_buffer(buffer)

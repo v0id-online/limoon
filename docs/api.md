@@ -1164,6 +1164,13 @@ Save and restore the main selection during undo and redo, respectively.
 
 The default value is `buffer.UNDO_SELECTION_HISTORY_ENABLED`.
 
+<a id="buffer.undo_collection"></a>
+#### `buffer.undo_collection`
+
+Whether or not to record undo history.
+
+The default value is `true`.
+
 ### Employ the Clipboard
 
 

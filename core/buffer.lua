@@ -540,6 +540,10 @@ end)
 --- Enable selection undo/redo.
 -- @field UNDO_SELECTION_HISTORY_ENABLED
 
+--- Whether or not to record undo history.
+-- The default value is `true`.
+-- @field undo_collection
+
 --- Employ the Clipboard.
 -- The terminal version relies on the commands defined in `textadept.clipboard` in order to
 -- interact with the system clipboard, or else it uses its own internal clipboard.
@@ -3690,7 +3694,6 @@ end)
 -- - undo_action_text
 -- - undo_action_type
 -- - undo_actions
--- - undo_collection
 -- - undo_current
 -- - undo_detach
 -- - undo_save_point
