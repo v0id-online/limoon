@@ -435,6 +435,18 @@ test('closing a buffer should switch back to the previously shown one', function
 	test.assert_equal(buffer:get_text(), '3')
 end)
 
+test('closing a buffer and switching back a previous one should preserve state', function()
+	buffer:add_text(test.lines{'1', ''})
+	buffer.new():add_text(test.lines{'2', ''})
+	buffer.new():add_text(test.lines{'3', ''})
+	view:goto_buffer(_BUFFERS[2])
+	buffer:close(true) -- should switch back to 3 after switching to 1
+
+	view:goto_buffer(_BUFFERS[1])
+
+	test.assert_equal(buffer:line_from_position(buffer.current_pos), 2)
+end)
+
 if CURSES then
 	test('clicking in a view should focus it', function()
 		view:split(true)
