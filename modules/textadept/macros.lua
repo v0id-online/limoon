@@ -9,20 +9,20 @@ local M = {}
 local macro_path = _USERHOME .. (not WIN32 and '/' or '\\') .. 'macros'
 local recording, macro
 
--- List of commands bound to keys to ignore during macro recording, as the command(s) ultimately
+--- List of commands bound to keys to ignore during macro recording, as the command(s) ultimately
 -- executed will be recorded in some form.
+-- @table ignore
+-- @local
 local ignore
 events.connect(events.INITIALIZED, function()
-	ignore = {
-		textadept.menu.menubar['Search/Find'][2], textadept.menu.menubar['Search/Find Incremental'][2],
-		textadept.menu.menubar['Tools/Select Command'][2],
-		textadept.menu.menubar['Tools/Macros']['Start/Stop Recording'][2]
-	}
+	local find_incremental = textadept.menu.menubar['Search/Find Incremental'][2]
+	ignore = {ui.find.focus, find_incremental, textadept.menu.select_command, M.record}
 end)
 
 --- Returns a function that records a macro-able event.
 -- @param event The name of the event to record.
 local function event_recorder(event) return function(...) macro[#macro + 1] = {event, ...} end end
+
 --- Event handlers for recording macro-able events.
 local event_recorders = {
 	[events.KEYPRESS] = function(key)
@@ -38,6 +38,7 @@ local event_recorders = {
 		if #keys.keychain == 0 then ui.statusbar_text = _L['Macro recording'] end
 	end
 }
+
 --- Prevents `events.FIND` from being emitted immediately after `events.REPLACE`.
 local function inhibit_find_next() return true end
 

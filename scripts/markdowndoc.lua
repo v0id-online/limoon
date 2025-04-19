@@ -229,7 +229,7 @@ local writers = {
 	field = write_field, ['function'] = write_function, table = write_table, module = write_module,
 	section = write_section, classmod = write_classmod
 }
-write = function(f, item, module_name)
+function write(f, item, module_name)
 	writers[item.type](f, item, module_name)
 end
 

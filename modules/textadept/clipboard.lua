@@ -54,7 +54,7 @@ local function enable_system_clipboard()
 				proc:wait()
 			else
 				-- For whatever reason, the clipboard copy processes do not die after closing stdin.
-				timeout(1, function() proc:kill() end)
+				timeout(1, proc.kill, proc)
 			end
 		end
 	end

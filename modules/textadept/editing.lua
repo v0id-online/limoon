@@ -137,6 +137,7 @@ end
 --- Moves the caret to the beginning of a line, ensuring that line is visible.
 -- @param[opt] line Line number to go to. If `nil`, the user is prompted for one.
 function M.goto_line(line)
+	if type(line) == 'string' then line = tonumber(line) or '' end
 	if not assert_type(line, 'number/nil', 1) then
 		line = tonumber(ui.dialogs.input{title = _L['Go to line number:']} or nil)
 		if not line then return end
@@ -144,19 +145,18 @@ function M.goto_line(line)
 	view:ensure_visible_enforce_policy(line)
 	buffer:goto_line(line)
 end
-args.register('-l', '--line', 1, function(line) M.goto_line(tonumber(line) or line) end,
-	'Go to line')
+args.register('-l', '--line', 1, M.goto_line, 'Go to line')
 
 --- Joins the currently selected lines, or joins the current line with the line below it if no
 -- lines are selected.
 -- As long as any part of a line is selected, the entire line is eligible for joining.
 function M.join_lines()
-	local s_line = buffer:line_from_position(buffer.selection_start)
-	local e_line = buffer:line_from_position(buffer.selection_end)
-	if e_line == s_line then e_line = e_line + 1 end
+	local s = buffer:line_from_position(buffer.selection_start)
+	local e = buffer:line_from_position(buffer.selection_end)
+	if e == s then e = e + 1 end
 	buffer:begin_undo_action()
-	for i = s_line + 1, e_line do buffer.line_indentation[i] = 0 end
-	buffer:set_target_range(buffer:position_from_line(s_line), buffer:position_from_line(e_line))
+	for i = s + 1, e do buffer.line_indentation[i] = 0 end
+	buffer:set_target_range(buffer:position_from_line(s), buffer:position_from_line(e))
 	buffer:lines_join()
 	buffer:line_end()
 	buffer:end_undo_action()
@@ -175,10 +175,7 @@ function M.enclose(left, right, select)
 	buffer:begin_undo_action()
 	for i = 1, buffer.selections do
 		local s, e = buffer.selection_n_start[i], buffer.selection_n_end[i]
-		if s == e then
-			s = buffer:word_start_position(s, true)
-			e = buffer:word_end_position(e, true)
-		end
+		if s == e then s, e = buffer:word_start_position(s, true), buffer:word_end_position(e, true) end
 		buffer:set_target_range(s, e)
 		buffer:replace_target(left .. buffer.target_text .. right)
 		buffer.selection_n_start[i] = not select and buffer.target_end or buffer.target_start + #left
@@ -230,7 +227,7 @@ end
 
 --- Selects the current word.
 -- If that word is already selected, its next occurrence will be selected as a multiple selection.
--- @param[opt=false] all Select all occurrences of the current  word.
+-- @param[opt=false] all Select all occurrences of the current word.
 -- @see buffer.word_chars
 function M.select_word(all)
 	buffer:target_whole_document()
@@ -266,9 +263,8 @@ end
 function M.convert_indentation()
 	buffer:begin_undo_action()
 	for line = 1, buffer.line_count do
-		local s = buffer:position_from_line(line)
+		local s, e = buffer:position_from_line(line), buffer.line_indent_position[line]
 		local indent = buffer.line_indentation[line]
-		local e = buffer.line_indent_position[line]
 		local current_indentation, new_indentation = buffer:text_range(s, e), nil
 		if buffer.use_tabs then
 			local tabs = indent // buffer.tab_width
@@ -380,7 +376,7 @@ function M.filter_through(command)
 		local proc = assert(os.spawn(commands[i]:match('^%s*(.-)%s*$')))
 		proc:write(inout)
 		proc:close()
-		inout = proc:read('a') or ''
+		inout = proc:read('a')
 		if proc:wait() ~= 0 then
 			ui.statusbar_text = string.format('"%s" %s', commands[i], _L['returned non-zero status'])
 			return
@@ -434,26 +430,24 @@ end
 -- @see textadept.editing.autocomplete
 -- @function _G.textadept.editing.autocompleters.word
 M.autocompleters.word = function()
-	local list, matches = {}, {}
+	local list, found = {}, {}
 	local s = buffer:word_start_position(buffer.current_pos, true)
 	if s == buffer.current_pos then return end
-	local word_part = buffer:text_range(s, buffer.current_pos)
+	local prefix = buffer:text_range(s, buffer.current_pos)
 	for _, buffer in ipairs(_BUFFERS) do
-		if buffer == _G.buffer or M.autocomplete_all_words then
-			buffer.search_flags = buffer.FIND_WORDSTART |
-				(not _G.buffer.auto_c_ignore_case and buffer.FIND_MATCHCASE or 0)
-			buffer:target_whole_document()
-			while buffer:search_in_target(word_part) ~= -1 do
-				local e = buffer:word_end_position(buffer.target_end, true)
-				local match = buffer:text_range(buffer.target_start, e)
-				if #match > #word_part and not matches[match] then
-					list[#list + 1], matches[match] = match, true
-				end
-				buffer:set_target_range(e, buffer.length + 1)
-			end
+		if buffer ~= _G.buffer and not M.autocomplete_all_words then goto continue end
+		buffer.search_flags = buffer.FIND_WORDSTART |
+			(not _G.buffer.auto_c_ignore_case and buffer.FIND_MATCHCASE or 0)
+		buffer:target_whole_document()
+		while buffer:search_in_target(prefix) ~= -1 do
+			local e = buffer:word_end_position(buffer.target_end, true)
+			local match = buffer:text_range(buffer.target_start, e)
+			if #match > #prefix and not found[match] then list[#list + 1], found[match] = match, true end
+			buffer:set_target_range(e, buffer.length + 1)
 		end
+		::continue::
 	end
-	return #word_part, list
+	return #prefix, list
 end
 
 --- Table of brace characters to highlight.
@@ -533,24 +527,23 @@ events.connect(events.CHAR_ADDED, function(code)
 			buffer:get_line(line):find('^[^\r\n]') then
 			return -- do not auto-indent when pressing enter from start of previous line
 		end
-		local j = line - 1
+		local j, indent_pos = line - 1, nil
 		while j >= 1 and buffer:get_line(j):find('^[\r\n]+$') do j = j - 1 end
-		if j >= 1 then
-			local indent_pos
-			if not buffer:get_line(line):find('^[ \t]+[\r\n]*$') then
-				buffer.line_indentation[line] = buffer.line_indentation[j]
-				indent_pos = buffer.line_indent_position[line]
-			else
-				-- If there is only whitespace after the caret, preserve it.
-				-- This is necessary for preventing the deletion of the snippet end indicator.
-				local level = buffer.line_indentation[j] // buffer.tab_width
-				local indent = (buffer.use_tabs and '\t' or string.rep(' ', buffer.tab_width)):rep(level)
-				local pos = buffer:position_from_line(line)
-				buffer:set_target_range(pos, pos)
-				indent_pos = pos + buffer:replace_target(indent)
-			end
-			buffer.selection_n_start[i], buffer.selection_n_end[i] = indent_pos, indent_pos
+		if j < 1 then goto continue end
+		if not buffer:get_line(line):find('^[ \t]+[\r\n]*$') then
+			buffer.line_indentation[line] = buffer.line_indentation[j]
+			indent_pos = buffer.line_indent_position[line]
+		else
+			-- If there is only whitespace after the caret, preserve it.
+			-- This is necessary for preventing the deletion of the snippet end indicator.
+			local level = buffer.line_indentation[j] // buffer.tab_width
+			local indent = (buffer.use_tabs and '\t' or string.rep(' ', buffer.tab_width)):rep(level)
+			local pos = buffer:position_from_line(line)
+			buffer:set_target_range(pos, pos)
+			indent_pos = pos + buffer:replace_target(indent)
 		end
+		buffer.selection_n_start[i], buffer.selection_n_end[i] = indent_pos, indent_pos
+		::continue::
 	end
 end)
 
@@ -565,14 +558,14 @@ end, 1)
 
 -- Highlights matching braces.
 events.connect(events.UPDATE_UI, function(updated)
-	if not updated or updated & 3 == 0 then return end -- ignore scrolling
-	if brace_matches[buffer.char_at[buffer.current_pos]] then
-		local match = buffer:brace_match(buffer.current_pos, 0)
-		local f = match ~= -1 and view.brace_highlight or view.brace_bad_light
-		f(buffer, buffer.current_pos, match)
+	if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
+	if not brace_matches[buffer.char_at[buffer.current_pos]] then
+		view:brace_bad_light(-1)
 		return
 	end
-	view:brace_bad_light(-1)
+	local match = buffer:brace_match(buffer.current_pos, 0)
+	local f = match ~= -1 and view.brace_highlight or view.brace_bad_light
+	f(view, buffer.current_pos, match)
 end)
 
 -- Highlight all instances of the current or selected word.
@@ -605,7 +598,7 @@ end)
 if CURSES and not WIN32 then
 	local function enable_br_paste() io.stdout:write('\x1b[?2004h'):flush() end
 	local function disable_br_paste() io.stdout:write('\x1b[?2004l'):flush() end
-	enable_br_paste()
+	events.connect(events.INITIALIZED, enable_br_paste)
 	events.connect(events.SUSPEND, disable_br_paste)
 	events.connect(events.RESUME, enable_br_paste)
 	events.connect(events.QUIT, disable_br_paste)

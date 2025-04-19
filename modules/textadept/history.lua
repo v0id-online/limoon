@@ -33,11 +33,10 @@ local INSERT, DELETE = buffer.MOD_INSERTTEXT, buffer.MOD_DELETETEXT
 local UNDO, REDO = buffer.PERFORMED_UNDO, buffer.PERFORMED_REDO
 -- Listens for text insertion and deletion events and records their locations.
 events.connect(events.MODIFIED, function(position, mod, text, length)
-	if mod & (INSERT | DELETE) == 0 or buffer.length == (mod & INSERT > 0 and length or 0) then
-		return -- ignore non-insertion/deletion, file loading, and replacing buffer contents
-	end
-	if mod & INSERT > 0 then position = position + length end
+	if mod & (INSERT | DELETE) == 0 then return end -- ignore non-insertion/deletion
+	if buffer.length == (mod & INSERT > 0 and length or 0) then return end -- file load/replace all
 	if mod & (UNDO | REDO) > 0 then return end -- ignore undo/redo
+	if mod & INSERT > 0 then position = position + length end
 	local line, column = buffer:line_from_position(position), buffer.column[position]
 	if buffer.selections > 1 and line ~= buffer:line_from_position(buffer.current_pos) then return end
 	M.record(nil, line, column, buffer._type ~= nil)
@@ -120,14 +119,11 @@ function M.record(filename, line, column, soft)
 			(math.abs(record.line - line) <= M.minimum_line_distance or record.soft) then
 			-- If the most recent record is close enough (distance-wise), or if that record is a soft
 			-- record, update it instead of recording a new one.
-			record.line, record.column = line, column
-			record.soft = soft and record.soft
+			record.line, record.column, record.soft = line, column, soft and record.soft
 			return
 		end
 	end
-	if history.pos < #history then
-		for i = history.pos + 1, #history do history[i] = nil end -- clear forward
-	end
+	if history.pos < #history then for i = history.pos + 1, #history do history[i] = nil end end
 	history[#history + 1] = {filename = filename, line = line, column = column, soft = soft}
 	if #history > M.maximum_history_size then table.remove(history, 1) end
 	history.pos = #history

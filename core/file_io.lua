@@ -141,7 +141,7 @@ function io.open_file(filenames)
 
 			-- Detect EOL mode.
 			local s, e = text:find('\r?\n')
-			if s then buffer.eol_mode = buffer[s ~= e and 'EOL_CRLF' or 'EOL_LF'] end
+			if s then buffer.eol_mode = s ~= e and buffer.EOL_CRLF or buffer.EOL_LF end
 
 			-- Insert buffer text.
 			buffer:append_text(text)

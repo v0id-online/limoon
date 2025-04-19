@@ -9,15 +9,6 @@
 -- @module ui.command_entry
 local M = ui.command_entry
 
---- The text of the command entry label. (Write-only)
--- @field label
-
---- The height in pixels of the command entry.
--- @field height
-
---- Whether or not the command entry is active.
--- @field active
-
 --- Command history per mode.
 -- The current mode is in the `mode` field.
 -- @table history
@@ -80,11 +71,8 @@ keys.assign_platform_bindings(M.editing_keys.__index, {
 -- @local
 local env = setmetatable({}, {
 	__index = function(_, k)
-		if type(buffer[k]) == 'function' then
-			return function(...) return buffer[k](buffer, ...) end
-		elseif type(view[k]) == 'function' then
-			return function(...) view[k](view, ...) end -- do not return a value
-		end
+		if type(buffer[k]) == 'function' then return function(...) return buffer[k](buffer, ...) end end
+		if type(view[k]) == 'function' then return function(...) view[k](view, ...) end end -- no return
 		return buffer[k] or view[k] or ui[k] or _G[k] or textadept[k]
 	end, --
 	__newindex = function(self, k, v)
@@ -123,7 +111,7 @@ local function run_lua(code)
 		end
 	end
 	if result ~= nil or code:find('^return ') then ui.output(tostring(result), '\n') end
-	events.emit(events.UPDATE_UI, 1) -- update UI if necessary (e.g. statusbar)
+	events.emit(events.UPDATE_UI, buffer.UPDATE_CONTENT) -- update UI if necessary (e.g. statusbar)
 end
 args.register('-e', '--execute', 1, run_lua, 'Execute Lua code')
 
@@ -210,7 +198,7 @@ function M.run(label, f, keys, lang, initial_text, ...)
 	-- Auto-define Esc and Enter keys to cancel and finish the command entry, respectively,
 	-- and connect to keybindings in `ui.command_entry.editing_keys`.
 	local key_mode = _G.keys.mode
-	local hide = function()
+	local function hide()
 		_G.keys.mode = key_mode
 		M.focus()
 	end
@@ -239,10 +227,19 @@ end
 events.connect(events.INITIALIZED, function()
 	M.h_scroll_bar, M.v_scroll_bar = false, false
 	for i = 1, M.margins do M.margin_width_n[i] = 0 end
-	M.margin_type_n[1], M.margin_style[1] = view.MARGIN_TEXT, view.STYLE_LINENUMBER
-	M.call_tip_use_style = M.tab_width * M:text_width(view.STYLE_CALLTIP, ' ')
-	M.call_tip_position = true
+	M.call_tip_use_style, M.call_tip_position = 4 * M:text_width(view.STYLE_CALLTIP, ' '), true
 end)
+
+-- The fields below were defined in C.
+
+--- The text of the command entry label. (Write-only)
+-- @field label
+
+--- The height in pixels of the command entry.
+-- @field height
+
+--- Whether or not the command entry is active.
+-- @field active
 
 -- The function below is a Lua C function.
 

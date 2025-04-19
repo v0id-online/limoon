@@ -302,7 +302,7 @@ local function m(path) return textadept.menu.menubar[path][2] end
 local function start_new_line(above)
 	local line = buffer:line_from_position(buffer.current_pos)
 	if above then buffer:line_up() end
-	if not above or above and line > 1 then buffer:line_end() end
+	if not above or line > 1 then buffer:line_end() end
 	buffer:new_line()
 	if above and line == 1 then buffer:line_up() end
 end
@@ -545,5 +545,3 @@ keys.assign_platform_bindings{
 	[function() buffer.selection_mode = 0 end] = {nil, nil, 'ctrl+^'},
 	[buffer.swap_main_anchor_caret] = {nil, nil, 'ctrl+]'}
 }
-
-return M

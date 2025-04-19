@@ -18,12 +18,26 @@ end
 --- Clears all bookmarks in the current buffer.
 function M.clear() buffer:marker_delete_all(M.MARK_BOOKMARK) end
 
---- Returns an iterator for all bookmarks in the given buffer.
-local function bookmarks(buffer)
-	return function(buffer, line)
-		line = buffer:marker_next(line + 1, 1 << M.MARK_BOOKMARK - 1)
-		return line >= 1 and line or nil
-	end, buffer, 0
+--- Iterator function that returns a buffer's next bookmark after a given line.
+-- @usage for line in next_bookmark, buffer, 0 do ... end
+local function next_bookmark(buffer, line)
+	line = buffer:marker_next(line + 1, 1 << M.MARK_BOOKMARK - 1)
+	return line >= 1 and line or nil
+end
+
+--- Adds all bookmarks in a buffer to the given lists.
+-- @param buffer Buffer to add bookmarks from.
+-- @param utf8_list List of bookmarks to show the user.
+-- @param buffers List of buffers associated with bookmarks in *utf8_list*.
+local function add_bookmarks(buffer, utf8_list, buffers)
+	local filename = buffer.filename and buffer.filename:iconv('UTF-8', _CHARSET) or buffer._type or
+		_L['Untitled']
+	local basename = buffer.filename and filename:match('[^/\\]+$') or filename
+	for line in next_bookmark, buffer, 0 do
+		utf8_list[#utf8_list + 1] = string.format('%s:%d: %s', basename, line,
+			buffer:get_line(line):match('^[^\r\n]*'))
+		buffers[#buffers + 1] = buffer
+	end
 end
 
 --- Jumps to a the beginning of a bookmarked line.
@@ -43,22 +57,11 @@ function M.goto_mark(next)
 		return
 	end
 	-- List the current buffer's marks, and then all other buffers' marks.
-	local scan_this_buffer, utf8_list, buffers = true, {}, {}
-	::rescan::
+	local utf8_list, buffers = {}, {}
+	add_bookmarks(buffer, utf8_list, buffers)
 	for _, buffer in ipairs(_BUFFERS) do
-		if scan_this_buffer ~= (buffer == _G.buffer) then goto continue end
-		local filename = buffer.filename or buffer._type or _L['Untitled']
-		if buffer.filename then filename = filename:iconv('UTF-8', _CHARSET) end
-		local basename = buffer.filename and filename:match('[^/\\]+$') or filename
-		for line in bookmarks(buffer) do
-			utf8_list[#utf8_list + 1] = string.format('%s:%d: %s', basename, line,
-				buffer:get_line(line):match('^[^\r\n]*'))
-			buffers[#buffers + 1] = buffer
-		end
-		::continue::
+		if buffer ~= _G.buffer then add_bookmarks(buffer, utf8_list, buffers) end
 	end
-	scan_this_buffer = not scan_this_buffer
-	if not scan_this_buffer then goto rescan end
 	if #utf8_list == 0 then return end
 	local i = ui.dialogs.list{title = _L['Select Bookmark'], items = utf8_list}
 	if not i then return end
@@ -70,7 +73,7 @@ local lines = {}
 -- Save and restore bookmarks when replacing buffer text (e.g. buffer:reload(),
 -- textadept.editing.filter_through()).
 events.connect(events.BUFFER_BEFORE_REPLACE_TEXT,
-	function() for line in bookmarks(buffer) do lines[#lines + 1] = line end end)
+	function() for line in next_bookmark, buffer, 0 do lines[#lines + 1] = line end end)
 events.connect(events.BUFFER_AFTER_REPLACE_TEXT, function()
 	for _, line in ipairs(lines) do buffer:marker_add(line, M.MARK_BOOKMARK) end
 	lines = {} -- clear

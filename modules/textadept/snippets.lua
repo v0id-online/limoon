@@ -235,8 +235,7 @@ M.transform_methods = {
 	end
 }
 
-local INDIC_SNIPPET = view.new_indic_number()
-local INDIC_CURRENTPLACEHOLDER = view.new_indic_number()
+local INDIC_SNIPPET, INDIC_CURRENTPLACEHOLDER = view.new_indic_number(), view.new_indic_number()
 
 --- Map of [snippet](#textadept.snippets) triggers to snippet text or functions that return
 -- such text.
@@ -254,22 +253,20 @@ for _, name in ipairs(lexer.names()) do snippets[name] = {} end
 -- @param[optchain=false] no_trigger Ignore the trigger word and return all snippets.
 -- @return trigger word, snippet text or table of matching snippets
 local function find_snippet(grep, no_trigger)
-	local matching_snippets = {}
-	local trigger = not no_trigger and
-		buffer:text_range(buffer:word_start_position(buffer.current_pos), buffer.current_pos) or ''
+	local matches = {}
+	local pos = buffer.current_pos
+	local trigger = not no_trigger and buffer:text_range(buffer:word_start_position(pos), pos) or ''
 	if no_trigger then grep = true end
 	local lang = buffer:get_lexer(true)
 	local name_patt = '^' .. trigger
 	-- Search in the snippet tables.
-	local snippet_tables = {snippets}
-	if type(snippets[lang]) == 'table' then table.insert(snippet_tables, 1, snippets[lang]) end
-	for _, snippets in ipairs(snippet_tables) do
-		if not grep and snippets[trigger] then return trigger, snippets[trigger] end
-		if not grep then goto continue end
+	for _, snippets in ipairs{snippets[lang] or {}, snippets} do
+		if not grep then
+			if snippets[trigger] then return trigger, snippets[trigger] end
+			goto continue
+		end
 		for name, text in pairs(snippets) do
-			if name:find(name_patt) and type(text) ~= 'table' then
-				matching_snippets[name] = tostring(text)
-			end
+			if name:find(name_patt) and type(text) == 'string' then matches[name] = text end
 		end
 		::continue::
 	end
@@ -285,15 +282,14 @@ local function find_snippet(grep, no_trigger)
 				local f<close> = io.open(string.format('%s/%s', M.paths[i], basename))
 				local text = f:read('a')
 				if not grep and p1 == lang then return trigger, text end
-				matching_snippets[p1 == lang and p2 or p1] = text
+				matches[p1 == lang and p2 or p1] = text
 			end
 		end
-		if not grep and next(matching_snippets) then
-			return trigger, select(2, next(matching_snippets)) -- non-preferred "trigger.ext" was found
-		end
+		-- Non-preferred "trigger.ext" was found.
+		if not grep and next(matches) then return trigger, select(2, next(matches)) end
 	end
 	if not grep then return nil, nil end
-	return trigger, matching_snippets
+	return trigger, matches
 end
 
 --- A snippet object.
@@ -749,12 +745,6 @@ function M.select()
 	if i then M.insert(items[i * 2]) end
 end
 
---- Whether or not a snippet is active.
--- @field active
-
-setmetatable(M,
-	{__index = function(_, k) if k == 'active' then return active_snippet ~= nil end end})
-
 -- Update snippet transforms when text is added or deleted.
 events.connect(events.UPDATE_UI, function(updated)
 	if not active_snippet then return end
@@ -778,4 +768,10 @@ textadept.editing.autocompleters.snippet = function()
 	return #trigger, list
 end
 
-return M
+--- Whether or not a snippet is active.
+-- @field active
+
+return setmetatable(M, {
+	__index = function(_, k) if k == 'active' then return active_snippet ~= nil end end
+})
+

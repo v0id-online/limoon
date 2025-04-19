@@ -13,8 +13,7 @@ if arg then
 end
 
 -- Events.
-local session_events = {'session_save', 'session_load'}
-for _, v in ipairs(session_events) do events[v:upper()] = v end
+for _, v in ipairs{'session_save', 'session_load'} do events[v:upper()] = v end
 
 --- Emitted when saving a session.
 -- Arguments:
@@ -39,16 +38,15 @@ local session_file = _USERHOME .. (not CURSES and '/session' or '/session_term')
 --	is prompted for one.
 -- @see events.SESSION_LOAD
 function M.load(filename)
-	local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 	if not assert_type(filename, 'string/nil', 1) then
+		local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 		filename = ui.dialogs.open{title = _L['Load Session'], dir = dir, file = name}
 		if not filename then return end
 	end
 	if session_file ~= filename then M.save(session_file) end
 	local f = loadfile(filename, 't', {})
 	if not f or not io.close_all_buffers() then return end -- fail silently
-	local session = f()
-	local not_found = {}
+	local session, files_not_found = f(), {}
 
 	-- Unserialize cwd.
 	if session.cwd then lfs.chdir(session.cwd) end
@@ -56,38 +54,37 @@ function M.load(filename)
 	-- Unserialize buffers.
 	local tabs = ui.tabs
 	if tabs then ui.tabs = false end -- avoid repeated tab add-and-redraw
+	local MARK_BOOKMARK = textadept.bookmarks.MARK_BOOKMARK
 	for _, buf in ipairs(session.buffers) do
-		if lfs.attributes(buf.filename) then
-			io.open_file(buf.filename)
-			if not buf.selection then buf.selection = buf.anchor - 1 .. '-' .. buf.current_pos - 1 end
-			buffer.selection_serialized = buf.selection
-			view.first_visible_line = buf.top_line
-			for _, line in ipairs(buf.bookmarks) do
-				buffer:marker_add(line, textadept.bookmarks.MARK_BOOKMARK)
-			end
-		else
-			not_found[#not_found + 1] = buf.filename:iconv('UTF-8', _CHARSET)
+		if not lfs.attributes(buf.filename) then
+			files_not_found[#files_not_found + 1] = buf.filename:iconv('UTF-8', _CHARSET)
+			goto continue
 		end
+		io.open_file(buf.filename)
+		if not buf.selection then buf.selection = buf.anchor - 1 .. '-' .. buf.current_pos - 1 end
+		buffer.selection_serialized, view.first_visible_line = buf.selection, buf.top_line
+		for _, line in ipairs(buf.bookmarks) do buffer:marker_add(line, MARK_BOOKMARK) end
+		::continue::
 	end
-	ui.tabs = tabs
+	if tabs then ui.tabs = tabs end -- restore
 
 	-- Unserialize UI state.
 	ui.maximized = session.ui.maximized
 	if not ui.maximized then ui.size = session.ui.size end
 
 	-- Unserialize views.
-	local function unserialize_split(split)
+	local function load_split(split)
 		if type(split) ~= 'table' then
 			view:goto_buffer(_BUFFERS[math.min(split, #_BUFFERS)])
-		else
-			for i, view in ipairs{view:split(split.vertical)} do
-				view.size = split.size
-				ui.goto_view(view)
-				unserialize_split(split[i])
-			end
+			return
+		end
+		for i, view in ipairs{view:split(split.vertical)} do
+			if i == 1 then view.size = split.size end
+			ui.goto_view(view)
+			load_split(split[i])
 		end
 	end
-	unserialize_split(session.views[1])
+	load_split(session.views[1])
 	ui.goto_view(_VIEWS[math.min(session.views.current, #_VIEWS)])
 
 	-- Unserialize recent files.
@@ -96,14 +93,13 @@ function M.load(filename)
 	-- Unserialize user data.
 	events.emit(events.SESSION_LOAD, session)
 
-	if #not_found > 0 then
-		ui.dialogs.message{
-			title = _L['Session Files Not Found'],
-			text = string.format('%s\n • %s', _L['The following session files were not found:'],
-				table.concat(not_found, '\n • ')), icon = 'dialog-warning'
-		}
-	end
 	session_file = filename
+	if #files_not_found == 0 then return end
+	ui.dialogs.message{
+		title = _L['Session Files Not Found'],
+		text = string.format('%s\n • %s', _L['The following session files were not found:'],
+			table.concat(files_not_found, '\n • ')), icon = 'dialog-warning'
+	}
 end
 -- Load session when no args are present.
 events.connect(events.ARG_NONE, function() if M.save_on_quit then M.load(session_file) end end)
@@ -112,12 +108,11 @@ events.connect(events.ARG_NONE, function() if M.save_on_quit then M.load(session
 -- This is a very simple implementation suitable for session saving only.
 -- Ignores function, userdata, and thread types, and does not handle circular tables.
 local function _tostring(val)
+	if type(val) == 'function' or type(val) == 'userdata' or type(val) == 'thread' then return 'nil' end
 	if type(val) == 'table' then
 		local t = {}
 		for k, v in pairs(val) do t[#t + 1] = string.format('[%s]=%s,', _tostring(k), _tostring(v)) end
 		return string.format('{%s}', table.concat(t))
-	elseif type(val) == 'function' or type(val) == 'userdata' or type(val) == 'thread' then
-		val = nil
 	end
 	return type(val) == 'string' and string.format('%q', val) or tostring(val)
 end
@@ -131,8 +126,8 @@ end
 --	is prompted for one.
 -- @see events.SESSION_SAVE
 function M.save(filename)
-	local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 	if not assert_type(filename, 'string/nil', 1) then
+		local dir, name = session_file:match('^(.-)[/\\]?([^/\\]+)$')
 		filename = ui.dialogs.save{title = _L['Save Session'], dir = dir, file = name}
 		if not filename then return end
 	end
@@ -169,13 +164,11 @@ function M.save(filename)
 	session.ui = {maximized = ui.maximized, size = ui.size}
 
 	-- Serialize views.
-	local function serialize_split(split)
-		return split.buffer and _BUFFERS[split.buffer] or {
-			serialize_split(split[1]), serialize_split(split[2]), vertical = split.vertical,
-			size = split.size
-		}
+	local function save_split(split)
+		return split.buffer and _BUFFERS[split.buffer] or
+			{save_split(split[1]), save_split(split[2]), vertical = split.vertical, size = split.size}
 	end
-	session.views = {serialize_split(ui.get_split_table()), current = _VIEWS[view]}
+	session.views = {save_split(ui.get_split_table()), current = _VIEWS[view]}
 
 	-- Serialize recent files.
 	session.recent_files = io.recent_files
@@ -188,8 +181,7 @@ end
 events.connect(events.QUIT, function() if M.save_on_quit then M.save(session_file) end end, 1)
 
 -- Does not save session on quit.
-args.register('-n', '--nosession', 0, function() M.save_on_quit = false end,
-	'No session functionality')
+args.register('-n', '--nosession', 0, function() M.save_on_quit = false end, 'Disable sessions')
 -- Loads a session on startup.
 args.register('-s', '--session', 1, function(name)
 	if not lfs.attributes(name) then name = string.format('%s/%s', _USERHOME, name) end

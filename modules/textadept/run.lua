@@ -26,7 +26,7 @@ M.INDIC_ERROR = view.new_indic_number()
 
 -- Events.
 local run_events = {'compile_output', 'run_output', 'build_output', 'test_output'}
-for _, event in ipairs(run_events) do events[event:upper()] = event end
+for _, v in ipairs(run_events) do events[v:upper()] = v end
 
 --- Emitted when an executed compile command has output.
 -- The default behavior is to print output to the output buffer. In order to override this,
@@ -93,14 +93,14 @@ local function print_output(silent, ...)
 	buffer = ui[silent and 'output_silent' or 'output'](...)
 	for i = last_line, buffer.line_count do
 		local line_state = buffer.line_state[i]
-		if line_state > 0 then
-			buffer:marker_add(i, line_state_marks[line_state])
-			local s, e = buffer:position_from_line(i), buffer.line_end_position[i]
-			while s < e and buffer:name_of_style(buffer.style_at[s]) ~= 'message' do s = s + 1 end
-			while e > s and buffer:name_of_style(buffer.style_at[e]) ~= 'message' do e = e - 1 end
-			buffer.indicator_current = line_state_indics[line_state]
-			buffer:indicator_fill_range(s, e - s + 1)
-		end
+		if line_state == 0 then goto continue end
+		buffer:marker_add(i, line_state_marks[line_state])
+		local s, e = buffer:position_from_line(i), buffer.line_end_position[i]
+		while s < e and buffer:name_of_style(buffer.style_at[s]) ~= 'message' do s = s + 1 end
+		while e > s and buffer:name_of_style(buffer.style_at[e]) ~= 'message' do e = e - 1 end
+		buffer.indicator_current = line_state_indics[line_state]
+		buffer:indicator_fill_range(s, e - s + 1)
+		::continue::
 	end
 end
 for _, event in ipairs(run_events) do
@@ -108,7 +108,7 @@ for _, event in ipairs(run_events) do
 		print_output(M.run_in_background or not (...):find('^> ') or (...):find('^> exit'), ...)
 	end)
 end
-events.connect(events.ERROR, function(errmsg) print_output(false, errmsg, '\n') end) -- mark Lua errors
+events.connect(events.ERROR, function(msg) print_output(false, msg, '\n') end) -- mark Lua errors
 
 --- Separate command entry run functions for distinct command histories.
 local command_entry_f = {}
@@ -122,7 +122,7 @@ local command_entry_f = {}
 --	custom commands per file/directory.
 -- @param key String key in *commands* that produced *command*. This is for saving/restoring
 --	custom commands per file/directory.
--- @param[opt] macros Optional table of '%[char]' macros to expand within *command*.
+-- @param[opt] macros Table of '%[char]' macros to expand within *command*.
 local function run_command(label, command, dir, event, commands, key, macros)
 	local is_func, working_dir, env = type(command) == 'function'
 	if is_func then command, working_dir, env = command() end
@@ -166,11 +166,11 @@ local function compile_or_run(filename, commands)
 	local ext = filename:match('[^/\\.]+$')
 	local lang = filename == buffer.filename and buffer.lexer_language or lexer.detect(ext)
 	local command = commands[filename] or commands[ext] or commands[lang]
-	local dirname, basename = '', filename
-	if filename:find('[/\\]') then dirname, basename = filename:match('^(.+)[/\\]([^/\\]+)$') end
+	local dirname, basename = filename:match('^(.-)[/\\]?([^/\\]+)$')
 	local event = commands == M.compile_commands and events.COMPILE_OUTPUT or events.RUN_OUTPUT
 	local macros = {
-		['%p'] = filename, ['%d'] = dirname, ['%f'] = basename, ['%e'] = basename:match('^(.+)%.') -- no extension
+		['%p'] = filename, ['%d'] = dirname, ['%f'] = basename,
+		['%e'] = basename:match('^(.+)%.') or basename
 	}
 	run_command(label, command, dirname, event, commands, filename, macros)
 end
@@ -244,29 +244,6 @@ end
 M.build_commands = {--[[Ant]]['build.xml']='ant',--[[Dockerfile]]Dockerfile='docker build .',--[[Make]]Makefile='make',GNUmakefile='make',makefile='make',--[[Meson]]['meson.build']='meson compile',--[[Maven]]['pom.xml']='mvn',--[[Ruby]]Rakefile='rake'}
 -- LuaFormatter on
 
---- Prompts the user with the command entry to build a project using its shell command from the
--- `textadept.run.build_commands` table.
--- @param[opt] dir String path to the project to build. The default value is the current project,
---	which is determined by either the buffer's filename or the current working directory.
--- @see events.BUILD_OUTPUT
-function M.build(dir)
-	if not assert_type(dir, 'string/nil', 1) then
-		dir = io.get_project_root()
-		if not dir then return end
-	end
-	for _, buffer in ipairs(_BUFFERS) do buffer:annotation_clear_all() end
-	local cmd = M.build_commands[dir]
-	if not cmd then
-		for build_file, build_command in pairs(M.build_commands) do
-			if lfs.attributes(string.format('%s/%s', dir, build_file)) then
-				cmd = build_command
-				break
-			end
-		end
-	end
-	run_command(_L['Build command:'], cmd, dir, events.BUILD_OUTPUT, M.build_commands, dir)
-end
-
 --- Map of project root paths to their associated "test" shell command line strings or functions
 -- that return such strings.
 -- Functions may also return a working directory and process environment table to operate
@@ -274,22 +251,6 @@ end
 -- is Textadept's environment.
 -- @usage textadept.run.test_commands['/path/to/project'] = 'pytest'
 M.test_commands = {}
-
---- Prompts the user with the command entry to run tests for a project using its shell command
--- from the `textadept.run.test_commands` table.
--- @param[opt] dir String path to the project to run tests for. The default value is the
---	current project, which is determined by either the buffer's filename or the current
---	working directory.
--- @see events.TEST_OUTPUT
-function M.test(dir)
-	if not assert_type(dir, 'string/nil', 1) then
-		dir = io.get_project_root()
-		if not dir then return end
-	end
-	for _, buffer in ipairs(_BUFFERS) do buffer:annotation_clear_all() end
-	local cmd = M.test_commands[dir]
-	run_command(_L['Test command:'], cmd, dir, events.TEST_OUTPUT, M.test_commands, dir)
-end
 
 --- Map of project root paths to their associated "run" shell command line strings or functions
 -- that return such strings.
@@ -303,6 +264,48 @@ end
 --	end
 M.run_project_commands = {}
 
+local lookup = {
+	[M.build_commands] = {label = _L['Build command:'], event = events.BUILD_OUTPUT},
+	[M.test_commands] = {label = _L['Test command:'], event = events.TEST_OUTPUT},
+	[M.run_project_commands] = {label = _L['Project run command:'], event = events.RUN_OUTPUT}
+}
+--- Builds, tests, or runs a project command from the given set of shell commands.
+-- @param commands Either `build_commands`, `test_commands`, or `run_project_commands`.
+-- @param[opt] dir String directory of the project to build/test/run.
+-- @param[optchain=commands[dir]] cmd Shell command to run.
+local function build_test_or_run(commands, dir, cmd)
+	if not dir then
+		dir = io.get_project_root()
+		if not dir then return end
+	end
+	for _, buffer in ipairs(_BUFFERS) do buffer:annotation_clear_all() end
+	local cmd = commands[dir]
+	if not cmd and commands == M.build_commands then
+		for build_file, build_command in pairs(commands) do
+			if lfs.attributes(string.format('%s/%s', dir, build_file)) then
+				cmd = build_command
+				break
+			end
+		end
+	end
+	run_command(lookup[commands].label, cmd, dir, lookup[commands].event, commands, dir)
+end
+
+--- Prompts the user with the command entry to build a project using its shell command from the
+-- `textadept.run.build_commands` table.
+-- @param[opt] dir String path to the project to build. The default value is the current project,
+--	which is determined by either the buffer's filename or the current working directory.
+-- @see events.BUILD_OUTPUT
+function M.build(dir) build_test_or_run(M.build_commands, assert_type(dir, 'string/nil', 1)) end
+
+--- Prompts the user with the command entry to run tests for a project using its shell command
+-- from the `textadept.run.test_commands` table.
+-- @param[opt] dir String path to the project to run tests for. The default value is the
+--	current project, which is determined by either the buffer's filename or the current
+--	working directory.
+-- @see events.TEST_OUTPUT
+function M.test(dir) build_test_or_run(M.test_commands, assert_type(dir, 'string/nil', 1)) end
+
 --- Prompts the user with the command entry to run a shell command for a project.
 -- @param[opt] dir String path to the project to run a command for. The default value is the
 --	current project, which is determined by either the buffer's filename or the current
@@ -311,12 +314,7 @@ M.run_project_commands = {}
 --	command. The default value comes from `textadept.run.run_project_commands` and *dir*.
 -- @see events.RUN_OUTPUT
 function M.run_project(dir, cmd)
-	if not assert_type(dir, 'string/nil', 1) then
-		dir = io.get_project_root()
-		if not dir then return end
-	end
-	if not assert_type(cmd, 'string/nil', 2) then cmd = M.run_project_commands[dir] end
-	run_command(_L['Project run command:'], cmd, dir, events.RUN_OUTPUT, M.run_project_commands, dir)
+	build_test_or_run(M.run_project_commands, assert_type(dir, 'string/nil', 1), cmd)
 end
 
 --- Stops the currently running process, if any.
@@ -325,20 +323,21 @@ end
 function M.stop()
 	for i = #procs, 1, -1 do if procs[i].proc:status() ~= 'running' then table.remove(procs, i) end end
 	if #procs == 0 then return end
-	local utf8_cmds = {}
-	for _, proc in ipairs(procs) do utf8_cmds[#utf8_cmds + 1] = proc.command:iconv('UTF-8', _CHARSET) end
-	local selected = #procs == 1 and {1} or
-		ui.dialogs.list{title = _L['Stop Process'], items = utf8_cmds, multiple = true}
+	local selected = {#procs}
+	if #procs > 1 then
+		local utf8_cmds = {}
+		for _, p in ipairs(procs) do utf8_cmds[#utf8_cmds + 1] = p.command:iconv('UTF-8', _CHARSET) end
+		selected = ui.dialogs.list{title = _L['Stop Process'], items = utf8_cmds, multiple = true}
+	end
 	if selected then for _, i in ipairs(selected) do procs[i].proc:kill() end end
 end
 
 -- Send line as input to process stdin on return.
 events.connect(events.CHAR_ADDED, function(code)
+	if code ~= string.byte('\n') or not is_out_buf(buffer) then return end
 	local proc = #procs > 0 and procs[#procs].proc or nil
-	if code == string.byte('\n') and proc and proc:status() == 'running' and is_out_buf(buffer) then
-		local line_num = buffer:line_from_position(buffer.current_pos) - 1
-		proc:write(buffer:get_line(line_num))
-	end
+	if not proc or proc:status() ~= 'running' then return end
+	proc:write(buffer:get_line(buffer:line_from_position(buffer.current_pos) - 1))
 end)
 
 --- Returns text tagged with an output lexer tag on a line number.
@@ -375,26 +374,19 @@ function M.goto_error(location)
 		local f, next = location and buffer.marker_next or buffer.marker_previous, location
 		line_num = buffer:line_from_position(buffer.current_pos)
 		local WARN_BIT, ERROR_BIT = 1 << M.MARK_WARNING - 1, 1 << M.MARK_ERROR - 1
-		local wrapped = false
-		::retry::
 		local wline = f(buffer, line_num + (next and 1 or -1), WARN_BIT)
 		local eline = f(buffer, line_num + (next and 1 or -1), ERROR_BIT)
 		if wline == -1 and eline == -1 then
 			wline = f(buffer, next and 1 or buffer.line_count, WARN_BIT)
 			eline = f(buffer, next and 1 or buffer.line_count, ERROR_BIT)
-		elseif wline == -1 or eline == -1 then
-			if wline == -1 then
-				wline = eline
-			else
-				eline = wline
-			end
+			if wline == -1 and eline == -1 then return end
+		end
+		if wline == -1 then
+			wline = eline
+		elseif eline == -1 then
+			eline = wline
 		end
 		line_num = (next and math.min or math.max)(wline, eline)
-		if line_num == -1 and not wrapped then
-			line_num = next and 1 or buffer.line_count
-			wrapped = true
-			goto retry
-		end
 	end
 
 	-- Go to the warning or error and show an annotation.
@@ -427,9 +419,10 @@ end
 
 -- Jump to the error or warning when pressing Enter.
 events.connect(events.KEYPRESS, function(key)
-	local line_num = buffer:line_from_position(buffer.current_pos)
-	if key ~= '\n' or not is_out_buf(buffer) or buffer.line_state[line_num] == 0 then return end
-	M.goto_error(line_num)
+	if key ~= '\n' or not is_out_buf(buffer) then return end
+	local line = buffer:line_from_position(buffer.current_pos)
+	if buffer.line_state[line] == 0 then return end
+	M.goto_error(line)
 	return true
 end)
 

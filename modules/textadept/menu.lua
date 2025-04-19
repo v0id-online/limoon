@@ -41,8 +41,8 @@ local function deselect()
 	buffer:set_empty_selection(buffer._deselect_pos)
 end
 events.connect(events.UPDATE_UI, function(updated)
-	if not updated or updated & 3 == 0 or not buffer.selection_empty then return end
-	buffer._deselect_pos = buffer.current_pos
+	if not updated or updated & (buffer.UPDATE_CONTENT | buffer.UPDATE_SELECTION) == 0 then return end
+	if buffer.selection_empty then buffer._deselect_pos = buffer.current_pos end
 end)
 
 --- Wrapper around `buffer:upper_case()` and `buffer:lower_case()`.
@@ -51,6 +51,32 @@ local function change_case(upper)
 	if select then textadept.editing.select_word() end
 	buffer[upper and 'upper_case' or 'lower_case'](buffer)
 	if select then buffer:goto_pos(pos) end
+end
+
+--- Returns for a list dialog a list of menu items and their key shortcuts.
+-- @param menu Menu to read from.
+-- @param[opt] items Table to append items to. This is used internally and should not be set.
+local function get_menu_items(menu, items)
+	if not items then items = {} end
+	for _, item in ipairs(menu) do
+		if item.title then
+			get_menu_items(item, items)
+		elseif item[1] ~= '' then -- item = {label, function}
+			local label = menu.title and string.format('%s: %s', menu.title, item[1]) or item[1]
+			items[#items + 1] = label:gsub('[_&]([^_&])', '%1')
+			items[#items + 1] = key_shortcuts[item[2]] or ''
+		end
+	end
+	return items
+end
+
+--- Prompts the user to select a menu command to run.
+function M.select_command()
+	local i = ui.dialogs.list{
+		title = _L['Run Command'], columns = {_L['Command'], _L['Key Binding']},
+		items = get_menu_items(getmetatable(M.menubar).menu)
+	}
+	if i then events.emit(events.MENU_CLICKED, i) end
 end
 
 local press_any_key = _L['Press any key or Esc to cancel...']
@@ -62,13 +88,13 @@ keys._show_keys = setmetatable({esc = function() keys.mode = nil end}, {
 			local key = k:gsub('[\b\t\n]', {['\b'] = '\\b', ['\t'] = '\\t', ['\n'] = '\\n'})
 			local command = keys[key] and _L['Unknown'] or _L['Unassigned']
 			for _, item in ipairs(menu_items) do
-				if key_shortcuts[tostring(item[2])] == key then
+				if key_shortcuts[item[2]] == key then
 					command = item[1]:gsub('[_&]([^_&])', '%1') -- no longer 'Unknown'
 					break
 				end
 			end
 			ui.statusbar_text = string.format('%s (%s) - %s', key, command, press_any_key)
-			buffer:copy_text(key)
+			buffer:copy_text(key) -- copy for convenience
 		end
 	end
 })
@@ -85,23 +111,26 @@ local function show_style()
 	view:call_tip_show(buffer.current_pos, text)
 end
 
+--- Trigger a statusbar update.
+local function update_statusbar() events.emit(events.UPDATE_UI, buffer.UPDATE_CONTENT) end
+
 --- Wrapper around `buffer.tab_width`.
 local function set_indentation(i)
 	buffer.tab_width = i
-	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
+	update_statusbar()
 end
 
 --- Wrapper around `buffer.eol_mode`.
 local function set_eol_mode(mode)
 	buffer.eol_mode = mode
 	buffer:convert_eols(mode)
-	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
+	update_statusbar()
 end
 
 --- Wrapper around `buffer:set_encoding()`.
 local function set_encoding(encoding)
 	buffer:set_encoding(encoding)
-	events.emit(events.UPDATE_UI, 1) -- for updating statusbar
+	update_statusbar()
 end
 
 --- Opens a URL in the user's default web browser.
@@ -223,8 +252,8 @@ local default_menubar = {
 		{_L['Go To Line...'], textadept.editing.goto_line}
 	}, {
 		title = _L['Tools'], --
-		{_L['Command Entry'], ui.command_entry.run},
-		{_L['Select Command'], function() M.select_command() end}, --
+		{_L['Command Entry'], ui.command_entry.run}, --
+		{_L['Select Command'], M.select_command}, --
 		SEPARATOR, --
 		{_L['Run'], textadept.run.run}, --
 		{_L['Compile'], textadept.run.compile}, --
@@ -285,7 +314,7 @@ local default_menubar = {
 			SEPARATOR, {
 				_L['Toggle Use Tabs'], function()
 					buffer.use_tabs = not buffer.use_tabs
-					events.emit(events.UPDATE_UI, 1) -- for updating statusbar
+					update_statusbar()
 				end
 			}, {_L['Convert Indentation'], textadept.editing.convert_indentation}
 		}, {
@@ -419,23 +448,19 @@ local ignore = {[0xFE20] = true, [0x01000002] = true}
 -- `SCMOD_*` modifiers.
 -- @param key_seq String key sequence.
 -- @return keycode and modifier mask
-local function get_menu_key_seq(key_seq)
+local function get_menu_accel(key_seq)
 	if not key_seq then return nil end
 	local mods, key = key_seq:match('^(.*%+)(.+)$')
 	if not mods and not key then mods, key = '', key_seq end
-	local modifiers = ((mods:find('shift%+') or key:lower() ~= key) and SHIFT or 0) +
-		(mods:find('ctrl%+') and CTRL or 0) + (mods:find('alt%+') and ALT or 0) +
+	local mask = ((mods:find('shift%+') or key:lower() ~= key) and SHIFT or 0) |
+		(mods:find('ctrl%+') and CTRL or 0) | (mods:find('alt%+') and ALT or 0) |
 		(mods:find('cmd%+') and META or 0)
 	local code = string.byte(key)
-	if #key > 1 or code < 32 then
-		for i, s in pairs(keys.KEYSYMS) do
-			if s == key and i >= (not QT and 0xFE20 or 0x01000000) and not ignore[i] then
-				code = i
-				break
-			end
-		end
+	if #key == 1 and code >= 32 then return code, mask end
+	for c, s in pairs(keys.KEYSYMS) do
+		if s == key and c >= (not QT and 0xFE20 or 0x01000000) and not ignore[c] then return c, mask end
 	end
-	return code, modifiers
+	return code, mask
 end
 
 --- Creates a menu suitable for `ui.menu()` from the menu table format.
@@ -450,8 +475,7 @@ local function read_menu_table(menu, contextmenu)
 			ui_menu[#ui_menu + 1] = read_menu_table(item, contextmenu)
 		else -- item = {label, function}
 			local menu_id = not contextmenu and #menu_items + 1 or #contextmenu_items + 1000 + 1
-			local key, mods = get_menu_key_seq(key_shortcuts[tostring(item[2])])
-			ui_menu[#ui_menu + 1] = {item[1], menu_id, key, mods}
+			ui_menu[#ui_menu + 1] = {item[1], menu_id, get_menu_accel(key_shortcuts[item[2]])}
 			if item[2] then
 				local items = not contextmenu and menu_items or contextmenu_items
 				items[menu_id < 1000 and menu_id or menu_id - 1000] = item
@@ -464,36 +488,35 @@ end
 --- Returns a proxy table for a menu table such that when a menu item is changed or added,
 -- the menu is updated in the UI.
 -- @param menu Menu or table of menus to create a proxy for.
--- @param update Function to call to update the menu in the UI when a menu item is changed
+-- @param[opt] update Function to call to update the menu in the UI when a menu item is changed
 --	or added.
--- @param menubar Used internally to keep track of the top-level menu for calling *update* with.
+-- @param[optchain] menubar Used internally to keep track of the top-level menu for calling
+--	*update* with.
 local function proxy_menu(menu, update, menubar)
-	local proxy_mt = {
-		__index = function(_, k)
-			local v
-			if type(k) == 'number' or k == 'title' then
-				v = menu[k]
-			elseif type(k) == 'string' then
-				for _, item in ipairs(menu) do
-					if item.title == _L[k] or item[1] == _L[k] then
-						v = item
-						break
-					end
-				end
-			end
+	local proxy_mt = {menu = menu} -- store existing menu for copying (e.g. m[#m + 1] = m[#m])
+	proxy_mt.__index = function(_, k)
+		if type(k) == 'number' or k == 'title' then
+			local v = menu[k]
 			return type(v) == 'table' and proxy_menu(v, update, menubar or menu) or v
-		end, --
-		__newindex = function(_, k, v)
-			menu[k] = getmetatable(v) and getmetatable(v).menu or v
-			-- After adding or removing menus or menu items, update the menubar or context menu. When
-			-- updating a menu item's function, do nothing extra.
-			if type(v) ~= 'function' then update(menubar or menu) end
-		end, --
-		__len = function() return #menu end, --
-		menu = menu -- store existing menu for copying (e.g. m[#m + 1] = m[#m])
-	}
+		end
+		if type(k) ~= 'string' then return nil end
+		k = _L[k]
+		for _, item in ipairs(menu) do
+			if item.title == k or item[1] == k then return proxy_menu(item, update, menubar or menu) end
+		end
+		return nil
+	end
+	proxy_mt.__newindex = function(_, k, v)
+		menu[k] = getmetatable(v) and getmetatable(v).menu or v
+		-- After adding or removing menus or menu items, update the menubar or context menu. When
+		-- updating a menu item's function, do nothing extra.
+		if type(v) ~= 'function' and update then update(menubar or menu) end
+	end
+	proxy_mt.__len = function() return #menu end
+
 	local proxy = setmetatable({}, proxy_mt)
-	if menubar then return proxy end
+	if menubar then return proxy end -- this is a sub-menu
+
 	-- Handle shorthand `menubar['Edit/Select/Select Word']` notation for top-level menus.
 	local toplevel_proxy_mt = {}
 	for k, v in pairs(proxy_mt) do toplevel_proxy_mt[k] = v end
@@ -524,7 +547,7 @@ local function set_menubar(menubar)
 		return
 	end
 	key_shortcuts, menu_items = {}, {} -- reset
-	for key, f in pairs(keys) do key_shortcuts[tostring(f)] = key end
+	for key, f in pairs(keys) do key_shortcuts[f] = key end
 	local _menubar = {}
 	for _, menu in ipairs(menubar) do _menubar[#_menubar + 1] = ui.menu(read_menu_table(menu)) end
 	ui.menubar = _menubar
@@ -534,88 +557,57 @@ events.connect(events.INITIALIZED, function() set_menubar(default_menubar) end)
 -- Define menu proxy for use by keys.lua and user scripts.
 -- Do not use an update function because this is expensive at startup, and `events.INITIALIZED`
 -- will create the first visible menubar and proper proxy.
-proxies.menubar = proxy_menu(default_menubar, function() end)
+proxies.menubar = proxy_menu(default_menubar)
 
---- Sets `ui.context_menu` and `ui.tab_context_menu` from the given menu item lists.
+--- Set a context menu from the given menu item lists.
 -- Menu items are tables containing menu text and either a function to call or a table containing a
 -- function with its parameters to call when an item is clicked. Menu items may also be sub-menus,
 -- ordered lists of menu items with an additional `title` key for the sub-menu's title text.
--- @param[opt=default_context_menu] buffer_menu Menu table to create the buffer context menu from.
--- @param[optchain=default_tab_context_menu] tab_menu Menu table to create the tabbar context
+-- @param name Name of the context menu, either 'context_menu' or 'tab_context_menu'.
+-- @param menu Menu table to create the buffer context menu from.
 --	menu from.
 -- @see ui.menu
-local function set_contextmenus(buffer_menu, tab_menu)
-	contextmenu_items = {} -- reset
-	local menus = {
-		context_menu = buffer_menu or default_context_menu,
-		tab_context_menu = tab_menu or default_tab_context_menu
-	}
-	for name, menu in pairs(menus) do
-		ui[name] = ui.menu(read_menu_table(menu, true))
-		proxies[name] = proxy_menu(menu, function()
-			set_contextmenus(menus.context_menu, menus.tab_context_menu)
-		end)
-	end
+local function set_contextmenu(name, menu)
+	if name == 'context_menu' then contextmenu_items = {} end -- reset
+	ui[name] = ui.menu(read_menu_table(menu, true))
+	proxies[name] = proxy_menu(menu, function() set_contextmenu(name, menu) end)
 end
-events.connect(events.INITIALIZED, set_contextmenus)
+events.connect(events.INITIALIZED, function()
+	set_contextmenu('context_menu', default_context_menu)
+	set_contextmenu('tab_context_menu', default_tab_context_menu)
+end)
 -- Define menu proxies for use by user scripts.
 -- Do not use an update function because this is expensive at startup, and `events.INITIALIZED`
 -- will create these visible menus and their proper proxies.
-proxies.context_menu = proxy_menu(default_context_menu, function() end)
-proxies.tab_context_menu = proxy_menu(default_tab_context_menu, function() end)
+proxies.context_menu = proxy_menu(default_context_menu)
+proxies.tab_context_menu = proxy_menu(default_tab_context_menu)
 
 -- Performs the appropriate action when clicking a menu item.
 events.connect(events.MENU_CLICKED, function(menu_id)
 	local items = menu_id < 1000 and menu_items or contextmenu_items
 	local f = items[menu_id < 1000 and menu_id or menu_id - 1000][2]
-	if not OSX or not key_shortcuts[tostring(f)] then
+	if not OSX or not key_shortcuts[f] then
 		assert_type(f, 'function', 'command')()
-		-- When recording a macro on macOS, only record `events.MENU_CLICKED` if there is no key
-		-- shortcut, or else `events.KEYPRESS` will also be recorded, resulting in a duplicate
-		-- action. This undocumented event will act in place of `events.MENU_CLICKED`.
+		-- On macOS, `events.MENU_CLICKED` will also emit `events.KEYPRESS` if there is a key
+		-- shortcut (see below). This would result in recording the command twice during macro
+		-- record. Therefore, macro recording ignores `events.MENU_CLICKED`, but listens for
+		-- this undocumented event instead when a shortcut does not exist.
 		events.emit('menu_clicked_no_shortcut', menu_id)
-	else
-		-- The macOS menubar eats key shortcuts, emits menu events, and prevents keypress events.
-		-- This affects user-defined key bindings, as well as command entry key bindings.
-		-- Instead of invoking a menu item's function, emit the keypress for its shortcut.
-		if not ui.command_entry.active and not keys.mode then
-			events.emit(events.KEYPRESS, keys.CLEAR)
-		end
-		events.emit(events.KEYPRESS, key_shortcuts[tostring(f)])
+		return
 	end
+	-- The macOS menubar eats key shortcuts, emits menu events, and prevents keypress events.
+	-- This affects user-defined key bindings, as well as command entry key bindings.
+	-- Instead of invoking a menu item's function, emit the keypress for its shortcut.
+	if not ui.command_entry.active and not keys.mode then events.emit(events.KEYPRESS, keys.CLEAR) end
+	events.emit(events.KEYPRESS, key_shortcuts[f])
 end)
-
---- Prompts the user to select a menu command to run.
-function M.select_command()
-	local items = {}
-	-- Builds the item tables for the list dialog.
-	-- @param menu Menu to read from.
-	local function build_command_tables(menu)
-		for _, item in ipairs(menu) do
-			if item.title then
-				build_command_tables(item)
-			elseif item[1] ~= '' then -- item = {label, function}
-				local label = menu.title and string.format('%s: %s', menu.title, item[1]) or item[1]
-				items[#items + 1] = label:gsub('[_&]([^_&])', '%1')
-				items[#items + 1] = key_shortcuts[tostring(item[2])] or ''
-			end
-		end
-	end
-	build_command_tables(getmetatable(M.menubar).menu)
-	local i = ui.dialogs.list{
-		title = _L['Run Command'], columns = {_L['Command'], _L['Key Binding']}, items = items
-	}
-	if i then events.emit(events.MENU_CLICKED, i) end
-end
 
 return setmetatable(M, {
 	__index = function(_, k) return proxies[k] or rawget(M, k) end, __newindex = function(_, k, v)
 		if k == 'menubar' then
 			set_menubar(v)
-		elseif k == 'context_menu' then
-			set_contextmenus(v) -- TODO: this can reset tab_context_menu
-		elseif k == 'tab_context_menu' then
-			set_contextmenus(nil, v) -- TODO: this can reset context_menu
+		elseif k == 'context_menu' or k == 'tab_context_menu' then
+			set_contextmenu(k, v)
 		else
 			rawset(M, k, v)
 		end

@@ -28,7 +28,7 @@ test('find should emit an event for results found', function()
 	ui.find.find_next()
 
 	test.assert_equal(found.called, true)
-	test.assert_equal(found.args, {find})
+	test.assert_equal(found.args, {find, false})
 end)
 
 test('find should count how many occurrences it found #skip', function()
