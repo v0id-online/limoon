@@ -99,7 +99,8 @@ end)
 -- @field view.size
 
 --- Work with Files.
--- **Note:** this module does not open files. `io.open_file()` does.
+-- > [!NOTE]
+-- > This module does not open files. `io.open_file()` does.
 -- @section
 
 --- Reloads the buffer's file contents, discarding any changes.
@@ -788,7 +789,8 @@ end)
 -- @function change_selection_mode
 
 --- Make and Modify Multiple Selections.
--- **Note:** the `buffer.selection_n_`\* fields cannot be used to create selections.
+-- > [!NOTE]
+-- > The `buffer.selection_n_`\* fields cannot be used to create selections.
 -- @section
 
 --- Selects a range of text, removing all other selections.
@@ -2540,18 +2542,19 @@ end)
 -- Alpha transparency values are numbers that range from `0` (transparent) to `0xFF` (opaque),
 -- and also includes `view.ALPHA_NOALPHA` for no transparency.
 --
--- **Terminal version note:** irrespective of how many colors the terminal actually supports,
--- Textadept only recognizes 16 colors:
---
--- `0x000000` | Black | `0x404040` | Light black
--- `0x000080` | Red | `0x0000FF` | Light red
--- `0x008000` | Green | `0x00FF00` | Light green
--- `0x800000` | Blue | `0xFF0000` | Light blue
--- `0x800080` | Magenta | `0xFF00FF` | Light magenta
--- `0x808000` | Cyan | `0xFFFF00` | Light cyan
--- `0xC0C0C0` | White | `0xFFFFFF` | Light white
---
--- Themes must use these colors, but your terminal emulator will map them to its own palette.
+-- > [!NOTE]
+-- > The terminal version of Textadept only recognizes 16 colors (regardless of how many colors
+-- > the terminal actually supports):
+-- >
+-- > `0x000000` | Black | `0x404040` | Light black
+-- > `0x000080` | Red | `0x0000FF` | Light red
+-- > `0x008000` | Green | `0x00FF00` | Light green
+-- > `0x800000` | Blue | `0xFF0000` | Light blue
+-- > `0x800080` | Magenta | `0xFF00FF` | Light magenta
+-- > `0x808000` | Cyan | `0xFFFF00` | Light cyan
+-- > `0xC0C0C0` | White | `0xFFFFFF` | Light white
+-- >
+-- > Themes must use these colors, but your terminal emulator will map them to its own palette.
 --
 -- #### Styles
 --

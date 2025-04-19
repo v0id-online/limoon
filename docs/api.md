@@ -434,8 +434,8 @@ not make a visible selection, even if `buf` is visible in another view. Despite 
 (Basically, you can make "background" edits of non-current buffers in an object-oriented way.)
 
 [Scintilla]: https://scintilla.org/ScintillaDoc.html
-### Create Buffers and Views
 
+### Create Buffers and Views
 
 <a id="buffer.new"></a>
 #### `buffer.new`()
@@ -468,7 +468,6 @@ Returns: whether or not the view was unsplit.
 
 ### View Information
 
-
 <a id="view.buffer"></a>
 #### `view.buffer`
 
@@ -485,7 +484,9 @@ See also: [`ui.get_split_table`](#ui.get_split_table)
 ### Work with Files
 
 
-**Note:** this module does not open files. [`io.open_file()`](#io.open_file) does.
+> [!NOTE]
+> This module does not open files. [`io.open_file()`](#io.open_file) does.
+
 <a id="buffer.reload"></a>
 #### `buffer:reload`()
 
@@ -566,6 +567,7 @@ Do not change this field manually. Call [`buffer:set_encoding()`](#buffer.set_en
 
 
 Movements within the current buffer scroll the caret into view if it is not already visible.
+
 <a id="buffer.char_left"></a>
 #### `buffer:char_left`()
 
@@ -674,6 +676,7 @@ there, to the beginning of the actual line.
 
 
 Movements within the current buffer scroll the caret into view if it is not already visible.
+
 <a id="buffer.goto_pos"></a>
 #### `buffer:goto_pos`(*pos*)
 
@@ -731,6 +734,7 @@ Toggles [`buffer.caret_sticky`](#buffer.caret_sticky) between `buffer.CARETSTICK
 
 
 Movements within the current buffer scroll the caret into view if it is not already visible.
+
 <a id="buffer.stuttered_page_up"></a>
 #### `buffer:stuttered_page_up`()
 
@@ -755,6 +759,7 @@ Moves the caret down one page.
 
 
 Movements between buffers do not scroll the caret into view if it is not visible.
+
 <a id="view.goto_buffer"></a>
 #### `view:goto_buffer`(*buffer*)
 
@@ -777,6 +782,7 @@ See also: [`events.BUFFER_BEFORE_SWITCH`](#events.BUFFER_BEFORE_SWITCH), [`event
 
 
 Movements within the current buffer scroll the caret into view if it is not already visible.
+
 <a id="buffer.para_up"></a>
 #### `buffer:para_up`()
 
@@ -807,7 +813,6 @@ Moves the caret to the beginning of the buffer.
 Moves the caret to the end of the buffer.
 
 ### Retrieve Text
-
 
 <a id="buffer.get_text"></a>
 #### `buffer:get_text`()
@@ -859,7 +864,6 @@ Map of buffer positions to their character bytes.
 (Read-only)
 
 ### Set Text
-
 
 <a id="buffer.set_text"></a>
 #### `buffer:set_text`(*text*)
@@ -921,6 +925,7 @@ Types a new line at the caret position according to [`buffer.eol_mode`](#buffer.
 Replacing an arbitrary range of text makes use of a *target range*, a user-defined defined
 region of text that some buffer functions operate on in order to avoid altering the current
 selection or scrolling the view.
+
 <a id="buffer.replace_sel"></a>
 #### `buffer:replace_sel`(*text*)
 
@@ -967,7 +972,6 @@ Parameters:
 Returns: length of replacement text
 
 ### Delete Text
-
 
 <a id="buffer.clear"></a>
 #### `buffer:clear`()
@@ -1039,7 +1043,6 @@ Deletes the buffer's text.
 
 ### Transform Text
 
-
 <a id="buffer.tab"></a>
 #### `buffer:tab`()
 
@@ -1096,6 +1099,7 @@ Shifts the selected lines down one line.
 
 Splitting and joining lines uses a target range (a user-defined defined region of text that
 some buffer functions operate on).
+
 <a id="buffer.lines_split"></a>
 #### `buffer:lines_split`(*width*)
 
@@ -1115,7 +1119,6 @@ boundaries.
 See also: [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_from_selection`](#buffer.target_from_selection), [`textadept.editing.join_lines`](#textadept.editing.join_lines)
 
 ### Undo and Redo
-
 
 <a id="buffer.can_undo"></a>
 #### `buffer:can_undo`()
@@ -1176,6 +1179,7 @@ The default value is `true`.
 
 The terminal version relies on the commands defined in [`textadept.clipboard`](#textadept.clipboard) in order to
 interact with the system clipboard, or else it uses its own internal clipboard.
+
 <a id="buffer.cut"></a>
 #### `buffer:cut`()
 
@@ -1259,7 +1263,6 @@ The default value is `buffer.MULTIPASTE_EACH`.
 
 ### Make Simple Selections
 
-
 <a id="buffer.set_sel"></a>
 #### `buffer:set_sel`(*start_pos*, *end_pos*)
 
@@ -1327,7 +1330,6 @@ Parameters:
 - *end_pos*:  End position of the range to check.
 
 ### Make Movement Selections
-
 
 <a id="buffer.char_left_extend"></a>
 #### `buffer:char_left_extend`()
@@ -1495,7 +1497,6 @@ The default value is `false`.
 
 ### Modal Selection
 
-
 <a id="buffer.selection_mode"></a>
 #### `buffer.selection_mode`
 
@@ -1526,7 +1527,9 @@ Parameters:
 ### Make and Modify Multiple Selections
 
 
-**Note:** the `buffer.selection_n_`\* fields cannot be used to create selections.
+> [!NOTE]
+> The `buffer.selection_n_`\* fields cannot be used to create selections.
+
 <a id="buffer.set_selection"></a>
 #### `buffer:set_selection`(*end_pos*, *start_pos*)
 
@@ -1661,7 +1664,6 @@ The default value is `true`.
 
 ### Make Rectangular Selections
 
-
 <a id="buffer.rectangular_selection_anchor"></a>
 #### `buffer.rectangular_selection_anchor`
 
@@ -1762,7 +1764,6 @@ Parameters:
 
 ### Simple Search
 
-
 <a id="buffer.search_anchor"></a>
 #### `buffer:search_anchor`()
 
@@ -1813,6 +1814,7 @@ Returns: found text's position, or `-1` if no text was found
 The more complex search and replace API uses a target range (a user-defined region of text
 that some buffer functions operate on, or a region of text that some buffer functions define
 as output).
+
 <a id="buffer.search_flags"></a>
 #### `buffer.search_flags`
 
@@ -1902,7 +1904,6 @@ Map of a regular expression search's capture numbers to captured text.
 (Read-only)
 
 ### Query Position Information
-
 
 <a id="buffer.anchor"></a>
 #### `buffer.anchor`
@@ -2041,7 +2042,6 @@ Parameters:
 
 ### Query Line and Line Number Information
 
-
 <a id="buffer.line_count"></a>
 #### `buffer.line_count`
 
@@ -2119,7 +2119,6 @@ Parameters:
 
 ### Query Measurement Information
 
-
 <a id="buffer.length"></a>
 #### `buffer.length`
 
@@ -2171,6 +2170,7 @@ Parameters:
 
 The number of line margins is configurable, with each one displaying either line numbers,
 [marker symbols](#mark-lines-with-markers), or text.
+
 <a id="view.margins"></a>
 #### `view.margins`
 
@@ -2402,6 +2402,7 @@ Marker Number | Description
 
 [XPM image]: https://scintilla.org/ScintillaDoc.html#XPM
 [RGBA image]: https://scintilla.org/ScintillaDoc.html#RGBA
+
 <a id="view.new_marker_number"></a>
 #### `view.new_marker_number`()
 
@@ -2647,6 +2648,7 @@ format.
 Lines may be annotated with styled, read-only text displayed underneath them or next to them
 at the ends of lines (EOL). This may be useful for displaying compiler errors, runtime errors,
 variable values, or other useful information.
+
 <a id="buffer.annotation_text"></a>
 #### `buffer.annotation_text`
 
@@ -2805,6 +2807,7 @@ Indicator number | Description
 `INDICATOR_HISTORY_REVERTED_TO_ORIGIN_INSERTION` | Text was inserted, saved, and fully reverted
 `INDICATOR_HISTORY_REVERTED_TO_ORIGIN_DELETION` | Text was deleted, saved, and fully reverted
 
+
 <a id="view.new_indic_number"></a>
 #### `view.new_indic_number`()
 
@@ -2956,6 +2959,7 @@ text. Autocompletion lists should define a separator character and a list order 
 the list. User lists should define a separator character, a list order, and an identifier
 number before showing the list. An autocompletion list inserts its selected item, while a
 user list emits an event with its selected item.
+
 <a id="buffer.auto_c_separator"></a>
 #### `buffer.auto_c_separator`
 
@@ -3166,6 +3170,7 @@ local function autocomplete()
 	buffer:auto_c_show(0, table.concat(list, string.char(buffer.auto_c_separator)))
 end
 ```
+
 <a id="view.new_image_type"></a>
 #### `view.new_image_type`()
 
@@ -3243,6 +3248,7 @@ Clears all images registered by [`view:register_image()`](#view.register_image) 
 A call tip is a small pop-up window that conveys a piece of textual information, such as
 the arguments and documentation for a function. A call tip may highlight an internal range
 of its own text, such as the current argument in a function call.
+
 <a id="view.call_tip_show"></a>
 #### `view:call_tip_show`(*pos*, *text*)
 
@@ -3315,6 +3321,7 @@ A call tip's highlighted text foreground color in "0xBBGGRR" format.
 Code folding temporarily hide blocks of source code. The buffer's lexer normally determines
 code fold points that the view denotes with fold margin markers, but arbitrary lines may be
 hidden or shown.
+
 <a id="view.toggle_fold"></a>
 #### `view:toggle_fold`(*line*)
 
@@ -3490,7 +3497,6 @@ Whether or not all lines are visible.
 
 ### Scroll the View
 
-
 <a id="view.x_offset"></a>
 #### `view.x_offset`
 
@@ -3556,6 +3562,7 @@ Scrolls to the end of the buffer without moving the caret.
 
 
 Each buffer and file has its own indentation and end-of-line character settings.
+
 <a id="buffer.use_tabs"></a>
 #### `buffer.use_tabs`
 
@@ -3628,6 +3635,7 @@ Parameters:
 The classification of characters as word, whitespace, or punctuation characters affects the
 buffer's behavior when moving between words or searching for whole words. The display of
 individual characters may be changed.
+
 <a id="buffer.word_chars"></a>
 #### `buffer.word_chars`
 
@@ -3719,18 +3727,19 @@ is blue. Each component ranges from `0` to `0xFF` (255).
 Alpha transparency values are numbers that range from `0` (transparent) to `0xFF` (opaque),
 and also includes `view.ALPHA_NOALPHA` for no transparency.
 
-**Terminal version note:** irrespective of how many colors the terminal actually supports,
-Textadept only recognizes 16 colors:
-
-`0x000000` | Black | `0x404040` | Light black
-`0x000080` | Red | `0x0000FF` | Light red
-`0x008000` | Green | `0x00FF00` | Light green
-`0x800000` | Blue | `0xFF0000` | Light blue
-`0x800080` | Magenta | `0xFF00FF` | Light magenta
-`0x808000` | Cyan | `0xFFFF00` | Light cyan
-`0xC0C0C0` | White | `0xFFFFFF` | Light white
-
-Themes must use these colors, but your terminal emulator will map them to its own palette.
+> [!NOTE]
+> The terminal version of Textadept only recognizes 16 colors (regardless of how many colors
+> the terminal actually supports):
+>
+> `0x000000` | Black | `0x404040` | Light black
+> `0x000080` | Red | `0x0000FF` | Light red
+> `0x008000` | Green | `0x00FF00` | Light green
+> `0x800000` | Blue | `0xFF0000` | Light blue
+> `0x800080` | Magenta | `0xFF00FF` | Light magenta
+> `0x808000` | Cyan | `0xFFFF00` | Light cyan
+> `0xC0C0C0` | White | `0xFFFFFF` | Light white
+>
+> Themes must use these colors, but your terminal emulator will map them to its own palette.
 
 #### Styles
 
@@ -3798,6 +3807,7 @@ Style property | Description
 
 <sup>a</sup>`view.CASE_UPPER` for upper, `view.CASE_LOWER` for lower, and `view.CASE_MIXED`
 for normal, mixed case. The default value is `view.CASE_MIXED`.
+
 <a id="view.set_theme"></a>
 #### `view:set_theme`([*name*][, *env*])
 
@@ -3872,6 +3882,7 @@ There are 256 different styles to style text with. The color theme normally dict
 default styles, but custom fonts, colors, and attributes may be applied to styles outside
 of themes. However, these custom settings must be re-applied every time a new buffer or view
 is created, and every time a lexer is loaded.
+
 <a id="view.style_reset_default"></a>
 #### `view:style_reset_default`()
 
@@ -3989,6 +4000,7 @@ Element ID | Description
 
 <sup>a</sup>Linux only
 
+
 <a id="view.element_color"></a>
 #### `view.element_color`
 
@@ -4032,7 +4044,6 @@ How selections are drawn.
 The default value is `view.LAYER_BASE`.
 
 ### Configure Caret Display
-
 
 <a id="view.caret_style"></a>
 #### `view.caret_style`
@@ -4125,7 +4136,6 @@ The default value is `buffer.VS_NONE`.
 
 ### Configure Selection Display
 
-
 <a id="view.sel_eol_filled"></a>
 #### `view.sel_eol_filled`
 
@@ -4137,6 +4147,7 @@ The default value is `false`.
 
 
 Normally, tab, space, and end of line characters are invisible.
+
 <a id="view.view_ws"></a>
 #### `view.view_ws`
 
@@ -4188,7 +4199,6 @@ The amount of pixel padding below lines.
 The default is `0`.
 
 ### Configure Scrollbar Display and Scrolling Behavior
-
 
 <a id="view.h_scroll_bar"></a>
 #### `view.h_scroll_bar`
@@ -4288,7 +4298,6 @@ Parameters:
 
 ### Configure Mouse Cursor Display
 
-
 <a id="view.cursor"></a>
 #### `view.cursor`
 
@@ -4306,6 +4315,7 @@ The default value is `view.CURSORNORMAL`.
 
 By default, lines that contain more characters than the view can show do not wrap into view
 and onto sub-lines.
+
 <a id="view.wrap_mode"></a>
 #### `view.wrap_mode`
 
@@ -4367,7 +4377,6 @@ The default value is `0`.
 
 ### Configure Text Zoom
 
-
 <a id="view.zoom_in"></a>
 #### `view:zoom_in`()
 
@@ -4391,6 +4400,7 @@ The default value is `0`.
 
 While the view does not enforce a maximum line length, it allows for visual identification
 of long lines.
+
 <a id="view.edge_column"></a>
 #### `view.edge_column`
 
@@ -4439,7 +4449,6 @@ The color, in "0xBBGGRR" format, of the single edge or background for long lines
 [`view.edge_mode`](#view.edge_mode)).
 
 ### Configure Fold Settings and Folded Line Display
-
 
 <a id="view.folding"></a>
 #### `view.folding`
@@ -4504,7 +4513,6 @@ The default value is `view.FOLDDISPLAYTEXT_BOXED`.
 
 ### Highlight Matching Braces
 
-
 <a id="view.brace_bad_light"></a>
 #### `view:brace_bad_light`(*pos*)
 
@@ -4547,7 +4555,6 @@ Parameters:
 
 ### Configure Indentation Guide Display
 
-
 <a id="view.indentation_guides"></a>
 #### `view.indentation_guides`
 
@@ -4574,7 +4581,6 @@ The indentation guide column number to also highlight when highlighting matching
 `0` to stop indentation guide highlighting.
 
 ### Configure File Types
-
 
 <a id="buffer.set_lexer"></a>
 #### `buffer:set_lexer`([*name*])
@@ -4608,6 +4614,7 @@ the caret.
 
 
 Plain text can be manually styled after manually [setting up styles](#override-style-settings).
+
 <a id="buffer.colorize"></a>
 #### `buffer:colorize`(*start_pos*, *end_pos*)
 
@@ -4651,7 +4658,6 @@ Parameters:
 
 ### Query Style Information
 
-
 <a id="buffer.style_at"></a>
 #### `buffer.style_at`
 
@@ -4690,7 +4696,6 @@ The current styling position or the last correctly styled character's position.
 (Read-only)
 
 ### Miscellaneous
-
 
 <a id="buffer.tab_label"></a>
 #### `buffer.tab_label`
@@ -7811,10 +7816,11 @@ In general, bindings for the terminal version are the same as for Windows/Linux/
 - "Ctrl+J" and "Ctrl+M" become "M-J" and "M-M", respectively, because control sequences with
 	the 'J' and 'M' keys often involve the Enter key.
 
-**Windows Note:** on international keyboard layouts, the "AltGr" key is equivalent to pressing
-"Ctrl" and "Alt", so "AltGr+*key*" combinations may unexpectedly trigger one of Textadept's
-"Ctrl+Alt+*key*" bindings. In order to avoid this, you will likely have to disable the
-"Ctrl+Alt+*key*" binding in your *~/.textadept/init.lua* by setting it to `nil`.
+> [!NOTE]
+> On international keyboard layouts in Windows, the "AltGr" key is equivalent to pressing
+> "Ctrl" and "Alt", so "AltGr+*key*" combinations may unexpectedly trigger one of Textadept's
+> "Ctrl+Alt+*key*" bindings. In order to avoid this, you will likely have to disable the
+> "Ctrl+Alt+*key*" binding in your *~/.textadept/init.lua* by setting it to `nil`.
 
 ### Key Bindings
 

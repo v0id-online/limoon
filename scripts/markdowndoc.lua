@@ -192,8 +192,9 @@ end
 -- @param section LDoc section to write.
 local function write_section(f, section)
 	f:write('### ', section.display_name, '\n\n')
+	if section.description:find('^%s*$') then return end
 	local description = link_known_symbols(section.description):gsub('\n ', '\n') -- strip leading spaces
-	f:write(description, '\n')
+	f:write(description, '\n\n')
 end
 
 --- Writes an LDoc class module to a file.
