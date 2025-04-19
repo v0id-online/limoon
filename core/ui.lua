@@ -335,6 +335,7 @@ end)
 -- Keeps track of, and switches back to the previous buffer after buffer close.
 events.connect(events.BUFFER_BEFORE_SWITCH, function() view._prev_buffer = buffer end)
 events.connect(events.BUFFER_DELETED, function()
+	update_bars()
 	if not _BUFFERS[view._prev_buffer] or buffer == view._prev_buffer then return end
 	view:goto_buffer(view._prev_buffer)
 end)
