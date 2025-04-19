@@ -379,6 +379,7 @@ events.connect(events.FIND, function(text, next)
 				end
 				local line_num = buffer:line_from_position(buffer.target_start)
 				local line = buffer:get_line(line_num):match('^[^\r\n]*')
+				if #line > 500 then line = line:sub(1, 500) .. '...' end -- truncate long lines
 				append(string.format('%s:%d:%s', utf8_filenames[i], line_num, line))
 				local pos = ff_buffer.line_end_position[ff_buffer.line_count - 1] - #line +
 					buffer.target_start - buffer:position_from_line(line_num)
