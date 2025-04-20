@@ -96,14 +96,13 @@ Textadept releases and their release notes can be found [here][all releases]. Se
 appropriate binary package for your platform. You can optionally download a companion set of
 modules that provide extra features and functionality for the core application.
 
-> [!NOTE]
-> Windows antivirus software may flag the Windows package as containing a virus or malware. This
-> is a false-positive, caused by Textadept's terminal version executable, which is a console
-> application.
+**Windows Note:** antivirus software may flag the Windows package as containing a virus or
+malware. This is a false-positive, caused by Textadept's terminal version executable, which is
+a console application.
 
-> [!NOTE]
-> BSD binary packages are not available. You will have to [compile](#compiling) Textadept
-> manually. Installing and running Textadept will be similar to the Linux instructions below.
+**BSD Note:** binary packages for BSD are not available. You will have to [compile](#compiling)
+Textadept manually. Installing and running Textadept will be similar to the Linux instructions
+below.
 
 [all releases]: https://github.com/orbitalquark/textadept/releases
 
@@ -121,9 +120,8 @@ it manually, or [run Textadept](#running), which creates it for you. You could i
 the extra modules into Textadept's directory (thus merging the two *modules/* directories),
 but this is not recommended, as it may make upgrading more difficult
 
-> [!NOTE]
-> Textadept generally does not auto-load modules, so you will need to load any extra modules
-> you installed manually. The [modules](#modules) section describes this process.
+**Note:** Textadept generally does not auto-load modules, so you will need to load any extra
+modules you installed manually. The [modules](#modules) section describes this process.
 
 ### Updating
 
@@ -144,10 +142,9 @@ macOS, double-click *Textadept.app* or invoke the *ta* script from the command l
 invoke *textadept*, *textadept-gtk*, or *textadept-curses* from a file browser, run dialog,
 terminal, etc.
 
-> [!NOTE]
-> For Linux, it is not possible to provide a single Textadept binary that runs correctly on
-> all systems. If the editor will not start on your machine, you must [compile](#compiling)
-> it manually.
+**Linux Note:** it is not possible to provide a single Textadept binary that runs correctly
+on all systems. If the editor will not start on your machine, you must [compile](#compiling)
+it manually.
 
 For better platform integration:
 
@@ -175,8 +172,7 @@ Menu, Quick Launch toolbar, etc.
   or by editing Textadept's desktop files to set "Icon" to the absolute path to
   *core/images/textadept.svg*.
 
-  > [!NOTE]
-	> If you compiled Textadept, using CMake to install it will do all this for you.
+  **Note:** if you compiled Textadept, using CMake to install it will do all this for you.
 
 Textadept accepts the following command line arguments:
 
@@ -198,14 +194,13 @@ Option | Description
 <sup>b</sup>Non-Windows terminal version only.<br/>
 <sup>c</sup>Qt interprets `--session` for itself, so `-s` must be used.
 
-> [!NOTE]
-> The `-L` and `--lua` options instructs Textadept to function as a standalone Lua interpreter. All
-> other command line options have no effect, but they are available to the script via the
-> global `arg` table. Textadept defines `arg` as it is described in the Lua manual: the script
-> name goes at index 0, the first argument after the script name goes at index 1, and so on;
-> arguments before the script name (i.e. the Textadept binary and the `-L` or `--lua` option)
-> go to negative indices. Textadept does not emulate Lua's command line options or its default
-> `package.path` and `package.cpath` settings.
+**Note:** the `-L` and `--lua` options instructs Textadept to function as a standalone Lua
+interpreter. All other command line options have no effect, but they are available to the script
+via the global `arg` table. Textadept defines `arg` as it is described in the Lua manual: the
+script name goes at index 0, the first argument after the script name goes at index 1, and so
+on; arguments before the script name (i.e. the Textadept binary and the `-L` or `--lua` option)
+go to negative indices. Textadept does not emulate Lua's command line options or its default
+`package.path` and `package.cpath` settings.
 
 Textadept also accepts files and projects to open from the command line. For example:
 
@@ -303,11 +298,10 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 ```
 
-> [!NOTE]
-> *~/.textadept/init.lua* must not call any functions that create buffers and views
-> (e.g. `ui.print()`, `io.open_file()`, and `buffer.new()`) at file-level scope. Buffers and
-> views can only be created within functions assigned to keys, associated with menu items,
-> or connected to events.
+**Note:** *~/.textadept/init.lua* must not call any functions that create buffers and views
+(e.g. `ui.print()`, `io.open_file()`, and `buffer.new()`) at file-level scope. Buffers and
+views can only be created within functions assigned to keys, associated with menu items, or
+connected to events.
 
 [Lua API]: api.html
 
@@ -324,8 +318,7 @@ Textadept's user interface is sleek and simple. It consists of:
 - Command entry (initially hidden)
 - Statusbar and document statusbar
 
-> [!NOTE]
-> The terminal version does not support the menu bar or tab bar.
+**Terminal version note:** the menu bar and tab bar are not supported.
 
 The titlebar shows the name and path of the current, active buffer. A '\*' character, if present,
 indicates there are unsaved changes in that buffer.
@@ -359,9 +352,8 @@ look up key bindings for particular commands.
 <a src="assets/images/menudialog.png"><img src="assets/images/menudialog.png" alt="menu dialog" width="400"/></a>
 <a src="assets/images/menudialogcurses.png"><img src="assets/images/menudialogcurses.png" alt="menu dialog curses" width="375"/></a>
 
-> [!NOTE]
-> Some commands have more than one key binding, but only one of those bindings (chosen at random)
-> is shown in the menu and dialog.
+**Note:** some commands have more than one key binding, but only one of those bindings (chosen
+at random) is shown in the menu and dialog.
 
 You can extend Textadept's menu (and dialog) with your own menus, sub-menus, and menu items by
 modifying the [`textadept.menu.menubar`][] table. For example, in your *~/.textadept/init.lua*:
@@ -441,8 +433,7 @@ separates them. Right-clicking inside a view brings up a context menu.
 - Unsplit the current view by removing all other views via `Ctrl+Alt+Shift+W` on Windows and
   Linux/BSD, `^⌘⇧W` on macOS, and `M-S-W` in the terminal version.
 
-> [!NOTE]
-> Depending on the split sequence, the order when cycling between views may not be linear.
+**Note:** depending on the split sequence, the order when cycling between views may not be linear.
 
 ### Find & Replace Pane
 
@@ -453,11 +444,9 @@ find and replace functionality you would expect, along with "Match Case", "Whole
 "[Regex](#regex-and-lua-pattern-syntax)", and "In Files" options. The pane also stores find
 and replace history that you can cycle through.
 
-> [!NOTE]
-> Textadept does not support multi-line searches (either regex or plain text).
+**Note:** Textadept does not support multi-line searches (either regex or plain text).
 
-> [!NOTE]
-> The terminal version's find and replace history is limited to 100 items each.
+**Terminal version note:** find and replace history is limited to 100 items each.
 
 Summon the pane via `Ctrl+F` on Windows and Linux/BSD, `⌘F` on macOS, and `^F` in the terminal
 version.
@@ -495,17 +484,16 @@ sequences:
 - `\u` and `\l` converts the next character to uppercase and lowercase, respectively. These
 	may appear within `\U` and `\L` constructs.
 
-> [!TIP]
-> By default, "Replace All" replaces all text in the buffer. Selecting text and then performing
-> "Replace All" replaces all text in that selection only.
+**Tip:** by default, "Replace All" replaces all text in the buffer. Selecting text and then
+performing "Replace All" replaces all text in that selection only.
 
-> [!TIP]
-> You can make Textadept automatically highlight all instances of found text in the current buffer
-> by setting [`ui.find.highlight_all_matches`][]. For example, in your *~/.textadept/init.lua*:
->
-> ```lua
-> ui.find.highlight_all_matches = true
-> ```
+**Tip:** You can make Textadept automatically highlight all instances of found text in
+the current buffer by setting [`ui.find.highlight_all_matches`][]. For example, in your
+*~/.textadept/init.lua*:
+
+```lua
+ui.find.highlight_all_matches = true
+```
 
 [`ui.find.highlight_all_matches`]: api.html#ui.find.highlight_all_matches
 
@@ -522,14 +510,13 @@ to include or exclude. Patterns are inclusive by default. Exclusive patterns beg
 '/' also matches the Windows directory separator. The default filter excludes many common binary
 files and version control directories from searches.
 
-> [!TIP]
-> Textadept keeps track of filters set per-directory. You can also set per-directory filters
-> in Lua by modifying [`ui.find_in_files_filters`][]. For example, in your *~/.textadept/init.lua*:
->
-> ```lua
-> -- Only search in certain source directories.
-> ui.find.find_in_files_filters['/path/to/project'] = {'/include', '/src'}
-> ```
+**Tip:** Textadept keeps track of filters set per-directory. You can also set per-directory filters
+in Lua by modifying [`ui.find_in_files_filters`][]. For example, in your *~/.textadept/init.lua*:
+
+```lua
+-- Only search in certain source directories.
+ui.find.find_in_files_filters['/path/to/project'] = {'/include', '/src'}
+```
 
 Textadept shows search results in a temporary buffer. Jump to the next or previous result via
 `Ctrl+Alt+G` or `Ctrl+Alt+Shift+G`, respectively, on Windows and Linux/BSD; `^⌘G` or `^⌘⇧G`,
@@ -589,18 +576,17 @@ Lua code | Command entry equivalent
 `ui.tabs = false` | `tabs = false`
 `textadept.keys['ctrl+n'] = buffer.new` | `keys['ctrl+n'] = new`
 
-> [!WARNING]
-> Textadept will not prevent you from wrecking its internal Lua state, so please be careful.
+**Warning:** Textadept will not prevent you from wrecking its internal Lua state, so please
+be careful.
 
-> [!TIP]
-> Textadept's `-e` and `--execute` command line arguments run the given code as if it was entered
-> in the editor's Lua command entry. Since the GUI version of Textadept is a single-instance
-> application, you can send commands to that instance. For example:
->
-> ```lua
-> textadept /path/to/file &
-> textadept -e "io.open_file('/path/to/another/file')"
-> ```
+**Tip:** Textadept's `-e` and `--execute` command line arguments run the given code as if
+it was entered in the editor's Lua command entry. Since the GUI version of Textadept is a
+single-instance application, you can send commands to that instance. For example:
+
+```lua
+textadept /path/to/file &
+textadept -e "io.open_file('/path/to/another/file')"
+```
 
 [Lua API]: api.html
 
@@ -623,11 +609,10 @@ Text passed as standard input to shell commands is determined as follows:
 
 The command's standard output replaces its input text.
 
-> [!WARNING]
-> Commands that emit stdout while reading stdin (as opposed to emitting stdout only after stdin
-> is closed) may hang the GTK and terminal versions of Textadept if input generates more output
-> than stdout can buffer. For example, on Linux stdout may only be able to buffer 64K while
-> there is still incoming input.
+**Warning:** commands that emit stdout while reading stdin (as opposed to emitting stdout only
+after stdin is closed) may hang the GTK and terminal versions of Textadept if input generates
+more output than stdout can buffer. For example, on Linux stdout may only be able to buffer
+64K while there is still incoming input.
 
 ### Statusbar
 
@@ -669,12 +654,11 @@ Textadept provides many ways to open files:
 - Reopen the currently opened file, discarding any unsaved changes, using the "File > Reload"
   menu item. (Textadept prompts you do this if the editor detects it has been modified externally.)
 
-> [!NOTE]
-> On Windows, due to limitations in Lua and Microsoft's C runtime (MSVCRT), Textadept can only
-> open files whose *filenames* contain characters in the system's encoding, even if Windows
-> properly displays characters outside that encoding. For example, if the system's encoding is
-> CP1252 (English and most European languages), Textadept cannot open a filename that contains
-> Japanese characters in it. This limitation only exists for file *names*, not file *contents*.
+**Windows Note:** Due to limitations in Lua and Microsoft's C runtime (MSVCRT), Textadept can
+only open files whose *filenames* contain characters in the system's encoding, even if Windows
+properly displays characters outside that encoding. For example, if the system's encoding is
+CP1252 (English and most European languages), Textadept cannot open a filename that contains
+Japanese characters in it. This limitation only exists for file *names*, not file *contents*.
 
 ### Projects
 
@@ -688,9 +672,8 @@ can work with multiple projects at once, since the current project depends large
   directory. If one is found, its parent directory is the current project.
 3. If no version control directory is found, there is no current project.
 
-> [!TIP]
-> You can specify Textadept's current working directory by passing it on the command line when
-> running the application. This effectively starts Textadept with a "default project".
+**Tip:** you can specify Textadept's current working directory by passing it on the command
+line when running the application. This effectively starts Textadept with a "default project".
 
 Textadept's quick open dialog for opening a file from the current project displays the first
 5000 files it finds. You can increase this limit by changing [`io.quick_open_max`][]. You can
@@ -744,9 +727,8 @@ Textadept has lexers for more than 100 different programming languages, but if i
 a lexer for your language, you can [write one][], place it in your *~/.textadept/lexers/*
 directory, and add an extension and/or pattern for it.
 
-> [!TIP]
-> Placing lexers in your user data directory avoids the possibility of you overwriting them
-> when you update Textadept.
+**Tip:** placing lexers in your user data directory avoids the possibility of you overwriting
+them when you update Textadept.
 
 You can manually change a buffer's lexer via `Ctrl+Shift+L` on Windows and Linux/ BSD, `⌘⇧L`
 on macOS, and `M-^L` in the terminal version. Typing part of a lexer name in the dialog filters
@@ -918,10 +900,9 @@ the completion. You can expand the word pool to include all open buffers by sett
 textadept.editing.autocomplete_all_words = true
 ```
 
-> [!TIP]
-> The external [Language Server Protocol module][] provides language-specific autocompletions. It
-> also shows symbol documentation. These features enable you to easily configure and extend
-> Textadept, as well as understand its API, all from within the editor itself.
+**Tip:** the external [Language Server Protocol module][] provides language-specific
+autocompletions. It also shows symbol documentation. These features enable you to easily
+configure and extend Textadept, as well as understand its API, all from within the editor itself.
 
 <a href="assets/images/lsp.png"><img src="assets/images/lsp.png" alt="autocomplete" width="365"/></a>
 <a href="assets/images/apidoc.png"><img src="assets/images/apidoc.png" alt="api doc" width="400"/></a>
@@ -997,10 +978,9 @@ typed or pasted text on all of those lines.
 You can also copy rectangular blocks of text and paste them into rectangular blocks of the
 same size.
 
-> [!NOTE]
-> macOS does not support directly pasting into rectangular selections. Instead, use the [Lua
-> Command Entry](#lua-command-entry) and enter `replace_rectangular(clipboard_text)` after
-> copying a block of text.
+**Note:** macOS does not support directly pasting into rectangular selections. Instead, use
+the [Lua Command Entry](#lua-command-entry) and enter `replace_rectangular(clipboard_text)`
+after copying a block of text.
 
 ### Text Transformations
 
@@ -1085,11 +1065,10 @@ custom Lua script:
 - Load a saved macro from a file using the "Tools > Macros > Load..." menu item. Play the
   loaded macro via the default macro play key binding.
 
-> [!TIP]
-> The previously recorded/loaded macro is always registered to `0` (zero), so if you accidentally
-> recorded/loaded a macro without having registered/saved the previous one, you can reload and
-> play it via `Ctrl+Alt+R 0` on Windows and Linux/BSD, `^⌘R 0` on macOS, and `M-R 0` in the
-> terminal version.
+**Tip:** the previously recorded/loaded macro is always registered to `0` (zero), so if you
+accidentally recorded/loaded a macro without having registered/saved the previous one, you can
+reload and play it via `Ctrl+Alt+R 0` on Windows and Linux/BSD, `^⌘R 0` on macOS, and `M-R 0`
+in the terminal version.
 
 ### Snippets
 
@@ -1229,16 +1208,14 @@ textadept.run.test_commands['/path/to/project'] = 'lua tests.lua'
 textadept.run.run_project_commands['/path/to/project'] = function() ... end
 ```
 
-> [!TIP]
-> You can set compile and run commands on a per-filename basis.
+**Tip:** you can set compile and run commands on a per-filename basis.
 
-> [!TIP]
-> On macOS, GUI applications like *Textadept.app* run in a restricted environment with a
-> stripped-down `$PATH`. (The terminal version is unaffected.) Thus, Textadept may fail to
-> find compile/run programs outside that `$PATH` (e.g. programs installed with Homebrew). The
-> editor attempts to work around this by silently invoking your `$SHELL` and extracting its
-> environment (including its full `$PATH`), but if this fails, you will need to supply absolute
-> paths to executables.
+**macOS Tip:** GUI applications like *Textadept.app* run in a restricted environment with a
+stripped-down `$PATH`. (The terminal version is unaffected.) Thus, Textadept may fail to find
+compile/run programs outside that `$PATH` (e.g. programs installed with Homebrew). The editor
+attempts to work around this by silently invoking your `$SHELL` and extracting its environment
+(including its full `$PATH`), but if this fails, you will need to supply absolute paths to
+executables.
 
 [`textadept.run.run_without_prompt`]: api.html#textadept.run.run_without_prompt
 [`textadept.run.run_in_background`]: api.html#textadept.run.run_in_background
@@ -1260,9 +1237,8 @@ Textadept attempts to load a given module from the following locations:
 1. Your *~/.textadept/modules/* directory.
 2. Textadept's *modules/* directory.
 
-> [!TIP]
-> Placing modules in your user data directory avoids the possibility of you overwriting them
-> when you update Textadept.
+**Tip:** placing modules in your user data directory avoids the possibility of you overwriting
+them when you update Textadept.
 
 Just because a module exists does not mean Textadept will automatically load it. The editor
 only loads modules it is explicitly told to load (e.g. from your *~/.textadept/init.lua*). For
@@ -1282,9 +1258,8 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 ```
 
-> [!NOTE]
-> Lexer language names are typically the names of lexer files in your *~/.textadept/lexers/*
-> directory and Textadept's *lexers/* directory.
+**Note:** lexer language names are typically the names of lexer files in your
+*~/.textadept/lexers/* directory and Textadept's *lexers/* directory.
 
 ### Developing Modules
 
@@ -1316,9 +1291,8 @@ A theme consists of a single Lua file, and defines the [colors][] and [text disp
 (styles) used in syntax highlighting. It also assigns colors to various UI elements like carets,
 selections, margins, markers, highlights, errors, and warnings.
 
-> [!NOTE]
-> Textadept cannot theme its own GUI widgets. You must use the theming tools provided by the
-> applicable Qt or GTK widget toolkit.
+**Note:** Textadept cannot theme its own GUI widgets. You must use the theming tools provided
+by the applicable Qt or GTK widget toolkit.
 
 [colors]: api.html#view.colors
 [text display settings]: api.html#view.styles
@@ -1328,9 +1302,8 @@ Textadept attempts to load themes from the following locations:
 1. Your *~/.textadept/themes/* directory.
 2. Textadept's *themes/* directory.
 
-> [!TIP]
-> Placing themes in your user data directory avoids the possibility of you overwriting them
-> when you update Textadept.
+**Tip:** placing themes in your user data directory avoids the possibility of you overwriting
+them when you update Textadept.
 
 You can set Textadept's theme using [`view:set_theme()`][]. You can also tweak a theme's styles
 on a per-language basis. For example, in your *~/.textadept/init.lua*:
@@ -1350,10 +1323,10 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 ```
 
-> [!TIP]
-> You can experiment with themes without having to restart Textadept by using the [`reset()`][]
-> command in the [Lua Command Entry](#lua-command-entry). After making changes to either your
-> *~/.textadept/init.lua* or theme file, issue the `reset` command to reload your changes.
+**Tip:** you can experiment with themes without having to restart Textadept by using the
+[`reset()`][] command in the [Lua Command Entry](#lua-command-entry). After making changes
+to either your *~/.textadept/init.lua* or theme file, issue the `reset` command to reload
+your changes.
 
 [`view:set_theme()`]: api.html#view.set_theme
 [`reset()`]: api.html#reset
@@ -1438,13 +1411,11 @@ Textadept requires the following:
 	- [GTK][] 2.24+ development libraries for the GUI version
 	- [ncurses][](w) development libraries (wide character support) for the terminal version
 
-> [!NOTE]
-> On macOS, [XCode][] provides Clang.
+**macOS Note:** [XCode][] provides Clang.
 
-> [!NOTE]
-> On Linux and BSD, a package manager likely supplies these requirements. On Ubuntu for example,
-> the `build-essential`, `qtbase5-dev`, `libgtk-3-dev` (or `libgtk2.0-dev`), and `libncurses-dev`
-> packages are all that is needed.
+**Linux Note:** a package manager likely supplies these requirements. On Ubuntu for example,
+the `build-essential`, `qtbase5-dev`, `libgtk-3-dev` (or `libgtk2.0-dev`), and `libncurses-dev`
+packages are all that is needed.
 
 [CMake]: https://cmake.org
 [GNU C compiler]: https://gcc.gnu.org
@@ -1475,18 +1446,15 @@ cmake --build build_dir -j # compiled binaries are in build_dir/
 cmake --install build_dir # self-contained installation is in build_dir/install/
 ```
 
-> [!NOTE]
-> On Windows you need to run these commands from Visual Studio's developer command prompt if
-> you are not using CMake's GUI and Visual Studio.
+**Windows Note:** you need to run these commands from Visual Studio's developer command prompt
+if you are not using CMake's GUI and Visual Studio.
 
-> [!TIP]
-> You can use the environment variable `TEXTADEPT_HOME` to specify the location of Textadept's
-> root directory. Doing so allows you to run Textadept executables directly from the binary
-> directory without having to install or copy them.
+**Tip:** you can use the environment variable `TEXTADEPT_HOME` to specify the location of
+Textadept's root directory. Doing so allows you to run Textadept executables directly from the
+binary directory without having to install or copy them.
 
-> [!NOTE]
-> On Windows and macOS, when creating the self-contained Qt version of Textadept, Qt's *bin/*
-> directory should be in your `%PATH%` or `$PATH`, respectively.
+**Windows and macOS Note:** when creating the self-contained Qt version of Textadept, Qt's
+*bin/* directory should be in your `%PATH%` or `$PATH`, respectively.
 
 CMake boolean variables that affect the build:
 

@@ -45,9 +45,8 @@ Textadept's pre-built binaries require the following:
 You can [compile](#compile) Textadept from source for use with different UI library versions,
 such as Qt 6 and GTK 2.24.
 
-> [!NOTE]
-> Lua and other [third-party dependencies][] are compiled into the application itself, and a
-> Qt runtime is distributed with Windows and macOS builds.
+**Note:** Lua and other [third-party dependencies][] are compiled into the application itself,
+and a Qt runtime is distributed with Windows and macOS builds.
 
 [Qt]: https://www.qt.io/
 [GTK]: https://gtk.org
@@ -88,10 +87,8 @@ A list of all released versions is [here][all versions] along with their release
 [nightly source]: https://github.com/orbitalquark/textadept/archive/refs/tags/textadept_nightly.zip
 [all versions]: https://github.com/orbitalquark/textadept/releases
 
-> [!NOTE]
-> While Textadept contains plenty of built-in productivity tools, some extra features and
-> functionality are available as optional modules in the "Extra modules" links above. This
-> includes:
+**Note:** while Textadept contains plenty of built-in productivity tools, some extra features and
+functionality are available as optional modules in the "Extra modules" links above. This includes:
 
 - [Language debuggers](https://github.com/orbitalquark/textadept-debugger)
 - [File comparison](https://github.com/orbitalquark/textadept-file-diff)
@@ -129,10 +126,9 @@ your home folder (keeping the top-level *modules/* directory intact). You could 
 it into Textadept's directory (thus merging the two *modules/* directories), but this is not
 recommended, as it may make upgrading more difficult.
 
-> [!NOTE]
-> Textadept generally does not auto-load modules. To use any of modules from the optional set,
-> select the "Edit > Preferences", use Lua's `require()` function for each module to load,
-> save the file, and restart Textadept. For example:
+**Note:** Textadept generally does not auto-load modules. To use any of modules from the optional
+set, select the "Edit > Preferences", use Lua's `require()` function for each module to load,
+save the file, and restart Textadept. For example:
 
 ```lua
 require('lsp')
@@ -174,9 +170,8 @@ cmake --build build_dir -j # compiled binaries are in build_dir/
 cmake --install build_dir # self-contained installation is in build_dir/install/
 ```
 
-> [!NOTE]
-> If you would like to build the nightly development version of Textadept, enable the `NIGHTLY`
-> option during the configuration phase (e.g. `-D NIGHTLY=1`).
+**Note:** if you would like to build the nightly development version of Textadept, enable the
+`NIGHTLY` option during the configuration phase (e.g. `-D NIGHTLY=1`).
 
 The "[Compiling][]" section of the manual contains more information about this process.
 
