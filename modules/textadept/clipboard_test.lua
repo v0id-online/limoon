@@ -5,7 +5,8 @@ local proc
 --- Copies text to the system clipboard using `textadept.clipboard.copy_command`.
 -- @param text String text to copy.
 local function copy(text)
-	proc = assert(os.spawn(textadept.clipboard.copy_command))
+	proc = os.spawn(textadept.clipboard.copy_command)
+	if not proc then return end
 	proc:write(text)
 	proc:close()
 	if WIN32 or OSX then
