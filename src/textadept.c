@@ -1045,8 +1045,8 @@ static int delete_buffer_lua(lua_State *L) {
 	luaL_argcheck(L, view != command_entry, 1, "cannot delete command entry");
 	sptr_t doc = SS(view, SCI_GETDOCPOINTER, 0, 0);
 	if (lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(L, -1) == 1) new_buffer(0);
-	if (view == focused_view) goto_doc(L, focused_view, -1, true), emit("buffer_after_switch", -1);
-	return (delete_buffer(doc), 0);
+	if (view == focused_view) goto_doc(L, focused_view, -1, true);
+	return (delete_buffer(doc), emit("buffer_after_switch", -1), 0);
 }
 
 // `_G.buffer_new()` Lua function.
