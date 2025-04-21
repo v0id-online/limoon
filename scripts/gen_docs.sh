@@ -25,6 +25,7 @@ sed -i "s/\(\# Textadept\).\+\?\(Manual\|API\)/\1 $version \2/;" *.md
 
 # Build html pages.
 pushd ../docs
+rm -f *.html # prevent any previous docs from being copied
 bundle install
 if [ -z "$LANG" ]; then export LANG="en_US.UTF-8"; fi
 bundle exec jekyll build --quiet

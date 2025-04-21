@@ -199,4 +199,4 @@ Textadept is an open-source project, released under the MIT License.
 
 You can contact me personally at code att foicica.com.
 
-![Lines of Code](assets/images/loc.png)
+<a href="assets/images/loc.png"><img src="assets/images/loc.png" alt="lines of code"/></a>

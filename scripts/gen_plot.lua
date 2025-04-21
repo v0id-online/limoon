@@ -82,16 +82,26 @@ for i = 1, #langs do styles[i] = '-' end
 styles[#styles + 1] = ':' -- code
 styles[#styles + 1] = ':' -- comments
 
-local png = repo .. '/docs/images/loc.png'
-cmd = string.format([[
-	graph %s -o %s \
-	--figsize 900x325 \
-	--fontsize 10 \
-	-X '' -Y '' -T 'Code Line Counts' \
-	-f epoch -F "%%Y %%b" \
-	--xrange='%f:%f' --yrange=0:8600 \
-	-m '' -w 1 --style='%s' \
-	--legend-ncols=%d \
-	--transparent-bg]], csv_file, png, start_day, end_day, table.concat(styles, ','), #langs + 2)
-os.execute(cmd)
-os.execute('pngcrush -ow ' .. png)
+local png = repo .. '/docs/assets/images/loc.png'
+cmd = table.concat({
+	string.format('graph %s -o %s', csv_file, png), --
+	'--figsize 900x325', --
+	'--fontsize 10', --
+	'-X "" -Y "" -T "Code Line Counts"', --
+	'-f epoch -F "%Y %b"', --
+	string.format('--xrange="%f:%f" --yrange=0:8600', start_day, end_day),
+	string.format('-m "" -w 1 --style="%s"', table.concat(styles, ',')), --
+	'--legend-ncols=' .. #langs + 2, --
+	'--transparent-bg', --
+	'2&>1'
+}, ' ')
+print(cmd)
+
+-- Note: write to a shell script and execute it since os.execute() with such a complex command
+-- line string causes trouble.
+local sh = os.tmpname()
+io.open(sh, 'wb'):write(cmd):close()
+os.execute('sh "' .. sh .. '"')
+os.remove(sh)
+
+os.execute('pngcrush -ow ' .. png) -- compress result
