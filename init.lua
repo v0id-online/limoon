@@ -166,8 +166,8 @@ for i = 2, view.margins do
 end
 
 -- Annotations.
-view.annotation_visible = view.ANNOTATION_BOXED
-view.eol_annotation_visible = view.EOLANNOTATION_BOXED
+view.annotation_visible = not CURSES and view.ANNOTATION_BOXED or view.ANNOTATION_STANDARD
+view.eol_annotation_visible = not CURSES and view.EOLANNOTATION_BOXED or view.EOLANNOTATION_STANDARD
 
 -- Other.
 -- view.buffered_draw = not GTK
