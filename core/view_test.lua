@@ -103,3 +103,12 @@ test('switching between views should toggle view.caret_line_visible_always', fun
 	test.assert_equal(old_view.caret_line_visible_always, true)
 	test.assert_equal(new_view.caret_line_visible_always, false)
 end)
+
+test('events.MODE_CHANGED should trigger view.set_theme', function()
+	local set_theme = test.stub()
+	local _<close> = test.mock(view, 'set_theme', set_theme)
+
+	events.emit(events.MODE_CHANGED) -- simulate OS-generated event
+
+	test.assert_equal(set_theme.called, true)
+end)
