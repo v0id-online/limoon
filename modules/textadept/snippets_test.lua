@@ -145,6 +145,28 @@ test('snippets.insert should update transforms', function()
 	test.assert_equal(buffer:get_text(), 'other OTHER')
 end)
 
+test('snippets.insert should update variable transforms', function()
+	buffer:add_text('word')
+	buffer:select_all()
+
+	textadept.snippets.insert('${TM_SELECTED_TEXT/.+/${0:/capitalize}/}')
+
+	test.assert_equal(buffer:get_text(), 'Word')
+end)
+
+test('snippets.insert should support conditional transforms', function()
+	textadept.snippets.insert('${1:word} ${1/^word$/${0:?true:false}/}')
+	test.assert_equal(buffer:get_text(), 'word true ')
+	test.type('no')
+	test.assert_equal(buffer:get_text(), 'no false ')
+	textadept.snippets.cancel()
+
+	textadept.snippets.insert('${1:word} ${1/^word([0-9]*)$/${1:?true:false}/}')
+	test.assert_equal(buffer:get_text(), 'word false ')
+	test.type('word2')
+	test.assert_equal(buffer:get_text(), 'word2 true ')
+end)
+
 test('snippets.insert should handle unvisited transforms', function()
 	textadept.snippets.insert('$0${2/.+/${0:/capitalize}/}')
 

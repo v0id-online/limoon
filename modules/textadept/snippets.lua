@@ -631,6 +631,7 @@ function snippet:transform(placeholder)
 	local text = not placeholder.variable and
 		buffer:text_range(self.placeholder_pos, buffer.selection_end) or
 		tostring(self.variables[placeholder.variable])
+	if not regex.match(text, placeholder.regex) then return placeholder.repl[1]['else'] or '' end
 	return regex.gsub(text, string.format('(%s)', placeholder.regex), function(...)
 		local repl, captures = {}, {...}
 		for _, part in ipairs(placeholder.repl) do
