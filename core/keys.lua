@@ -162,9 +162,9 @@ events.connect(events.KEY, function(code, mods)
 	-- Report unrecognized codes in hex.
 	if not key then key = string.format('0x%X', code) end
 	-- Emit the keypress.
-	return events.emit(events.KEYPRESS,
-		string.format('%s%s%s%s%s', ctrl and 'ctrl+' or '', alt and 'alt+' or '',
-			cmd and OSX and 'cmd+' or '', shift and 'shift+' or '', key))
+	return events.emit(events.KEYPRESS, string.format('%s%s%s%s%s', ctrl and 'ctrl+' or '', alt and
+		(not CURSES and 'alt+' or 'meta+') or '', cmd and OSX and 'cmd+' or '',
+		shift and 'shift+' or '', key))
 end)
 
 --- The current key sequence.
