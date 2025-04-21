@@ -6,7 +6,7 @@ bundle=$(cd "$(dirname "$0")/../../" && pwd)
 export DYLD_FRAMEWORK_PATH="$bundle/Contents/Frameworks"
 
 # Strip out the argument added by macOS.
-if [ x`echo "x$1" | sed "s/^x-psn_.*//"` == x ]; then shift 1; fi
+if [ x$(echo "x$1" | sed "s/^x-psn_.*//") == x ]; then shift 1; fi
 
 # Run Textadept.
 exec "$bundle/Contents/MacOS/textadept" "$@"

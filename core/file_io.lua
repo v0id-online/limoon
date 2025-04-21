@@ -311,6 +311,9 @@ events.connect(events.VIEW_AFTER_SWITCH, set_change_history)
 events.connect(events.BUFFER_NEW, set_change_history)
 events.connect(events.VIEW_NEW, set_change_history)
 
+--- Helper function for closing all buffers, but returns true if the user cancels the operation.
+local function close_all() for i = 1, #_BUFFERS do if not buffer:close() then return true end end end
+
 --- Closes all open buffers.
 -- If there are any unsaved buffers, the user is prompted to confirm closing without saving
 -- for each one. If the user does not confirm, the remaining open buffers stay open.
@@ -319,9 +322,7 @@ events.connect(events.VIEW_NEW, set_change_history)
 -- @return `true` if user did not cancel, and all buffers were closed; `nil` otherwise.
 function io.close_all_buffers()
 	events.disconnect(events.BUFFER_AFTER_SWITCH, update_modified_file)
-	local canceled = (function()
-		for i = 1, #_BUFFERS do if not buffer:close() then return true end end
-	end)()
+	local canceled = close_all()
 	events.connect(events.BUFFER_AFTER_SWITCH, update_modified_file)
 	if not canceled then return true end
 end

@@ -604,8 +604,7 @@ static int list_dialog_lua(lua_State *L) {
 static int get_clipboard_text_lua(lua_State *L) {
 	int len;
 	char *text = get_clipboard_text(&len);
-	if (text) return (lua_pushlstring(L, text, len), free(text), 1);
-	return (lua_pushliteral(L, ""), 1);
+	return text ? (lua_pushlstring(L, text, len), free(text), 1) : (lua_pushliteral(L, ""), 1);
 }
 
 // Pushes the given Scintilla view onto the Lua stack.
