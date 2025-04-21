@@ -85,14 +85,14 @@ local function show_keys() keys.mode, ui.statusbar_text = '_show_keys', press_an
 keys._show_keys = setmetatable({esc = function() keys.mode = nil end}, {
 	__index = function(t, k)
 		return function()
-			local key = k:gsub('[\b\t\n]', {['\b'] = '\\b', ['\t'] = '\\t', ['\n'] = '\\n'})
-			local command = keys[key] and _L['Unknown'] or _L['Unassigned']
+			local command = keys[k] and _L['Unknown'] or _L['Unassigned']
 			for _, item in ipairs(menu_items) do
-				if key_shortcuts[item[2]] == key then
+				if key_shortcuts[item[2]] == k then
 					command = item[1]:gsub('[_&]([^_&])', '%1') -- no longer 'Unknown'
 					break
 				end
 			end
+			local key = k:gsub('[\b\t\n]', {['\b'] = '\\b', ['\t'] = '\\t', ['\n'] = '\\n'})
 			ui.statusbar_text = string.format('%s (%s) - %s', key, command, press_any_key)
 			buffer:copy_text(key) -- copy for convenience
 		end
