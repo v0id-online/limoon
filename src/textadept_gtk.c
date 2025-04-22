@@ -88,8 +88,8 @@ static GtkWidget *new_combo(GtkWidget **label, GtkWidget **entry, GtkListStore *
 	*label = gtk_label_new(""); // localized label text set later via Lua
 	*history = gtk_list_store_new(1, G_TYPE_STRING);
 	GtkWidget *combo = gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(*history));
-	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(combo), 0);
-	gtk_combo_box_set_focus_on_click(GTK_COMBO_BOX(combo), false);
+	gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(combo), 0),
+		gtk_combo_box_set_focus_on_click(GTK_COMBO_BOX(combo), false);
 	*entry = gtk_bin_get_child(GTK_BIN(combo));
 	gtk_entry_set_text(GTK_ENTRY(*entry), " "), gtk_entry_set_text(GTK_ENTRY(*entry), ""); // non-NULL
 	gtk_label_set_mnemonic_widget(GTK_LABEL(*label), *entry);
@@ -108,8 +108,7 @@ static void button_clicked(GtkWidget *button, void *_) { find_clicked(button); }
 static GtkWidget *new_button(void) {
 	GtkWidget *button = gtk_button_new_with_mnemonic(""); // localized via Lua
 	g_signal_connect(button, "clicked", G_CALLBACK(button_clicked), NULL);
-	gtk_widget_set_can_focus(button, false);
-	return button;
+	return (gtk_widget_set_can_focus(button, false), button);
 }
 
 // Creates and returns a new checkbox option for the findbox.
@@ -149,8 +148,7 @@ void new_window(SciObject *(*get_view)(void)) {
 	char *icon = g_strconcat(textadept_home, "/core/images/textadept.svg", NULL);
 	gtk_window_set_default_icon_from_file(icon, NULL), free(icon);
 
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_widget_set_name(window, "textadept");
+	window = gtk_window_new(GTK_WINDOW_TOPLEVEL), gtk_widget_set_name(window, "textadept");
 	gtk_window_set_default_size(GTK_WINDOW(window), 1000, 600);
 	g_signal_connect(window, "delete-event", G_CALLBACK(exiting), NULL);
 	g_signal_connect(window, "focus-in-event", G_CALLBACK(window_focused), NULL);
@@ -165,8 +163,7 @@ void new_window(SciObject *(*get_view)(void)) {
 	tabbar = gtk_notebook_new();
 	g_signal_connect(tabbar, "switch-page", G_CALLBACK(tab_changed), NULL);
 	g_signal_connect(tabbar, "page-reordered", G_CALLBACK(tab_reordered), NULL);
-	gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabbar), true);
-	gtk_widget_set_can_focus(tabbar, false);
+	gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabbar), true), gtk_widget_set_can_focus(tabbar, false);
 	gtk_box_pack_start(GTK_BOX(vbox), tabbar, false, false, 0);
 
 	GtkWidget *paned = gtk_vpaned_new();
@@ -246,14 +243,12 @@ void split_view(SciObject *view, SciObject *view2, bool vertical) {
 	gtk_widget_get_allocation(view, &allocation);
 	int middle = (vertical ? allocation.width : allocation.height) / 2;
 	GtkWidget *parent = gtk_widget_get_parent(view);
-	g_object_ref(view);
-	gtk_container_remove(GTK_CONTAINER(parent), view);
+	g_object_ref(view), gtk_container_remove(GTK_CONTAINER(parent), view);
 	GtkWidget *pane = vertical ? gtk_hpaned_new() : gtk_vpaned_new();
-	gtk_paned_add1(GTK_PANED(pane), view), gtk_paned_add2(GTK_PANED(pane), view2);
-	gtk_container_add(GTK_CONTAINER(parent), pane);
-	gtk_paned_set_position(GTK_PANED(pane), middle);
+	gtk_paned_add1(GTK_PANED(pane), view), gtk_paned_add2(GTK_PANED(pane), view2),
+		g_object_unref(view);
+	gtk_container_add(GTK_CONTAINER(parent), pane), gtk_paned_set_position(GTK_PANED(pane), middle);
 	gtk_widget_show_all(pane), update_ui(); // ensure view2 is painted
-	g_object_unref(view);
 }
 
 // Removes all Scintilla views from the given pane and deletes them along with the child panes
@@ -316,8 +311,8 @@ void add_tab(void) {
 	tab_sync = true;
 	int i = gtk_notebook_append_page(GTK_NOTEBOOK(tabbar), tab, NULL);
 	gtk_widget_show(tab);
-	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tabbar), tab, true);
-	gtk_notebook_set_current_page(GTK_NOTEBOOK(tabbar), i);
+	gtk_notebook_set_tab_reorderable(GTK_NOTEBOOK(tabbar), tab, true),
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(tabbar), i);
 	tab_sync = false;
 }
 
@@ -328,17 +323,17 @@ void set_tab(int index) {
 // Signal for a tab label mouse click.
 static bool tab_clicked(GtkWidget *label, GdkEventButton *event, void *_) {
 	GtkNotebook *notebook = GTK_NOTEBOOK(tabbar);
-	for (int i = 0; i < gtk_notebook_get_n_pages(notebook); i++) {
-		GtkWidget *page = gtk_notebook_get_nth_page(notebook, i);
-		if (label != gtk_notebook_get_tab_label(notebook, page)) continue;
-		int modifiers = (event->state & GDK_SHIFT_MASK ? SCMOD_SHIFT : 0) |
-			(event->state & GDK_CONTROL_MASK ? SCMOD_CTRL : 0) |
-			(event->state & GDK_MOD1_MASK ? SCMOD_ALT : 0) |
-			(event->state & GDK_META_MASK ? SCMOD_META : 0);
-		emit("tab_clicked", LUA_TNUMBER, i + 1, LUA_TNUMBER, event->button, LUA_TNUMBER, modifiers, -1);
-		if (event->button == 3) show_context_menu("tab_context_menu", event);
-		break;
-	}
+	for (int i = 0; i < gtk_notebook_get_n_pages(notebook); i++)
+		if (label == gtk_notebook_get_tab_label(notebook, gtk_notebook_get_nth_page(notebook, i))) {
+			int modifiers = (event->state & GDK_SHIFT_MASK ? SCMOD_SHIFT : 0) |
+				(event->state & GDK_CONTROL_MASK ? SCMOD_CTRL : 0) |
+				(event->state & GDK_MOD1_MASK ? SCMOD_ALT : 0) |
+				(event->state & GDK_META_MASK ? SCMOD_META : 0);
+			emit(
+				"tab_clicked", LUA_TNUMBER, i + 1, LUA_TNUMBER, event->button, LUA_TNUMBER, modifiers, -1);
+			if (event->button == 3) show_context_menu("tab_context_menu", event);
+			break;
+		}
 	return true;
 }
 
@@ -347,14 +342,14 @@ void set_tab_label(int index, const char *text) {
 	gtk_event_box_set_visible_window(GTK_EVENT_BOX(box), false);
 	GtkWidget *label = gtk_label_new(text);
 	gtk_container_add(GTK_CONTAINER(box), label), gtk_widget_show(label);
-	GtkNotebook *notebook = GTK_NOTEBOOK(tabbar);
-	gtk_notebook_set_tab_label(notebook, gtk_notebook_get_nth_page(notebook, index), box);
+	gtk_notebook_set_tab_label(
+		GTK_NOTEBOOK(tabbar), gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabbar), index), box);
 	g_signal_connect(box, "button-press-event", G_CALLBACK(tab_clicked), NULL);
 }
 
 void move_tab(int from, int to) {
-	GtkNotebook *notebook = GTK_NOTEBOOK(tabbar);
-	gtk_notebook_reorder_child(notebook, gtk_notebook_get_nth_page(notebook, from), current_tab = to);
+	gtk_notebook_reorder_child(
+		GTK_NOTEBOOK(tabbar), gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabbar), from), current_tab = to);
 }
 
 void remove_tab(int index) { gtk_notebook_remove_page(GTK_NOTEBOOK(tabbar), index); }
@@ -452,10 +447,9 @@ static void menu_clicked(GtkWidget *_, void *id) {
 
 void *read_menu(lua_State *L, int index) {
 	GtkWidget *menu = gtk_menu_new(), *submenu_root = NULL;
-	if (lua_getfield(L, index, "title")) { // submenu title
-		submenu_root = gtk_menu_item_new_with_mnemonic(lua_tostring(L, -1));
+	if (lua_getfield(L, index, "title")) // submenu title
+		submenu_root = gtk_menu_item_new_with_mnemonic(lua_tostring(L, -1)),
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(submenu_root), menu);
-	}
 	lua_pop(L, 1); // title
 	for (size_t i = 1; i <= lua_rawlen(L, index); lua_pop(L, 1), i++) {
 		if (lua_rawgeti(L, index, i) != LUA_TTABLE) continue; // popped on loop
@@ -507,8 +501,7 @@ void set_menubar(lua_State *L, int index) {
 
 char *get_clipboard_text(int *len) {
 	char *text = gtk_clipboard_wait_for_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD));
-	*len = text ? strlen(text) : 0;
-	return text;
+	return (*len = text ? strlen(text) : 0, text);
 }
 
 // Contains information about an active timeout.
@@ -539,8 +532,8 @@ bool is_dark_mode(void) {
 #if GTK_CHECK_VERSION(3, 0, 0)
 	GtkStyleContext *context = gtk_style_context_new();
 	GdkRGBA fore, back;
-	gtk_style_context_lookup_color(context, "theme_fg_color", &fore);
-	gtk_style_context_lookup_color(context, "theme_bg_color", &back);
+	gtk_style_context_lookup_color(context, "theme_fg_color", &fore),
+		gtk_style_context_lookup_color(context, "theme_bg_color", &back);
 	return (fore.red + fore.green + fore.blue) > (back.red + back.green + back.blue);
 #else
 	return false; // not supported in Gtk 2.0
@@ -739,7 +732,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 		GtkTreeIter iter;
 		if (j == 0) gtk_list_store_append(store, &iter);
 		const char *item = (lua_rawgeti(L, opts.items, i), lua_tostring(L, -1));
-		gtk_list_store_set(store, &iter, j++, item, -1), lua_pop(L, 1);
+		gtk_list_store_set(store, &iter, j++, item, -1), lua_pop(L, 1); // item
 		if (j == num_columns) j = 0; // new row
 	}
 	GtkTreeModel *filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(store), NULL);
@@ -765,10 +758,10 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 		gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), column);
 		if (opts.columns) lua_pop(L, 1); // header
 	}
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview), opts.columns);
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(treeview), opts.search_column - 1);
-	gtk_tree_view_set_search_entry(GTK_TREE_VIEW(treeview), GTK_ENTRY(entry));
-	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(treeview), matches, NULL, NULL);
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview), opts.columns),
+		gtk_tree_view_set_search_column(GTK_TREE_VIEW(treeview), opts.search_column - 1),
+		gtk_tree_view_set_search_entry(GTK_TREE_VIEW(treeview), GTK_ENTRY(entry)),
+		gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(treeview), matches, NULL, NULL);
 	g_signal_connect(entry, "changed", G_CALLBACK(refilter), treeview);
 	g_signal_connect(entry, "key-release-event", G_CALLBACK(entry_keypress), treeview);
 	g_signal_connect(treeview, "key-press-event", G_CALLBACK(list_keypress), dialog);
@@ -780,10 +773,9 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 	select_nth_item(GTK_TREE_VIEW(treeview), opts.select);
 	gtk_widget_show_all(dialog); // compute and draw columns
 	int treeview_width = 0;
-	for (int i = 0; i < num_columns; i++) {
+	for (int i = 0; i < num_columns; i++)
 		treeview_width +=
 			gtk_tree_view_column_get_width(gtk_tree_view_get_column(GTK_TREE_VIEW(treeview), i));
-	}
 	int dw = fmax(treeview_width, 800), dh = dw * 10 / 16; // 16:10 ratio, minimum 800x500
 	gtk_window_resize(GTK_WINDOW(dialog), dw, dh);
 	int x, y, w, h;
