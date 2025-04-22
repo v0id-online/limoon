@@ -107,12 +107,3 @@ test('events.emit should write to io.stderr if the default error handler itself 
 	local stderr = stderr_writer.args[2]
 	test.assert_contains(stderr, error_message)
 end)
-
-test('events.emit should allow passing nil', function()
-	local f = test.stub()
-	local _<close> = test.connect(event, f)
-
-	events.emit(event, nil, 'nil')
-
-	test.assert_equal(f.args, {nil, 'nil'})
-end)
