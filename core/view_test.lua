@@ -112,3 +112,4 @@ test('events.MODE_CHANGED should trigger view.set_theme', function()
 
 	test.assert_equal(set_theme.called, true)
 end)
+if CURSES then skip('the terminal version does not emit this event') end
