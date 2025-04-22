@@ -141,3 +141,6 @@ test('timeout should repeatedly call a function as long as it returns true', fun
 		expected_duration, duration)
 end)
 if BSD then skip('luasocket was not built for this platform') end
+if GTK and os.getenv('CI') == 'true' and io.popen('dpkg --list'):read('a'):find('gtk2%.0%-dev') then
+	skip('smoke test for GTK2 does not include modules')
+end

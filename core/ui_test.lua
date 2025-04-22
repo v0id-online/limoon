@@ -509,7 +509,10 @@ test('ui.get_split_table should report the current split view state', function()
 	test.assert_equal(_VIEWS[2], splits[2][1])
 	test.assert_equal(_VIEWS[3], splits[2][2])
 end)
-if GTK then expected_failure() end -- TODO: splits[2].size == 0
+if GTK then
+	local gtk2 = os.getenv('CI') == 'true' and io.popen('dpkg --list'):read('a'):find('gtk2%.0%-dev')
+	if not gtk2 then expected_failure() end -- TODO: splits[2].size == 0
+end
 
 test('ui.goto_view should focus a given view', function()
 	view:split()
