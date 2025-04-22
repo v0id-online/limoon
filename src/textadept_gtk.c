@@ -63,7 +63,7 @@ static bool window_keypress(GtkWidget *_, GdkEventKey *event, void *__) {
 // buffer.
 // Generates a 'tab_clicked' event.
 static void tab_changed(GtkNotebook *_, GtkWidget *__, int tab_num, void *___) {
-	if (!gtk_widget_is_visible(tabbar)) return; // adding or removing tabs should not trigger this
+	if (!gtk_widget_get_visible(tabbar)) return; // adding or removing tabs should not trigger this
 	current_tab = tab_num;
 	if (!tab_sync) emit("tab_clicked", LUA_TNUMBER, tab_num + 1, LUA_TNUMBER, 1, LUA_TNUMBER, 0, -1);
 }
