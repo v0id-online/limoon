@@ -107,8 +107,9 @@ static void button_clicked(GtkWidget *button, void *_) { find_clicked(button); }
 // Creates and returns a new button for the findbox.
 static GtkWidget *new_button(void) {
 	GtkWidget *button = gtk_button_new_with_mnemonic(""); // localized via Lua
+	gtk_widget_set_can_focus(button, false);
 	g_signal_connect(button, "clicked", G_CALLBACK(button_clicked), NULL);
-	return (gtk_widget_set_can_focus(button, false), button);
+	return button;
 }
 
 // Creates and returns a new checkbox option for the findbox.
@@ -160,10 +161,10 @@ void new_window(SciObject *(*get_view)(void)) {
 
 	gtk_box_pack_start(GTK_BOX(vbox), menubar = gtk_menu_bar_new(), false, false, 0);
 
-	tabbar = gtk_notebook_new();
+	tabbar = gtk_notebook_new(), gtk_widget_set_can_focus(tabbar, false);
+	gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabbar), true);
 	g_signal_connect(tabbar, "switch-page", G_CALLBACK(tab_changed), NULL);
 	g_signal_connect(tabbar, "page-reordered", G_CALLBACK(tab_reordered), NULL);
-	gtk_notebook_set_scrollable(GTK_NOTEBOOK(tabbar), true), gtk_widget_set_can_focus(tabbar, false);
 	gtk_box_pack_start(GTK_BOX(vbox), tabbar, false, false, 0);
 
 	GtkWidget *paned = gtk_vpaned_new();
@@ -171,7 +172,7 @@ void new_window(SciObject *(*get_view)(void)) {
 	gtk_box_pack_start(GTK_BOX(editors), get_view(), true, true, 0);
 	gtk_paned_add1(GTK_PANED(paned), editors);
 	command_entry_box = gtk_hbox_new(false, 0);
-	command_entry_label = gtk_label_new("");
+	command_entry_label = gtk_label_new(""),
 	gtk_misc_set_alignment(GTK_MISC(command_entry_label), 0, 0);
 	gtk_box_pack_start(GTK_BOX(command_entry_box), command_entry_label, false, false, 5);
 	gtk_box_pack_start(GTK_BOX(command_entry_box), command_entry, true, true, 5);
@@ -325,12 +326,11 @@ static bool tab_clicked(GtkWidget *label, GdkEventButton *event, void *_) {
 	GtkNotebook *notebook = GTK_NOTEBOOK(tabbar);
 	for (int i = 0; i < gtk_notebook_get_n_pages(notebook); i++)
 		if (label == gtk_notebook_get_tab_label(notebook, gtk_notebook_get_nth_page(notebook, i))) {
-			int modifiers = (event->state & GDK_SHIFT_MASK ? SCMOD_SHIFT : 0) |
+			int mods = (event->state & GDK_SHIFT_MASK ? SCMOD_SHIFT : 0) |
 				(event->state & GDK_CONTROL_MASK ? SCMOD_CTRL : 0) |
 				(event->state & GDK_MOD1_MASK ? SCMOD_ALT : 0) |
 				(event->state & GDK_META_MASK ? SCMOD_META : 0);
-			emit(
-				"tab_clicked", LUA_TNUMBER, i + 1, LUA_TNUMBER, event->button, LUA_TNUMBER, modifiers, -1);
+			emit("tab_clicked", LUA_TNUMBER, i + 1, LUA_TNUMBER, event->button, LUA_TNUMBER, mods, -1);
 			if (event->button == 3) show_context_menu("tab_context_menu", event);
 			break;
 		}
@@ -520,8 +520,7 @@ static int timed_out(void *data_) {
 
 void add_timeout(double interval, bool (*f)(int *), int *refs) {
 	TimeoutData *data = malloc(sizeof(TimeoutData));
-	data->f = f, data->refs = refs;
-	g_timeout_add(interval * 1000, timed_out, data);
+	g_timeout_add(interval * 1000, timed_out, (data->f = f, data->refs = refs, data));
 }
 
 void update_ui(void) {
@@ -776,9 +775,8 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 	for (int i = 0; i < num_columns; i++)
 		treeview_width +=
 			gtk_tree_view_column_get_width(gtk_tree_view_get_column(GTK_TREE_VIEW(treeview), i));
-	int dw = fmax(treeview_width, 800), dh = dw * 10 / 16; // 16:10 ratio, minimum 800x500
+	int x, y, w, h, dw = fmax(treeview_width, 800), dh = dw * 10 / 16; // 16:10 ratio, minimum 800x500
 	gtk_window_resize(GTK_WINDOW(dialog), dw, dh);
-	int x, y, w, h;
 	gtk_window_get_position(GTK_WINDOW(window), &x, &y),
 		gtk_window_get_size(GTK_WINDOW(window), &w, &h);
 	gtk_window_move(GTK_WINDOW(dialog), x + (w - dw) / 2, y + (h - dh) / 2); // re-center
