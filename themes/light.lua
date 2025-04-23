@@ -91,6 +91,14 @@ styles.environment_math = styles[lexer.NUMBER]
 -- styles.target = {}
 -- Markdown.
 -- styles.hr = {}
+-- Output.
+styles.csi = {visible = false}
+local csi_colors = {
+	black = colors.black, red = colors.red, green = colors.green, yellow = colors.yellow,
+	blue = colors.blue, magenta = colors.magenta, cyan = colors.teal, white = colors.white
+}
+for k, v in pairs(csi_colors) do styles['csi_' .. k] = {fore = v} end
+for k, v in pairs(csi_colors) do styles['csi_' .. k .. '_bright'] = {fore = v, bold = true} end
 -- Python.
 styles.keyword_soft = {}
 -- XML.
