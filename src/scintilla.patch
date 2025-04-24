@@ -3,6 +3,7 @@ Scintilla changes:
 * Handle leading whitespace in XPM images in order to prevent crashes.
 * Use Qt macros instead of keywords in header.
 * Increase minimum width of SC_MARK_BAR. (Committed upstream and will be in next release.)
+* Do not restore scroll position with undo selection history. (Committed upstream in some form.)
 
 diff -r 22b6bbb36280 src/XPM.cxx
 --- a/src/XPM.cxx	Sat Sep 05 07:55:08 2020 +1000
@@ -61,3 +62,15 @@ diff --git a/src/LineMarker.cxx b/src/LineMarker.cxx
  			rcBar.left = centreX - std::floor(widthBar / 2.0);
  			rcBar.right = rcBar.left + widthBar;
  			surface->SetClip(rcWhole);
+diff --git a/src/Editor.cxx b/src/Editor.cxx
+--- a/src/Editor.cxx
++++ b/src/Editor.cxx
+@@ -2414,7 +2414,7 @@ void Editor::RestoreSelection(Sci::Position newPos, UndoRedo history) {
+ 		const int index = pdoc->UndoCurrent() + (history == UndoRedo::undo ? 1 : 0);
+ 		const SelectionWithScroll selAndLine = modelState->SelectionFromStack(index, history);
+ 		if (!selAndLine.selection.empty()) {
+-			ScrollTo(selAndLine.topLine);
++			//ScrollTo(selAndLine.topLine);
+ 			sel = Selection(selAndLine.selection);
+ 			if (sel.IsRectangular()) {
+ 				const size_t mainForRectangular = sel.Main();
