@@ -489,13 +489,14 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 	QObject::connect(treeView, &QTreeView::doubleClicked, &dialog, &QDialog::accept);
 	if (opts.multiple) treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	QItemSelectionModel *selection = treeView->selectionModel();
-	QObject::connect(
-		lineEdit, &QLineEdit::textChanged, &filter, [&filter, &selection](const QString &text) {
+	QObject::connect(lineEdit, &QLineEdit::textChanged, &filter,
+		[&filter, &selection, &treeView](const QString &text) {
 			QString re = QRegularExpression::escape(text).replace("\\ ", ".*");
 			filter.setFilterRegularExpression(
 				QRegularExpression{re, QRegularExpression::CaseInsensitiveOption});
-			selection->setCurrentIndex(
-				filter.index(0, 0), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+			const auto index = filter.index(0, 0);
+			selection->setCurrentIndex(index, QItemSelectionModel::Select | QItemSelectionModel::Rows),
+				treeView->scrollTo(index);
 		});
 	if (opts.text) lineEdit->setText(opts.text);
 	auto index = filter.index(opts.select - 1, 0);
