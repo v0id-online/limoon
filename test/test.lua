@@ -113,6 +113,7 @@ local function snapshot()
 end
 
 local tests_passed, tests_failed, tests_skipped, tests_failed_expected = 0, 0, 0, 0
+local failure_messages = {}
 
 -- Qt on Linux needs a window manager to facilitate focus events.
 -- When running under xvfb-run, start a window manager before running tests.
@@ -185,11 +186,16 @@ for _, name in ipairs(tests) do
 		status = 'SKIP'
 	else
 		status = 'FAIL'
-		io.output():write(string.rep('-', 100), '\n')
 	end
 	if not skip or not next(include_tags) then
 		io.output():write(status, ' ', name, '\n'):flush()
-		if not ok and errmsg then io.output():write(errmsg, '\n', string.rep('-', 100), '\n') end
+		if not ok and errmsg then
+			local separator = string.rep('-', 100)
+			local message = #failure_messages == 0 and
+				string.format('%s\n%s %s\n%s\n%s\n', separator, status, name, errmsg, separator) or
+				string.format('%s %s\n%s\n%s\n', status, name, errmsg, separator)
+			failure_messages[#failure_messages + 1] = message
+		end
 	end
 
 	-- Update statistics.
@@ -204,7 +210,10 @@ for _, name in ipairs(tests) do
 	end
 end
 
--- Output final result.
+-- Output failure messages at the end.
+for _, errmsg in ipairs(failure_messages) do io.output():write(errmsg) end
+
+-- Output summary.
 io.output():write(string.format('%d failed, %d passed, %d skipped, %d expected failures\n',
 	tests_failed, tests_passed, tests_skipped, tests_failed_expected))
 
