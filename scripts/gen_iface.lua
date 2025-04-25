@@ -43,10 +43,10 @@ end
 local function is_rint(rtype, name)
 	return rtype == 'position' and (name:find('length$') or name:find('virtual_space$'))
 end
-local function is_index(ptype, param)
+local function is_index(ptype, param, is_enum)
 	return ptype == 'int' and
 		(param == 'style' or param == 'markerNumber' or param == 'margin' or param == 'indicator' or
-			param == 'selection')
+			param == 'selection' or param == 'action' and not is_enum)
 end
 
 for line in io.lines('../build/_deps/scintilla-src/include/Scintilla.iface') do
@@ -82,20 +82,21 @@ for line in io.lines('../build/_deps/scintilla-src/include/Scintilla.iface') do
 		events[value] = table.concat(event, ',')
 	elseif line:find('^fun ') then
 		local _, rtype, name, id, wtype, param, ltype, param2 = line:match(msg_patt)
-		if rtype:find('^%u') then rtype = 'int' end
-		if wtype:find('^%u') then wtype = 'int' end
-		if ltype:find('^%u') then ltype = 'int' end
+		local rtype_enum, wtype_enum, ltype_enum
+		if rtype:find('^%u') then rtype_enum, rtype = true, 'int' end
+		if wtype:find('^%u') then wtype_enum, wtype = true, 'int' end
+		if ltype:find('^%u') then ltype_enum, ltype = true, 'int' end
 		name = to_lua_name(name)
 		if name == 'convert_eo_ls' then name = 'convert_eols' end
 		if is_rint(rtype, name) then rtype = 'int' end
 		if is_length(wtype, param) then
 			wtype = 'length'
-		elseif is_index(wtype, param) then
+		elseif is_index(wtype, param, wtype_enum) then
 			wtype = 'index'
 		end
 		if is_length(ltype, param2) then
 			ltype = 'length'
-		elseif is_index(ltype, param2) then
+		elseif is_index(ltype, param2, ltype_enum) then
 			ltype = 'index'
 		elseif ltype == 'stringresult' then
 			rtype = 'void'
@@ -104,9 +105,10 @@ for line in io.lines('../build/_deps/scintilla-src/include/Scintilla.iface') do
 		functions[name] = {id, types[rtype], types[wtype], types[ltype]}
 	elseif line:find('^get ') or line:find('^set ') then
 		local kind, rtype, name, id, wtype, param, ltype, param2 = line:match(msg_patt)
-		if rtype:find('^%u') then rtype = 'int' end
-		if wtype:find('^%u') then wtype = 'int' end
-		if ltype:find('^%u') then ltype = 'int' end
+		local rtype_enum, wtype_enum, ltype_enum
+		if rtype:find('^%u') then rtype_enum, rtype = true, 'int' end
+		if wtype:find('^%u') then wtype_enum, wtype = true, 'int' end
+		if ltype:find('^%u') then ltype_enum, ltype = true, 'int' end
 		name = to_lua_name(name:gsub('[GS]et%f[%u]', ''))
 		if kind == 'get' and types[wtype] == types.int and types[ltype] == types.int or
 			(wtype == 'bool' and ltype ~= '') or changed_setter[name] then
@@ -122,8 +124,8 @@ for line in io.lines('../build/_deps/scintilla-src/include/Scintilla.iface') do
 			properties[name] = {0, 0, 0, 0}
 		end
 		if is_rint(rtype, name) then rtype = 'int' end
-		if is_index(wtype, param) then wtype = 'index' end
-		if is_index(ltype, param2) then ltype = 'index' end
+		if is_index(wtype, param, wtype_enum) then wtype = 'index' end
+		if is_index(ltype, param2, ltype_enum) then ltype = 'index' end
 		local prop = properties[name]
 		if kind == 'get' then
 			prop[1] = id
