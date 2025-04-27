@@ -50,10 +50,8 @@ for locale_conf in lfs.walk(_HOME .. '/core/locales') do
 end
 
 local stock_files = {}
-for _, dir in ipairs{_HOME .. '/core', _HOME .. '/modules/textadept'} do
-	for filename in lfs.walk(dir, '.lua') do stock_files[#stock_files + 1] = filename end
-end
-stock_files[#stock_files + 1] = _HOME .. '/init.lua'
+local filter = {'*.lua', 'core/*.lua', 'modules/textadept/*.lua', '!**/*_test.lua'}
+for filename in lfs.walk(_HOME, filter) do stock_files[#stock_files + 1] = filename:gsub('\\', '/') end
 table.sort(stock_files)
 
 -- Test each stock file.
@@ -68,27 +66,26 @@ end
 -- Records localization assignments in the given Lua file for use in subsequent checks.
 -- @param L Table of localizations to add to.
 local function load_extra_localizations(filename, L)
-	local count = 0
+	local count, i = 0, 1
 	for line in io.lines(filename) do
 		if not line:find('_L%b[]%s*=') then goto continue end
 		for id in line:gmatch([=[_L%[['"]([^'"]+)['"]%]%s*=]=]) do
-			test.assert(not L[id], 'duplicate locale id "%s"', id)
-			L[id], count = true, count + 1
+			test.assert(not L[id], 'duplicate locale id "%s" on line %d (first seen in %s)', id, i, L[id])
+			L[id], count = string.format('%s:%d', filename:sub(#_HOME + 2), i), count + 1
 		end
 		::continue::
+		i = i + 1
 	end
 	if count > 0 then test.log(string.format('Added %d localizations.', count)) end
 end
 
 local extra_files = {}
 local filter = {
-	'.lua', '!/modules/textadept', '!/build',
+	'**/*.lua', '!textadept', '!**/build', '!**/*_test.lua',
 	-- Extra modules.
-	'!dkjson.lua', '!mobdebug.lua', '!socket.lua', '!/lsp/ldoc', '!/lsp/logging', '!/lsp/pl'
+	'!**/{dkjson,mobdebug,socket}.lua', '!lsp/{ldoc,logging,pl}'
 }
-for filename in lfs.walk(_HOME .. '/modules', filter) do
-	extra_files[#extra_files + 1] = filename
-end
+for filename in lfs.walk(_HOME .. '/modules', filter) do extra_files[#extra_files + 1] = filename end
 table.sort(extra_files)
 
 -- Test each extra file.
@@ -100,4 +97,5 @@ for _, extra_file in ipairs(extra_files) do
 
 		test.assert_equal(missing, {})
 	end)
+	retry(0) -- do not retry or else there will be erroneous 'duplicate locale id' errors
 end

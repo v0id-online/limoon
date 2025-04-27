@@ -651,7 +651,7 @@ test('io.quick_open should prompt for a file to open, subject to a filter', func
 	local select_first_item = test.stub({1})
 	local _<close> = test.mock(ui.dialogs, 'list', select_first_item)
 
-	io.quick_open(dir.dirname, '.lua')
+	io.quick_open(dir.dirname, '**/*.lua')
 
 	test.assert_equal(buffer.filename, dir / (subdir .. '/' .. subfile_lua))
 end)
@@ -664,7 +664,7 @@ test('io.quick_open should prompt for a file to open, subject to an exclusive fi
 	local select_first_item = test.stub({1})
 	local _<close> = test.mock(ui.dialogs, 'list', select_first_item)
 
-	io.quick_open(dir.dirname, {'!.txt'})
+	io.quick_open(dir.dirname, '!*.txt')
 
 	test.assert_equal(buffer.filename, dir / (subdir .. '/' .. subfile_lua))
 end)

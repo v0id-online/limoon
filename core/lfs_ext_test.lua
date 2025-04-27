@@ -21,15 +21,67 @@ test('lfs.walk should walk a directory tree', function()
 end)
 
 test('lfs.walk should allow filters to include files by extension', function()
+	local lua_file = 'file.lua'
+	local non_lua_file = 'file.luadoc'
+	local subdir = 'subdir'
+	local sub_lua_file = 'subfile.lua'
+	local dir<close> = test.tmpdir{lua_file, non_lua_file, [subdir] = {sub_lua_file}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, '**/*.lua') do files[#files + 1] = filename end
+
+	table.sort(files)
+	test.assert_equal(files, {dir / lua_file, dir / (subdir .. '/' .. sub_lua_file)})
+end)
+
+test('lfs.walk should not recurse for a filter with non-recursive includes', function()
 	local non_lua_file = 'file.luadoc'
 	local subdir = 'subdir'
 	local lua_file = 'file.lua'
 	local dir<close> = test.tmpdir{non_lua_file, [subdir] = {lua_file}}
 	local files = {}
 
-	for filename in lfs.walk(dir.dirname, '.lua') do files[#files + 1] = filename end
+	for filename in lfs.walk(dir.dirname, '*.lua') do files[#files + 1] = filename end
 
-	test.assert_equal(files, {dir / (subdir .. '/' .. lua_file)})
+	test.assert_equal(files, {})
+end)
+
+test('lfs.walk should not recurse for a *', function()
+	local file = 'file.txt'
+	local subdir = 'subdir'
+	local subfile = 'subfile.txt'
+	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, '*', nil, true) do files[#files + 1] = filename end
+
+	table.sort(files)
+	test.assert_equal(files, {dir / file, dir / subdir .. (not WIN32 and '/' or '\\')})
+end)
+
+test('lfs.walk should allow filters to match a group', function()
+	local h_file, c_file = 'lib.h', 'lib.c'
+	local subdir = 'src'
+	local dir<close> = test.tmpdir{[subdir] = {h_file, c_file}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, '**/*.{c,h}') do files[#files + 1] = filename end
+
+	table.sort(files)
+	test.assert_equal(files, {dir / (subdir .. '/' .. c_file), dir / (subdir .. '/' .. h_file)})
+end)
+
+test('lfs.walk should allow filters to match multiple groups', function()
+	local h_int_file, h_float_file = 'lib_int.h', 'lib_float.h'
+	local c_int_file, c_float_file = 'lib_int.c', 'lib_float.c'
+	local dir<close> = test.tmpdir{h_int_file, h_float_file, c_int_file, c_float_file}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, 'lib_{int,float}.{c,h}') do files[#files + 1] = filename end
+
+	table.sort(files)
+	test.assert_equal(files,
+		{dir / c_float_file, dir / h_float_file, dir / c_int_file, dir / h_int_file})
 end)
 
 test('lfs.walk should allow filters to exclude files by extension', function()
@@ -40,24 +92,40 @@ test('lfs.walk should allow filters to exclude files by extension', function()
 	local dir<close> = test.tmpdir{lua_file, [subdir] = {lua_subfile, non_lua_subfile}}
 	local files = {}
 
-	for filename in lfs.walk(dir.dirname, '!.lua') do files[#files + 1] = filename end
+	for filename in lfs.walk(dir.dirname, '!**/*.lua') do files[#files + 1] = filename end
 
 	test.assert_equal(files, {dir / (subdir .. '/' .. non_lua_subfile)})
 end)
 
-test('lfs.walk should allow filters to include directories', function()
+test('lfs.walk should allow filters to include files in subdirectories', function()
 	local file = 'file.txt'
 	local subdir = 'subdir'
 	local subfile = 'subfile.txt'
 	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
 	local files = {}
 
-	for filename in lfs.walk(dir.dirname, '/' .. subdir) do files[#files + 1] = filename end
+	for filename in lfs.walk(dir.dirname, subdir .. '/*.txt') do files[#files + 1] = filename end
 
 	table.sort(files)
 	test.assert_equal(files, {dir / (subdir .. '/' .. subfile)})
 end)
-expected_failure() -- TODO:
+
+test('lfs.walk should allow filters to include files in nested subdirectories', function()
+	local file = 'file.txt'
+	local subdir = 'subdir'
+	local subfile = 'subfile.txt'
+	local subdir2 = 'subdir2'
+	local subfile2 = 'subfile2.txt'
+	local dir<close> = test.tmpdir{file, [subdir] = {subfile, [subdir2] = {subfile2}}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, subdir .. '/' .. subdir2 .. '/*.txt') do
+		files[#files + 1] = filename
+	end
+
+	table.sort(files)
+	test.assert_equal(files, {dir / (subdir .. '/' .. subdir2 .. '/' .. subfile2)})
+end)
 
 test('lfs.walk should allow mixed filters', function()
 	local file = 'file.txt'
@@ -66,9 +134,21 @@ test('lfs.walk should allow mixed filters', function()
 	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
 	local files = {}
 
-	for filename in lfs.walk(dir.dirname, {'!/' .. subdir, '.txt'}) do files[#files + 1] = filename end
+	for filename in lfs.walk(dir.dirname, {'!' .. subdir, '*.txt'}) do files[#files + 1] = filename end
 
 	test.assert_equal(files, {dir / file})
+end)
+
+test('lfs.walk should have a default filter', function()
+	local file = 'file.so'
+	local subdir = '.hg'
+	local subfile = 'subfile.txt'
+	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname) do files[#files + 1] = filename end
+
+	test.assert_equal(files, {})
 end)
 
 test('lfs.walk should stop after reaching a maximum depth', function()
@@ -78,7 +158,7 @@ test('lfs.walk should stop after reaching a maximum depth', function()
 	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
 	local files = {}
 
-	for filename in lfs.walk(dir.dirname, '.txt', 0) do files[#files + 1] = filename end
+	for filename in lfs.walk(dir.dirname, '*.txt', 0) do files[#files + 1] = filename end
 
 	test.assert_equal(files, {dir / file})
 end)

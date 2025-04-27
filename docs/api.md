@@ -5617,20 +5617,17 @@ The number of files shown in the list is capped at [`io.quick_open_max`](#io.qui
 Parameters:
 - *paths*:  String directory path or table of directory paths to search for files
 	in. The default value is the current project's root directory.
-- *filter*:  Filter table or filter string of files to show in the list. A
-	filter consists of glob patterns that match file and directory paths to include
-	or exclude. Patterns are inclusive by default. Exclusive patterns begin with a
-	'!'. If no inclusive patterns are given, any path is initially considered. As a
-	convenience, '/' also matches the Windows directory separator. The default value is
-	`io.quick_open_filters[paths]` if it exists, or
- [`lfs.default_filter`](#lfs.default_filter) otherwise.
+- *filter*:  [Filter](#filters) that specifies the files and directories the
+	iterator should yield. It is a shell-style glob string or table of such glob strings. The
+	default value is `io.quick_open_filters[paths]` if it exists, or [`lfs.default_filter`](#lfs.default_filter)
+	otherwise. Any non-[`lfs.default_filter`](#lfs.default_filter) filter will be combined with [`lfs.default_filter`](#lfs.default_filter).
 
 Usage:
 
 ```lua
 io.quick_open(buffer.filename:match('^(.+)[/\\]')) -- list files in the buffer's directory
-io.quick_open(io.get_current_project(), {'.lua', '.c'}) -- list Lua and C project files
-io.quick_open(io.get_current_project(), '!/build') -- list non-build project files
+io.quick_open(io.get_project_root(), '**/*.{lua,c}') -- list Lua and C project files
+io.quick_open(io.get_project_root(), '!build') -- list non-build project files
 ```
 
 <a id="io.quick_open_filters"></a>
@@ -7186,6 +7183,30 @@ A pattern that matches any hexadecimal digit ('0'-'9', 'A'-'F', 'a'-'f').
 
 Extends the [`lfs`](#lfs) library to find files in directories and determine absolute file paths.
 
+
+### Filters
+
+The [`lfs.walk()`](#lfs.walk) function accepts a filter that specifies which files and directories the
+returned iterator should yield. A filter is a shell-style glob string or table of such
+strings with the following syntax:
+- `/`: directory separator (Windows will expand this to match '\\' too).
+- `*`: matches any part of a single file or directory name.
+- `?`: matches any character in a file or directory name.
+- `[...]`: matches any character in the set; may be a range like `[0-9]`.
+- `[!...]` or `[^...]`: matches any character not in the set; may be a range like `[^0-9]`.
+- `{...}`: matches any one of the comma-separated items in the group.
+- `**`: matches any number of directories, including no directory.
+- `!glob`: rejects a matched glob. The `!` must be the first character.
+
+For example:
+```lua
+'*.lua' -- match all Lua files in the top-level directory
+'**/*.lua' -- match all Lua files in any directory
+{'**/*.{c,h}', '!build'} -- match all C source files except in the top-level build/ directory
+{'include/*', 'src/*'} -- match all immediate children of the 'include/' and 'src/' dirs
+{'include/**', 'src/**'} -- match everything in 'include/' and 'src/', including subdirectories
+```
+
 <a id="lfs.abspath"></a>
 ### `lfs.abspath`(*filename*[, *prefix*])
 
@@ -7214,11 +7235,9 @@ Returns an iterator that iterates over all files in a directory and its sub-dire
 
 Parameters:
 - *dir*:  String directory path to iterate over.
-- *filter*:  Filter table or filter string of files to show in the
-	list. A filter consists of glob patterns that match file and directory paths to include
-	or exclude. Patterns are inclusive by default. Exclusive patterns begin with a '!'. If
-	no inclusive patterns are given, any path is initially considered. As a convenience,
-	'/' also matches the Windows directory separator.
+- *filter*:  [Filter](#filters) that specifies the files and
+	directories the iterator should yield. It is a shell-style glob string or table of such
+	glob strings. If *filter* is not `nil`, it will be combined with [`lfs.default_filter`](#lfs.default_filter).
 - *n*:  Maximum number of directory levels to descend into. The default
 	is to have no limit.
 - *include_dirs*:  Include directory names in iterator results. Directory

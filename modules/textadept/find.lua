@@ -91,7 +91,7 @@ function M.focus(options)
 	M.replace_label_text = (not M.in_files and _L['Replace:'] or _L['Filter:']):gsub('&', '')
 	if M.in_files then
 		if not already_in_files then repl_text = M.replace_entry_text end -- save
-		local filter = M.find_in_files_filters[ff_dir()] or lfs.default_filter
+		local filter = M.find_in_files_filters[ff_dir()] or ''
 		M.replace_entry_text = type(filter) == 'string' and filter or table.concat(filter, ',')
 	elseif M.replace_entry_text ~= repl_text then
 		-- Note: this is here because the find & replace pane does not hide on focus lost, so it is
@@ -313,11 +313,13 @@ events.connect(events.FIND, function(text, next)
 
 	if M.replace_entry_text ~= repl_text then
 		-- Update stored filter.
-		local t = {}
-		for patt in M.replace_entry_text:gmatch('[^,]+') do t[#t + 1] = patt end
+		local t = lpeg.Ct(lpeg.P{
+			lpeg.V('item') * (',' * lpeg.V('item'))^0,
+			item = lpeg.C((1 - lpeg.S('{,') + '{' * (lpeg.P(1) - '}')^0 * '}')^0)
+		}):match(M.replace_entry_text)
 		M.find_in_files_filters[dir], M.find_in_files_filters[ff_dir()] = t, t
 	end
-	local filter = M.find_in_files_filters[dir] or lfs.default_filter
+	local filter = M.find_in_files_filters[dir] or ''
 	if not CURSES and M.active then orig_focus() end -- hide automatically
 
 	if buffer._type ~= _L['[Files Found Buffer]'] then preferred_view = view end

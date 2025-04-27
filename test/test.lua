@@ -69,9 +69,7 @@ end
 
 -- Load all tests from '*_test.lua' files in _HOME.
 local test_files = {}
-for test_file in lfs.walk(_HOME, {'.lua', '!/build'}) do -- TODO: '*_test.lua'
-	if test_file:find('_test%.lua$') then test_files[#test_files + 1] = test_file end
-end
+for file in lfs.walk(_HOME, {'**/*_test.lua', '!**/build'}) do test_files[#test_files + 1] = file end
 table.sort(test_files)
 for _, test_file in ipairs(test_files) do
 	_TESTSUITE = test_file:sub(#_HOME + 2, -string.len('_test.lua') - 1):gsub('\\', '/'):gsub(

@@ -400,24 +400,19 @@ io.quick_open_filters = {}
 -- The number of files shown in the list is capped at `io.quick_open_max`.
 -- @param[opt] paths String directory path or table of directory paths to search for files
 --	in. The default value is the current project's root directory.
--- @param[optchain] filter Filter table or filter string of files to show in the list. A
---	filter consists of glob patterns that match file and directory paths to include
---	or exclude. Patterns are inclusive by default. Exclusive patterns begin with a
---	'!'. If no inclusive patterns are given, any path is initially considered. As a
---	convenience, '/' also matches the Windows directory separator. The default value is
---	`io.quick_open_filters[paths]` if it exists, or
--- `lfs.default_filter` otherwise.
+-- @param[optchain] filter [Filter](#filters) that specifies the files and directories the
+--	iterator should yield. It is a shell-style glob string or table of such glob strings. The
+--	default value is `io.quick_open_filters[paths]` if it exists, or `lfs.default_filter`
+--	otherwise. Any non-`lfs.default_filter` filter will be combined with `lfs.default_filter`.
 -- @usage io.quick_open(buffer.filename:match('^(.+)[/\\]')) -- list files in the buffer's directory
--- @usage io.quick_open(io.get_current_project(), {'.lua', '.c'}) -- list Lua and C project files
--- @usage io.quick_open(io.get_current_project(), '!/build') -- list non-build project files
+-- @usage io.quick_open(io.get_project_root(), '**/*.{lua,c}') -- list Lua and C project files
+-- @usage io.quick_open(io.get_project_root(), '!build') -- list non-build project files
 function io.quick_open(paths, filter)
 	if not assert_type(paths, 'string/table/nil', 1) then
 		paths = io.get_project_root()
 		if not paths then return end
 	end
-	if not assert_type(filter, 'string/table/nil', 2) then
-		filter = io.quick_open_filters[paths] or lfs.default_filter
-	end
+	if not assert_type(filter, 'string/table/nil', 2) then filter = io.quick_open_filters[paths] end
 	if type(paths) == 'string' then paths = {paths} end
 
 	local utf8_list = {}

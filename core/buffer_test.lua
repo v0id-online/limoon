@@ -60,6 +60,7 @@ local ignore_exprs = {['ui.size'] = true}
 local exceptions = {
 	[file('core/buffer.lua')] = {'buf:select_all', 'buf:replace_sel'},
 	[file('core/lexer.lua')] = {'lexer.style_at', 'lexer.fold_level', 'lexer.line_from_position'},
+	[file('core/lfs_ext.lua')] = {'filter_object.new'}, --
 	[file('core/ui.lua')] = {'view:document_end'}, --
 	[file('core/view.lua')] = {'env.view'},
 	[file('modules/textadept/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
@@ -130,14 +131,8 @@ end
 local buffer_props, view_props = load_props()
 
 local stock_files = {}
-for _, dir in ipairs{file('core'), file('modules/textadept')} do
-	for filename in lfs.walk(dir, '.lua') do
-		if not filename:find('_test.lua') then
-			stock_files[#stock_files + 1] = filename:gsub('\\', '/')
-		end
-	end
-end
-stock_files[#stock_files + 1] = file('init.lua')
+local filter = {'*.lua', 'core/*.lua', 'modules/textadept/*.lua', '!**/*_test.lua'}
+for filename in lfs.walk(_HOME, filter) do stock_files[#stock_files + 1] = filename:gsub('\\', '/') end
 table.sort(stock_files)
 
 -- Test each stock file.

@@ -504,18 +504,16 @@ Windows and Linux/BSD, `⌘⇧F` on macOS, and `M-^F` in the terminal version. I
 Next" prompts you for a directory to search in. The "Replace" entry transforms into a "Filter"
 entry that contains files and directories to include or exclude from the search.
 
-A filter consists of a comma-separated list of glob patterns that match filenames and directories
-to include or exclude. Patterns are inclusive by default. Exclusive patterns begin with a
-'!'. If no inclusive patterns are given, any filename is initially considered. As a convenience,
-'/' also matches the Windows directory separator. The default filter excludes many common binary
-files and version control directories from searches.
+A [filter][] consists of a comma-separated list of shell-style glob patterns that match filenames
+and directories to include or exclude. The default filter excludes many common binary files
+and version control directories from searches. It is included with any extra items you specify.
 
 **Tip:** Textadept keeps track of filters set per-directory. You can also set per-directory filters
 in Lua by modifying [`ui.find_in_files_filters`][]. For example, in your *~/.textadept/init.lua*:
 
 ```lua
 -- Only search in certain source directories.
-ui.find.find_in_files_filters['/path/to/project'] = {'/include', '/src'}
+ui.find.find_in_files_filters['/path/to/project'] = {'include/**', 'src/**'}
 ```
 
 Textadept shows search results in a temporary buffer. Jump to the next or previous result via
@@ -527,6 +525,7 @@ and press `Enter`.
 <a href="assets/images/findinfiles.png"><img src="assets/images/findinfiles.png" alt="find in files" width="500"/></a>
 
 [`ui.find_in_files_filters`]: api.html#ui.find.find_in_files_filters
+[filter]: api.html#filters
 
 #### Incremental Find
 
@@ -682,14 +681,12 @@ to [`io.quick_open_filters`][]. For example, in your *~/.textadept/init.lua*:
 
 ```lua
 io.quick_open_max = 10000 -- support huge projects
-io.quick_open_filters['/path/to/project'] = {'/include', '/src'}
+io.quick_open_filters['/path/to/project'] = {'include/**', 'src/**'}
 ```
 
-A filter consists of a comma-separated list of glob patterns that match filenames and directories
-to include or exclude. Patterns are inclusive by default. Exclusive patterns begin with a
-'!'. If no inclusive patterns are given, any filename is initially considered. As a convenience,
-'/' also matches the Windows directory separator. The default filter excludes many common binary
-files and version control directories from searches.
+A [filter][] consists of a comma-separated list of shell-style glob patterns that match filenames
+and directories to include or exclude. The default filter excludes many common binary files
+and version control directories from searches. It is included with any extra items you specify.
 
 <a href="assets/images/quickopen.png"><img src="assets/images/quickopen.png" alt="quick open" width="500"/></a>
 
@@ -700,6 +697,7 @@ files in *~/.textadept/*, and the default session name is "session".
 
 [`io.quick_open_filters`]: api.html#io.quick_open_filters
 [`io.quick_open_max`]: api.html#io.quick_open_max
+[filter]: api.html#filters
 
 ### Language
 

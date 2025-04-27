@@ -254,9 +254,10 @@ end)
 if CURSES then skip('find & replace pane blocks the UI') end
 
 test('ui.find.focus with in_files should show the default filter in the replace entry', function()
+	local _<close> = test.mock(ui.find, 'replace_entry_text', replace)
 	ui.find.focus{in_files = true}
 
-	test.assert_equal(ui.find.replace_entry_text, table.concat(lfs.default_filter, ','))
+	test.assert_equal(ui.find.replace_entry_text, '') -- lfs.default_filter will be appended to this
 end)
 if CURSES then skip('find & replace pane blocks the UI') end
 
@@ -333,6 +334,16 @@ test('ui.find.find_in_files should update the filter if changed', function()
 
 	test.assert_equal(ui.find.find_in_files_filters[lfs.currentdir()], {'*.txt'})
 	test.assert_equal(ui.find.find_in_files_filters[dir.dirname], {'*.txt'})
+end)
+
+test('ui.find.find_in_files should properly handle comma-separated groups', function()
+	local dir<close> = test.tmpdir({}, true)
+	local filter = {'**/*.{c,h}', '**/*.txt'}
+	find_in_files(dir.dirname, find, table.concat(filter, ',')) -- find just needs to be empty
+
+	test.assert_equal(ui.find.find_in_files_filters[lfs.currentdir()], filter)
+	test.assert_equal(ui.find.find_in_files_filters[dir.dirname], filter)
+
 end)
 
 test('replace should replace found text', function()
