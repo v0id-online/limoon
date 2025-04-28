@@ -11,22 +11,23 @@
 9. [lfs](#lfs)
 10. [os](#os)
 11. [string](#string)
-12. [textadept](#textadept)
-13. [textadept.bookmarks](#textadept.bookmarks)
-14. [textadept.clipboard](#textadept.clipboard)
-15. [textadept.editing](#textadept.editing)
-16. [textadept.history](#textadept.history)
-17. [textadept.keys](#textadept.keys)
-18. [textadept.macros](#textadept.macros)
-19. [textadept.menu](#textadept.menu)
-20. [textadept.run](#textadept.run)
-21. [textadept.session](#textadept.session)
-22. [textadept.snippets](#textadept.snippets)
-23. [ui](#ui)
-24. [ui.command_entry](#ui.command_entry)
-25. [ui.dialogs](#ui.dialogs)
-26. [ui.find](#ui.find)
-27. [view](#the-view-module)
+12. [table](#table)
+13. [textadept](#textadept)
+14. [textadept.bookmarks](#textadept.bookmarks)
+15. [textadept.clipboard](#textadept.clipboard)
+16. [textadept.editing](#textadept.editing)
+17. [textadept.history](#textadept.history)
+18. [textadept.keys](#textadept.keys)
+19. [textadept.macros](#textadept.macros)
+20. [textadept.menu](#textadept.menu)
+21. [textadept.run](#textadept.run)
+22. [textadept.session](#textadept.session)
+23. [textadept.snippets](#textadept.snippets)
+24. [ui](#ui)
+25. [ui.command_entry](#ui.command_entry)
+26. [ui.dialogs](#ui.dialogs)
+27. [ui.find](#ui.find)
+28. [view](#the-view-module)
 
 <a id="_G"></a>
 ## The `_G` module
@@ -7398,6 +7399,23 @@ Usage:
 local utf8_filename = string.iconv(buffer.filename, 'UTF-8', _CHARSET)
 local filename = string.iconv(utf8_filename, _CHARSET, 'UTF-8')
 ```
+
+
+
+<a id="table"></a>
+## The `table` module
+
+Extends Lua's [`table`](#table) library to provide more utility functions.
+
+<a id="table.map"></a>
+### `table.map`(*t*, *f*[, ...])
+
+Applies a map function to a list's items and returns a new table with the results.
+
+Parameters:
+- *t*:  Table to map. It may have an `n` field for its length.
+- *f*:  Mapping function. The first parameter passed will be a value in *t*.
+- *...*:  Additional values to pass to *f*.
 
 
 

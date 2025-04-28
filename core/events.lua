@@ -89,11 +89,12 @@ function M.emit(event, ...)
 end
 
 -- Handles Scintilla notifications.
+-- Each notification has a code and populated data fields. _SCINTILLA maps those codes to event
+-- tables with event names and the names of the event's populated data fields.
 M.connect('SCN', function(notification)
-	local iface = _SCINTILLA[notification.code]
-	local args = {}
-	for i = 2, #iface do args[i - 1] = notification[iface[i]] end
-	return M.emit(iface[1], table.unpack(args))
+	local iface = _SCINTILLA[notification.code] -- e.g. {'style_needed','position'}
+	-- Note: `notification[v] or v` is a data field or event name, respectively.
+	return M.emit(table.unpack(table.map(iface, function(v) return notification[v] or v end)))
 end)
 
 -- Set event constants (events are numeric ID keys).

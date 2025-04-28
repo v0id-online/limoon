@@ -438,13 +438,10 @@ function io.quick_open(paths, filter)
 	local selected = ui.dialogs.list{title = title, items = utf8_list, multiple = true}
 	if not selected then return end
 
-	local filenames = {}
-	for i = 1, #selected do
-		local filename = utf8_list[selected[i]]:iconv(_CHARSET, 'UTF-8')
-		if prefix then filename = prefix .. filename end
-		filenames[i] = filename
-	end
-	io.open_file(filenames)
+	io.open_file(table.map(selected, function(i)
+		local filename = utf8_list[i]:iconv(_CHARSET, 'UTF-8')
+		return prefix and prefix .. filename or filename
+	end))
 end
 
 args.register('-', '-', 0, function()

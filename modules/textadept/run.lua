@@ -325,8 +325,7 @@ function M.stop()
 	if #procs == 0 then return end
 	local selected = {#procs}
 	if #procs > 1 then
-		local utf8_cmds = {}
-		for _, p in ipairs(procs) do utf8_cmds[#utf8_cmds + 1] = p.command:iconv('UTF-8', _CHARSET) end
+		local utf8_cmds = table.map(procs, function(p) return p.command:iconv('UTF-8', _CHARSET) end)
 		selected = ui.dialogs.list{title = _L['Stop Process'], items = utf8_cmds, multiple = true}
 	end
 	if selected then for _, i in ipairs(selected) do procs[i].proc:kill() end end

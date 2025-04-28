@@ -633,15 +633,13 @@ function snippet:transform(placeholder)
 		tostring(self.variables[placeholder.variable])
 	if not regex.match(text, placeholder.regex) then return placeholder.repl[1]['else'] or '' end
 	return regex.gsub(text, string.format('(%s)', placeholder.regex), function(...)
-		local repl, captures = {}, {...}
-		for _, part in ipairs(placeholder.repl) do
-			if type(part) == 'table' then
-				local capture = captures[part.index + 1] -- $0 is captures[1]
-				part = part.method and M.transform_methods[part.method](capture) or
-					(capture ~= '' and (part['if'] or capture) or part['else'])
-			end
-			repl[#repl + 1] = part
-		end
+		local captures = {...}
+		local repl = table.map(placeholder.repl, function(part)
+			if type(part) ~= 'table' then return part end
+			local capture = captures[part.index + 1] -- $0 is captures[1]
+			return part.method and M.transform_methods[part.method](capture) or
+				(capture ~= '' and (part['if'] or capture) or part['else'])
+		end)
 		return table.concat(repl)
 	end, placeholder.opts:find('g') and 0 or 1)
 end

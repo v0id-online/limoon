@@ -20,7 +20,7 @@ args = require('args')
 _L = require('locale')
 lexer = require('lexer')
 keys = require('keys')
-for _, module in ipairs{'buffer', 'file_io', 'lfs_ext', 'ui', 'view'} do require(module) end
+for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} do require(mod) end
 
 -- The fields below were defined in C.
 

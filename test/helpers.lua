@@ -66,15 +66,12 @@ end
 -- @function log
 M.log = setmetatable({clear = function(self) for i = 1, #self do self[i] = nil end end}, {
 	__call = function(self, ...)
-		local args = {}
-		for _, arg in pairs{...} do
-			if type(arg) == 'table' then
-				local kvs = {}
-				for k, v in pairs(arg) do kvs[#kvs] = tostring(k) .. ' = ' .. tostring(v) end
-				arg = '{' .. table.concat(kvs) .. '}'
-			end
-			args[#args + 1] = tostring(arg)
-		end
+		local args = table.map({...}, function(arg)
+			if type(arg) ~= 'table' then return tostring(arg) end
+			local kvs = {}
+			for k, v in pairs(arg) do kvs[#kvs + 1] = tostring(k) .. ' = ' .. tostring(v) end
+			return '{' .. table.concat(kvs) .. '}'
+		end)
 		self[#self + 1] = table.concat(args)
 	end
 })

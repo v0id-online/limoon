@@ -12,6 +12,7 @@ file = {
 	'core/lfs_ext.lua',
 	'core/locale.lua',
 	'core/.os.luadoc',
+	'core/table_ext.lua',
 	'core/ui.lua',
 	'core/.ui.dialogs.luadoc',
 	'core/view.lua',

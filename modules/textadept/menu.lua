@@ -548,9 +548,7 @@ local function set_menubar(menubar)
 	end
 	key_shortcuts, menu_items = {}, {} -- reset
 	for key, f in pairs(keys) do key_shortcuts[f] = key end
-	local _menubar = {}
-	for _, menu in ipairs(menubar) do _menubar[#_menubar + 1] = ui.menu(read_menu_table(menu)) end
-	ui.menubar = _menubar
+	ui.menubar = table.map(menubar, function(menu) return ui.menu(read_menu_table(menu)) end)
 	proxies.menubar = proxy_menu(menubar, set_menubar)
 end
 events.connect(events.INITIALIZED, function() set_menubar(default_menubar) end)

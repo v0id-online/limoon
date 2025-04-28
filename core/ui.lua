@@ -130,11 +130,7 @@ function ui.output_silent(...) return output_to(true, ...) end
 -- function.
 -- @param ... Values to print. Lua's `tostring()` function is called for each value. They will
 --	be printed as tab-separated values.
-function ui.print(...)
-	local args = table.pack(...)
-	for i = 1, args.n do args[i] = tostring(args[i]) end
-	ui.output(table.concat(args, '\t'), '\n')
-end
+function ui.print(...) ui.output(table.concat(table.map(table.pack(...), tostring), '\t'), '\n') end
 
 --- Buffer z-order list (most recently accessed buffer on top).
 local buffers_zorder = {}
