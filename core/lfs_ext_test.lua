@@ -59,6 +59,19 @@ test('lfs.walk should not recurse for a *', function()
 	test.assert_equal(files, {dir / file, dir / subdir .. (not WIN32 and '/' or '\\')})
 end)
 
+test('lfs.walk should recurse as long as one glob starts with "**"', function()
+	local file = 'file.txt'
+	local subdir = 'subdir'
+	local subfile = 'subfile.txt'
+	local dir<close> = test.tmpdir{file, [subdir] = {subfile}}
+	local files = {}
+
+	for filename in lfs.walk(dir.dirname, {'**/*.txt', 'nodir/*'}) do files[#files + 1] = filename end
+
+	table.sort(files)
+	test.assert_equal(files, {dir / file, dir / (subdir .. '/' .. subfile)})
+end)
+
 test('lfs.walk should allow filters to match a group', function()
 	local h_file, c_file = 'lib.h', 'lib.c'
 	local subdir = 'src'

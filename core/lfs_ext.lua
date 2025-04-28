@@ -74,8 +74,8 @@ function filter_object:add(glob)
 	glob = glob:gsub('%*', '[^/\\]*') -- match any path part
 	glob = glob:gsub('^!?', '%0^') .. '$' -- anchor for exact matches
 
-	local include = not glob:find('^!')
-	if include and not glob:find('%.%-') then self.recurse = false end
+	local include, recurse = not glob:find('^!'), glob:find('^^%.%-')
+	if include and (recurse or #self.include == 0) then self.recurse = recurse end
 	table.insert(include and self.include or self.exclude, include and glob or glob:sub(2))
 end
 
