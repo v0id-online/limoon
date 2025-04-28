@@ -611,10 +611,10 @@ end)
 -- @section
 
 --- Selects a range of text, scrolling it into view.
--- @param start_pos Start position of the range to select. If negative, it means the end
---	of the buffer.
--- @param end_pos End position of the range to select. If negative, it means remove any
---	selection (i.e. set `buffer.anchor` to the same position as `buffer.current_pos`).
+-- @param start_pos Start position of the range to select, with a negative position being the
+--	end of the buffer.
+-- @param end_pos End position of the range to select, with a negative value being *start_pos*
+--	(i.e. no selection).
 -- @function set_sel
 
 --- The selected text's start position.

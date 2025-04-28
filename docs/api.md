@@ -1268,10 +1268,10 @@ The default value is `buffer.MULTIPASTE_EACH`.
 Selects a range of text, scrolling it into view.
 
 Parameters:
-- *start_pos*:  Start position of the range to select. If negative, it means the end
-	of the buffer.
-- *end_pos*:  End position of the range to select. If negative, it means remove any
-	selection (i.e. set [`buffer.anchor`](#buffer.anchor) to the same position as [`buffer.current_pos`](#buffer.current_pos)).
+- *start_pos*:  Start position of the range to select, with a negative position being the
+	end of the buffer.
+- *end_pos*:  End position of the range to select, with a negative value being *start_pos*
+	(i.e. no selection).
 
 <a id="buffer.selection_start"></a>
 #### `buffer.selection_start`
