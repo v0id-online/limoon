@@ -2723,7 +2723,8 @@ The annotation display style.
 	with a box.
 - `view.ANNOTATION_INDENTED`: Indent non-decorated annotations to match the annotated text.
 
-The default value is `view.ANNOTATION_BOXED`.
+The default value is `view.ANNOTATION_BOXED` in the GUI version and `view.ANNOTATION_STANDARD`
+in the terminal version.
 
 <a id="view.eol_annotation_visible"></a>
 #### `view.eol_annotation_visible`
@@ -2745,7 +2746,8 @@ The EOL annotation display style.
 
 All annotations have the same shape.
 
-The default value is `view.EOLANNOTATION_BOXED`.
+The default value is `view.EOLANNOTATION_BOXED` in the GUI version and
+`view.EOLANNOTATION_STANDARD` in the terminal version.
 
 <a id="buffer.annotation_lines"></a>
 #### `buffer.annotation_lines`
@@ -4495,8 +4497,7 @@ Bit-mask of folding lines to draw in the buffer.
 - `view.FOLDFLAG_LINESTATE`: Show line state in line margins.
 	This option cannot be combined with `view.FOLDFLAG_LEVELNUMBERS`.
 
-The default value is `view.FOLDFLAG_LINEAFTER_CONTRACTED` in the GUI version, and
-`view.FOLDFLAG_NONE` in the terminal version.
+The default value is `view.FOLDFLAG_NONE`.
 
 <a id="view.fold_display_text_style"></a>
 #### `view.fold_display_text_style`
@@ -7979,6 +7980,9 @@ Ctrl+Alt+Shift+W | ^⌘⇧W | M-S-W | Unsplit all views
 Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 Ctrl+Alt+- | ^⌘- | M-- | Shrink view
 Ctrl+} | ⌘} | M-} | Toggle current fold
+None | None | None | Collapse Top-Level Folds
+None | None | None | Collapse All Folds
+None | None | None | Expand All Folds
 Ctrl+\\ | ⌘\\ | M-\\ | Toggle wrap mode
 None | None | N/A | Toggle indent guides
 None | None | None | Toggle view whitespace

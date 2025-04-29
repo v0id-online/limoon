@@ -342,6 +342,42 @@ test('View > Toggle Current Fold should do so', function()
 	test.assert_equal(view.fold_expanded[1], false)
 end)
 
+test('View > Collapse Top-Level Folds should collapse folds and keep the caret visible', function()
+	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
+		true)
+	buffer:line_down()
+	buffer:line_down()
+
+	click('View/Collapse Top-Level Folds')
+
+	test.assert_equal(view.fold_expanded[1], false)
+	test.assert_equal(view.fold_expanded[2], true) -- only fold top-level
+	test.assert_equal(buffer:line_from_position(buffer.current_pos), 1)
+end)
+
+test('View > Collapse All Folds should collapse all folds', function()
+	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
+		true)
+	buffer:line_down()
+	buffer:line_down()
+
+	click('View/Collapse All Folds')
+
+	test.assert_equal(view.fold_expanded[1], false)
+	test.assert_equal(view.fold_expanded[2], false)
+end)
+
+test('View > Expand All Folds should do so', function()
+	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
+		true)
+	click('View/Collapse All Folds')
+
+	click('View/Expand All Folds')
+
+	test.assert_equal(view.fold_expanded[1], true)
+	test.assert_equal(view.fold_expanded[2], true)
+end)
+
 test('View > Toggle Wrap Mode should do so and retain the first visible line', function()
 	buffer:append_text(test.lines(100))
 	buffer:goto_line(50)

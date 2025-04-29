@@ -1688,7 +1688,8 @@ end)
 --	with a box.
 -- - `view.ANNOTATION_INDENTED`: Indent non-decorated annotations to match the annotated text.
 --
--- The default value is `view.ANNOTATION_BOXED`.
+-- The default value is `view.ANNOTATION_BOXED` in the GUI version and `view.ANNOTATION_STANDARD`
+-- in the terminal version.
 -- @field view.annotation_visible
 
 --- Indent annotations to match the annotated text and outline them with a box.
@@ -1719,7 +1720,8 @@ end)
 --
 -- All annotations have the same shape.
 --
--- The default value is `view.EOLANNOTATION_BOXED`.
+-- The default value is `view.EOLANNOTATION_BOXED` in the GUI version and
+-- `view.EOLANNOTATION_STANDARD` in the terminal version.
 -- @field view.eol_annotation_visible
 
 --- @field view.EOLANNOTATION_HIDDEN
@@ -3328,8 +3330,7 @@ end)
 -- - `view.FOLDFLAG_LINESTATE`: Show line state in line margins.
 --	This option cannot be combined with `view.FOLDFLAG_LEVELNUMBERS`.
 --
--- The default value is `view.FOLDFLAG_LINEAFTER_CONTRACTED` in the GUI version, and
--- `view.FOLDFLAG_NONE` in the terminal version.
+-- The default value is `view.FOLDFLAG_NONE`.
 -- @field view.fold_flags
 
 --- Do not draw folding lines.

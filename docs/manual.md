@@ -683,7 +683,7 @@ to [`io.quick_open_filters`][]. For example, in your *~/.textadept/init.lua*:
 
 ```lua
 io.quick_open_max = 10000 -- support huge projects
-io.quick_open_filters['/path/to/project'] = {'include/**', 'src/**'}
+io.quick_open_filters['/path/to/project'] = {'include/**', 'src/**'} -- only show these directories
 ```
 
 A [filter][] consists of a comma-separated list of shell-style glob patterns that match filenames
@@ -1109,10 +1109,11 @@ directory, with file names being trigger words.
 
 ### Code Folding
 
-Many of Textadept's lexers can identify blocks of code and mark their fold points in the
-editor's left-hand margin. Toggle the visibility of a code block by clicking on its marker,
-or toggle the visibility of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}`
-on macOS, and `M-}` in the terminal version.
+Many of Textadept's lexers can identify blocks of code and mark their fold points in the editor's
+left-hand margin. Toggle the visibility of a code block by clicking on its marker, or toggle
+the visibility of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}` on macOS,
+and `M-}` in the terminal version. You can also use the "View > Collapse Top-Level Folds",
+"View > Collapse All Folds", and "View > Expand All Folds" menu items to manipulate folds.
 
 <a href="assets/images/folding.png"><img src="assets/images/folding.png" alt="folding" width="600"/></a>
 

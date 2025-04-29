@@ -266,8 +266,9 @@ view.folding = true
 -- view.fold_on_zero_sum_lines = true
 -- view.fold_compact = true
 view.automatic_fold = view.AUTOMATICFOLD_SHOW | view.AUTOMATICFOLD_CLICK | view.AUTOMATICFOLD_CHANGE
-view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
+-- view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
 view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED
+view:set_default_fold_display_text(not CURSES and ' ... ' or '[...]')
 
 -- Line Wrapping.
 -- view.wrap_mode = view.WRAP_WHITESPACE

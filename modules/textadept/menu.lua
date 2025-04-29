@@ -133,6 +133,15 @@ local function set_encoding(encoding)
 	update_statusbar()
 end
 
+--- Wrapper around `view:fold_all()`.
+local function fold_all(action)
+	view:fold_all(action)
+	local line = buffer:line_from_position(buffer.current_pos)
+	while not view.line_visible[line] do line = buffer.fold_parent[line] end
+	if line ~= buffer:line_from_position(buffer.current_pos) then buffer:goto_line(line) end
+	view:vertical_center_caret()
+end
+
 --- Opens a URL in the user's default web browser.
 local function open_page(url)
 	local cmd = (WIN32 and 'start ""') or (OSX and 'open') or 'xdg-open'
@@ -358,7 +367,9 @@ local default_menubar = {
 				local line = buffer:line_from_position(buffer.current_pos)
 				view:toggle_fold(math.max(buffer.fold_parent[line], line))
 			end
-		}, --
+		}, {_L['Collapse Top-Level Folds'], function() fold_all(view.FOLDACTION_CONTRACT) end},
+		{_L['Collapse All Folds'], function() fold_all(view.FOLDACTION_CONTRACT_EVERY_LEVEL) end},
+		{_L['Expand All Folds'], function() fold_all(view.FOLDACTION_EXPAND) end}, --
 		SEPARATOR, {
 			_L['Toggle Wrap Mode'], function()
 				local first_visible_line = view.first_visible_line
