@@ -110,8 +110,8 @@ for line in io.lines('../build/_deps/scintilla-src/include/Scintilla.iface') do
 		if wtype:find('^%u') then wtype_enum, wtype = true, 'int' end
 		if ltype:find('^%u') then ltype_enum, ltype = true, 'int' end
 		name = to_lua_name(name:gsub('[GS]et%f[%u]', ''))
-		if kind == 'get' and types[wtype] == types.int and types[ltype] == types.int or
-			(wtype == 'bool' and ltype ~= '') or changed_setter[name] then
+		if kind == 'get' and types[wtype] == types.int and (types[ltype] == types.int) or
+			(ltype_enum and rtype ~= 'void') or (wtype == 'bool' and ltype ~= '') or changed_setter[name] then
 			-- Special case getter/setter; handle as function.
 			local fname = kind .. '_' .. name
 			functions[#functions + 1] = fname
