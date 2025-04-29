@@ -160,6 +160,14 @@ view.margin_width_n[2] = not CURSES and 4 or 1
 -- Fold Margin.
 view.margin_width_n[3] = not CURSES and 12 or 1
 view.margin_mask_n[3] = view.MASK_FOLDERS
+local function update_fold_margin()
+	_G.view._fold_margin_width = math.max(_G.view.margin_width_n[3], _G.view._fold_margin_width or 0)
+	_G.view.margin_width_n[3] = _G.buffer.folding and _G.view._fold_margin_width or 0
+end
+events.connect(events.LEXER_LOADED, update_fold_margin) -- emitted during BUFFER_NEW
+events.connect(events.BUFFER_AFTER_SWITCH, update_fold_margin)
+events.connect(events.VIEW_AFTER_SWITCH, update_fold_margin)
+events.connect(events.VIEW_NEW, update_fold_margin)
 -- Other Margins.
 for i = 2, view.margins do
 	view.margin_sensitive_n[i], view.margin_cursor_n[i] = true, view.CURSORARROW

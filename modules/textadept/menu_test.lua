@@ -295,6 +295,28 @@ test('Buffer > Toggle Tab Bar should toggle tab bar visibility', function()
 	test.assert_equal(ui.tabs, not tabs)
 end)
 
+test('Buffer > Toggle Code Folding should do so and update fold margin visibility', function()
+	local _<close> = test.tmpfile('.lua', test.lines{'local t = {', '', '}'}, true)
+
+	click('Buffer/Toggle Code Folding')
+
+	test.assert_equal(view.margin_width_n[3], 0)
+	test.assert_equal(buffer.folding, false)
+	test.assert_equal(buffer.fold_level[1], buffer.FOLDLEVELBASE)
+end)
+
+test('Buffer > Toggle Code Folding should not affect other buffers', function()
+	local _<close> = test.tmpfile('.lua', test.lines{'local t = {', '', '}'}, true)
+	local _<close> = test.tmpfile('.c', test.lines{'int main() {', '', '}'}, true)
+	click('Buffer/Toggle Code Folding')
+
+	view:goto_buffer(1)
+
+	test.assert(view.margin_width_n[3] > 0, 'fold margin is not visible')
+	test.assert_equal(buffer.folding, true)
+	test.assert(buffer.fold_level[1] & buffer.FOLDLEVELHEADERFLAG > 0, 'folding is not enabled')
+end)
+
 test('Buffer > Select Lexer... should prompt for a lexer selection', function()
 	local select_first_item = test.stub(1)
 	local _<close> = test.mock(ui.dialogs, 'list', select_first_item)

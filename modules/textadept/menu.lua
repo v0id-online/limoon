@@ -338,8 +338,12 @@ local default_menubar = {
 			{_L['UTF-16 Encoding'], function() set_encoding('UTF-16LE') end}
 		}, --
 		SEPARATOR, --
-		{_L['Toggle Tab Bar'], function() ui.tabs = not ui.tabs end}, --
-		SEPARATOR, {
+		{_L['Toggle Tab Bar'], function() ui.tabs = not ui.tabs end}, {
+			_L['Toggle Code Folding'], function()
+				buffer.folding = not buffer.folding
+				buffer:set_lexer(buffer.lexer_language) -- reload
+			end
+		}, SEPARATOR, {
 			_L['Select Lexer...'], function()
 				local lexers = lexer.names()
 				local i = ui.dialogs.list{title = _L['Select Lexer'], items = lexers}

@@ -1110,10 +1110,21 @@ directory, with file names being trigger words.
 ### Code Folding
 
 Many of Textadept's lexers can identify blocks of code and mark their fold points in the editor's
-left-hand margin. Toggle the visibility of a code block by clicking on its marker, or toggle
-the visibility of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}` on macOS,
-and `M-}` in the terminal version. You can also use the "View > Collapse Top-Level Folds",
-"View > Collapse All Folds", and "View > Expand All Folds" menu items to manipulate folds.
+left-hand margin.
+
+- Toggle the visibility of a code block by clicking on its marker, or toggle the visibility
+  of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}` on macOS, and `M-}` in the
+  terminal version.
+- Use the "View > Collapse Top-Level Folds", "View > Collapse All Folds", and "View > Expand
+  All Folds" menu items to manipulate folds.
+- Turn off/on code folding for a buffer using the "Buffer > Toggle Code Folding" menu item.
+
+**Tip:** you can turn off code folding completely by changing `buffer.folding`. For example
+in your *~/.textadept/init.lua*:
+
+```lua
+buffer.folding = false
+```
 
 <a href="assets/images/folding.png"><img src="assets/images/folding.png" alt="folding" width="600"/></a>
 

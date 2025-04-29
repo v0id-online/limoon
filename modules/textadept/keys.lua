@@ -142,6 +142,8 @@
 -- None | None | None | ASCII encoding
 -- None | None | None | CP-1252 encoding
 -- None | None | None | UTF-16 encoding
+-- None | None | None | Toggle Tab Bar
+-- None | None | None | Toggle Code Folding
 -- Ctrl+Shift+L | ⌘⇧L | M-^L | Select lexer...
 -- **View**| | |
 -- Ctrl+Alt+PgDn | ^⌘⇟ | M-^PgDn<br/>M-PgUp<sup>d</sup> | Next view
@@ -454,6 +456,8 @@ keys.assign_platform_bindings{
 	-- TODO: m('Buffer/Encoding/ASCII Encoding')
 	-- TODO: m('Buffer/Encoding/CP-1252 Encoding')
 	-- TODO: m('Buffer/Encoding/UTF-16 Encoding')
+	-- TODO: m('Buffer/Toggle Tab Bar')
+	-- TODO: m('Buffer/Toggle Code Folding')
 	[m('Buffer/Select Lexer...')] = {'ctrl+L', 'cmd+L', 'ctrl+meta+l'},
 
 	-- View.
