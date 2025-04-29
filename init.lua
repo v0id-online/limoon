@@ -261,10 +261,10 @@ view.call_tip_use_style = buffer.tab_width * view:text_width(view.STYLE_CALLTIP,
 -- view.call_tip_position = true
 
 -- Folding.
-view.folding = true
--- view.fold_by_indentation = true
--- view.fold_on_zero_sum_lines = true
--- view.fold_compact = true
+buffer.folding = true
+-- buffer.fold_by_indentation = true
+-- buffer.fold_on_zero_sum_lines = true
+-- buffer.fold_compact = true
 view.automatic_fold = view.AUTOMATICFOLD_SHOW | view.AUTOMATICFOLD_CLICK | view.AUTOMATICFOLD_CHANGE
 -- view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
 view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED

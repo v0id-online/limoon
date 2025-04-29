@@ -68,7 +68,7 @@ local function set_lexer(buffer, name)
 	-- Update styles, forward folding properties to the lexer, copy lexer-specific properties to
 	-- the buffer, and refresh syntax highlighting.
 	if view.set_styles then view.set_styles(buffer ~= ui.command_entry and view or ui.command_entry) end
-	for k, v in pairs(view) do
+	for k, v in pairs(buffer) do
 		if not k:find('^fold') then goto continue end
 		lexer.property[(k ~= 'folding' and k:gsub('_', '.') or 'fold'):gsub('^fold%.',
 			'fold.scintillua.')] = v and '1' or '0'

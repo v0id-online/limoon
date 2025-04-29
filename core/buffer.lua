@@ -3301,23 +3301,23 @@ end)
 
 --- Enable folding for the lexers that support it.
 -- The default value is `true`.
--- @field view.folding
+-- @field folding
 
 --- Consider any blank lines after an ending fold point as part of the fold.
 -- The default value is `false`.
--- @field view.fold_compact
+-- @field fold_compact
 
 --- Mark as fold points lines that contain both an ending and starting fold point.
 -- For example, mark `} else {` as a fold point.
 --
 -- The default value is `false`.
--- @field view.fold_on_zero_sum_lines
+-- @field fold_on_zero_sum_lines
 
 --- Fold based on indentation level if a lexer does not have a folder.
 -- Some lexers automatically enable this option.
 --
 -- The default value is `false`.
--- @field view.fold_by_indentation
+-- @field fold_by_indentation
 
 --- Bit-mask of folding lines to draw in the buffer. (Read-only)
 -- - `view.FOLDFLAG_NONE`: Do not draw folding lines.

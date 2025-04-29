@@ -4450,22 +4450,22 @@ The color, in "0xBBGGRR" format, of the single edge or background for long lines
 
 ### Configure Fold Settings and Folded Line Display
 
-<a id="view.folding"></a>
-#### `view.folding`
+<a id="buffer.folding"></a>
+#### `buffer.folding`
 
 Enable folding for the lexers that support it.
 
 The default value is `true`.
 
-<a id="view.fold_compact"></a>
-#### `view.fold_compact`
+<a id="buffer.fold_compact"></a>
+#### `buffer.fold_compact`
 
 Consider any blank lines after an ending fold point as part of the fold.
 
 The default value is `false`.
 
-<a id="view.fold_on_zero_sum_lines"></a>
-#### `view.fold_on_zero_sum_lines`
+<a id="buffer.fold_on_zero_sum_lines"></a>
+#### `buffer.fold_on_zero_sum_lines`
 
 Mark as fold points lines that contain both an ending and starting fold point.
 
@@ -4473,8 +4473,8 @@ For example, mark `} else {` as a fold point.
 
 The default value is `false`.
 
-<a id="view.fold_by_indentation"></a>
-#### `view.fold_by_indentation`
+<a id="buffer.fold_by_indentation"></a>
+#### `buffer.fold_by_indentation`
 
 Fold based on indentation level if a lexer does not have a folder.
 
@@ -7969,6 +7969,8 @@ None | None | None | UTF-8 encoding
 None | None | None | ASCII encoding
 None | None | None | CP-1252 encoding
 None | None | None | UTF-16 encoding
+None | None | None | Toggle Tab Bar
+None | None | None | Toggle Code Folding
 Ctrl+Shift+L | ⌘⇧L | M-^L | Select lexer...
 **View**| | |
 Ctrl+Alt+PgDn | ^⌘⇟ | M-^PgDn<br/>M-PgUp<sup>d</sup> | Next view
