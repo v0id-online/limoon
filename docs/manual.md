@@ -672,7 +672,9 @@ can work with multiple projects at once, since the current project depends large
 3. If no version control directory is found, there is no current project.
 
 **Tip:** you can specify Textadept's current working directory by passing it on the command
-line when running the application. This effectively starts Textadept with a "default project".
+line when running the application. This effectively starts Textadept with a "default
+project". You can also change the current working from within the editor by running the
+`lfs.chdir('/path/to/folder')` command in the Lua command entry.
 
 Textadept's quick open dialog for opening a file from the current project displays the first
 5000 files it finds. You can increase this limit by changing [`io.quick_open_max`][]. You can
