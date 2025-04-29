@@ -63,12 +63,25 @@ test('view.split should preserve buffer state', function()
 	local x_offset = 10
 	view.x_offset = x_offset
 
-	view:split()
+	view:split(true) -- vertical split preserves scroll position
 
 	test.assert_equal(buffer:get_sel_text(), selected_text)
 	if QT then ui.update() end
 	test.assert_equal(view.first_visible_line, first_line)
 	test.assert_equal(view.x_offset, x_offset)
+end)
+
+test('view.split should ensure the caret remains visible', function()
+	buffer:append_text(test.lines(100))
+	buffer:set_sel(buffer:position_from_line(50), buffer.line_end_position[50])
+
+	view:split() -- horizontal split should scroll caret into view as necessary
+
+	if QT then ui.update() end
+	local top_line = view.first_visible_line
+	local bottom_line = top_line + view.lines_on_screen
+	local line = buffer:line_from_position(buffer.current_pos)
+	test.assert(line >= top_line and line <= bottom_line, 'caret was not scrolled into view')
 end)
 
 test('view.unsplit should remove the other view', function()

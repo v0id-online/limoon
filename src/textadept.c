@@ -1108,6 +1108,7 @@ static int split_view_lua(lua_State *L) {
 	split_view(view, view2, lua_toboolean(L, 2)), focus_view(view2), update_ui();
 	SS(view2, SCI_SETSEL, anchor, current_pos), SS(view2, SCI_SETFIRSTVISIBLELINE, first_line, 0),
 		SS(view2, SCI_SETXOFFSET, x_offset, 0);
+	if (!lua_toboolean(L, 2)) SS(view, SCI_SCROLLCARET, 0, 0), SS(view2, SCI_SCROLLCARET, 0, 0);
 	return (lua_pushvalue(L, 1), lua_getglobal(L, "view"), 2); // old, new view
 }
 
