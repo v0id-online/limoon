@@ -1115,8 +1115,7 @@ left-hand margin.
 - Toggle the visibility of a code block by clicking on its marker, or toggle the visibility
   of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}` on macOS, and `M-}` in the
   terminal version.
-- Use the "View > Collapse Top-Level Folds", "View > Collapse All Folds", and "View > Expand
-  All Folds" menu items to manipulate folds.
+- Use the "View > Code Folding" submenu to manipulate folds.
 - Turn off/on code folding for a buffer using the "Buffer > Toggle Code Folding" menu item.
 
 **Tip:** you can turn off code folding completely by changing `buffer.folding`. For example

@@ -133,12 +133,28 @@ local function set_encoding(encoding)
 	update_statusbar()
 end
 
+--- Resizes a split view.
+-- @param view The view to resize.
+-- @param grow Whether to grow or shrink the view.
+local function resize_view(view, grow)
+	if view.size then view.size = view.size + (grow and 1 or -1) * 10 * view:text_height(1) end
+end
+
 --- Wrapper around `view:fold_all()`.
-local function fold_all(action)
-	view:fold_all(action)
-	local line = buffer:line_from_position(buffer.current_pos)
-	while not view.line_visible[line] do line = buffer.fold_parent[line] end
-	if line ~= buffer:line_from_position(buffer.current_pos) then buffer:goto_line(line) end
+local function fold_all(action, level)
+	if not level then
+		view:fold_all(action)
+	else
+		for i = 1, buffer.line_count do
+			if buffer.fold_level[i] & buffer.FOLDLEVELHEADERFLAG == 0 then goto continue end
+			local parent, parents = buffer.fold_parent[i], 1
+			while parent ~= -1 do parent, parents = buffer.fold_parent[parent], parents + 1 end
+			if parents ~= level then goto continue end
+			view.fold_expanded[i] = false
+			view:hide_lines(i + 1, buffer:get_last_child(i, -1))
+			::continue::
+		end
+	end
 	view:vertical_center_caret()
 end
 
@@ -242,8 +258,7 @@ local default_menubar = {
 			{_L['Record Location'], textadept.history.record}, --
 			SEPARATOR, --
 			{_L['Clear History'], textadept.history.clear}
-		}, --
-		SEPARATOR, --
+		}, SEPARATOR, --
 		{_L['Preferences'], function() io.open_file(_USERHOME .. '/init.lua') end}
 	}, {
 		title = _L['Search'], --
@@ -304,8 +319,7 @@ local default_menubar = {
 			{_L['Cancel Snippet'], textadept.snippets.cancel}, --
 			SEPARATOR, --
 			{_L['Complete Trigger Word'], function() textadept.editing.autocomplete('snippet') end}
-		}, --
-		SEPARATOR, --
+		}, SEPARATOR, --
 		{_L['Show Keys...'], show_keys}, --
 		{_L['Show Style'], show_style}
 	}, {
@@ -336,8 +350,7 @@ local default_menubar = {
 			{_L['ASCII Encoding'], function() set_encoding('ASCII') end},
 			{_L['CP-1252 Encoding'], function() set_encoding('CP1252') end},
 			{_L['UTF-16 Encoding'], function() set_encoding('UTF-16LE') end}
-		}, --
-		SEPARATOR, --
+		}, SEPARATOR, --
 		{_L['Toggle Tab Bar'], function() ui.tabs = not ui.tabs end}, {
 			_L['Toggle Code Folding'], function()
 				buffer.folding = not buffer.folding
@@ -359,22 +372,22 @@ local default_menubar = {
 		{_L['Split View Vertical'], function() view:split(true) end},
 		{_L['Unsplit View'], function() view:unsplit() end},
 		{_L['Unsplit All Views'], function() while view:unsplit() do end end},
-		{
-			_L['Grow View'],
-			function() if view.size then view.size = view.size + view:text_height(1) end end
-		}, {
-			_L['Shrink View'],
-			function() if view.size then view.size = view.size - view:text_height(1) end end
-		}, --
+		{_L['Grow View'], function() resize_view(view, true) end},
+		{_L['Shrink View'], function() resize_view(view, false) end}, --
 		SEPARATOR, {
-			_L['Toggle Current Fold'], function()
-				local line = buffer:line_from_position(buffer.current_pos)
-				view:toggle_fold(math.max(buffer.fold_parent[line], line))
-			end
-		}, {_L['Collapse Top-Level Folds'], function() fold_all(view.FOLDACTION_CONTRACT) end},
-		{_L['Collapse All Folds'], function() fold_all(view.FOLDACTION_CONTRACT_EVERY_LEVEL) end},
-		{_L['Expand All Folds'], function() fold_all(view.FOLDACTION_EXPAND) end}, --
-		SEPARATOR, {
+			title = _L['Code Folding'], {
+				_L['Toggle Current Fold'], function()
+					local line = buffer:line_from_position(buffer.current_pos)
+					view:toggle_fold(math.max(buffer.fold_parent[line], line))
+				end
+			}, SEPARATOR,
+			{_L['Toggle Level 1 Folds'], function() fold_all(view.FOLDACTION_CONTRACT, 1) end},
+			{_L['Toggle Level 2 Folds'], function() fold_all(view.FOLDACTION_CONTRACT, 2) end},
+			{_L['Toggle Level 3 Folds'], function() fold_all(view.FOLDACTION_CONTRACT, 3) end}, --
+			SEPARATOR,
+			{_L['Collapse All Folds'], function() fold_all(view.FOLDACTION_CONTRACT_EVERY_LEVEL) end},
+			{_L['Expand All Folds'], function() fold_all(view.FOLDACTION_EXPAND) end}
+		}, SEPARATOR, {
 			_L['Toggle Wrap Mode'], function()
 				local first_visible_line = view.first_visible_line
 				local display_line = view:visible_from_doc_line(first_visible_line)
@@ -404,8 +417,7 @@ local default_menubar = {
 				buffer.virtual_space_options = buffer.virtual_space_options == 0 and
 					buffer.VS_RECTANGULARSELECTION | buffer.VS_USERACCESSIBLE or 0
 			end
-		}, --
-		SEPARATOR, --
+		}, SEPARATOR, --
 		{_L['Zoom In'], view.zoom_in}, --
 		{_L['Zoom Out'], view.zoom_out}, --
 		{_L['Reset Zoom'], function() view.zoom = 0 end}

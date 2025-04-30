@@ -155,7 +155,9 @@
 -- Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 -- Ctrl+Alt+- | ^⌘- | M-- | Shrink view
 -- Ctrl+} | ⌘} | M-} | Toggle current fold
--- None | None | None | Collapse Top-Level Folds
+-- None | None | None | Toggle Level 1 Folds
+-- None | None | None | Toggle Level 2 Folds
+-- None | None | None | Toggle Level 3 Folds
 -- None | None | None | Collapse All Folds
 -- None | None | None | Expand All Folds
 -- Ctrl+\\ | ⌘\\ | M-\\ | Toggle wrap mode
@@ -472,10 +474,12 @@ keys.assign_platform_bindings{
 	[m('View/Grow View')] = {
 		{'ctrl+alt++', 'ctrl+alt+='}, {'ctrl+cmd++', 'ctrl+cmd+='}, {'meta++', 'meta+='}
 	}, [m('View/Shrink View')] = {'ctrl+alt+-', 'ctrl+cmd+-', 'meta+-'},
-	[m('View/Toggle Current Fold')] = {'ctrl+}', 'cmd+}', 'meta+}'},
-	-- TODO: m('View/Collapse Top-Level Folds')
-	-- TODO: m('View/Collapse All Folds')
-	-- TODO: m('View/Expand All Folds')
+	[m('View/Code Folding/Toggle Current Fold')] = {'ctrl+}', 'cmd+}', 'meta+}'},
+	-- TODO: m('View/Code Folding/Toggle Level 1 Folds')
+	-- TODO: m('View/Code Folding/Toggle Level 2 Folds')
+	-- TODO: m('View/Code Folding/Toggle Level 3 Folds')
+	-- TODO: m('View/Code Folding/Collapse All Folds')
+	-- TODO: m('View/Code Folding/Expand All Folds')
 	[m('View/Toggle Wrap Mode')] = {'ctrl+\\', 'cmd+\\', 'meta+\\'},
 	-- TODO: m('View/Toggle Show Indent Guides')
 	-- TODO: m('View/Toggle View Whitespace')

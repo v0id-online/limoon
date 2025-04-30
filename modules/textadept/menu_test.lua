@@ -355,46 +355,46 @@ test('View > Shrink View should do so', function()
 	test.assert(view.size < size or size == 0, 'should have shrunk view')
 end)
 
-test('View > Toggle Current Fold should do so', function()
+test('View > Code Folding > Toggle Current Fold should do so', function()
 	local _<close> = test.tmpfile('.lua', test.lines{'local t = {', '', '}'}, true)
 	buffer:line_down()
 
-	click('View/Toggle Current Fold')
+	click('View/Code Folding/Toggle Current Fold')
 
 	test.assert_equal(view.fold_expanded[1], false)
 end)
 
-test('View > Collapse Top-Level Folds should collapse folds and keep the caret visible', function()
+for i = 1, 3 do
+	test('View > Code Folding > Toggle Level ' .. i .. ' Folds should collapse level folds',
+		function()
+			local _<close> = test.tmpfile('.lua', test.lines{
+				'function f()', 'if condition then', 'local t = {', '', '}', 'end', 'end'
+			}, true)
+
+			click('View/Code Folding/Toggle Level ' .. i .. ' Folds')
+
+			test.assert_equal(view.fold_expanded[1], i ~= 1)
+			test.assert_equal(view.fold_expanded[2], i ~= 2)
+			test.assert_equal(view.fold_expanded[3], i ~= 3)
+		end)
+end
+
+test('View > Code Folding > Collapse All Folds should collapse all folds', function()
 	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
 		true)
-	buffer:line_down()
-	buffer:line_down()
 
-	click('View/Collapse Top-Level Folds')
-
-	test.assert_equal(view.fold_expanded[1], false)
-	test.assert_equal(view.fold_expanded[2], true) -- only fold top-level
-	test.assert_equal(buffer:line_from_position(buffer.current_pos), 1)
-end)
-
-test('View > Collapse All Folds should collapse all folds', function()
-	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
-		true)
-	buffer:line_down()
-	buffer:line_down()
-
-	click('View/Collapse All Folds')
+	click('View/Code Folding/Collapse All Folds')
 
 	test.assert_equal(view.fold_expanded[1], false)
 	test.assert_equal(view.fold_expanded[2], false)
 end)
 
-test('View > Expand All Folds should do so', function()
+test('View > Code Folding > Expand All Folds should do so', function()
 	local _<close> = test.tmpfile('.lua', test.lines{'function f()', 'local t = {', '', '}', 'end'},
 		true)
-	click('View/Collapse All Folds')
+	click('View/Code Folding/Collapse All Folds')
 
-	click('View/Expand All Folds')
+	click('View/Code Folding/Expand All Folds')
 
 	test.assert_equal(view.fold_expanded[1], true)
 	test.assert_equal(view.fold_expanded[2], true)
