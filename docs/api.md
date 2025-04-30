@@ -6402,6 +6402,11 @@ in indentation, create the lexer with a `fold_by_indentation = true` option:
 local lex = lexer.new(..., {fold_by_indentation = true})
 ```
 
+#### Custom Folding
+
+Lexers with complex folding needs can implement their own folders by defining their own
+[`lex:fold()`](#lexer.fold) method. Writing custom folders is beyond the scope of this document.
+
 ### Using Lexers
 
 **Textadept**
@@ -7982,7 +7987,9 @@ Ctrl+Alt+Shift+W | ^⌘⇧W | M-S-W | Unsplit all views
 Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 Ctrl+Alt+- | ^⌘- | M-- | Shrink view
 Ctrl+} | ⌘} | M-} | Toggle current fold
-None | None | None | Collapse Top-Level Folds
+None | None | None | Toggle Level 1 Folds
+None | None | None | Toggle Level 2 Folds
+None | None | None | Toggle Level 3 Folds
 None | None | None | Collapse All Folds
 None | None | None | Expand All Folds
 Ctrl+\\ | ⌘\\ | M-\\ | Toggle wrap mode
