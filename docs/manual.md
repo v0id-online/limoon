@@ -1,4 +1,4 @@
-# Textadept 12.7 nightly Manual
+# Textadept 12.7 beta 2 Manual
 
 **Contents**
 
