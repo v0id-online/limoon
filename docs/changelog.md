@@ -2,6 +2,88 @@
 
 [Atom Feed](https://github.com/orbitalquark/textadept/releases.atom)
 
+## 12.7 beta 2 (01 May 2025)
+
+Download:
+
+- [Textadept 12.7 beta 2 -- Windows][]
+- [Textadept 12.7 beta 2 -- macOS 11+][]
+- [Textadept 12.7 beta 2 -- Linux][]
+- [Textadept 12.7 beta 2 -- Linux ARM][]
+- [Textadept 12.7 beta 2 -- Modules][]
+
+Bugfixes:
+
+- Fixed file update notification not working after a canceled `io.close_all_buffers()`.
+- Auto-indent should keep trailing whitespace when breaking up lines.
+- `buffer:save_as()` should only ultimately emit one `events.FILE_AFTER_SAVE` event.
+- Fixed some inconsistencies swapping replacement text with the "in files" filter.
+- Fixed a hidden caret after some unsuccessful incremental searches.
+- Fixed macOS emitting an erroneous `Esc` to an active key mode.
+- Fixed loss of intermediate view state after closing a buffer and switching to a previous one.
+- Fixed potential hangs in "Find in Files" by truncating long lines in found output.
+- Fixed lack of terminal UTF-8 characters when building on some systems.
+- Fixed snippet transform with 'else' conditional if there is no match.
+- Fixed annotation display in the terminal version.
+- Fixed Qt list dialog sometimes not showing the first item after filtering items.
+- Fixed non-existant `buffer:get_last_child()`.
+- Horizontal split should scroll the caret into view as necessary.
+- Fixed call tips not displaying in the terminal version's Lua command entry.
+- Lua REPL: show completions for `view` too.
+- LSP: fixed potential bug showing call tip for the first time.
+- Debugger: fixed "Set Watch Expression" dialog.
+
+Changes:
+
+- Increase minimum required Qt from 5.12 to 5.15.
+- Added [`io.track_changes`][] for showing change history.
+- Enabled undo selection history via `buffer.undo_selection_history`.
+- Greatly improve startup time when restoring a large session, particularly on macOS.
+- Added [`textadept.clipboard`][] module for interacting with the system clipboard from the
+  terminal version.
+- Replaced `ui.clipboard_text` with [`ui.get_clipboard_text()`][].
+- `textadept.editing.join_lines()` should strip leading indentation and move to the end of
+  joined lines.
+- Added `events.FIND_PANE_SHOW` and `events.FIND_PANE_HIDE` for the find & replace pane.
+- Added "Tools > Show Keys..." for querying typed key shortcuts and copying them to the clipboard.
+- The `keys` table can accept direct key code strings without the need for `keys.KEYSYMS`.
+- The cut/copy commands operate on the current line when no text is selected.
+- Added [`keys.assign_platform_bindings()`][] for easily making platform-specific key bindings.
+- Keys passed to `ui.command_entry.run()` can no longer declare their own `Esc` and `\n` keys.
+- Added `^↩` key binding on macOS to show the right-click context menu.
+- Sessions no longer save typed buffers (find in files, output, etc.)
+- Disable undo for typed buffers.
+- Highlight terminal ANSI escape codes for colors in output buffers.
+- Improved [filter][] syntax and speed.
+- `lfs.default_filter` is auto-appended to filters given to `lfs.walk()`, `io.quick_open()`, etc.
+- Added [`table.map()`][].
+- Moved `view.fold*` fields into `buffer` since they are actually buffer-specific fields.
+- Added "Buffer > Toggle Code Folding" to turn off/on code folding on a per-buffer basis.
+- Changed how folded text is shown.
+- Added "View > Code Folding" submenu with more fold manipulation items.
+- Updated Lisp lexer to highlight character escapes.
+- Updated rpmspec and reST lexers.
+- Lexers can have custom fold functions.
+- Updated Markdown lexer with folding.
+- LSP: wrap hover text like signature help.
+- Scratch: save typed buffers as scratch buffers too.
+- Scratch: save modified files as scratch buffers and also save their undo histories.
+- Lua REPL: added tab-completion.
+- Updated to [Scintilla][] 5.3.6.
+
+[Textadept 12.7 beta 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.win.zip
+[Textadept 12.7 beta 2 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.macOS.zip
+[Textadept 12.7 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.linux.tgz
+[Textadept 12.7 beta 2 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.linux.arm.tgz
+[Textadept 12.7 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.modules.zip
+[`io.track_changes`]: api.html#io.track_changes
+[`textadept.clipboard`]: api.html#textadept.clipboard
+[`ui.get_clipboard_text()`]: api.html#ui.get_clipboard_text
+[`keys.assign_platform_bindings()`]: api.html#keys.assign_platform_bindings
+[filter]: api.html#filters
+[`table.map()`]: api.html#table.map
+[Scintilla]: https://scintilla.org
+
 ## 12.7 beta (01 Apr 2025)
 
 Download:
@@ -41,7 +123,6 @@ Changes:
 [Textadept 12.7 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.linux.tgz
 [Textadept 12.7 beta -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.linux.arm.tgz
 [Textadept 12.7 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.modules.zip
-[Scintilla]: https://scintilla.org
 
 ## 12.6 (01 Feb 2025)
 
