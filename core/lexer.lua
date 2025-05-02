@@ -109,7 +109,7 @@ local function highlight(buffer, start_pos, end_pos)
 	while start_pos > 1 and style_at[start_pos - 1] == init_style do start_pos = start_pos - 1 end
 	if ws then while start_pos > 1 and not ws[style_at[start_pos]] do start_pos = start_pos - 1 end end
 
-	-- Setup buffer-specific lexer fields.
+	-- Setup buffer-specific lexer fields used by Scintillua lexers.
 	local name_of_style, line_from_position = buffer.name_of_style, buffer.line_from_position
 	lexer.style_at = setmetatable({}, {
 		__index = function(_, pos) return name_of_style(buffer, style_at[start_pos + pos - 1]) end
@@ -118,6 +118,10 @@ local function highlight(buffer, start_pos, end_pos)
 	lexer.line_from_position =
 		function(pos) return line_from_position(buffer, start_pos + pos - 1) end
 	lexer.line_state, lexer.indent_amount = buffer.line_state, buffer.line_indentation
+	lexer.line_start, lexer.line_end = setmetatable({}, {
+		__index = function(_, line) return buffer:position_from_line(line) end
+	}), buffer.line_end_position
+	lexer.text_range = function(pos, length) return buffer:text_range(pos, pos + length) end
 
 	-- Invoke the lexer and style text from the returned table of tags.
 	buffer:start_styling(start_pos, 0)

@@ -58,9 +58,10 @@ local function file(filename) return ((_HOME .. '/' .. filename):gsub('\\', '/')
 local ignore_ids = {_G = true, M = true, _SCINTILLA = true, snippets = true}
 local ignore_exprs = {['ui.size'] = true}
 local exceptions = {
-	[file('core/buffer.lua')] = {'buf:select_all', 'buf:replace_sel'},
-	[file('core/lexer.lua')] = {'lexer.style_at', 'lexer.fold_level', 'lexer.line_from_position'},
-	[file('core/lfs_ext.lua')] = {'filter_object.new'}, --
+	[file('core/buffer.lua')] = {'buf:select_all', 'buf:replace_sel'}, [file('core/lexer.lua')] = {
+		'lexer.style_at', 'lexer.fold_level', 'lexer.line_from_position', 'lexer.line_end',
+		'lexer.text_range'
+	}, [file('core/lfs_ext.lua')] = {'filter_object.new'}, --
 	[file('core/ui.lua')] = {'view:document_end'}, --
 	[file('core/view.lua')] = {'env.view'},
 	[file('modules/textadept/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
