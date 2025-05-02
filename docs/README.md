@@ -155,9 +155,9 @@ Compiling Textadept from source requires the following:
 Basic procedure:
 
 1. Configure CMake by pointing it to Textadept's source directory (where *CMakeLists.txt* is),
-  specify a directory to build in, and optionally specify a directory to install to. CMake will
-  determine what UI toolkits are available and fetch third-party build dependencies.
-  <br/><a href="assets/images/compile.png"><img src="assets/images/compile.png" alt="cmake" width="400"/></a>
+	specify a directory to build in, and optionally specify a directory to install to. CMake will
+	determine what UI toolkits are available and fetch third-party build dependencies.
+	<br/><a href="assets/images/compile.png"><img src="assets/images/compile.png" alt="cmake" width="400"/></a>
 2. Build Textadept.
 3. Either copy the built binaries to Textadept's source directory or use CMake to install it.
 
