@@ -84,6 +84,30 @@ test('view.split should ensure the caret remains visible', function()
 	test.assert(line >= top_line and line <= bottom_line, 'caret was not scrolled into view')
 end)
 
+-- Note: view.size is tested in modules/textadept/menu_test.lua.
+test('view.parent_size should give access to parent split size', function()
+	view:split(true)
+	view:split()
+
+	test.assert(view.parent_size, 'view.parent_size is nil')
+end)
+
+test('view.parent_size should be mutable', function()
+	view:split(true)
+	view:split()
+	local size, offset = view.parent_size, 10
+
+	view.parent_size = view.parent_size + offset
+
+	test.assert_equal(view.parent_size, size + offset)
+end)
+
+test('view.parent_size should be nil otherwise', function()
+	view:split()
+
+	test.assert_equal(view.parent_size, nil)
+end)
+
 test('view.unsplit should remove the other view', function()
 	view:split()
 	buffer.new()

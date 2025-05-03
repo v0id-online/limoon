@@ -187,6 +187,10 @@ PaneInfo get_pane_info(Pane *pane_) {
 	return info;
 }
 
+PaneInfo get_parent_pane_info(PaneInfo info) {
+	return get_pane_info(static_cast<QWidget *>(info.self)->parent());
+}
+
 PaneInfo get_pane_info_from_view(SciObject *view) { return get_pane_info(SCI(view)->parent()); }
 
 void set_pane_size(Pane *pane_, int size) {

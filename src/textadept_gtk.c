@@ -301,6 +301,10 @@ PaneInfo get_pane_info(Pane *pane) {
 	return info;
 }
 
+PaneInfo get_parent_pane_info(PaneInfo info) {
+	return get_pane_info(gtk_widget_get_parent(info.self));
+}
+
 PaneInfo get_pane_info_from_view(SciObject *v) { return get_pane_info(gtk_widget_get_parent(v)); }
 
 void set_pane_size(Pane *pane, int size) { gtk_paned_set_position(GTK_PANED(pane), size); }

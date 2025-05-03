@@ -119,6 +119,11 @@ Pane *get_top_pane(void);
  * @see get_pane_info_from_view
  */
 PaneInfo get_pane_info(Pane *pane);
+/**
+ * Returns information about the given pane's parent.
+ * If the pane has no parent, the returned info's members are all zero.
+ */
+PaneInfo get_parent_pane_info(PaneInfo info);
 /** Returns information about the pane that contains the given Scintilla view.
  * @see get_pane_info
  */

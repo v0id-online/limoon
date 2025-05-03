@@ -482,6 +482,13 @@ The split resizer's pixel position if the view is a split one.
 
 See also: [`ui.get_split_table`](#ui.get_split_table)
 
+<a id="view.parent_size"></a>
+#### `view.parent_size`
+
+The parent split resizer's pixel position if the view's parent is a split one.
+
+See also: [`ui.get_split_table`](#ui.get_split_table)
+
 ### Work with Files
 
 

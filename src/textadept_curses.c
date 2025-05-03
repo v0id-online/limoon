@@ -125,12 +125,14 @@ sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
 	return scintilla_send_message(view, message, wparam, lparam);
 }
 
-// Searches the given pane for the given view and returns that view's parent pane, if there is one.
-static struct Pane *get_parent_pane(struct Pane *pane, SciObject *view) {
+// Searches the given pane and its parents for the given child and returns that child's parent
+// pane, if there is one.
+static struct Pane *get_parent_pane(struct Pane *pane, void *child) {
 	if (pane->type == SINGLE) return NULL;
-	if (pane->child1->view == view || pane->child2->view == view) return pane;
-	struct Pane *parent = get_parent_pane(pane->child1, view);
-	return parent ? parent : get_parent_pane(pane->child2, view);
+	if (pane->child1->view == child || pane->child2->view == child) return pane;
+	if (pane->child1 == child || pane->child2 == child) return pane;
+	struct Pane *parent = get_parent_pane(pane->child1, child);
+	return parent ? parent : get_parent_pane(pane->child2, child);
 }
 
 // Redraws the given pane and its children.
@@ -198,9 +200,16 @@ void delete_scintilla(SciObject *view) { scintilla_delete(view); }
 Pane *get_top_pane(void) { return root_pane; }
 
 PaneInfo get_pane_info(Pane *pane) {
-	PaneInfo info = {PANE(pane)->type != SINGLE, PANE(pane)->type == VSPLIT, PANE(pane)->view,
-		PANE(pane), PANE(pane)->child1, PANE(pane)->child2, PANE(pane)->split_size};
+	PaneInfo info = {pane != NULL, false, pane, pane, NULL, NULL, 0};
+	if (pane && PANE(pane)->type != SINGLE)
+		info.vertical = PANE(pane)->type == VSPLIT, info.view = PANE(pane)->view,
+		info.child1 = PANE(pane)->child1, info.child2 = PANE(pane)->child2,
+		info.size = PANE(pane)->split_size;
 	return info;
+}
+
+PaneInfo get_parent_pane_info(PaneInfo info) {
+	return get_pane_info(get_parent_pane(root_pane, info.self));
 }
 
 PaneInfo get_pane_info_from_view(SciObject *v) {
