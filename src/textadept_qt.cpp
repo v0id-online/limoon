@@ -554,8 +554,8 @@ bool spawn(lua_State *L, Process *proc, int /*index*/, const char *cmd, const ch
 	QStringList args = QProcess::splitCommand(QString{cmd});
 	QProcessEnvironment env;
 	if (envi)
-		for (int i = (lua_pushnil(L), 0); lua_next(L, envi); lua_pop(L, 1), i++) {
-			std::string pair{lua_tostring(L, -1)};
+		for (size_t i = 1; i <= lua_rawlen(L, envi); lua_pop(L, 1), i++) {
+			std::string pair{(lua_rawgeti(L, envi, i), lua_tostring(L, -1))}; // popped on loop
 			env.insert(pair.substr(0, pair.find('=')).c_str(), pair.substr(pair.find('=') + 1).c_str());
 		}
 
@@ -735,7 +735,7 @@ public:
 			QStringList args;
 			in >> cwd >> args;
 			if (args.size() == 0) return;
-			lua_newtable(lua);
+			lua_newtable(lua); // {[-1] = cwd, [0] = args[0], table.unpack(args)}
 			lua_pushstring(lua, cwd.toLocal8Bit().data()), lua_rawseti(lua, -2, -1);
 			for (int i = 0; i < args.size(); i++)
 				lua_pushstring(lua, args[i].toLocal8Bit().data()), lua_rawseti(lua, -2, i);

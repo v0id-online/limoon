@@ -590,7 +590,7 @@ static int open_save_dialog(DialogOptions *opts, lua_State *L, bool open) {
 		if (opts->only_dirs) gtk_file_chooser_set_action(fc, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 		gtk_file_chooser_set_select_multiple(fc, opts->multiple);
 		if (opts->dir && opts->file)
-			gtk_file_chooser_select_filename(fc,
+			gtk_file_chooser_select_filename(fc, // opts.dir .. '/' .. opts.file
 				(lua_pushstring(L, opts->dir), lua_pushliteral(L, G_DIR_SEPARATOR_S),
 					lua_pushstring(L, opts->file), lua_concat(L, 3), lua_tostring(L, -1)));
 	} else {
@@ -722,6 +722,7 @@ static void row_activated(GtkTreeView *_, GtkTreePath *__, GtkTreeViewColumn *__
 static void add_selected_row(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *_, void *__) {
 	path = gtk_tree_model_filter_convert_path_to_child_path(GTK_TREE_MODEL_FILTER(model), path);
 	int index = gtk_tree_path_get_indices(path)[0];
+	// selected[#selected + 1] = index + 1
 	lua_pushnumber(lua, index + 1), lua_rawseti(lua, -2, lua_rawlen(lua, -2) + 1);
 }
 
@@ -846,9 +847,9 @@ bool spawn(lua_State *L, Process *proc_, int index, const char *cmd, const char 
 	char **argv, *envp[envc + 1];
 	GError *err = NULL;
 	if (!g_shell_parse_argv(cmd, NULL, &argv, &err)) return (*error = err->message, false);
-	if (lua_checkstack(L, envc + 2), envi) // extra stack slots needed for key-value pairs
-		for (int i = (lua_pushnil(L), 0); lua_next(L, envi); lua_pop(L, 1), i++)
-			envp[i] = (char *)(lua_pushvalue(L, -1), lua_insert(L, -3), lua_tostring(L, -3));
+	if (lua_checkstack(L, envc), envi) // extra stack slots needed for key-value pairs
+		for (size_t i = 1; i <= lua_rawlen(L, envi); i++)
+			envp[i - 1] = (char *)(lua_rawgeti(L, envi, i), lua_tostring(L, -1));
 	envp[envc] = NULL;
 	// Spawn the process with pipes for stdin, stdout, and stderr.
 	bool ok = g_spawn_async_with_pipes(cwd, argv, envi ? envp : NULL,
@@ -926,7 +927,7 @@ static int process(GApplication *_, GApplicationCommandLine *line, void *__) {
 	char **argv = g_application_command_line_get_arguments(line, &argc);
 	const char *cwd = g_application_command_line_get_cwd(line);
 	if (argc > 1) {
-		lua_newtable(lua);
+		lua_newtable(lua); // {[-1] = cwd, table.unpack(argv)}
 		lua_pushstring(lua, cwd), lua_rawseti(lua, -2, -1);
 		while (--argc) lua_pushstring(lua, argv[argc]), lua_rawseti(lua, -2, argc);
 		emit("command_line", LUA_TTABLE, luaL_ref(lua, LUA_REGISTRYINDEX), -1);

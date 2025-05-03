@@ -191,8 +191,8 @@ static int spawn_lua(lua_State *L) {
 			if (!lua_isstring(L, -2) || !lua_isstring(L, -1)) continue;
 			if (lua_type(L, -2) == LUA_TSTRING)
 				lua_pushvalue(L, -2), lua_pushliteral(L, "="), lua_pushvalue(L, -3), lua_concat(L, 3),
-					lua_replace(L, -2); // construct "KEY=VALUE"
-			lua_pushvalue(L, -1), lua_rawseti(L, -4, lua_rawlen(L, -4) + 1);
+					lua_replace(L, -2); // v = k .. '=' .. v
+			lua_pushvalue(L, -1), lua_rawseti(L, -4, lua_rawlen(L, -4) + 1); // env[#env + 1] = v
 		}
 		lua_replace(L, envi);
 	}
@@ -829,8 +829,7 @@ static bool init_lua(int argc, char **argv) {
 		while (lua_pushnil(L), lua_next(L, -2)) lua_pushnil(L), lua_replace(L, -2), lua_rawset(L, -3);
 		lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 		while (lua_pushnil(L), lua_next(L, -2)) lua_pushnil(L), lua_replace(L, -2), lua_rawset(L, -3);
-		lua_pop(L, 2); // package.loaded, _G
-		lua_gc(L, LUA_GCCOLLECT, 0);
+		lua_pop(L, 2), lua_gc(L, LUA_GCCOLLECT, 0); // pop package.loaded, _G
 	}
 	luaL_openlibs(L);
 	luaL_requiref(L, "lpeg", luaopen_lpeg, 1), lua_pop(L, 1);
@@ -1009,9 +1008,10 @@ static void new_buffer(sptr_t doc) {
 // Generates a 'buffer_deleted' event.
 static void remove_doc(sptr_t doc) {
 	lua_getfield(lua, LUA_REGISTRYINDEX, VIEWS);
-	for (lua_pushnil(lua); lua_next(lua, -2); lua_pop(lua, 1))
-		if (lua_isnumber(lua, -2) && doc == SS(lua_toview(lua, -1), SCI_GETDOCPOINTER, 0, 0))
-			goto_doc(lua, lua_toview(lua, -1), -1, true);
+	// for i = 1, #_VIEWS do if _VIEWS[i].buffer == buffer then view:goto_buffer(-1) end
+	for (size_t i = 1; i <= lua_rawlen(lua, -1); lua_pop(lua, 1), i++)
+		if (doc == SS((lua_rawgeti(lua, -1, i), lua_toview(lua, -1)), SCI_GETDOCPOINTER, 0, 0))
+			goto_doc(lua, lua_toview(lua, -1), -1, true); // popped on loop
 	if (doc == SS(dummy_view, SCI_GETDOCPOINTER, 0, 0)) SS(dummy_view, SCI_SETDOCPOINTER, 0, 0);
 	lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS), lua_replace(lua, -2); // replaces _VIEWS
 	for (size_t i = 1; i <= lua_rawlen(lua, -1); lua_pop(lua, 1), i++)
@@ -1043,6 +1043,7 @@ static int delete_buffer_lua(lua_State *L) {
 	SciObject *view = view_for_doc(L, 1);
 	luaL_argcheck(L, view != command_entry, 1, "cannot delete command entry");
 	sptr_t doc = SS(view, SCI_GETDOCPOINTER, 0, 0);
+	// if #_BUFFERS == 1 then buffer.new() end
 	if (lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawlen(L, -1) == 1) new_buffer(0);
 	if (view == focused_view) goto_doc(L, focused_view, -1, true);
 	delete_buffer(doc);
@@ -1054,6 +1055,7 @@ static int delete_buffer_lua(lua_State *L) {
 static int new_buffer_lua(lua_State *L) {
 	if (initing) return luaL_error(L, "cannot create buffers during initialization");
 	new_buffer(0);
+	// return _BUFFERS[#_BUFFERS]
 	return (lua_getfield(L, LUA_REGISTRYINDEX, BUFFERS), lua_rawgeti(L, -1, lua_rawlen(L, -1)), 1);
 }
 
@@ -1215,6 +1217,7 @@ void close_textadept(void) {
 	if (lua) {
 		closing = true;
 		while (unsplit_view(focused_view, delete_view)) {}
+		// for i = #_BUFFERS, 1, -1 do _BUFFERS[i]:delete() end
 		lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS);
 		for (int i = lua_rawlen(lua, -1); i > 0; lua_pop(lua, 1), i--)
 			lua_rawgeti(lua, -1, i), delete_buffer(lua_todoc(lua, -1)); // popped on loop
