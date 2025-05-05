@@ -306,7 +306,7 @@ end)
 -- A filter determines which files to search in, with the default filter being
 -- `ui.find.find_in_files_filters[dir]` (if it exists) or `lfs.default_filter`.
 -- The user is prompted for a directory to search in.
-events.connect(events.FIND, function(text, next)
+events.connect(events.FIND, function(text)
 	if text == '' or not M.in_files then return end
 	local dir = ui.dialogs.open{title = _L['Select Directory'], only_dirs = true, dir = ff_dir()}
 	if not dir then return end
@@ -343,7 +343,7 @@ events.connect(events.FIND, function(text, next)
 	local stopped = ui.dialogs.progress{
 		title = string.format('%s\n%s...', _L['Scanning for files to search in'], dir),
 		work = function()
-			for i = 1, 1000 do -- scan filenames (not contents) in blocks for performance
+			for _ = 1, 1000 do -- scan filenames (not contents) in blocks for performance
 				local filename = iterator()
 				if not filename then return nil end -- done
 				filenames[#filenames + 1] = filename
@@ -363,7 +363,7 @@ events.connect(events.FIND, function(text, next)
 	view:goto_buffer(ff_buffer)
 	buffer.undo_collection, buffer.code_page = false, 0 -- default is UTF-8
 	buffer.search_flags = get_flags()
-	local text, i, found, show_names = M.find_entry_text, 1, false, M.show_filenames_in_progressbar
+	local i, found, show_names = 1, false, M.show_filenames_in_progressbar
 	stopped = ui.dialogs.progress{
 		title = string.format('%s: %s', _L['Find in Files']:gsub('[_&]', ''), text),
 		text = show_names and utf8_filenames[i], work = function()

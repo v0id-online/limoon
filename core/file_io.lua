@@ -158,9 +158,9 @@ function io.open_file(filenames)
 
 		-- Add file to recent files list, eliminating duplicates.
 		table.insert(io.recent_files, 1, filename)
-		for j = 2, #io.recent_files do
-			if io.recent_files[j] == filename then
-				table.remove(io.recent_files, j)
+		for i = 2, #io.recent_files do
+			if io.recent_files[i] == filename then
+				table.remove(io.recent_files, i)
 				break
 			end
 		end
@@ -312,7 +312,7 @@ events.connect(events.BUFFER_NEW, set_change_history)
 events.connect(events.VIEW_NEW, set_change_history)
 
 --- Helper function for closing all buffers, but returns true if the user cancels the operation.
-local function close_all() for i = 1, #_BUFFERS do if not buffer:close() then return true end end end
+local function close_all() for _ = 1, #_BUFFERS do if not buffer:close() then return true end end end
 
 --- Closes all open buffers.
 -- If there are any unsaved buffers, the user is prompted to confirm closing without saving
@@ -346,16 +346,11 @@ end)
 --- Prompts the user to select a recently opened file to reopen.
 -- @see recent_files
 function io.open_recent_file()
-	local utf8_list, i = {}, 1
-	while i <= #io.recent_files do
-		if lfs.attributes(io.recent_files[i]) then
-			utf8_list[#utf8_list + 1] = io.recent_files[i]:iconv('UTF-8', _CHARSET)
-			i = i + 1
-		else
-			table.remove(io.recent_files, i)
-		end
+	for i = #io.recent_files, 1, -1 do
+		if not lfs.attributes(io.recent_files[i]) then table.remove(io.recent_files, i) end
 	end
-	if #utf8_list == 0 then return end
+	if #io.recent_files == 0 then return end
+	local utf8_list = table.map(io.recent_files, string.iconv, 'UTF-8', _CHARSET)
 	local selected, button = ui.dialogs.list{
 		title = _L['Open File'], items = utf8_list, multiple = true, button3 = _L['Clear List'],
 		return_button = true

@@ -110,13 +110,11 @@ local function highlight(buffer, start_pos, end_pos)
 	if ws then while start_pos > 1 and not ws[style_at[start_pos]] do start_pos = start_pos - 1 end end
 
 	-- Setup buffer-specific lexer fields used by Scintillua lexers.
-	local name_of_style, line_from_position = buffer.name_of_style, buffer.line_from_position
 	lexer.style_at = setmetatable({}, {
-		__index = function(_, pos) return name_of_style(buffer, style_at[start_pos + pos - 1]) end
+		__index = function(_, pos) return buffer:name_of_style(style_at[start_pos + pos - 1]) end
 	})
 	lexer.fold_level = buffer.fold_level
-	lexer.line_from_position =
-		function(pos) return line_from_position(buffer, start_pos + pos - 1) end
+	lexer.line_from_position = function(pos) return buffer:line_from_position(start_pos + pos - 1) end
 	lexer.line_state, lexer.indent_amount = buffer.line_state, buffer.line_indentation
 	lexer.line_start, lexer.line_end = setmetatable({}, {
 		__index = function(_, line) return buffer:position_from_line(line) end
@@ -135,10 +133,10 @@ local function highlight(buffer, start_pos, end_pos)
 	buffer:set_styling(end_pos - (start_pos + pos - 1), view.STYLE_DEFAULT)
 
 	-- Invoke the folder and fold the text from the returned table of fold levels.
-	local line = buffer:line_from_position(start_pos)
-	start_pos = buffer:position_from_line(line)
-	local level = buffer.fold_level[line] & buffer.FOLDLEVELNUMBERMASK
-	local folds = buffer.lexer:fold(buffer:text_range(start_pos, end_pos), line, level)
+	local start_line = buffer:line_from_position(start_pos)
+	start_pos = buffer:position_from_line(start_line)
+	local start_level = buffer.fold_level[start_line] & buffer.FOLDLEVELNUMBERMASK
+	local folds = buffer.lexer:fold(buffer:text_range(start_pos, end_pos), start_line, start_level)
 	for line, level in pairs(folds) do buffer.fold_level[line] = level end
 end
 

@@ -1,8 +1,7 @@
 -- Copyright 2020-2025 Mitchell. See LICENSE.
 
---- Load localizations from *locale_conf* and return them in a table.
+--- Load localizations from a locale file and return them in a table.
 -- @param locale_conf String path to a local file to load.
--- @return locale map
 local function load_locale(locale_conf)
 	local L = {}
 	for line in io.lines(locale_conf) do
@@ -12,6 +11,23 @@ local function load_locale(locale_conf)
 		::continue::
 	end
 	return L
+end
+
+--- Loads additional localizations read from assignments in a Lua file.
+-- @param filename String path to a Lua file to read localizations from.
+-- @param L Table of localizations to add to.
+local function load_extra_localizations(L, filename)
+	local count, i = 0, 1
+	for line in io.lines(filename) do
+		if not line:find('_L%b[]%s*=') then goto continue end
+		for id in line:gmatch([=[_L%[['"]([^'"]+)['"]%]%s*=]=]) do
+			test.assert(not L[id], 'duplicate locale id "%s" on line %d (first seen in %s)', id, i, L[id])
+			L[id], count = string.format('%s:%d', filename:sub(#_HOME + 2), i), count + 1
+		end
+		::continue::
+		i = i + 1
+	end
+	if count > 0 then test.log(string.format('Added %d localizations.', count)) end
 end
 
 --- Looks for use of localization in the given Lua file and returns a list of missing IDs.
@@ -63,24 +79,8 @@ for _, stock_file in ipairs(stock_files) do
 	end)
 end
 
--- Records localization assignments in the given Lua file for use in subsequent checks.
--- @param L Table of localizations to add to.
-local function load_extra_localizations(filename, L)
-	local count, i = 0, 1
-	for line in io.lines(filename) do
-		if not line:find('_L%b[]%s*=') then goto continue end
-		for id in line:gmatch([=[_L%[['"]([^'"]+)['"]%]%s*=]=]) do
-			test.assert(not L[id], 'duplicate locale id "%s" on line %d (first seen in %s)', id, i, L[id])
-			L[id], count = string.format('%s:%d', filename:sub(#_HOME + 2), i), count + 1
-		end
-		::continue::
-		i = i + 1
-	end
-	if count > 0 then test.log(string.format('Added %d localizations.', count)) end
-end
-
 local extra_files = {}
-local filter = {
+filter = {
 	'**/*.lua', '!textadept', '!**/build', '!**/*_test.lua',
 	-- Extra modules.
 	'!**/{dkjson,mobdebug,socket}.lua', '!lsp/{ldoc,logging,pl}'
@@ -91,7 +91,7 @@ table.sort(extra_files)
 -- Test each extra file.
 for _, extra_file in ipairs(extra_files) do
 	test(extra_file:sub(#_HOME + 2) .. ' should be using known locale IDs', function()
-		load_extra_localizations(extra_file, L)
+		load_extra_localizations(L, extra_file)
 
 		local missing = check_missing_localizations(extra_file, L)
 

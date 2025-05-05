@@ -463,7 +463,7 @@ test('Enter in an output buffer error should jump to that error', function()
 	local command = not WIN32 and 'cat' or 'type'
 	textadept.run.run_commands[f.filename] = command .. ' "%f"'
 	textadept.run.run(f.filename)
-	for i = 1, 3 do buffer:line_up() end
+	for _ = 1, 3 do buffer:line_up() end
 
 	test.type('\n')
 
@@ -479,7 +479,7 @@ test('double-clicking an error in the output buffer should jump to it', function
 	local command = not WIN32 and 'cat' or 'type'
 	textadept.run.run_commands[f.filename] = command .. ' "%f"'
 	textadept.run.run(f.filename)
-	for i = 1, 3 do buffer:line_up() end
+	for _ = 1, 3 do buffer:line_up() end
 	local line = buffer:line_from_position(buffer.current_pos)
 
 	events.emit(events.DOUBLE_CLICK, buffer.current_pos, line)

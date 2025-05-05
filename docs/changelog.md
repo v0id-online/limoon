@@ -3730,7 +3730,7 @@ Changes:
 - Replaced `scripts/update_doc` with `src/Makefile` targets.
 - New Manual and LuaDoc HTML page formatting.
 - `_M.textadept.editing.autocomplete_word()` accepts default words.
-- Added documentation on [generating LuaDoc][] and Lua Adeptsense.
+- Added documentation on generating LuaDoc and Lua Adeptsense.
 - Moved `Markdown:` comments into LuaDoc.
 - Added Spanish and German translations.
 - Updated VB and VBScript lexers.
@@ -3738,7 +3738,6 @@ Changes:
 - Use [GTK][] 2.24 on Windows.
 - Updated to [Scintilla][] 3.0.4.
 
-[generating LuaDoc]: manual.html#generating-luadoc
 [GTK]: https://gtk.org
 [Scintilla]: https://scintilla.org
 

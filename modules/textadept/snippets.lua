@@ -312,7 +312,7 @@ end
 local snippet = {}
 
 local P, S, R, V = lpeg.P, lpeg.S, lpeg.R, lpeg.V
-local C, Cs, Cp, Ct, Cg, Cc = lpeg.C, lpeg.Cs, lpeg.Cp, lpeg.Ct, lpeg.Cg, lpeg.Cc
+local C, Cs, Ct, Cg, Cc = lpeg.C, lpeg.Cs, lpeg.Ct, lpeg.Cg, lpeg.Cc
 
 --- Returns a pattern that matches any character other than the one in a set, but allowing
 -- for escapes.
@@ -395,13 +395,13 @@ function snippet.new(text, trigger)
 
 	-- Set variables.
 	local line, pos = buffer:line_from_position(buffer.current_pos), buffer.current_pos
-	local dir, name = (buffer.filename or ''):match('^(.-)([^/\\]*)$')
+	local dir, file = (buffer.filename or ''):match('^(.-)([^/\\]*)$')
 	snip.variables = {
 		TM_SELECTED_TEXT = snip.original_sel_text, TM_CURRENT_LINE = buffer:get_cur_line(),
 		TM_CURRENT_WORD = buffer:text_range(buffer:word_start_position(pos, true),
 			buffer:word_end_position(pos, true)), TM_LINE_INDEX = tostring(line - 1),
-		TM_LINE_NUMBER = tostring(line), TM_FILENAME = name,
-		TM_FILENAME_BASE = name:gsub('%.[^.]+$', ''), TM_DIRECTORY = dir, TM_FILEPATH = buffer.filename
+		TM_LINE_NUMBER = tostring(line), TM_FILENAME = file,
+		TM_FILENAME_BASE = file:gsub('%.[^.]+$', ''), TM_DIRECTORY = dir, TM_FILEPATH = buffer.filename
 	}
 	for name, value in pairs(M.variables) do
 		snip.variables[name] = tostring(type(value) == 'function' and value() or value)
@@ -444,7 +444,7 @@ function snippet:add_part(part)
 		self.snapshots[0].placeholders[placeholder.id] = placeholder
 		local position = #self.snapshots[0].text
 		if placeholder.default then
-			for _, part in ipairs(placeholder.default) do self:add_part(part) end
+			for _, part2 in ipairs(placeholder.default) do self:add_part(part2) end
 			placeholder.default = self.snapshots[0].text:sub(position + 1)
 		else
 			self:add_part(' ') -- fill empty placeholder for display
@@ -547,7 +547,7 @@ function snippet:next()
 	-- Add additional carets at mirrors and clear their markers.
 	local text = ph.default or ''
 	::redo::
-	for pos in self:each_placeholder(self.index, 'simple') do
+	for pos in self:each_placeholder(self.index, 'simple') do -- luacheck: ignore 512
 		e = buffer:indicator_end(M.INDIC_PLACEHOLDER, pos)
 		buffer:indicator_clear_range(pos, e - pos)
 		buffer:set_target_range(pos, pos + 1)
@@ -730,8 +730,8 @@ end
 -- snippets.
 function M.select()
 	local all_snippets, items = {}, {}
-	for trigger, snippet in pairs(select(2, find_snippet(true, true))) do
-		all_snippets[#all_snippets + 1], all_snippets[trigger] = trigger, snippet
+	for trigger, text in pairs(select(2, find_snippet(true, true))) do
+		all_snippets[#all_snippets + 1], all_snippets[trigger] = trigger, text
 	end
 	if #all_snippets == 0 then return end
 	table.sort(all_snippets)

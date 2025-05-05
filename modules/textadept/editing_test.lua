@@ -724,7 +724,7 @@ test('editing.auto_indent should preserve indentation on Enter', function()
 	local no_indent = buffer.line_indentation[line]
 
 	test.type('\t\n')
-	local line = buffer:line_from_position(buffer.current_pos)
+	line = buffer:line_from_position(buffer.current_pos)
 	local indent = buffer.line_indentation[line]
 
 	test.assert_equal(no_indent, 0)

@@ -58,7 +58,7 @@ end
 
 -- Record the initial call(s) to `view:set_theme()` in order to apply it to subsequent views.
 local theme, env
-rawset(view, 'set_theme', function(_, name, env_) theme, env = name, env_ end)
+rawset(view, 'set_theme', function(_, name_, env_) theme, env = name_, env_ end)
 events.connect(events.VIEW_NEW, function() view:set_theme(theme, env) end)
 -- Set the command entry theme after initialization and synchronize light/dark editor theme
 -- with light/dark GUI mode.
@@ -145,7 +145,7 @@ events.connect(events.FOCUS, restore_caret_line_visible_always)
 -- Line Number Margin.
 local function resize_line_number_margin(shrinkable)
 	-- This needs to be evaluated dynamically since themes/styles can change.
-	local buffer, view = _G.buffer, _G.view
+	local buffer, view = _G.buffer, _G.view -- luacheck: no redefined
 	local width = math.max(4, #tostring(buffer.line_count)) *
 		view:text_width(view.STYLE_LINENUMBER, '9') + (not CURSES and 4 or 0)
 	view.margin_width_n[1] = not shrinkable and math.max(view.margin_width_n[1], width) or width
@@ -317,7 +317,7 @@ events.connect(events.BUFFER_NEW, load_buffer_settings, 1)
 
 -- Sets default properties for a Scintilla window.
 events.connect(events.VIEW_NEW, function()
-	local view, CTRL, SHIFT = _G.view, view.MOD_CTRL, view.MOD_SHIFT
+	local view, CTRL, SHIFT = _G.view, view.MOD_CTRL, view.MOD_SHIFT -- luacheck: no redefined
 	-- Allow redefinitions of these Scintilla key bindings.
 	for _, code in utf8.codes('[]/\\ZYXCVALTDU') do view:clear_cmd_key(code | CTRL << 16) end
 	for _, code in utf8.codes('LTUZ') do view:clear_cmd_key(code | (CTRL | SHIFT) << 16) end

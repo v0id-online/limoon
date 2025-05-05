@@ -263,7 +263,6 @@
 -- <sup>d</sup> Only on Windows or the GTK version on Linux.
 --
 -- @module textadept.keys
-local M = {}
 
 -- Windows, Linux, and BSD key bindings.
 --

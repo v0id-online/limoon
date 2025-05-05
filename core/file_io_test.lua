@@ -396,14 +396,13 @@ test('io.save_all_files should save all modified files', function()
 	local modified_file<close> = test.tmpfile(true)
 	buffer:append_text('modified_file')
 
-	local unmodified_file<close> = test.tmpfile(true)
+	local _<close> = test.tmpfile(true) -- unmodified
 
-	local modified_untitled_buffer = buffer.new()
+	buffer.new() -- untitled, modified
 	buffer:append_text('new')
 
-	local modified_typed_buffer = buffer.new()
+	buffer.new() -- typed
 	buffer._type = '[Typed Buffer]'
-	buffer:append_text('typed')
 
 	local saved_all = io.save_all_files()
 
@@ -487,7 +486,7 @@ end
 
 test('externally modified files should prompt for reload', function()
 	local reloaded_contents = 'reloaded'
-	local f<close> = open_and_externally_modify_tmpfile(reloaded_contents)
+	local _<close> = open_and_externally_modify_tmpfile(reloaded_contents)
 	local reload = test.stub(1)
 	local _<close> = test.mock(ui.dialogs, 'message', reload)
 
@@ -500,7 +499,7 @@ test('io.close_all_buffers should close all unmodified buffers without checking 
 	function()
 		local file_changed = test.stub(false) -- prevent propagation to default, prompting handler
 		local _<close> = test.connect(events.FILE_CHANGED, file_changed, 1)
-		local f<close> = open_and_externally_modify_tmpfile()
+		local _<close> = open_and_externally_modify_tmpfile()
 		buffer.new()
 
 		local closed_all = io.close_all_buffers()

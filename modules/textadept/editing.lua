@@ -264,8 +264,8 @@ function M.convert_indentation()
 	buffer:begin_undo_action()
 	for line = 1, buffer.line_count do
 		local s, e = buffer:position_from_line(line), buffer.line_indent_position[line]
-		local indent = buffer.line_indentation[line]
-		local current_indentation, new_indentation = buffer:text_range(s, e), nil
+		local current_indentation = buffer:text_range(s, e)
+		local indent, new_indentation = buffer.line_indentation[line]
 		if buffer.use_tabs then
 			local tabs = indent // buffer.tab_width
 			local spaces = math.fmod(indent, buffer.tab_width)
@@ -527,9 +527,10 @@ events.connect(events.CHAR_ADDED, function(code)
 			buffer:get_line(line):find('^[^\r\n]') then
 			return -- do not auto-indent when pressing enter from start of previous line
 		end
-		local j, indent_pos = line - 1, nil
+		local j = line - 1
 		while j >= 1 and buffer:get_line(j):find('^[\r\n]+$') do j = j - 1 end
 		if j < 1 then goto continue end
+		local indent_pos
 		if not buffer:get_line(line):find('^[ \t]+[\r\n]*$') then
 			buffer.line_indentation[line] = buffer.line_indentation[j]
 			indent_pos = buffer.line_indent_position[line]

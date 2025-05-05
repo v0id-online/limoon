@@ -55,7 +55,7 @@ local function set_theme(view, name, env)
 	if not name or not lfs.attributes(name) then return end
 	if not assert_type(env, 'table/nil', 3) then env = {} end
 	env.view = view
-	for name in pairs(view.styles) do view.styles[name] = nil end -- reset
+	for style_name in pairs(view.styles) do view.styles[style_name] = nil end -- reset
 	assert(loadfile(name, 't', setmetatable(env, {__index = _G})))()
 	view:set_styles()
 end

@@ -315,12 +315,12 @@ test('find should allow prompting to search in files and output results to a new
 end)
 if CURSES then skip('find & replace pane blocks the UI') end
 
---- Performs find in files for directory *dir*, find text *find*, and optional filter *filter*.
+--- Performs find in files.
 -- @param dir String path to the directory to search in.
--- @param find String text to search for.
--- @param filter Optional filter string to use when searching.
-local function find_in_files(dir, find, filter)
-	ui.find.find_entry_text = find
+-- @param text String text to search for.
+-- @param[opt] filter String filter to use when searching.
+local function find_in_files(dir, text, filter)
+	ui.find.find_entry_text = text
 	if filter then ui.find.replace_entry_text = filter end
 	local _<close> = test.mock(ui.find, 'in_files', true)
 	local select_directory = test.stub(dir)
@@ -349,7 +349,7 @@ end)
 test('replace should replace found text', function()
 	buffer:append_text(find)
 	ui.find.find_entry_text = find
-	local replace = 'replacement' -- should not match find case-insensitively
+	local _<close> = test.mock(ui.find, 'match_case', true) -- do not match find case-insensitively
 	ui.find.replace_entry_text = replace
 	ui.find.find_next()
 
@@ -382,17 +382,15 @@ test('replace should not unescape \\[bfnrtv] in normal replacement', function()
 	test.assert_equal(buffer:get_text(), '\\t')
 end)
 
---- Searches for regex string *find* in subject string *text*, replaces all instances with
--- string *replace*, and returns the string result.
+--- Performs regex "replace all" and returns the result.
 -- @param text Subject string to search.
--- @param find Regex string to find.
--- @param replace String to replace with.
--- @return replacement string
-local function regex_replace(text, find, replace)
+-- @param re Regex string to find.
+-- @param repl String to replace with.
+local function regex_replace(text, re, repl)
 	local _<close> = test.mock(ui.find, 'regex', true)
 	buffer:append_text(text)
-	ui.find.find_entry_text = find
-	ui.find.replace_entry_text = replace
+	ui.find.find_entry_text = re
+	ui.find.replace_entry_text = repl
 	ui.find.find_next()
 
 	ui.find.replace()
@@ -445,10 +443,9 @@ test('replace should upper-case the next char after \\u in regex replacements', 
 end)
 
 test('replace should lower-case the next char after \\l in regex replacements', function()
-	local find = find:upper()
-	local result = regex_replace(find, find, '\\l\\0')
+	local result = regex_replace(find:upper(), find:upper(), '\\l\\0')
 
-	test.assert_equal(result, find:gsub('^.', string.lower))
+	test.assert_equal(result, find:upper():gsub('^.', string.lower))
 end)
 
 test('replace should allow \\l inside \\U and \\E in regex replacements', function()
@@ -458,10 +455,9 @@ test('replace should allow \\l inside \\U and \\E in regex replacements', functi
 end)
 
 test('replace should allow \\u inside \\L and \\E in regex replacements', function()
-	local find = find:upper()
-	local result = regex_replace(find, find, '\\L\\u\\0\\E')
+	local result = regex_replace(find:upper(), find:upper(), '\\L\\u\\0\\E')
 
-	test.assert_equal(result, find:lower():gsub('^.', string.upper))
+	test.assert_equal(result, find:gsub('^.', string.upper))
 end)
 
 test('replace all should replace all found occurrences', function()
@@ -545,7 +541,6 @@ end)
 
 test('replace all should not match ^ more than once per line', function()
 	local _<close> = test.mock(ui.find, 'regex', true)
-	local find = '\t'
 	buffer:append_text(find .. find)
 	ui.find.find_entry_text = '^' .. find
 	ui.find.replace_entry_text = ''
@@ -675,7 +670,7 @@ test('Enter in the files found list should jump to that file', function()
 	local file = 'file.txt'
 	local dir<close> = test.tmpdir{[file] = find}
 	find_in_files(dir.dirname, find)
-	for i = 1, 3 do buffer:line_down() end
+	for _ = 1, 3 do buffer:line_down() end
 
 	test.type('\n')
 
@@ -686,7 +681,7 @@ test('double-clicking in the files found list should jump to that file', functio
 	local file = 'file.txt'
 	local dir<close> = test.tmpdir{[file] = find}
 	find_in_files(dir.dirname, find)
-	for i = 1, 3 do buffer:line_down() end
+	for _ = 1, 3 do buffer:line_down() end
 	local line = buffer:line_from_position(buffer.current_pos)
 
 	events.emit(events.DOUBLE_CLICK, buffer.current_pos, line) -- simulate

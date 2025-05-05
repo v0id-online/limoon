@@ -34,7 +34,7 @@ end)
 test('history.back should jump back to the last main edit pos for multiple selections', function()
 	local word = 'word'
 	local lines = {word}
-	for i = 1, textadept.history.minimum_line_distance do lines[#lines + 1] = '' end
+	for _ = 1, textadept.history.minimum_line_distance do lines[#lines + 1] = '' end
 	lines[#lines + 1] = word
 	local _<close> = test.tmpfile(test.lines(lines), true)
 	textadept.editing.select_word(true)
@@ -155,7 +155,7 @@ end)
 
 test('history.back/forward should update soft records', function()
 	local contents = test.lines(1 + textadept.history.minimum_line_distance + 1)
-	local f1<close> = test.tmpfile(contents, true)
+	local f1<close> = test.tmpfile(contents, true) -- luacheck: no unused
 	local f2<close> = test.tmpfile(contents, true)
 
 	textadept.history.back()

@@ -83,7 +83,7 @@ local press_any_key = _L['Press any key or Esc to cancel...']
 --- Show the key shortcut and assigned command (if any) for the next keypress.
 local function show_keys() keys.mode, ui.statusbar_text = '_show_keys', press_any_key end
 keys._show_keys = setmetatable({esc = function() keys.mode = nil end}, {
-	__index = function(t, k)
+	__index = function(_, k)
 		return function()
 			local command = keys[k] and _L['Unknown'] or _L['Unassigned']
 			for _, item in ipairs(menu_items) do
@@ -549,12 +549,12 @@ local function proxy_menu(menu, update, menubar)
 	for k, v in pairs(proxy_mt) do toplevel_proxy_mt[k] = v end
 	toplevel_proxy_mt.__index = function(_, k)
 		if type(k) ~= 'string' or not k:find('/') then return proxy[k] end
-		local proxy = proxy
+		local sub_proxy = proxy
 		for label in k:gmatch('[^/]+') do
-			proxy = proxy[label]
-			if not proxy then break end
+			sub_proxy = sub_proxy[label]
+			if not sub_proxy then break end
 		end
-		return proxy
+		return sub_proxy
 	end
 	return setmetatable({}, toplevel_proxy_mt)
 end

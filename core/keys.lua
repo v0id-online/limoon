@@ -233,7 +233,7 @@ events.connect(events.KEYPRESS, function(key)
 	-- PROPAGATE otherwise.
 end)
 
-local plat = CURSES and 3 or OSX and 2 or 1
+local platform = CURSES and 3 or OSX and 2 or 1
 --- Assigns key bindings for the current platform based on a map of commands to lists of their
 -- platform-specific key sequences.
 -- @param[opt=keys] keys Table to assign key bindings in.
@@ -246,12 +246,12 @@ local plat = CURSES and 3 or OSX and 2 or 1
 --	}
 function M.assign_platform_bindings(keys, bindings)
 	if not bindings then keys, bindings = _G.keys, keys end
-	for f, plat_keys in pairs(bindings) do
-		local key = plat_keys[plat]
-		if type(key) == 'string' then
-			keys[key] = f
-		elseif type(key) == 'table' then
-			for _, key in ipairs(key) do keys[key] = f end
+	for f, platform_keys in pairs(bindings) do
+		local platform_key = platform_keys[platform]
+		if type(platform_key) == 'string' then
+			keys[platform_key] = f
+		elseif type(platform_key) == 'table' then
+			for _, key in ipairs(platform_key) do keys[key] = f end
 		end
 	end
 end

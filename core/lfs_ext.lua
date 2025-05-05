@@ -55,13 +55,13 @@ function filter_object:add(glob)
 			for i = 1, #globs do globs[i] = globs[i] .. prefix end
 			local n, group = #globs, {}
 			for item in group_text:sub(2, -2):gmatch('[^,]+') do group[#group + 1] = item end
-			for i = 1, n do for j = 1, #group - 1 do globs[#globs + 1] = globs[i] end end -- copy
+			for i = 1, n do for _ = 1, #group - 1 do globs[#globs + 1] = globs[i] end end -- copy
 			for i = 1, #group do
 				for j = n * (i - 1) + 1, n * i do globs[j] = globs[j] .. group[i] end -- add each item
 			end
 			return ''
 		end)
-		if n > 0 then for _, glob in ipairs(globs) do self:add(glob .. suffix) end end
+		if n > 0 then for _, glob_prefix in ipairs(globs) do self:add(glob_prefix .. suffix) end end
 		return
 	end
 

@@ -77,7 +77,7 @@ test('ui.dialogs.open should allow prompting for a directory to open #skip', fun
 	local select_directory = test.stub(dir.dirname)
 	local _<close> = test.mock(ui.dialogs, 'open', select_directory)
 
-	local directory = ui.dialogs.open{dir = test_dir, only_dirs = true}
+	local directory = ui.dialogs.open{dir = dir.dirname, only_dirs = true}
 
 	test.assert_equal(directory, dir.dirname)
 end)
@@ -88,7 +88,9 @@ test('ui.dialogs.save should prompt for a file to save #skip', function()
 	local select_filename = test.stub(f.filename)
 	local _<close> = test.mock(ui.dialogs, 'save', select_filename)
 
-	local selected_filename = ui.dialogs.save{dir = test_dir, file = test_file}
+	local selected_filename = ui.dialogs.save{
+		dir = f.filename:match('^.+[/\\]'), file = f.filename:match('[^/\\]+$')
+	}
 
 	test.assert_equal(selected_filename, f.filename)
 end)

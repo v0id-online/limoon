@@ -30,7 +30,7 @@ local function emit_after_replace_text()
 	events.emit(events.BUFFER_AFTER_REPLACE_TEXT)
 end
 -- Emits events prior to and after replacing buffer text.
-events.connect(events.MODIFIED, function(position, mod, text, length)
+events.connect(events.MODIFIED, function(_, mod, _, length)
 	if mod & (DELETE | INSERT) == 0 or length ~= buffer.length then return end
 	if mod & (INSERT | UNDOREDO) == INSERT | UNDOREDO then
 		-- Cannot emit BUFFER_AFTER_REPLACE_TEXT here because Scintilla will do things like update

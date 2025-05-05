@@ -31,7 +31,7 @@ end)
 
 test('assert_type should return its argument on success', function()
 	local s = ''
-	local needs_string = function(s) return assert_type(s, 'string', 1) end
+	local needs_string = function(v) return assert_type(v, 'string', 1) end
 
 	local result = needs_string(s)
 
@@ -57,7 +57,7 @@ end)
 
 test('assert_type should consider an object with a __call metamethod to be a function', function()
 	local f = setmetatable({}, {__call = function() end})
-	local needs_callable = function(f) return assert_type(f, 'function', 1) end
+	local needs_callable = function(v) return assert_type(v, 'function', 1) end
 
 	local callable = needs_callable(f)
 
@@ -65,7 +65,7 @@ test('assert_type should consider an object with a __call metamethod to be a fun
 end)
 
 test('assert_type should raise an error on fail', function()
-	local needs_string = function(s) assert_type(s, 'string', 1) end
+	local needs_string = function(v) assert_type(v, 'string', 1) end
 	local optional_second_boolean = function(_, b) assert_type(b, 'boolean/nil', 2) end
 
 	test.assert_raises(function() needs_string(1) end,

@@ -112,14 +112,41 @@ events.connect(events.ERROR, function(msg) print_output(false, msg, '\n') end) -
 
 --- Separate command entry run functions for distinct command histories.
 local command_entry_f = {}
+
+--- Helper for running a command.
+-- Since each command entry function has its own history, this function cannot be used directly
+-- in `ui.command_entry.run()`. Instead, this function is wrapped in another function unique
+-- to compile/run/build/test for a given filename, directory, etc.
+--
+-- *update* specifies whether or not *command* was originally a string in *commands* (as opposed
+-- to a function that returns a string command). If so, *commands* will be updated.
+-- @see run_command
+local function run_command_helper(command, dir, env, event, commands, key, macros, update)
+	if not command or command:find('^%s*$') then return end
+	if update then commands[key] = command end -- update if not originally a function
+	if macros then command = command:gsub('%%%a', macros) end
+	preferred_view = view
+	local function emit(output) events.emit(event, output) end
+	events.emit(event, string.format('> cd %s\n', dir:gsub('[/\\]$', '')))
+	events.emit(event, string.format('> %s\n', command:iconv('UTF-8', _CHARSET)))
+	local args = {
+		command, dir, emit, emit, function(status)
+			events.emit(event, string.format('> exit status: %d\n\n', status))
+			ui.statusbar_text = status == 0 and _L['Command succeeded'] or _L['Command failed']
+		end
+	}
+	if env then table.insert(args, 3, env) end
+	procs[#procs + 1] = {proc = assert(os.spawn(table.unpack(args))), command = args[1]}
+end
+
 --- Prompts the user with the command entry to run a command.
 -- @param label String label to display in the command entry.
 -- @param command String command to run, or a function returning such a string and optional
 --	working directory and environment table. A returned working directory overrides *dir*.
 -- @param dir String working directory to run *command* in.
--- @param event String event name to emit command output with.
--- @param commands Table of commands that *command* came from. This is for saving/restoring
+-- @param event String event name to emit command output with. This is for saving/restoring
 --	custom commands per file/directory.
+-- @param commands Table of commands that *command* came from.
 -- @param key String key in *commands* that produced *command*. This is for saving/restoring
 --	custom commands per file/directory.
 -- @param[opt] macros Table of '%[char]' macros to expand within *command*.
@@ -127,31 +154,13 @@ local function run_command(label, command, dir, event, commands, key, macros)
 	local is_func, working_dir, env = type(command) == 'function'
 	if is_func then command, working_dir, env = command() end
 	local id = event .. key
-	if not command_entry_f[id] then
-		command_entry_f[id] = function(command, dir, env, event, commands, key, macros)
-			if not command or command:find('^%s*$') then return end
-			if not is_func then commands[key] = command end -- update if not originally a function
-			if macros then command = command:gsub('%%%a', macros) end
-			preferred_view = view
-			local function emit(output) events.emit(event, output) end
-			events.emit(event, string.format('> cd %s\n', dir:gsub('[/\\]$', '')))
-			events.emit(event, string.format('> %s\n', command:iconv('UTF-8', _CHARSET)))
-			local args = {
-				command, dir, emit, emit, function(status)
-					events.emit(event, string.format('> exit status: %d\n\n', status))
-					ui.statusbar_text = status == 0 and _L['Command succeeded'] or _L['Command failed']
-				end
-			}
-			if env then table.insert(args, 3, env) end
-			procs[#procs + 1] = {proc = assert(os.spawn(table.unpack(args))), command = args[1]}
-		end
-	end
+	if not command_entry_f[id] then command_entry_f[id] = function(...) run_command_helper(...) end end
 	if M.run_without_prompt then
-		command_entry_f[id](command, working_dir or dir, env, event, commands, key, macros)
-		return
+		command_entry_f[id](command, working_dir or dir, env, event, commands, key, macros, not is_func)
+	else
+		ui.command_entry.run(label, command_entry_f[id], 'bash', command, working_dir or dir, env,
+			event, commands, key, macros, not is_func)
 	end
-	ui.command_entry.run(label, command_entry_f[id], 'bash', command, working_dir or dir, env, event,
-		commands, key, macros)
 end
 
 --- Compiles or runs a file with a command from the given set of shell commands.
@@ -279,7 +288,7 @@ local function build_test_or_run(commands, dir, cmd)
 		if not dir then return end
 	end
 	for _, buffer in ipairs(_BUFFERS) do buffer:annotation_clear_all() end
-	local cmd = commands[dir]
+	if not cmd then cmd = commands[dir] end
 	if not cmd and commands == M.build_commands then
 		for build_file, build_command in pairs(commands) do
 			if lfs.attributes(string.format('%s/%s', dir, build_file)) then

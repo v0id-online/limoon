@@ -32,7 +32,7 @@ local view_history = setmetatable({}, {
 local INSERT, DELETE = buffer.MOD_INSERTTEXT, buffer.MOD_DELETETEXT
 local UNDO, REDO = buffer.PERFORMED_UNDO, buffer.PERFORMED_REDO
 -- Listens for text insertion and deletion events and records their locations.
-events.connect(events.MODIFIED, function(position, mod, text, length)
+events.connect(events.MODIFIED, function(position, mod, _, length)
 	if mod & (INSERT | DELETE) == 0 then return end -- ignore non-insertion/deletion
 	if buffer.length == (mod & INSERT > 0 and length or 0) then return end -- file load/replace all
 	if mod & (UNDO | REDO) > 0 then return end -- ignore undo/redo
