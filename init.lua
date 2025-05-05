@@ -145,8 +145,8 @@ events.connect(events.FOCUS, restore_caret_line_visible_always)
 -- Line Number Margin.
 local function resize_line_number_margin(shrinkable)
 	-- This needs to be evaluated dynamically since themes/styles can change.
-	local buffer, view = _G.buffer, _G.view -- luacheck: no redefined
-	local width = math.max(4, #tostring(buffer.line_count)) *
+	local view = _G.view -- luacheck: no redefined
+	local width = math.max(4, #tostring(_G.buffer.line_count)) *
 		view:text_width(view.STYLE_LINENUMBER, '9') + (not CURSES and 4 or 0)
 	view.margin_width_n[1] = not shrinkable and math.max(view.margin_width_n[1], width) or width
 end
@@ -273,6 +273,10 @@ buffer.folding = true
 -- buffer.fold_by_indentation = true
 -- buffer.fold_on_zero_sum_lines = true
 -- buffer.fold_compact = true
+-- Reset lexer properties so their settings get picked up by the __newindex metamethod.
+events.connect(events.RESET_BEFORE, function()
+	for k in pairs(_G.buffer) do if k:find('^fold') then _G.buffer[k] = nil end end
+end)
 view.automatic_fold = view.AUTOMATICFOLD_SHOW | view.AUTOMATICFOLD_CLICK | view.AUTOMATICFOLD_CHANGE
 -- view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
 view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED
