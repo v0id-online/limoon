@@ -200,8 +200,9 @@ void delete_scintilla(SciObject *view) { scintilla_delete(view); }
 Pane *get_top_pane(void) { return root_pane; }
 
 PaneInfo get_pane_info(Pane *pane) {
-	PaneInfo info = {pane != NULL, false, pane, pane, NULL, NULL, 0};
-	if (pane && PANE(pane)->type != SINGLE)
+	PaneInfo info = {
+		pane && PANE(pane)->type != SINGLE, false, pane ? PANE(pane)->view : NULL, pane, NULL, NULL, 0};
+	if (info.is_split)
 		info.vertical = PANE(pane)->type == VSPLIT, info.view = PANE(pane)->view,
 		info.child1 = PANE(pane)->child1, info.child2 = PANE(pane)->child2,
 		info.size = PANE(pane)->split_size;
