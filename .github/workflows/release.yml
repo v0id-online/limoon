@@ -563,3 +563,28 @@ jobs:
         with:
           name: artifacts-update-release-log
           path: log.md
+
+  luacheck:
+    needs: check-for-changes
+    if: needs.check-for-changes.outputs.new-commits == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout modules
+        run: |
+          cd modules
+          modules="debugger export file-diff format lsp lua-repl open-file-mode scratch spellcheck"
+          for module in $modules; do
+            name="$(echo -n $module | sed -e 's/-/_/g;')"
+            git clone --depth 1 https://github.com/orbitalquark/textadept-$module $name
+          done
+
+      - name: Install luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install lua-check --no-install-recommends -y
+
+      - name: Run luacheck
+        run: luacheck .
