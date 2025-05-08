@@ -2171,7 +2171,6 @@ end)
 --- Registers an XPM image to an image type number for use in autocompletion and user lists.
 -- @param type Image type number to register the image with.
 -- @param pixmap String [pixmap data](https://scintilla.org/ScintillaDoc.html#XPM).
--- @see textadept.editing.XPM_IMAGES
 -- @function view:register_image
 
 --- The width of the RGBA image to be defined using `view:marker_define_rgba_image()` and

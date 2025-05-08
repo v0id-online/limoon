@@ -3197,8 +3197,6 @@ Parameters:
 - *type*:  Image type number to register the image with.
 - *pixmap*:  String [pixmap data](https://scintilla.org/ScintillaDoc.html#XPM).
 
-See also: [`textadept.editing.XPM_IMAGES`](#textadept.editing.XPM_IMAGES)
-
 <a id="view.rgba_image_width"></a>
 #### `view.rgba_image_width`
 
@@ -7545,28 +7543,6 @@ Editing features for Textadept.
 ### `textadept.editing.INDIC_HIGHLIGHT`
 
 The word highlight indicator number.
-
-<a id="textadept.editing.XPM_IMAGES"></a>
-### `textadept.editing.XPM_IMAGES`
-
-Map of image names to registered image numbers.
-
-Fields:
-- `CLASS`:  The image number for classes.
-- `NAMESPACE`:  The image number for namespaces.
-- `METHOD`:  The image number for methods.
-- `SIGNAL`:  The image number for signals.
-- `SLOT`:  The image number for slots.
-- `VARIABLE`:  The image number for variables.
-- `STRUCT`:  The image number for structures.
-- `TYPEDEF`:  The image number for type definitions.
-
-Usage:
-
-```lua
-local item = string.format('%s%s%s', name, string.char(buffer.auto_c_type_separator),
-	textadept.editing.XPM_IMAGES.CLASS) -- autocompletion or user list item with image
-```
 
 <a id="textadept.editing.auto_enclose"></a>
 ### `textadept.editing.auto_enclose`
