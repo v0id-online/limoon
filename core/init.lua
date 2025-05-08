@@ -121,3 +121,6 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 --	seconds.
 -- @param[opt] ... Additional arguments to pass to *f*.
 -- @function timeout
+
+--- Returns whether or not Textadept is currently running on a HiDPI/Retina display.
+-- @function is_hidpi

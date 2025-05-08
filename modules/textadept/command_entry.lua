@@ -235,7 +235,7 @@ events.connect(events.INITIALIZED, function()
 	M.call_tip_use_style, M.call_tip_position = 4 * M:text_width(view.STYLE_CALLTIP, ' '), true
 	M._xpm = setmetatable({}, {__index = function(t) return t.variable end})
 	local image_type = 1 -- no need to use M.new_image_type() since this is a special view
-	for name, xpm in pairs(xpm16) do
+	for name, xpm in pairs(not is_hidpi() and xpm16 or xpm32) do
 		M:register_image(image_type, xpm)
 		M._xpm[name], image_type = image_type, image_type + 1
 	end

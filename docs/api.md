@@ -207,6 +207,11 @@ assert_type(option.setting, 'number', 'setting') -- assert 'setting' field is a 
 
 The current [buffer](#the-buffer-module) in the [current view](#_G.view).
 
+<a id="is_hidpi"></a>
+### `is_hidpi`()
+
+Returns whether or not Textadept is currently running on a HiDPI/Retina display.
+
 <a id="_G.keys"></a>
 ### `keys`
 
