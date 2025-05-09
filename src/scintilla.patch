@@ -79,6 +79,14 @@ diff --git a/src/Editor.cxx b/src/Editor.cxx
 diff --git a/qt/ScintillaEditBase/PlatQt.cpp b/qt/ScintillaEditBase/PlatQt.cpp
 --- a/qt/ScintillaEditBase/PlatQt.cpp
 +++ b/qt/ScintillaEditBase/PlatQt.cpp
+@@ -40,6 +40,7 @@
+ #include <QTextLayout>
+ #include <QTextLine>
+ #include <QLibrary>
++#include <QtMath>
+ 
+ using namespace Scintilla;
+ 
 @@ -1034,10 +1034,11 @@ void ListBoxImpl::Create(Window &parent,
  	int maxIconWidth = 0;
  	int maxIconHeight = 0;
