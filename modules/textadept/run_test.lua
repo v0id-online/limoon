@@ -223,7 +223,8 @@ test('run.* should allow functions to return commands, working dirs, and environ
 	pcall(textadept.run.run, f.filename) -- assert(os.spawn(...)) will fail, which is fine
 
 	test.assert_equal(spawn.called, true)
-	test.assert_equal(spawn.args[3], env)
+	local spawn_env = spawn.args[3]
+	test.assert_equal(spawn_env, env)
 end)
 
 test('run.compile/run should allow macros in commands', function()
