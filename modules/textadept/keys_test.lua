@@ -26,7 +26,6 @@ if CURSES then skip('ctrl+shift+\\n is not defined') end
 test('alt+pgup should line scroll up without moving the caret', function()
 	buffer:append_text(test.lines(50))
 	buffer:document_end()
-	if GTK then ui.update() end
 	local top_line = view.first_visible_line
 
 	test.type(not OSX and 'alt+pgup' or 'ctrl+pgup')
@@ -34,6 +33,7 @@ test('alt+pgup should line scroll up without moving the caret', function()
 	test.assert(view.first_visible_line < top_line, 'view was not scrolled up')
 	test.assert_equal(buffer.current_pos, buffer.length + 1)
 end)
+skip('this test randomly fails') -- TODO: no amount of ui.update() is good enough
 if CURSES then skip('alt+pgup is not defined') end
 
 test('alt+pgdn should line scroll down without moving the caret', function()

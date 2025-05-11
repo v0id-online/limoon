@@ -397,7 +397,9 @@ local function regex_replace(text, re, repl)
 
 	ui.find.replace()
 
-	return buffer:get_text()
+	local result = buffer:get_text()
+	events.emit(events.FIND_PANE_HIDE) -- clear find_text, found_text
+	return result
 end
 
 test('replace should unescape \\[bfnrtv] in regex replacement', function()
@@ -426,11 +428,9 @@ end)
 
 test('replace should upper-case between \\U and \\E in regex replacements', function()
 	local result = regex_replace(find .. find, find, '\\U\\0\\E')
-	-- TODO: if previous search was for 'word', find_next() incorrectly advances search pos.
 
 	test.assert_equal(result, find:upper() .. find)
 end)
-expected_failure()
 
 test('replace should lower-case between \\L and \\E in regex replacements', function()
 	local result = regex_replace(find:upper(), find, '\\L\\0\\E')

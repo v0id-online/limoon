@@ -497,7 +497,7 @@ test('activating menu items with shortcuts on macOS should emit events.KEYPRESS 
 	local keypress = test.stub()
 	local _<close> = test.connect(events.KEYPRESS, keypress, 1)
 
-	local OSX = OSX
+	local OSX = OSX and GUI
 	local _<close> = test.mock(_G, 'OSX', true)
 	events.emit(events.MENU_CLICKED, 1) -- simulate cmd+n triggering File > New
 

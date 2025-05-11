@@ -213,7 +213,7 @@ end)
 test('run.* should allow functions to return commands, working dirs, and environments', function()
 	local _<close> = test.mock(textadept.run, 'run_without_prompt', true)
 	local f<close> = test.tmpfile()
-	local env = {key == 'value'}
+	local env = {key = 'value'}
 	local command_in_dir =
 		function() return 'echo ' .. (not WIN32 and '$key' or '%key%'), nil, env end
 	textadept.run.run_commands[f.filename] = command_in_dir

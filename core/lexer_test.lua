@@ -200,7 +200,7 @@ test('lexer errors should style the entire buffer the default style', function()
 	if CURSES then events.emit(events.STYLE_NEEDED, buffer.length + 1, buffer) end
 
 	if GTK then test.wait(function() return error_handler.called end) end
-	test.assert_equal(error_handler.called, true)
+	test.assert(error_handler.called, 'error handler was not called') -- could happen more than once
 	test.assert_equal(buffer.style_at[1], view.STYLE_DEFAULT)
 	test.assert_equal(buffer.end_styled, buffer.length + 1)
 end)

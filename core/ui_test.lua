@@ -474,10 +474,10 @@ end
 test("ui.maximized = true should change the window's maximized state", function()
 	local _<close> = test.mock(ui, 'maximized', true)
 
-	-- For some reason, the following fails, even though the window maximized status is toggled.
-	-- `ui.update()` does not seem to help.
 	test.assert_equal(ui.maximized, true)
 end)
+-- For some reason, the following fails, even though the window maximized status is toggled.
+-- `ui.update()` does not seem to help.
 if GTK then expected_failure() end
 if CURSES then skip('ui.maximized cannot be changed') end
 
@@ -486,10 +486,10 @@ test('ui.size = {width, height} should resize the window', function()
 
 	local _<close> = test.mock(ui, 'size', new_size)
 
-	-- For some reason, reading ui.size fails, even though the window has been resized.
-	-- `ui.update()` does not seem to help.
 	test.assert_equal(ui.size, new_size)
 end)
+-- For some reason, reading ui.size fails, even though the window has been resized.
+-- `ui.update()` does not seem to help.
 if GTK then expected_failure() end
 if CURSES then skip('ui.size cannot be changed') end
 
