@@ -252,8 +252,6 @@ events.connect(events.URI_DROPPED, function(utf8_uris)
 	end
 	ui.goto_view(view) -- work around any view focus synchronization issues
 end)
-events.connect(events.APPLEEVENT_ODOC,
-	function(uri) return events.emit(events.URI_DROPPED, 'file://' .. uri) end)
 
 -- Sets buffer statusbar text.
 events.connect(events.UPDATE_UI, function(updated)

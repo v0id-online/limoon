@@ -359,8 +359,6 @@ test('dropping a directory URI should do nothing', function()
 	test.assert_equal(#_BUFFERS, 1)
 end)
 
--- TODO: OSX APPLEEVENT_ODOC
-
 test('switching between buffers should save/restore buffer state', function()
 	buffer:append_text(test.lines(100))
 	buffer:set_sel(buffer:position_from_line(50), buffer.line_end_position[50])
