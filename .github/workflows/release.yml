@@ -521,7 +521,7 @@ jobs:
         env:
           TEXTADEPT_HOME: ${{ github.workspace }}
           LANG: en_US.UTF-8
-        timeout-minutes: 6
+        timeout-minutes: 7
 
       - name: Read test output
         if: success() || failure()
