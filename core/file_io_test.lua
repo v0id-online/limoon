@@ -729,7 +729,6 @@ test('io.open_file should raise an error if it cannot open or read a file', func
 
 		test.assert_raises(cannot_open, 'cannot open /etc/gshadow-: Permission denied')
 	end
-	-- TODO: find a case where the file can be opened, but not read
 end)
 
 test("buffer.save should remove a buffer's type once it has a filename", function()

@@ -219,5 +219,5 @@ test('view should refresh its styles when switching between buffers with differe
 		test.assert_equal(style_num, view.STYLE_DEFAULT) -- unknown
 	end)
 
--- TODO: test view/scintilla <-> lexer api
--- e.g. view.folding = false disables lex:fold() and view.fold_compact = true re-folds compactly
+-- TODO: test buffer/scintilla <-> lexer api
+-- e.g. buffer.folding = false disables lex:fold() and buffer.fold_compact = true re-folds compactly

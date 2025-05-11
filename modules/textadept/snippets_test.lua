@@ -387,8 +387,6 @@ test("editing.autocomplete('snippet') should produce triggers", function()
 	test.assert_equal(autocomplete.called, true)
 	local cmpls = {}
 	for cmpl in autocomplete.args[3]:gmatch('[^ ]+') do cmpls[#cmpls + 1] = cmpl end
-	test.assert_equal(#cmpls, 2)
-	-- TODO: Scintilla does not always sort these properly.
-	-- test.assert_equal(autocomplete.args[3],
-	--	table.concat({trigger1, trigger2}, string.char(buffer.auto_c_separator)))
+	table.sort(cmpls)
+	test.assert_equal(cmpls, {trigger1, trigger2})
 end)
