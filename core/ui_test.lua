@@ -373,6 +373,7 @@ test('switching between buffers should save/restore buffer state', function()
 	test.assert_equal(view.first_visible_line, first_line)
 	test.assert_equal(view.x_offset, x_offset)
 end)
+if GTK then retry(1) end -- GTK 2
 
 test('switching between buffers should save/restore fold state', function()
 	local _<close> = test.tmpfile('.lua', test.lines{'if true then', '\tprint()', 'end'}, true)

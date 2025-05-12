@@ -18,6 +18,7 @@ test('ui.command_entry.run should show a Lua command entry', function()
 	if QT then test.wait(function() return ui.command_entry.active end) end
 	test.assert_equal(ui.command_entry.active, true)
 end)
+if GTK then retry(1) end -- GTK 2
 
 test('ui.command_entry.run should not have issues being called again while active', function()
 	ui.command_entry.run()
