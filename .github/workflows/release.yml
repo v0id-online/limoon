@@ -32,6 +32,7 @@ jobs:
       - name: Check repositories for changes
         id: check
         run: |
+          new_commits=false
           repos='
             textadept
             scintillua
@@ -54,12 +55,13 @@ jobs:
             today=$(date +%F)
             yesterday=$(date -d yesterday +%F)
             if [[ $last_date = $yesterday || $last_date = $today ]]; then
-              echo "new-commits=true" >> "$GITHUB_OUTPUT"
-              exit
+              new_commits=true
+              break
             fi
             popd
           done
-          echo "new-commits=false" >> "$GITHUB_OUTPUT"
+          if [[ ${{ github.event_name }} = workflow_dispatch ]]; then new_commits=true; fi
+          echo "new-commits=$new_commits" >> "$GITHUB_OUTPUT"
 
   get-version:
     runs-on: ubuntu-latest
