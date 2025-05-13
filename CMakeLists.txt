@@ -1,6 +1,8 @@
 # Copyright 2022-2025 Mitchell. See LICENSE.
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22..3.31)
+
+project(textadept LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -8,23 +10,21 @@ if(APPLE)
 	set(CMAKE_OSX_DEPLOYMENT_TARGET 11 CACHE STRING "")
 endif()
 
-project(textadept LANGUAGES C CXX)
-
 # Determine available platforms.
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets)
 if(Qt${QT_VERSION_MAJOR}_FOUND)
-	set(QT ON CACHE BOOL "Build Textadept using Qt")
+	option(QT "Build Textadept using Qt" ON)
 endif()
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
 	pkg_check_modules(GTK3 gtk+-3.0)
 	if(GTK3_FOUND)
-		set(GTK3 ON CACHE BOOL "Build Textadept using Gtk 3")
+		option(GTK3 "Build Textadept using Gtk 3" ON)
 	endif()
 	pkg_check_modules(GTK2 gtk+-2.0)
 	if(GTK2_FOUND)
-		set(GTK2 ON CACHE BOOL "Build Textadept using Gtk 2")
+		option(GTK2 "Build Textadept using Gtk 2" ON)
 	endif()
 endif()
 if(NOT WIN32)
@@ -35,7 +35,7 @@ if(NOT WIN32)
 	find_package(Curses)
 endif()
 if(CURSES_FOUND OR WIN32)
-	set(CURSES ON CACHE BOOL "Build Textadept using Curses")
+	option(CURSES "Build Textadept using Curses" ON)
 endif()
 if(NOT (QT OR GTK3 OR GTK2 OR CURSES))
 	message(FATAL_ERROR "No suitable platform found.")
@@ -44,7 +44,7 @@ endif()
 # Setup platform requirements.
 if(QT)
 	set(qt_major Qt${QT_VERSION_MAJOR})
-	if(${QT_VERSION_MAJOR} GREATER 5)
+	if(QT_VERSION_MAJOR GREATER 5)
 		find_package(${qt_major} COMPONENTS Widgets Core5Compat REQUIRED)
 		set(qt_libraries ${qt_major}::Widgets ${qt_major}::Core5Compat)
 	else()
@@ -71,6 +71,9 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 set(nightlies scinterm scintillua regex) # fetch latest version if NIGHTLY is true
 set(deps_dir ${CMAKE_BINARY_DIR}/_deps)
+if(POLICY CMP0135) # CMake 3.24 adds DOWNLOAD_EXTRACT_TIMESTAMP to FetchContent_Declare()
+	cmake_policy(SET CMP0135 NEW)
+endif()
 function(fetch name url)
 	string(REGEX MATCH "[^/]+$" archive ${url})
 	list(FIND nightlies ${name} can_use_nightly)
@@ -97,6 +100,9 @@ fetch(cdk https://github.com/ThomasDickey/cdk-snapshots/archive/refs/tags/t20240
 fetch(termkey https://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz)
 fetch(reproc https://github.com/DaanDeMeyer/reproc/archive/refs/tags/v14.2.5.zip)
 FetchContent_MakeAvailable(scintilla scinterm lua lpeg lfs regex cdk termkey)
+if(POLICY CMP0169) # CMake 3.28 adds EXCLUDE_FROM_ALL to FetchContent_MakeAvailable()
+	cmake_policy(SET CMP0169 OLD)
+endif()
 FetchContent_Populate(scintillua) # do not import targets; only need Lua lexers
 if(WIN32)
 	fetch(pdcurses https://prdownloads.sourceforge.net/pdcurses/PDCurses-3.9.zip)
@@ -113,12 +119,11 @@ if(CURSES)
 	set(REPROC_INSTALL OFF)
 	FetchContent_MakeAvailable(reproc)
 endif()
-set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL "Do not update deps if already set up")
+option(FETCHCONTENT_UPDATES_DISCONNECTED "Do not update deps if already set up" ON)
 
 # Scintilla core.
-add_library(scintilla STATIC)
 file(GLOB sci_src ${scintilla_SOURCE_DIR}/src/*.cxx)
-target_sources(scintilla PRIVATE ${sci_src})
+add_library(scintilla STATIC ${sci_src})
 target_include_directories(scintilla
 	PUBLIC ${scintilla_SOURCE_DIR}/include
 	PRIVATE ${scintilla_SOURCE_DIR}/src)
@@ -128,18 +133,16 @@ target_link_libraries(scintilla PRIVATE Threads::Threads)
 
 # Scintilla platform.
 if(QT)
-	add_library(scintilla_qt STATIC)
 	file(GLOB sci_qt_src ${scintilla_SOURCE_DIR}/qt/ScintillaEditBase/*.cpp)
-	target_sources(scintilla_qt PRIVATE ${sci_qt_src})
+	add_library(scintilla_qt STATIC ${sci_qt_src})
 	target_include_directories(scintilla_qt PUBLIC ${scintilla_SOURCE_DIR}/qt/ScintillaEditBase
 		${scintilla_SOURCE_DIR}/src)
 	target_compile_definitions(scintilla_qt PUBLIC SCINTILLA_QT)
 	target_link_libraries(scintilla_qt PUBLIC scintilla PRIVATE ${qt_libraries})
 endif()
 if(GTK3 OR GTK2)
-	add_library(scintilla_gtk STATIC)
 	file(GLOB sci_gtk_src ${scintilla_SOURCE_DIR}/gtk/*.c ${scintilla_SOURCE_DIR}/gtk/*.cxx)
-	target_sources(scintilla_gtk PRIVATE ${sci_gtk_src})
+	add_library(scintilla_gtk STATIC ${sci_gtk_src})
 	target_include_directories(scintilla_gtk
 		PUBLIC ${scintilla_SOURCE_DIR}/gtk
 		PRIVATE ${scintilla_SOURCE_DIR}/src ${GTK_INCLUDE_DIRS})
@@ -149,9 +152,8 @@ if(GTK3 OR GTK2)
 	target_link_libraries(scintilla_gtk PUBLIC scintilla PRIVATE ${GTK_LIBRARIES})
 endif()
 if(CURSES)
-	add_library(scintilla_curses STATIC)
 	file(GLOB sci_curses_src ${scinterm_SOURCE_DIR}/*.cxx)
-	target_sources(scintilla_curses PRIVATE ${sci_curses_src})
+	add_library(scintilla_curses STATIC ${sci_curses_src})
 	target_include_directories(scintilla_curses
 		PUBLIC ${scinterm_SOURCE_DIR}
 		PRIVATE ${scintilla_SOURCE_DIR}/src ${CURSES_INCLUDE_DIRS})
@@ -165,41 +167,35 @@ endif()
 # Nothing to set up.
 
 # Lua.
-add_library(lua STATIC)
 file(GLOB lua_src ${lua_SOURCE_DIR}/src/*.c)
 list(FILTER lua_src EXCLUDE REGEX "(lua|luac)\.c$")
+add_library(lua STATIC ${lua_src})
 target_include_directories(lua PUBLIC ${lua_SOURCE_DIR}/src)
-target_sources(lua PRIVATE ${lua_src})
 target_compile_definitions(lua PRIVATE
 	$<IF:$<BOOL:${WIN32}>,LUA_BUILD_AS_DLL,$<IF:$<BOOL:${APPLE}>,LUA_USE_MACOSX,LUA_USE_LINUX>>
 	$<$<CONFIG:Debug>:LUA_USE_APICHECK>)
-# Note: can use "$<$<BOOL:${LINUX}>:dl>" in CMake 3.25.
-target_link_libraries(lua PRIVATE $<$<NOT:$<OR:$<BOOL:${WIN32}>,$<BOOL:${APPLE}>>>:dl>)
+target_link_libraries(lua PRIVATE ${CMAKE_DL_LIBS})
 
 # LPeg.
-add_library(lpeg STATIC)
 file(GLOB lpeg_src ${lpeg_SOURCE_DIR}/*.c)
-target_sources(lpeg PRIVATE ${lpeg_src})
+add_library(lpeg STATIC ${lpeg_src})
 target_link_libraries(lpeg PRIVATE lua)
 
 # LFS.
-add_library(lfs STATIC)
 file(GLOB lfs_src ${lfs_SOURCE_DIR}/src/*.c)
-target_sources(lfs PRIVATE ${lfs_src})
+add_library(lfs STATIC ${lfs_src})
 target_link_libraries(lfs PRIVATE lua)
 
 # Regex.
-add_library(regex STATIC)
 file(GLOB regex_src ${regex_SOURCE_DIR}/*.cpp)
-target_sources(regex PRIVATE ${regex_src})
+add_library(regex STATIC ${regex_src})
 target_link_libraries(regex PRIVATE lua)
 
 if(CURSES)
 	# PDCurses.
 	if(WIN32)
-		add_library(pdcurses STATIC)
 		file(GLOB pdcurses_src ${pdcurses_SOURCE_DIR}/pdcurses/*.c ${pdcurses_SOURCE_DIR}/wincon/*.c)
-		target_sources(pdcurses PRIVATE ${pdcurses_src})
+		add_library(pdcurses STATIC ${pdcurses_src})
 		target_include_directories(pdcurses
 			PUBLIC ${pdcurses_SOURCE_DIR}
 			PRIVATE ${pdcurses_SOURCE_DIR}/wincon)
@@ -207,21 +203,19 @@ if(CURSES)
 	endif()
 
 	# Termkey.
-	add_library(termkey STATIC)
 	set(termkey_src termkey.c $<IF:$<BOOL:${UNIX}>,driver-ti.c driver-csi.c,driver-win-pdcurses.c>)
 	list(TRANSFORM termkey_src PREPEND ${termkey_SOURCE_DIR}/)
-	target_sources(termkey PRIVATE ${termkey_src})
+	add_library(termkey STATIC ${termkey_src})
 	target_include_directories(termkey PUBLIC ${termkey_SOURCE_DIR})
 	target_link_directories(termkey PRIVATE ${CURSES_LIBRARY_DIRS})
 	target_link_libraries(termkey PRIVATE ${CURSES_LIBRARIES})
 
 	# CDK.
-	add_library(cdk STATIC)
 	set(cdk_src binding buttonbox cdk cdk_display cdk_objs cdkscreen dialog draw entry fselect
 		itemlist label mentry popup_label scroll scroller select_file selection slider traverse version)
 	list(TRANSFORM cdk_src APPEND .c)
 	list(TRANSFORM cdk_src PREPEND ${cdk_SOURCE_DIR}/)
-	target_sources(cdk PRIVATE ${cdk_src})
+	add_library(cdk STATIC ${cdk_src})
 	target_include_directories(cdk PUBLIC ${cdk_SOURCE_DIR}/include)
 	target_link_directories(cdk PRIVATE ${CURSES_LIBRARY_DIRS})
 	target_link_libraries(cdk PRIVATE termkey ${CURSES_LIBRARIES})
@@ -233,18 +227,17 @@ endif()
 
 # iconv
 if(WIN32)
-	add_library(iconv SHARED)
 	set(iconv_src lib/iconv.c lib/relocatable.c libcharset/lib/localcharset.c
 		libcharset/lib/relocatable-stub.c windows/libiconv.rc)
 	list(TRANSFORM iconv_src PREPEND ${iconv_SOURCE_DIR}/)
-	target_sources(iconv PRIVATE ${iconv_src})
+	add_library(iconv SHARED ${iconv_src})
 	target_include_directories(iconv
 		PUBLIC ${iconv_SOURCE_DIR}/include
 		PRIVATE ${iconv_SOURCE_DIR}/libcharset/include)
 	target_compile_definitions(iconv PRIVATE BUILDING_LIBICONV)
 endif()
 
-set(CMAKE_ENABLE_EXPORTS ON)
+set(CMAKE_ENABLE_EXPORTS ON) # allow external Lua modules to link to exe
 
 # Textadept core.
 set(ta_src src/textadept.c $<$<BOOL:${WIN32}>:src/textadept.rc>)
@@ -257,15 +250,13 @@ set(ta_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${A
 
 # Textadept Qt.
 if(QT)
-	add_library(textadept_qt OBJECT)
-	target_sources(textadept_qt PRIVATE src/textadept_qt.cpp src/textadept_qt.ui)
+	add_library(textadept_qt OBJECT src/textadept_qt.cpp src/textadept_qt.ui)
 	target_compile_definitions(textadept_qt PRIVATE QT_NO_KEYWORDS)
 	target_compile_options(textadept_qt PRIVATE ${ta_compile_opts})
 	target_link_libraries(textadept_qt PRIVATE scintilla_qt lua ${qt_libraries}
 		SingleApplication::SingleApplication)
 
-	add_executable(textadept)
-	target_sources(textadept PRIVATE ${ta_src})
+	add_executable(textadept ${ta_src})
 	target_include_directories(textadept PRIVATE $<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
 	set_target_properties(textadept PROPERTIES WIN32_EXECUTABLE $<$<BOOL:${WIN32}>:ON>)
 	target_compile_options(textadept PRIVATE ${ta_compile_opts})
@@ -275,15 +266,13 @@ endif()
 
 # Textadept GTK.
 if(GTK3 OR GTK2)
-	add_library(textadept_gtk OBJECT)
-	target_sources(textadept_gtk PRIVATE src/textadept_gtk.c)
+	add_library(textadept_gtk OBJECT src/textadept_gtk.c)
 	target_include_directories(textadept_gtk PRIVATE ${GTK_INCLUDE_DIRS})
 	target_compile_options(textadept_gtk PRIVATE ${ta_compile_opts})
 	target_link_directories(textadept_gtk PRIVATE ${GTK_LIBRARY_DIRS})
 	target_link_libraries(textadept_gtk PRIVATE scintilla_gtk lua ${GTK_LIBRARIES})
 
-	add_executable(textadept-gtk)
-	target_sources(textadept-gtk PRIVATE ${ta_src})
+	add_executable(textadept-gtk ${ta_src})
 	target_compile_options(textadept-gtk PRIVATE ${ta_compile_opts})
 	target_link_options(textadept-gtk PRIVATE ${ta_link_opts})
 	target_link_libraries(textadept-gtk PRIVATE ${ta_link_libs} textadept_gtk)
@@ -291,16 +280,14 @@ endif()
 
 # Textadept Curses.
 if(CURSES)
-	add_library(textadept_curses OBJECT)
-	target_sources(textadept_curses PRIVATE src/textadept_curses.c)
+	add_library(textadept_curses OBJECT src/textadept_curses.c)
 	target_include_directories(textadept_curses PRIVATE ${CURSES_INCLUDE_DIRS})
 	target_compile_options(textadept_curses PRIVATE ${ta_compile_opts})
 	target_link_directories(textadept_curses PRIVATE ${CURSES_LIBRARY_DIRS})
 	target_link_libraries(textadept_curses PRIVATE scintilla_curses lua termkey cdk reproc
 		${CURSES_LIBRARIES})
 
-	add_executable(textadept-curses)
-	target_sources(textadept-curses PRIVATE ${ta_src})
+	add_executable(textadept-curses ${ta_src})
 	target_include_directories(textadept-curses PRIVATE
 		$<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
 	target_compile_options(textadept-curses PRIVATE ${ta_compile_opts})
@@ -325,6 +312,11 @@ elseif(APPLE)
 endif()
 
 # Install/release.
+function(install_data dir)
+	install(FILES init.lua LICENSE DESTINATION ${dir})
+	install(DIRECTORY core docs ${scintillua_SOURCE_DIR}/lexers test themes DESTINATION ${dir})
+	install(DIRECTORY modules DESTINATION ${dir} PATTERN ".git" EXCLUDE PATTERN "build" EXCLUDE)
+endfunction()
 if(NOT (WIN32 OR APPLE))
 	include(GNUInstallDirs)
 	set(ta_bin_dir ${CMAKE_INSTALL_FULL_BINDIR})
@@ -333,43 +325,31 @@ if(NOT (WIN32 OR APPLE))
 	file(RELATIVE_PATH ta_bin_to_data_dir ${CMAKE_INSTALL_FULL_BINDIR} ${ta_data_dir})
 	install(CODE "file(MAKE_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR}/applications)")
 	file(RELATIVE_PATH ta_app_to_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/applications ${ta_data_dir})
+	function(install_links target)
+		install(TARGETS ${target} DESTINATION ${ta_data_dir})
+		install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/${target}
+			${ta_bin_dir}/${target} SYMBOLIC)")
+		install(FILES src/${target}.desktop DESTINATION ${ta_data_dir})
+		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/${target}.desktop
+			${CMAKE_INSTALL_FULL_DATADIR}/applications/${target}.desktop SYMBOLIC)")
+	endfunction()
 	if(QT)
-		install(TARGETS textadept DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/textadept
-			${ta_bin_dir}/textadept SYMBOLIC)")
-		install(FILES src/textadept.desktop DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/textadept.desktop
-			${CMAKE_INSTALL_FULL_DATADIR}/applications/textadept.desktop SYMBOLIC)")
+		install_links(textadept)
 	endif()
 	if(GTK3 OR GTK2)
-		install(TARGETS textadept-gtk DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/textadept-gtk
-			${ta_bin_dir}/textadept-gtk SYMBOLIC)")
-		install(FILES src/textadept-gtk.desktop DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/textadept-gtk.desktop
-			${CMAKE_INSTALL_FULL_DATADIR}/applications/textadept-gtk.desktop SYMBOLIC)")
+		install_links(textadept-gtk)
 	endif()
 	if(CURSES)
-		install(TARGETS textadept-curses DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/textadept-curses
-			${ta_bin_dir}/textadept-curses SYMBOLIC)")
-		install(FILES src/textadept-curses.desktop DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/textadept-curses.desktop
-			${CMAKE_INSTALL_FULL_DATADIR}/applications/textadept-curses.desktop SYMBOLIC)")
+		install_links(textadept-curses)
 	endif()
-	install(FILES init.lua LICENSE DESTINATION ${ta_data_dir})
-	install(DIRECTORY core docs ${scintillua_SOURCE_DIR}/lexers test themes
-		DESTINATION ${ta_data_dir})
-	install(DIRECTORY modules
-		DESTINATION ${ta_data_dir}
-		PATTERN ".hg" EXCLUDE PATTERN ".git" EXCLUDE PATTERN "build" EXCLUDE)
+	install_data(${ta_data_dir})
 	install(FILES core/images/textadept.svg
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
-	# Note: can use file(ARCHIVE_CREATE) in CMake 3.18.
 	set(textadept_tgz textadept_${version}.tgz)
 	if(CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch")
 		set(textadept_tgz textadept_${version}.arm.tgz)
 	endif()
+	# Note: can use file(ARCHIVE_CREATE ... WORKING_DIRECTORY) in CMake 3.31.
 	add_custom_target(archive
 		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${textadept_tgz} textadept
 		WORKING_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR})
@@ -381,12 +361,8 @@ elseif(WIN32)
 	if(CURSES)
 		install(TARGETS textadept-curses DESTINATION ${ta_dir})
 	endif()
+	install_data(${ta_dir})
 	install(TARGETS iconv DESTINATION ${ta_dir})
-	install(FILES init.lua LICENSE DESTINATION ${ta_dir})
-	install(DIRECTORY core docs ${scintillua_SOURCE_DIR}/lexers test themes DESTINATION ${ta_dir})
-	install(DIRECTORY modules
-		DESTINATION ${ta_dir}
-		PATTERN ".hg" EXCLUDE PATTERN ".git" EXCLUDE PATTERN "build" EXCLUDE)
 	if(NOT (EXISTS ${ta_dir}/${qt_major}Core.dll OR EXISTS ${ta_dir}/${qt_major}Cored.dll))
 		install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime
 			${ta_dir}/textadept.exe)")
@@ -407,15 +383,13 @@ elseif(APPLE)
 		install(TARGETS textadept-curses DESTINATION ${ta_bin_dir})
 	endif()
 	install(PROGRAMS scripts/osx/textadept_osx DESTINATION ${ta_bin_dir})
-	install(FILES init.lua LICENSE DESTINATION ${ta_data_dir})
-	install(FILES src/Info.plist DESTINATION ${ta_data_dir}/../)
-	install(DIRECTORY core docs ${scintillua_SOURCE_DIR}/lexers test themes
-		DESTINATION ${ta_data_dir})
-	install(DIRECTORY modules
-		DESTINATION ${ta_data_dir}
-		PATTERN ".hg" EXCLUDE PATTERN ".git" EXCLUDE PATTERN "build" EXCLUDE)
+	install_data(${ta_data_dir})
 	install(CODE "file(RENAME ${ta_data_dir}/core/images/textadept.icns
 		${ta_data_dir}/textadept.icns)")
+	if(POLICY CMP0177) # CMake 3.31 auto-normalizes .. in install() paths.
+		cmake_policy(SET CMP0177 NEW)
+	endif()
+	install(FILES src/Info.plist DESTINATION ${ta_data_dir}/../)
 	if(NOT EXISTS ${ta_data_dir}/qt.conf)
 		install(CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE}
 			${CMAKE_INSTALL_PREFIX}/Textadept.app -executable=${ta_bin_dir}/textadept)")
@@ -428,6 +402,7 @@ elseif(APPLE)
 endif()
 
 # Generate HTML.
+option(GENERATE_HTML "Generate HTML documentation in docs/" OFF)
 if(GENERATE_HTML)
 	find_program(LUA lua REQUIRED)
 	find_program(BUNDLE bundle REQUIRED)

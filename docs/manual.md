@@ -1412,7 +1412,7 @@ run it from there.
 
 Textadept requires the following:
 
-- [CMake][] 3.16+
+- [CMake][] 3.22+
 - A C and C++ compiler, such as:
 	- [GNU C compiler][] (*gcc*) 7.1+
 	- [Microsoft Visual Studio][] 2019+
