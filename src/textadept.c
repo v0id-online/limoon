@@ -1266,6 +1266,9 @@ bool init_textadept(int argc, char **argv) {
 #else
 #error platform not supported
 #endif
+#ifdef TEXTADEPT_HOME
+	textadept_home = strcpy(textadept_home, TEXTADEPT_HOME);
+#endif
 	if (getenv("TEXTADEPT_HOME")) strcpy(textadept_home, getenv("TEXTADEPT_HOME"));
 
 	setlocale(LC_COLLATE, "C"), setlocale(LC_NUMERIC, "C"); // for Lua

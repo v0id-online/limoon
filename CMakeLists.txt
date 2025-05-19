@@ -244,7 +244,8 @@ set(ta_src src/textadept.c $<$<BOOL:${WIN32}>:src/textadept.rc>)
 set(ta_compile_opts
 	$<IF:$<NOT:$<BOOL:${WIN32}>>,-pedantic -Wall -Wextra -Wno-unused-parameter
 		-Wno-missing-field-initializers,/W4>
-	$<$<BOOL:${PROFILE}>:-pg --coverage>)
+	$<$<BOOL:${PROFILE}>:-pg --coverage>
+	$<$<BOOL:${TEXTADEPT_HOME}>:-DTEXTADEPT_HOME="${TEXTADEPT_HOME}">)
 set(ta_link_opts $<$<BOOL:${PROFILE}>:--coverage>)
 set(ta_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${APPLE}>>:iconv>)
 
@@ -326,9 +327,13 @@ if(NOT (WIN32 OR APPLE))
 	install(CODE "file(MAKE_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR}/applications)")
 	file(RELATIVE_PATH ta_app_to_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/applications ${ta_data_dir})
 	function(install_links target)
-		install(TARGETS ${target} DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/${target}
-			${ta_bin_dir}/${target} SYMBOLIC)")
+		if(DEFINED TEXTADEPT_HOME)
+			install(TARGETS ${target} DESTINATION ${ta_bin_dir})
+		else()
+			install(TARGETS ${target} DESTINATION ${ta_data_dir})
+			install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/${target}
+				${ta_bin_dir}/${target} SYMBOLIC)")
+		endif()
 		install(FILES src/${target}.desktop DESTINATION ${ta_data_dir})
 		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/${target}.desktop
 			${CMAKE_INSTALL_FULL_DATADIR}/applications/${target}.desktop SYMBOLIC)")

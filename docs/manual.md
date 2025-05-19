@@ -1479,6 +1479,9 @@ CMake boolean variables that affect the build:
 - `GENERATE_HTML`: When on, creates a `html` target to build HTML documentation in the *docs/*
 	directory (e.g. `cmake --build build_dir --target html`). Requires [Lua][] and [Ruby][]
 	to be installed. Defaults to off.
+- `TEXTADEPT_HOME`: When set on Linux or BSD, uses the given location as Textadept's root
+	directory. Setting this is probably only useful for distribution managers that want to install
+	binaries separately from data files.
 
 [Lua]: https://www.lua.org
 [Ruby]: https://www.ruby-lang.org/en/
