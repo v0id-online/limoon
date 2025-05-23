@@ -245,10 +245,10 @@ view.indic_style[textadept.run.INDIC_WARNING] = view.INDIC_SQUIGGLE
 view.indic_style[textadept.run.INDIC_ERROR] = view.INDIC_SQUIGGLE
 view.indic_style[textadept.snippets.INDIC_PLACEHOLDER] = not CURSES and view.INDIC_DOTBOX or
 	view.INDIC_STRAIGHTBOX
-view.indic_style[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = view.INDIC_PLAIN
-view.indic_style[view.INDICATOR_HISTORY_SAVED_INSERTION] = view.INDIC_PLAIN
-view.indic_style[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_INSERTION] = view.INDIC_PLAIN
-view.indic_style[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_INSERTION] = view.INDIC_PLAIN
+for _, kind in ipairs{'MODIFIED', 'SAVED', 'REVERTED_TO_MODIFIED', 'REVERTED_TO_ORIGIN'} do
+	view.indic_style[view['INDICATOR_HISTORY_' .. kind .. '_INSERTION']] = view.INDIC_PLAIN
+	view.indic_style[view['INDICATOR_HISTORY_' .. kind .. '_DELETION']] = view.INDIC_POINT_TOP
+end
 
 -- Autocompletion.
 -- buffer.auto_c_separator =
