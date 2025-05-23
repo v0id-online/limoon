@@ -76,7 +76,7 @@ static int scModMask(const Qt::KeyboardModifiers &mods) {
 // Event filter for Scintilla views. This avoids the need to subclass ScintillaEditBase.
 class ScintillaEventFilter : public QObject {
 public:
-	ScintillaEventFilter(QObject *parent = nullptr) : QObject{parent} {}
+	explicit ScintillaEventFilter(QObject *parent = nullptr) : QObject{parent} {}
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *event) override {
@@ -449,7 +449,8 @@ int progress_dialog(
 // tree view. This allows for cursor movement from the line edit while it has focus.
 class KeyForwarder : public QObject {
 public:
-	KeyForwarder(QWidget *target, QObject *parent = nullptr) : QObject{parent}, target{target} {}
+	explicit KeyForwarder(QWidget *target, QObject *parent = nullptr)
+			: QObject{parent}, target{target} {}
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *event) override {
@@ -638,7 +639,7 @@ void quit() { ta->close(); }
 // is pressed, and another button when Shift+Enter is pressed.
 class FindKeypressHandler : public QObject {
 public:
-	FindKeypressHandler(QObject *parent = nullptr) : QObject{parent} {}
+	explicit FindKeypressHandler(QObject *parent = nullptr) : QObject{parent} {}
 
 protected:
 	bool eventFilter(QObject *watched, QEvent *event) override {
