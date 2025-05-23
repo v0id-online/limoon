@@ -187,14 +187,13 @@ static int spawn_lua(lua_State *L) {
 	int envi = lua_istable(L, narg) && !lua_iscallable(L, narg) ? narg++ : 0;
 	if (envi) {
 		lua_newtable(L);
-		for (lua_pushnil(L); lua_next(L, envi); lua_pop(L, 1)) {
+		for (lua_pushnil(L); lua_next(L, envi) || (lua_replace(L, envi), false); lua_pop(L, 1)) {
 			if (!lua_isstring(L, -2) || !lua_isstring(L, -1)) continue;
 			if (lua_type(L, -2) == LUA_TSTRING)
 				lua_pushvalue(L, -2), lua_pushliteral(L, "="), lua_pushvalue(L, -3), lua_concat(L, 3),
 					lua_replace(L, -2); // v = k .. '=' .. v
 			lua_pushvalue(L, -1), lua_rawseti(L, -4, lua_rawlen(L, -4) + 1); // env[#env + 1] = v
 		}
-		lua_replace(L, envi);
 	}
 
 	// Create process object to be returned and link callback functions from optional function params.
@@ -731,9 +730,9 @@ void move_buffer(int from, int to, bool reorder_tabs) {
 		lua_getfield(lua, -1, "remove"), lua_replace(lua, -2), lua_pushvalue(lua, -5),
 		lua_pushinteger(lua, from), lua_call(lua, 2, 1), lua_call(lua, 3, 0);
 	// for i = 1, #_BUFFERS do _BUFFERS[_BUFFERS[i]] = i end
-	for (size_t i = 1; i <= lua_rawlen(lua, -1); i++)
+	for (size_t i = 1; i <= lua_rawlen(lua, -1) || (lua_pop(lua, 1), false); i++)
 		lua_rawgeti(lua, -1, i), lua_pushinteger(lua, i), lua_rawset(lua, -3);
-	if (lua_pop(lua, 1), tabs && reorder_tabs) move_tab(from - 1, to - 1); // pop _BUFFERS
+	if (tabs && reorder_tabs) move_tab(from - 1, to - 1);
 }
 
 // `_G.move_buffer` Lua function.
@@ -1013,11 +1012,11 @@ static void new_buffer(sptr_t doc) {
 static void remove_doc(sptr_t doc) {
 	lua_getfield(lua, LUA_REGISTRYINDEX, VIEWS);
 	// for i = 1, #_VIEWS do if _VIEWS[i].buffer == buffer then view:goto_buffer(-1) end
-	for (size_t i = 1; i <= lua_rawlen(lua, -1); lua_pop(lua, 1), i++)
+	for (size_t i = 1; i <= lua_rawlen(lua, -1) || (lua_pop(lua, 1), false); lua_pop(lua, 1), i++)
 		if (doc == SS((lua_rawgeti(lua, -1, i), lua_toview(lua, -1)), SCI_GETDOCPOINTER, 0, 0))
 			goto_doc(lua, lua_toview(lua, -1), -1, true); // popped on loop
 	if (doc == SS(dummy_view, SCI_GETDOCPOINTER, 0, 0)) SS(dummy_view, SCI_SETDOCPOINTER, 0, 0);
-	lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS), lua_replace(lua, -2); // replaces _VIEWS
+	lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS);
 	for (size_t i = 1; i <= lua_rawlen(lua, -1); lua_pop(lua, 1), i++)
 		if (doc == (lua_rawgeti(lua, -1, i), lua_todoc(lua, -1))) { // popped on loop
 			// _BUFFERS[buffer] = nil, _BUFFERS[buffer.doc_pointer] = nil, table.remove(_BUFFERS, i)
@@ -1223,9 +1222,10 @@ void close_textadept(void) {
 		while (unsplit_view(focused_view, delete_view)) {}
 		// for i = #_BUFFERS, 1, -1 do _BUFFERS[i]:delete() end
 		lua_getfield(lua, LUA_REGISTRYINDEX, BUFFERS);
-		for (int i = lua_rawlen(lua, -1); i > 0; lua_pop(lua, 1), i--)
+		for (int i = lua_rawlen(lua, -1); i > 0 || (lua_pop(lua, 1), false); lua_pop(lua, 1), i--)
 			lua_rawgeti(lua, -1, i), delete_buffer(lua_todoc(lua, -1)); // popped on loop
 		delete_scintilla(focused_view), delete_scintilla(command_entry), delete_scintilla(dummy_view);
+		if (lua_gettop(lua)) fprintf(stderr, "error: Lua stack has unpopped elements\n");
 		lua_close(lua), lua = NULL;
 	}
 	if (textadept_home) free(textadept_home), textadept_home = NULL;

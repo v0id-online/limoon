@@ -477,7 +477,7 @@ static void process_finished(struct Process *proc, int status) {
 static bool lua_processprocs(lua_State *L) {
 	bool refresh = false;
 	luaL_getsubtable(L, LUA_REGISTRYINDEX, "spawn_procs");
-	for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1)) {
+	for (lua_pushnil(L); lua_next(L, -2) || (lua_pop(L, 1), false); lua_pop(L, 1)) {
 		struct Process *proc = lua_touserdata(L, -2);
 		reproc_event_source event = {proc->reproc, REPROC_EVENT_OUT | REPROC_EVENT_ERR, 0};
 		reproc_poll(&event, 1, 0);
@@ -488,7 +488,7 @@ static bool lua_processprocs(lua_State *L) {
 		read_proc(proc, true), read_proc(proc, false), process_finished(proc, status), refresh = true;
 		lua_pushnil(L), lua_replace(L, -3); // key no longer exists
 	}
-	return (lua_pop(L, 1), refresh); // pop spawn_procs
+	return refresh;
 }
 
 // Contains information about an active timeout.
@@ -515,13 +515,13 @@ static double get_seconds(void) {
 static bool lua_processtimeouts(lua_State *L) {
 	bool refresh = false;
 	luaL_getsubtable(L, LUA_REGISTRYINDEX, "timeouts");
-	for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1)) {
+	for (lua_pushnil(L); lua_next(L, -2) || (lua_pop(L, 1), false); lua_pop(L, 1)) {
 		TimeoutData *timeout = lua_touserdata(L, -2);
 		if (get_seconds() - timeout->s < timeout->interval) continue;
 		if (timeout->s = get_seconds(), refresh = true, !timeout->f(timeout->refs))
 			lua_pushvalue(L, -2), lua_pushnil(L), lua_settable(L, -5); // t[timeout] = nil
 	}
-	return (lua_pop(L, 1), refresh); // pop timeouts
+	return refresh;
 }
 
 void add_timeout(double interval, bool (*f)(int *), int *refs) {
