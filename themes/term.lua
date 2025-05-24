@@ -112,6 +112,7 @@ styles.error_indent = {back = colors.red}
 -- view.element_color[view.ELEMENT_CARET] = colors.black
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 -- view.element_color[view.ELEMENT_CARET_LINE_BACK] =
+view.element_color[view.ELEMENT_WHITE_SPACE] = colors.black
 
 -- Fold Margin.
 -- view:set_fold_margin_color(true, colors.white)

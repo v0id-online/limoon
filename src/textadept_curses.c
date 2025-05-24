@@ -292,7 +292,10 @@ static void refresh_all(void) {
 		touchwin(command_entry_label), wnoutrefresh(command_entry_label),
 			scintilla_noutrefresh(command_entry);
 	refresh(); // draw to stdscr (titlebar, splits, statusbar)
-	if (!findbox) scintilla_update_cursor(!command_entry_active ? focused_view : command_entry);
+	if (!findbox)
+		scintilla_update_cursor(!command_entry_active ? focused_view : command_entry);
+	else
+		refreshCDKScreen(findbox);
 	doupdate(); // draw to all windows
 }
 
