@@ -522,5 +522,3 @@ test('textadept.menu should still act like a table', function()
 
 	test.assert_equal(textadept.menu[key], value)
 end)
-
--- TODO: ui.popup_menu

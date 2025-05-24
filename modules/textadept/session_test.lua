@@ -166,19 +166,20 @@ test('sessions should save recent files', function()
 	test.assert_equal(io.recent_files, {f.filename})
 end)
 
--- TODO: loading a new session will save the current session under the previous session name.
--- This leaves a temporary file on disk.
-test('session.load should not load if there are unsaved files and the user cancels #skip',
-	function()
-		local sf<close> = test.tmpfile()
-		local cancel = test.stub(2)
-		local _<close> = test.mock(ui.dialogs, 'message', cancel)
-		buffer:append_text('modified')
+test('session.load should not load if there are unsaved files and the user cancels', function()
+	local sf<close> = test.tmpfile()
+	local cancel = test.stub(2)
+	local _<close> = test.mock(ui.dialogs, 'message', cancel)
+	buffer:append_text('modified')
+	-- Note: loading a new session will save the current session under the previous session name.
+	-- Prevent this from leaving a temporary file on disk.
+	local function ignore_saving_current_session() end
+	local _<close> = test.mock(textadept.session, 'save', ignore_saving_current_session)
 
-		textadept.session.load(sf.filename)
+	textadept.session.load(sf.filename)
 
-		test.assert_equal(buffer:get_text(), 'modified')
-	end)
+	test.assert_equal(buffer:get_text(), 'modified')
+end)
 
 test('session.load should notify of non-existent session files', function()
 	local sf<close> = test.tmpfile()

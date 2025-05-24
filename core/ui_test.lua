@@ -559,3 +559,5 @@ test('ui.goto_view should focus a large relative view with wrapping (right)', fu
 
 	test.assert_equal(_VIEWS[view], 2)
 end)
+
+-- TODO: ui.popup_menu
