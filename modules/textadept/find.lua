@@ -153,8 +153,7 @@ events.connect(events.FIND, function(text, next)
 	-- If text is selected, assume it is from the current search and move the caret appropriately
 	-- for the next search.
 	buffer:set_empty_selection(next and buffer.selection_end or buffer.selection_start)
-	if not M.incremental and M.regex and find_text == text and found_text == '' and next then
-		-- TODO: Find Prev does not work and appears to be a Scintilla bug.
+	if not M.incremental and M.regex and find_text == text and found_text == '' then
 		buffer:set_empty_selection(buffer.current_pos + (next and 1 or -1))
 	end
 

@@ -161,10 +161,13 @@ test('find should allow advancing backwards through zero-width matches', functio
 	ui.find.find_entry_text = '$'
 
 	ui.find.find_prev()
+	local first_match_line = buffer:line_from_position(buffer.current_pos)
+	ui.find.find_prev()
+	local second_match_line = buffer:line_from_position(buffer.current_pos)
 
-	test.assert_equal(buffer:position_from_line(buffer.current_pos), 1)
+	test.assert_equal(first_match_line, 2)
+	test.assert_equal(second_match_line, 1)
 end)
-expected_failure() -- TODO: Scintilla bug?
 
 test('find should highlight results if ui.find.highlight_all_matches is enabled', function()
 	local _<close> = test.mock(ui.find, 'highlight_all_matches', true)
