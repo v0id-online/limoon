@@ -1553,9 +1553,11 @@ Liberation Mono), and lacks some GUI features due to the terminal's constraints:
 - Edge lines may be obscured by text.
 - No extra line ascent or descent.
 - No fold lines above and below lines.
+- Fold marker highlighting can only be bold, not colored.
 - No hotspot underlines on mouse hover.
 - No indicators other than `INDIC_ROUNDBOX` and `INDIC_STRAIGHTBOX`, although neither has
 	translucent drawing and `INDIC_ROUNDBOX` does not have rounded corners.
+- Indent guide highlighting can only be in white, not the brace highlight color.
 - Some complex marker symbols are not drawn properly or at all.
 - No mouse cursor types.
 - Not all key sequences are recognized properly, such as `Shift+Arrow` for making selections.

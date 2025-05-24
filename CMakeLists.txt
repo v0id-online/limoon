@@ -152,8 +152,10 @@ if(GTK3 OR GTK2)
 	target_link_libraries(scintilla_gtk PUBLIC scintilla PRIVATE ${GTK_LIBRARIES})
 endif()
 if(CURSES)
-	file(GLOB sci_curses_src ${scinterm_SOURCE_DIR}/*.cxx
-		$<$<BOOL:${WIN32}>:${scinterm_SOURCE_DIR}/wcwidth.c>)
+	file(GLOB sci_curses_src ${scinterm_SOURCE_DIR}/*.cxx)
+	if(WIN32)
+		list(APPEND sci_curses_src ${scinterm_SOURCE_DIR}/wcwidth.c)
+	endif()
 	add_library(scintilla_curses STATIC ${sci_curses_src})
 	target_include_directories(scintilla_curses
 		PUBLIC ${scinterm_SOURCE_DIR}
