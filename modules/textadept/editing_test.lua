@@ -602,6 +602,18 @@ test("editing.autocomplete('word') should allow for case-insensitive completions
 	test.assert_equal(items, word:upper())
 end)
 
+test('editing.autocomplete should allow selecting an initial item', function()
+	local list = {'one', 'two', 'zero'}
+	local item = 'zero'
+	local _<close> = test.mock(textadept.editing.autocompleters, 'select',
+		function() return 0, list, item end)
+
+	textadept.editing.autocomplete('select')
+
+	test.assert_equal(buffer:auto_c_active(), true)
+	test.assert_equal(buffer.auto_c_current_text, item)
+end)
+
 test('editing.autocomplete should return true even if an item was auto-selected', function()
 	buffer:add_text('word w')
 
@@ -972,7 +984,9 @@ test('editing.filter_through should write command errors to the statusbar', func
 end)
 if WIN32 then skip('false does not exist') end
 
--- TODO: test highlight matching braces.
+-- Note: cannot test highlight matching braces because neither buffer.style_at nor
+-- buffer:indicator_all_on_for() returns view.STYLE_BRACELIGHT and non-zero, respectively.
+-- Scintilla performs highlighting opaquely.
 
 test('most languages should not auto-pair <>', function()
 	test.assert_equal(textadept.editing.auto_pairs['<'], nil)

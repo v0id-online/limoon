@@ -19,6 +19,9 @@ M.comment_string = {}
 --	be autocompleted.
 -- 2. A table of completions to show.
 --
+-- Functions may optionally return a third result, the item to initially select. By default,
+-- the first item is selected.
+--
 -- If any completion contains a space character, the function should change
 -- `buffer.auto_c_separator`. Also, autocompletion lists are sorted automatically by default,
 -- but the function may change `buffer.auto_c_order` if it wants to control sort order.
@@ -398,13 +401,15 @@ end
 function M.autocomplete(name)
 	if not M.autocompleters[assert_type(name, 'string', 1)] then return end
 	buffer.auto_c_separator, buffer.auto_c_order = string.byte(' '), buffer.ORDER_PERFORMSORT
-	local len_entered, list = M.autocompleters[name]() -- may change separator, order
+	buffer.auto_c_type_separator = string.byte('?')
+	local len_entered, list, item = M.autocompleters[name]() -- may change separator, order
 	if not len_entered or not list or #list == 0 then return end
 	local pos = buffer.current_pos
 	buffer:auto_c_show(len_entered, table.concat(list, string.char(buffer.auto_c_separator)))
 	-- At this point, there is either (1) a list of completions shown, (2) a single completion was
 	-- automatically chosen, or (3) no completions are shown because none were valid (e.g. a language
 	-- server returned a "fuzzy" list of completions that Scintilla does not recognize as valid).
+	if buffer:auto_c_active() and item then buffer:auto_c_select(item) end
 	return buffer:auto_c_active() or buffer.auto_c_choose_single and buffer.current_pos ~= pos
 end
 

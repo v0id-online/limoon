@@ -7615,6 +7615,9 @@ Autocompletion functions must return two values:
 	be autocompleted.
 2. A table of completions to show.
 
+Functions may optionally return a third result, the item to initially select. By default,
+the first item is selected.
+
 If any completion contains a space character, the function should change
 [`buffer.auto_c_separator`](#buffer.auto_c_separator). Also, autocompletion lists are sorted automatically by default,
 but the function may change [`buffer.auto_c_order`](#buffer.auto_c_order) if it wants to control sort order.
