@@ -195,13 +195,6 @@ if not CURSES then view.indentation_guides = view.IV_LOOKBOTH end
 view:marker_define(textadept.bookmarks.MARK_BOOKMARK, view.MARK_FULLRECT)
 view:marker_define(textadept.run.MARK_WARNING, view.MARK_FULLRECT)
 view:marker_define(textadept.run.MARK_ERROR, view.MARK_FULLRECT)
--- Change History Markers.
-if CURSES then
-	view:marker_define(view.MARKNUM_HISTORY_MODIFIED, view.MARK_FULLRECT)
-	view:marker_define(view.MARKNUM_HISTORY_SAVED, view.MARK_FULLRECT)
-	view:marker_define(view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED, view.MARK_FULLRECT)
-	view:marker_define(view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN, view.MARK_FULLRECT)
-end
 -- Arrow Folding Symbols.
 -- view:marker_define(view.MARKNUM_FOLDEROPEN, view.MARK_ARROWDOWN)
 -- view:marker_define(view.MARKNUM_FOLDER, view.MARK_ARROW)
