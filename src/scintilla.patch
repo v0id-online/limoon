@@ -4,8 +4,8 @@ Scintilla changes:
 * Use Qt macros instead of keywords in header.
 * Increase minimum width of SC_MARK_BAR. (Committed upstream and will be in next release.)
 * Do not restore scroll position with undo selection history. (Committed upstream in some form.)
-* Use HiDPI pixmaps in Qt if possible.
-* Use HiDPI pixmaps in GTK if possible.
+* Improve consistency in scintilla.iface. (Committed upstream and will be in next release.)
+* Support HiDPI pixmaps in autocompletion lists. (Committed upstream and will be in next release).
 
 diff -r 22b6bbb36280 src/XPM.cxx
 --- a/src/XPM.cxx	Sat Sep 05 07:55:08 2020 +1000
@@ -76,58 +76,36 @@ diff --git a/src/Editor.cxx b/src/Editor.cxx
  			sel = Selection(selAndLine.selection);
  			if (sel.IsRectangular()) {
  				const size_t mainForRectangular = sel.Main();
-diff --git a/qt/ScintillaEditBase/PlatQt.cpp b/qt/ScintillaEditBase/PlatQt.cpp
---- a/qt/ScintillaEditBase/PlatQt.cpp
-+++ b/qt/ScintillaEditBase/PlatQt.cpp
-@@ -40,6 +40,7 @@
- #include <QTextLayout>
- #include <QTextLine>
- #include <QLibrary>
-+#include <QtMath>
+diff --git a/include/Scintilla.iface b/include/Scintilla.iface
+--- a/include/Scintilla.iface
++++ b/include/Scintilla.iface
+@@ -1566,7 +1566,7 @@ fun void CallTipCancel=2201(,)
+ fun bool CallTipActive=2202(,)
  
- using namespace Scintilla;
+ # Retrieve the position where the caret was before displaying the call tip.
+-fun position CallTipPosStart=2203(,)
++get position CallTipPosStart=2203(,)
  
-@@ -1034,10 +1034,11 @@ void ListBoxImpl::Create(Window &parent,
- 	int maxIconWidth = 0;
- 	int maxIconHeight = 0;
- 	foreach (QPixmap im, images) {
--		if (maxIconWidth < im.width())
--			maxIconWidth = im.width();
--		if (maxIconHeight < im.height())
--			maxIconHeight = im.height();
-+		im.setDevicePixelRatio(list->devicePixelRatio());
-+		if (maxIconWidth < im.width() / im.devicePixelRatio())
-+			maxIconWidth = im.width() / im.devicePixelRatio();
-+		if (maxIconHeight < im.height() / im.devicePixelRatio())
-+			maxIconHeight = im.height() / im.devicePixelRatio();
- 	}
- 	list->setIconSize(QSize(maxIconWidth, maxIconHeight));
- 
-@@ -1085,8 +1086,8 @@ int ListBoxImpl::CaretFromEdge()
- 	ListWidget *list = GetWidget();
- 	int maxIconWidth = 0;
- 	foreach (QPixmap im, images) {
--		if (maxIconWidth < im.width())
--			maxIconWidth = im.width();
-+		if (maxIconWidth < im.width() / im.devicePixelRatio())
-+			maxIconWidth = im.width() / im.devicePixelRatio();
- 	}
- 
- 	int extra;
-@@ -1165,9 +1166,9 @@ void ListBoxImpl::RegisterQPixmapImage(int type, const QPixmap& pm)
- 	ListWidget *list = GetWidget();
- 	if (list) {
- 		QSize iconSize = list->iconSize();
--		if (pm.width() > iconSize.width() || pm.height() > iconSize.height())
--			list->setIconSize(QSize(qMax(pm.width(), iconSize.width()),
--						 qMax(pm.height(), iconSize.height())));
-+		if (pm.width() / pm.devicePixelRatio() > iconSize.width() || pm.height() / pm.devicePixelRatio() > iconSize.height())
-+			list->setIconSize(QSize(qMax(qFloor(pm.width() / pm.devicePixelRatio()), iconSize.width()),
-+						 qMax(qFloor(pm.height() / pm.devicePixelRatio()), iconSize.height())));
- 	}
- 
+ # Set the start position in order to change when backspacing removes the calltip.
+ set void CallTipSetPosStart=2214(position posStart,)
+diff --git a/call/ScintillaCall.cxx b/call/ScintillaCall.cxx
+--- a/call/ScintillaCall.cxx
++++ b/call/ScintillaCall.cxx
+@@ -1115,6 +1115,14 @@ int ScintillaCall::AutoCGetStyle() {
+ 	return static_cast<int>(Call(Message::AutoCGetStyle));
  }
-diff --git a/gtk/PlatGTK.cxx b/gtk/PlatGTK.cxx
+ 
++void ScintillaCall::AutoCSetImageScale(int scalePercent) {
++	Call(Message::AutoCSetImageScale, scalePercent);
++}
++
++int ScintillaCall::AutoCGetImageScale() {
++	return static_cast<int>(Call(Message::AutoCGetImageScale));
++}
++
+ void ScintillaCall::SetIndent(int indentSize) {
+ 	Call(Message::SetIndent, indentSize);
+ }
 --- a/gtk/PlatGTK.cxx
 +++ b/gtk/PlatGTK.cxx
 @@ -27,6 +27,9 @@
@@ -140,7 +118,24 @@ diff --git a/gtk/PlatGTK.cxx b/gtk/PlatGTK.cxx
  
  #include "ScintillaTypes.h"
  #include "ScintillaMessages.h"
-@@ -1673,7 +1676,13 @@ void ListBoxX::Create(Window &parent, int, Point, int, bool, Technology) {
+@@ -1432,6 +1435,7 @@ class ListBoxX : public ListBox {
+ #if GTK_CHECK_VERSION(3,0,0)
+ 	std::unique_ptr<GtkCssProvider, GObjectReleaser> cssProvider;
+ #endif
++	float imageScale;
+ public:
+ 	IListBoxDelegate *delegate;
+ 
+@@ -1439,7 +1443,7 @@ public:
+ 		pixhash(nullptr), pixbuf_renderer(nullptr),
+ 		renderer(nullptr),
+ 		desiredVisibleRows(5), maxItemCharacters(0),
+-		aveCharWidth(1),
++		aveCharWidth(1), imageScale(1.0),
+ 		delegate(nullptr) {
+ 	}
+ 	// Deleted so ListBoxX objects can not be copied.
+@@ -1673,7 +1677,13 @@ void ListBoxX::Create(Window &parent, int, Point, int, bool, Technology) {
  
  	/* Tree and its model */
  	GtkListStore *store =
@@ -155,7 +150,7 @@ diff --git a/gtk/PlatGTK.cxx b/gtk/PlatGTK.cxx
  
  	list = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
  	g_signal_connect(G_OBJECT(list), "style-set", G_CALLBACK(StyleSet), nullptr);
-@@ -1701,7 +1710,13 @@ void ListBoxX::Create(Window &parent, int, Point, int, bool, Technology) {
+@@ -1701,7 +1711,13 @@ void ListBoxX::Create(Window &parent, int, Point, int, bool, Technology) {
  	gtk_cell_renderer_set_fixed_size(pixbuf_renderer, 0, -1);
  	gtk_tree_view_column_pack_start(column, pixbuf_renderer, FALSE);
  	gtk_tree_view_column_add_attribute(column, pixbuf_renderer,
@@ -170,19 +165,17 @@ diff --git a/gtk/PlatGTK.cxx b/gtk/PlatGTK.cxx
  
  	renderer = gtk_cell_renderer_text_new();
  	gtk_cell_renderer_text_set_fixed_height_from_font(GTK_CELL_RENDERER_TEXT(renderer), 1);
-@@ -1915,11 +1930,22 @@ void ListBoxX::Append(char *s, int type) {
+@@ -1915,11 +1931,20 @@ void ListBoxX::Append(char *s, int type) {
  		if (nullptr == list_image->pixbuf)
  			init_pixmap(list_image);
  		if (list_image->pixbuf) {
 +#if GTK_CHECK_VERSION(3, 10, 0)
-+			int scale = gtk_widget_get_scale_factor(GTK_WIDGET(list));
-+
-+			cairo_surface_t *surface = gdk_cairo_surface_create_from_pixbuf(list_image->pixbuf, scale, nullptr);
++			cairo_surface_t *surface = gdk_cairo_surface_create_from_pixbuf(list_image->pixbuf, imageScale, nullptr);
 +			gtk_list_store_set(GTK_LIST_STORE(store), &iter,
 +					   PIXBUF_COLUMN, surface,
 +					   TEXT_COLUMN, s, -1);
 +
-+			const gint pixbuf_width = gdk_pixbuf_get_width(list_image->pixbuf) / scale;
++			const gint pixbuf_width = gdk_pixbuf_get_width(list_image->pixbuf) / imageScale;
 +#else
  			gtk_list_store_set(GTK_LIST_STORE(store), &iter,
  					   PIXBUF_COLUMN, list_image->pixbuf,
@@ -193,3 +186,184 @@ diff --git a/gtk/PlatGTK.cxx b/gtk/PlatGTK.cxx
  			gint renderer_height, renderer_width;
  			gtk_cell_renderer_get_fixed_size(pixbuf_renderer,
  							 &renderer_width, &renderer_height);
+@@ -2125,7 +2150,8 @@ void ListBoxX::SetList(const char *listText, char separator, char typesep) {
+ 	}
+ }
+ 
+-void ListBoxX::SetOptions(ListOptions) {
++void ListBoxX::SetOptions(ListOptions options_) {
++	imageScale = options_.imageScale;
+ }
+ 
+ Menu::Menu() noexcept : mid(nullptr) {}
+--- a/include/Scintilla.h
++++ b/include/Scintilla.h
+@@ -475,6 +475,8 @@ typedef sptr_t (*SciFnDirectStatus)(sptr_t ptr, unsigned int iMessage, uptr_t wP
+ #define SCI_AUTOCGETMAXHEIGHT 2211
+ #define SCI_AUTOCSETSTYLE 2109
+ #define SCI_AUTOCGETSTYLE 2120
++#define SCI_AUTOCSETIMAGESCALE 2815
++#define SCI_AUTOCGETIMAGESCALE 2816
+ #define SCI_SETINDENT 2122
+ #define SCI_GETINDENT 2123
+ #define SCI_SETUSETABS 2124
+--- a/include/Scintilla.iface
++++ b/include/Scintilla.iface
+@@ -1174,6 +1174,12 @@ set void AutoCSetStyle=2109(int style,)
+ # Get the style number used for auto-completion and user lists fonts.
+ get int AutoCGetStyle=2120(,)
+ 
++# Set the scale factor in percent for auto-completion list images.
++set void AutoCSetImageScale=2815(int scalePercent,)
++
++# Get the scale factor in percent for auto-completion list images.
++get int AutoCGetImageScale=2816(,)
++
+ # Set the number of spaces used for one level of indentation.
+ set void SetIndent=2122(int indentSize,)
+ 
+--- a/include/ScintillaCall.h
++++ b/include/ScintillaCall.h
+@@ -324,6 +324,8 @@ public:
+ 	int AutoCGetMaxHeight();
+ 	void AutoCSetStyle(int style);
+ 	int AutoCGetStyle();
++	void AutoCSetImageScale(int scalePercent);
++	int AutoCGetImageScale();
+ 	void SetIndent(int indentSize);
+ 	int Indent();
+ 	void SetUseTabs(bool useTabs);
+--- a/include/ScintillaMessages.h
++++ b/include/ScintillaMessages.h
+@@ -249,6 +249,8 @@ enum class Message {
+ 	AutoCGetMaxHeight = 2211,
+ 	AutoCSetStyle = 2109,
+ 	AutoCGetStyle = 2120,
++	AutoCSetImageScale = 2815,
++	AutoCGetImageScale = 2816,
+ 	SetIndent = 2122,
+ 	GetIndent = 2123,
+ 	SetUseTabs = 2124,
+--- a/qt/ScintillaEditBase/PlatQt.cpp
++++ b/qt/ScintillaEditBase/PlatQt.cpp
+@@ -40,6 +40,7 @@
+ #include <QTextLayout>
+ #include <QTextLine>
+ #include <QLibrary>
++#include <QtMath>
+ 
+ using namespace Scintilla;
+ 
+@@ -994,6 +995,7 @@ private:
+ 	bool unicodeMode{false};
+ 	int visibleRows{5};
+ 	QMap<int,QPixmap> images;
++	float imageScale{1.0};
+ };
+ ListBoxImpl::ListBoxImpl() noexcept = default;
+ 
+@@ -1034,10 +1036,11 @@ void ListBoxImpl::Create(Window &parent,
+ 	int maxIconWidth = 0;
+ 	int maxIconHeight = 0;
+ 	foreach (QPixmap im, images) {
+-		if (maxIconWidth < im.width())
+-			maxIconWidth = im.width();
+-		if (maxIconHeight < im.height())
+-			maxIconHeight = im.height();
++		im.setDevicePixelRatio(imageScale);
++		if (maxIconWidth < im.width() / im.devicePixelRatio())
++			maxIconWidth = im.width() / im.devicePixelRatio();
++		if (maxIconHeight < im.height() / im.devicePixelRatio())
++			maxIconHeight = im.height() / im.devicePixelRatio();
+ 	}
+ 	list->setIconSize(QSize(maxIconWidth, maxIconHeight));
+ 
+@@ -1085,8 +1088,8 @@ int ListBoxImpl::CaretFromEdge()
+ 	ListWidget *list = GetWidget();
+ 	int maxIconWidth = 0;
+ 	foreach (QPixmap im, images) {
+-		if (maxIconWidth < im.width())
+-			maxIconWidth = im.width();
++		if (maxIconWidth < im.width() / im.devicePixelRatio())
++			maxIconWidth = im.width() / im.devicePixelRatio();
+ 	}
+ 
+ 	int extra;
+@@ -1165,9 +1168,9 @@ void ListBoxImpl::RegisterQPixmapImage(int type, const QPixmap& pm)
+ 	ListWidget *list = GetWidget();
+ 	if (list) {
+ 		QSize iconSize = list->iconSize();
+-		if (pm.width() > iconSize.width() || pm.height() > iconSize.height())
+-			list->setIconSize(QSize(qMax(pm.width(), iconSize.width()),
+-						 qMax(pm.height(), iconSize.height())));
++		if (pm.width() / pm.devicePixelRatio() > iconSize.width() || pm.height() / pm.devicePixelRatio() > iconSize.height())
++			list->setIconSize(QSize(qMax(qFloor(pm.width() / pm.devicePixelRatio()), iconSize.width()),
++						 qMax(qFloor(pm.height() / pm.devicePixelRatio()), iconSize.height())));
+ 	}
+ 
+ }
+@@ -1226,8 +1229,9 @@ void ListBoxImpl::SetList(const char *list, char separator, char typesep)
+ 		Append(startword, numword?atoi(numword + 1):-1);
+ 	}
+ }
+-void ListBoxImpl::SetOptions(ListOptions)
++void ListBoxImpl::SetOptions(ListOptions options_)
+ {
++	imageScale = options_.imageScale;
+ }
+ ListWidget *ListBoxImpl::GetWidget() const noexcept
+ {
+--- a/src/AutoComplete.cxx
++++ b/src/AutoComplete.cxx
+@@ -41,6 +41,7 @@ AutoComplete::AutoComplete() :
+ 	ignoreCase(false),
+ 	chooseSingle(false),
+ 	options(AutoCompleteOption::Normal),
++	imageScale(1.0),
+ 	posStart(0),
+ 	startLen(0),
+ 	cancelAtStartPos(true),
+--- a/src/AutoComplete.h
++++ b/src/AutoComplete.h
+@@ -25,6 +25,7 @@ public:
+ 	bool ignoreCase;
+ 	bool chooseSingle;
+ 	AutoCompleteOption options;
++	float imageScale;
+ 	std::unique_ptr<ListBox> lb;
+ 	Sci::Position posStart;
+ 	Sci::Position startLen;
+--- a/src/Platform.h
++++ b/src/Platform.h
+@@ -317,6 +317,7 @@ struct ListOptions {
+ 	std::optional<ColourRGBA> foreSelected;
+ 	std::optional<ColourRGBA> backSelected;
+ 	AutoCompleteOption options=AutoCompleteOption::Normal;
++	float imageScale=1.0f;
+ };
+ 
+ class ListBox : public Window {
+--- a/src/ScintillaBase.cxx
++++ b/src/ScintillaBase.cxx
+@@ -296,6 +296,7 @@ void ScintillaBase::AutoCompleteStart(Sci::Position lenEntered, const char *list
+ 		vs.ElementColour(Element::ListSelected),
+ 		vs.ElementColour(Element::ListSelectedBack),
+ 		ac.options,
++		ac.imageScale,
+ 	};
+ 
+ 	int lineHeight;
+@@ -972,6 +973,13 @@ sptr_t ScintillaBase::WndProc(Message iMessage, uptr_t wParam, sptr_t lParam) {
+ 	case Message::AutoCGetStyle:
+ 		return vs.autocStyle;
+ 
++	case Message::AutoCSetImageScale:
++		ac.imageScale = static_cast<float>(wParam) / 100.0f;
++		break;
++
++	case Message::AutoCGetImageScale:
++		return static_cast<int>(ac.imageScale * 100);
++
+ 	case Message::RegisterImage:
+ 		ac.lb->RegisterImage(static_cast<int>(wParam), ConstCharPtrFromSPtr(lParam));
+ 		break;

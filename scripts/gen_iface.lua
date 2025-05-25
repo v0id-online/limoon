@@ -145,10 +145,6 @@ end
 -- Manually adjust special-case messages that do not quite follow the rules.
 functions['auto_c_show'][3] = types.int -- was interpreted as 'length'
 functions['get_cur_line'][2] = types.position -- was interpreted as 'void'
-properties['call_tip_pos_start'][1] = functions['call_tip_pos_start'][1] -- was read as a function
-for i, name in ipairs(functions) do
-	if name == 'call_tip_pos_start' then table.remove(functions, i) end
-end
 
 -- Manually adjust messages whose param or return types would be interpreted as 1-based numbers,
 -- but should not be, or vice-versa.

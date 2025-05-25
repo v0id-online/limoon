@@ -256,6 +256,7 @@ buffer.auto_c_multi = buffer.MULTIAUTOC_EACH
 -- buffer.auto_c_type_separator =
 -- view.auto_c_max_height =
 -- view.auto_c_max_width =
+if is_hidpi() then view.auto_c_image_scale = 200 end
 
 -- Call Tips.
 view.call_tip_use_style = buffer.tab_width * view:text_width(view.STYLE_CALLTIP, ' ')
