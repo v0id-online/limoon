@@ -143,7 +143,7 @@ end)
 
 test('find should handle and advance through zero-width matches', function()
 	local _<close> = test.mock(ui.find, 'regex', true)
-	buffer:append_text(test.lines{'', ''})
+	buffer:append_text(test.lines(2))
 	ui.find.find_entry_text = '^'
 
 	ui.find.find_next()
@@ -157,7 +157,7 @@ end)
 
 test('find should allow advancing backwards through zero-width matches', function()
 	local _<close> = test.mock(ui.find, 'regex', true)
-	buffer:add_text(test.lines{'', ''})
+	buffer:add_text(test.lines(2))
 	ui.find.find_entry_text = '$'
 
 	ui.find.find_prev()
