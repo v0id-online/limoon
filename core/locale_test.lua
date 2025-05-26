@@ -97,5 +97,4 @@ for _, extra_file in ipairs(extra_files) do
 
 		test.assert_equal(missing, {})
 	end)
-	retry(0) -- do not retry or else there will be erroneous 'duplicate locale id' errors
 end

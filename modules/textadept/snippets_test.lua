@@ -131,6 +131,7 @@ test('snippets should allow shell code', function()
 
 	test.assert_equal(buffer:get_text(), date)
 end)
+retry(1) -- date can sometimes be off by one second
 
 test('snippets should allow variables in shell code', function()
 	local variable = not WIN32 and '$TM_LINE_INDEX' or '%TM_LINE_INDEX%'
