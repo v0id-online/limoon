@@ -1,4 +1,4 @@
-# Textadept 12.7 nightly API Documentation
+# Textadept 12.7 API Documentation
 
 1. [_G](#_G)
 2. [_L](#_L)
