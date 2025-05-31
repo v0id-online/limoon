@@ -2,6 +2,59 @@
 
 [Atom Feed](https://github.com/orbitalquark/textadept/releases.atom)
 
+## 12.7 (01 Jun 2025)
+
+Download:
+
+- [Textadept 12.7 -- Windows][]
+- [Textadept 12.7 -- macOS 11+][]
+- [Textadept 12.7 -- Linux][]
+- [Textadept 12.7 -- Linux ARM][]
+- [Textadept 12.7 -- Modules][]
+
+Bugfixes:
+
+- Fixed Markdown lexer to not lex some continuation lines as code.
+- Fixed `reset()` turning off folding for newly opened buffers.
+- Locale files with territories should load now.
+- Fixed find previous advancing backwards through zero-width matches.
+- Draw whitespace with the proper color in the terminal version.
+- Better wide character support in terminal version autocompletion lists.
+- Format: format on save should ignore selected text.
+- Debugger: fixed initial view setup.
+- Spellcheck: custom Hunspell paths should not require trailing slash.
+
+Changes:
+
+- Added [`lexer.line_start`][], [`lexer.line_end`][], and [`lexer.text_range()`][].
+- Added [`view.parent_size`][] for manipulating parent split sizes.
+- Removed `textadept.editing.XPM_IMAGES`.
+- Added `is_hidpi()` for detecting HiDPI/Retina displays.
+- Autocompletion lists on HiDPI displays now use 2x image sizes.
+- Updated Markdown lexer to allow tab-indented continuation lines.
+- Support arbitrary RGB colors in the terminal version.
+- Linux package maintainers can define `_HOME` in CMake via the `TEXTADEPT_HOME` variable.
+- Use different indicators for change history deletions.
+- Implement indent guide highlighting in the terminal version.
+- Implement fold marker highlighting in the terminal version.
+- Updated terminal version line marker glyphs.
+- Allow autocompleter functions to return a third value, the item to initially select.
+- Autoupdate: new module for checking for application updates.
+- LSP: new [autocompletion list icons][] and some terminal version "icon" changes.
+- LSP: support diagnostic tags.
+- LSP: allow preselected items in completion lists.
+
+[Textadept 12.7 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.win.zip
+[Textadept 12.7 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.macOS.zip
+[Textadept 12.7 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.linux.tgz
+[Textadept 12.7 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.linux.arm.tgz
+[Textadept 12.7 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.modules.zip
+[`lexer.line_start`]: api.html#lexer.line_start
+[`lexer.line_end`]: api.html#lexer.line_end
+[`lexer.text_range()`]: api.html#lexer.text_range
+[`view.parent_size`]: api.html#view.parent_size
+[autocompletion list icons]: https://github.com/orbitalquark/textadept-lsp#icon-reference
+
 ## 12.7 beta 2 (01 May 2025)
 
 Download:
