@@ -9150,8 +9150,7 @@ Parameters:
 	- `button1`: String label for the primary (accept) button. The default value is `_L['OK']`.
 	- `button2`: String label for the secondary (reject) button. The default value is
 		`_L['Cancel']`.
-	- `button3`: String label for the tertiary button. This option requires `button2`
-		to be set. It is not available in the Qt version.
+	- `button3`: String label for the tertiary button. It is not available in the Qt version.
 	- `return_button`: Also return the index of the selected button.
 
 Returns: string input text[, selected button index]; or `nil` if the user canceled the dialog
@@ -9182,7 +9181,7 @@ Parameters:
 	- `button1`: String label of the primary (accept) button. The default value is `_L['OK']`.
 	- `button2`: String label of the secondary (reject) button. The default value is
 		`_L['Cancel']`.
-	- `button3`: String label of the tertiary button. This option requires `button2` to be set.
+	- `button3`: String label of the tertiary button.
 	- `multiple`: Allow the user to select multiple items. The terminal version does not
 		support this option.
 	- `search_column`: Column number to filter the input text against. The default value is `1`.
