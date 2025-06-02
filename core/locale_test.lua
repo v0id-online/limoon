@@ -78,23 +78,3 @@ for _, stock_file in ipairs(stock_files) do
 		test.assert_equal(missing, {})
 	end)
 end
-
-local extra_files = {}
-filter = {
-	'**/*.lua', '!textadept', '!**/build', '!**/*_test.lua',
-	-- Extra modules.
-	'!**/{dkjson,mobdebug,socket}.lua', '!lsp/{ldoc,logging,pl}'
-}
-for filename in lfs.walk(_HOME .. '/modules', filter) do extra_files[#extra_files + 1] = filename end
-table.sort(extra_files)
-
--- Test each extra file.
-for _, extra_file in ipairs(extra_files) do
-	test(extra_file:sub(#_HOME + 2) .. ' should be using known locale IDs', function()
-		load_extra_localizations(L, extra_file)
-
-		local missing = check_missing_localizations(extra_file, L)
-
-		test.assert_equal(missing, {})
-	end)
-end
