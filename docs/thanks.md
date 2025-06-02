@@ -16,6 +16,7 @@ amazing editor that it is today.
 - Carl Sturtivant
 - Chris Emerson
 - Christof Böckler
+- coolvitto
 - Daniel Wutke
 - Franck Guadagnini
 - Gabriel Dubatti
