@@ -13,23 +13,6 @@ local function load_locale(locale_conf)
 	return L
 end
 
---- Loads additional localizations read from assignments in a Lua file.
--- @param filename String path to a Lua file to read localizations from.
--- @param L Table of localizations to add to.
-local function load_extra_localizations(L, filename)
-	local count, i = 0, 1
-	for line in io.lines(filename) do
-		if not line:find('_L%b[]%s*=') then goto continue end
-		for id in line:gmatch([=[_L%[['"]([^'"]+)['"]%]%s*=]=]) do
-			test.assert(not L[id], 'duplicate locale id "%s" on line %d (first seen in %s)', id, i, L[id])
-			L[id], count = string.format('%s:%d', filename:sub(#_HOME + 2), i), count + 1
-		end
-		::continue::
-		i = i + 1
-	end
-	if count > 0 then test.log(string.format('Added %d localizations.', count)) end
-end
-
 --- Looks for use of localization in the given Lua file and returns a list of missing IDs.
 -- @param filename String filename of the Lua file to check.
 -- @param L Table of localizations to read from.
