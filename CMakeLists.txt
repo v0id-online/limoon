@@ -402,6 +402,19 @@ elseif(APPLE)
 	if(NOT EXISTS ${ta_data_dir}/qt.conf)
 		install(CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE}
 			${CMAKE_INSTALL_PREFIX}/Textadept.app -executable=${ta_bin_dir}/textadept)")
+		# Homebrew Qt's macdeployqt cannot resolve rpaths to Homebrew's lib prefix.
+		# Work around this issue by adding Homebrew's lib to the executable's rpaths.
+		find_program(BREW brew)
+		if(BREW)
+			execute_process(COMMAND ${BREW} --prefix OUTPUT_VARIABLE BREW_PREFIX
+				OUTPUT_STRIP_TRAILING_WHITESPACE)
+			if(QT_DIR MATCHES "^${BREW_PREFIX}")
+				install(CODE "execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL} -add_rpath ${BREW_PREFIX}/lib
+					${ta_bin_dir}/textadept)")
+				install(CODE "execute_process(COMMAND codesign --sign - --force --deep
+					${CMAKE_INSTALL_PREFIX}/Textadept.app)")
+			endif()
+		endif()
 	endif()
 	install(PROGRAMS scripts/osx/ta DESTINATION ${CMAKE_INSTALL_PREFIX})
 	add_custom_target(archive
