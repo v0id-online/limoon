@@ -548,23 +548,6 @@ test('buffer.close should use the global buffer', function()
 	test.assert_equal(buffer.filename, nil)
 end)
 
-test('io.open_recent_file should prompt for a recently opened file if it still exists', function()
-	local _<close> = test.mock(io, 'recent_files', {})
-	local f<close> = test.tmpfile(true)
-	buffer:close()
-	do
-		local _<close> = test.tmpfile(true)
-		buffer:close()
-	end -- deletes the file
-
-	local select_first_item = test.stub({1}, 1)
-	local _<close> = test.mock(ui.dialogs, 'list', select_first_item)
-
-	io.open_recent_file()
-
-	test.assert_equal(buffer.filename, f.filename)
-end)
-
 test('io.open_recent_file should allow clearing the list during prompt', function()
 	local _<close> = test.mock(io, 'recent_files', {})
 	local _<close> = test.tmpfile(true)

@@ -347,9 +347,6 @@ end)
 --- Prompts the user to select a recently opened file to reopen.
 -- @see recent_files
 function io.open_recent_file()
-	for i = #io.recent_files, 1, -1 do
-		if not lfs.attributes(io.recent_files[i]) then table.remove(io.recent_files, i) end
-	end
 	if #io.recent_files == 0 then return end
 	local utf8_list = table.map(io.recent_files, string.iconv, 'UTF-8', _CHARSET)
 	local selected, button = ui.dialogs.list{

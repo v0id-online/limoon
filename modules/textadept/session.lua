@@ -88,7 +88,10 @@ function M.load(filename)
 	ui.goto_view(_VIEWS[math.min(session.views.current, #_VIEWS)])
 
 	-- Unserialize recent files.
-	io.recent_files = session.recent_files
+	io.recent_files = {}
+	for _, file in ipairs(session.recent_files) do
+		if lfs.attributes(file) then io.recent_files[#io.recent_files + 1] = file end
+	end
 
 	-- Unserialize user data.
 	events.emit(events.SESSION_LOAD, session)

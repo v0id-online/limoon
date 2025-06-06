@@ -198,6 +198,19 @@ test('session.load should notify of non-existent session files', function()
 	test.assert_contains(dialog_opts.text, f.filename)
 end)
 
+test('session.load should ignore non-existant recent files', function()
+	local _<close> = test.mock(io, 'recent_files', {})
+	local sf<close> = test.tmpfile()
+	local f<close> = test.tmpfile(true)
+	buffer:close()
+	textadept.session.save(sf.filename)
+	f:delete()
+
+	textadept.session.load(sf.filename)
+
+	test.assert_equal(io.recent_files, {})
+end)
+
 test('--session should load the given session', function()
 	local sf<close> = test.tmpfile()
 	local f<close> = test.tmpfile(true)
