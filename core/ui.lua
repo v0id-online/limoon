@@ -275,6 +275,7 @@ local function save_buffer_state()
 	-- Save view state.
 	buffer._selection = buffer.selection_serialized
 	buffer._top_line = view:doc_line_from_visible(view.first_visible_line)
+	buffer._sub_line = view.first_visible_line - view:visible_from_doc_line(buffer._top_line) + 1
 	buffer._x_offset = view.x_offset
 	-- Save fold state.
 	buffer._folds = {}
@@ -292,8 +293,7 @@ local function restore_buffer_state()
 	-- Restore view state.
 	if buffer.length > 1 then buffer.selection_serialized = buffer._selection end
 	buffer:choose_caret_x()
-	local _top_line, top_line = buffer._top_line, view.first_visible_line
-	view:line_scroll(0, view:visible_from_doc_line(_top_line) - top_line)
+	view:scroll_vertical(buffer._top_line, buffer._sub_line)
 	view.x_offset = buffer._x_offset
 end
 events.connect(events.BUFFER_AFTER_SWITCH, restore_buffer_state)

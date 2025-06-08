@@ -389,10 +389,9 @@ local default_menubar = {
 			{_L['Expand All Folds'], function() fold_all(view.FOLDACTION_EXPAND) end}
 		}, SEPARATOR, {
 			_L['Toggle Wrap Mode'], function()
-				local first_visible_line = view.first_visible_line
-				local display_line = view:visible_from_doc_line(first_visible_line)
+				local display_line = view:visible_from_doc_line(view.first_visible_line)
 				view.wrap_mode = view.wrap_mode == 0 and view.WRAP_WHITESPACE or 0
-				view:line_scroll(0, first_visible_line - display_line)
+				view:scroll_vertical(display_line, 1)
 			end
 		}, {
 			_L['Toggle Margins'], function()

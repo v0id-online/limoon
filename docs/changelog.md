@@ -122,7 +122,7 @@ Changes:
 - Scratch: save typed buffers as scratch buffers too.
 - Scratch: save modified files as scratch buffers and also save their undo histories.
 - Lua REPL: added tab-completion.
-- Updated to [Scintilla][] 5.3.6.
+- Updated to [Scintilla][] 5.5.6.
 
 [Textadept 12.7 beta 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.win.zip
 [Textadept 12.7 beta 2 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.macOS.zip
