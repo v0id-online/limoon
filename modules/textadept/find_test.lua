@@ -377,7 +377,7 @@ test('replace should select the next occurrence after replacing', function()
 	test.assert_equal(buffer:get_sel_text(), find)
 end)
 
-test('replace should not unescape \\[bfnrtv] in normal replacement', function()
+test('replace should not unescape \\[bfnrtv\\] in normal replacement', function()
 	buffer:append_text(find)
 	ui.find.find_entry_text = find
 	ui.find.replace_entry_text = '\\t'
@@ -406,10 +406,10 @@ local function regex_replace(text, re, repl)
 	return result
 end
 
-test('replace should unescape \\[bfnrtv] in regex replacement', function()
-	local result = regex_replace(find, find, '\\t')
+test('replace should unescape \\[bfnrtv\\] in regex replacement', function()
+	local result = regex_replace(find, find, [[\t\\t]])
 
-	test.assert_equal(result, '\t')
+	test.assert_equal(result, '\t\\t')
 end)
 
 test('replace should unescape \\d with its captured text in regex replacements', function()
