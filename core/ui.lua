@@ -323,7 +323,7 @@ events.connect(events.QUIT, function()
 			table.concat(items, '\n • ')), icon = 'dialog-question', button1 = _L['Save all'],
 		button2 = _L['Cancel'], button3 = _L['Quit without saving']
 	}
-	if button == 1 then return not io.save_all_files(true) end
+	if button == 1 then return not io.save_all_files(true) or nil end -- do not return false
 	if button ~= 3 then return true end -- prevent quit
 end)
 
