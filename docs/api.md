@@ -1,4 +1,4 @@
-# Textadept 12.7 API Documentation
+# Textadept 12.8 API Documentation
 
 1. [_G](#_G)
 2. [_L](#_L)
@@ -3238,6 +3238,16 @@ Parameters:
 	The image dimensions, [`view.rgba_image_width`](#view.rgba_image_width) and [`view.rgba_image_height`](#view.rgba_image_height), must have
 	already been defined.
 
+<a id="view.auto_c_image_scale"></a>
+#### `view.auto_c_image_scale`
+
+The scale factor in percent of *all* list images shown.
+
+This is useful on macOS with a retina display where each display unit is 2 pixels: use a
+factor of `200` so that each image pixel is displayed using a screen pixel.
+The default scale, `100`, will stretch each image pixel to cover 4 screen pixels on a
+retina display.
+
 <a id="buffer.auto_c_type_separator"></a>
 #### `buffer.auto_c_type_separator`
 
@@ -3535,6 +3545,17 @@ Scrolls the buffer by columns and lines.
 Parameters:
 - *columns*:  Number of columns to scroll horizontally. A negative value is allowed.
 - *lines*:  Number of lines to scroll vertically. A negative value is allowed.
+
+<a id="view.scroll_vertical"></a>
+#### `view:scroll_vertical`(*display_line*, *subline*)
+
+Scrolls the top line of the view to be the wrapped sub-line of a displayed line number.
+
+Parameters:
+- *display_line*:  Display line number to use (taking wrapped, annotated, and hidden lines
+	into account).
+- *subline*:  The sub-line of *display_line* to scroll to. A value of 1 is equivalent to
+	*display_line*. This is ignored if wrapping is off.
 
 <a id="view.scroll_caret"></a>
 #### `view:scroll_caret`()
@@ -4096,7 +4117,7 @@ The default value is `0`.
 <a id="view.caret_line_highlight_subline"></a>
 #### `view.caret_line_highlight_subline`
 
-Show the caret line on sublines rather than entire wrapped lines.
+Show the caret line on sub-lines rather than entire wrapped lines.
 
 The defalt value is `false`.
 
@@ -4360,7 +4381,7 @@ Where to mark wrapped lines.
 - `view.WRAPVISUALFLAGLOC_END_BY_TEXT`: Draw a visual flag near text at the end of a
 	wrapped line.
 - `view.WRAPVISUALFLAGLOC_START_BY_TEXT`: Draw a visual flag near text at the beginning of
-	a subline.
+	a sub-line.
 
 The default value is `view.WRAPVISUALFLAGLOC_DEFAULT`.
 
