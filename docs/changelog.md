@@ -2,6 +2,49 @@
 
 [Atom Feed](https://github.com/orbitalquark/textadept/releases.atom)
 
+## 12.8 (01 Aug 2025)
+
+Download:
+
+- [Textadept 12.8 -- Windows][]
+- [Textadept 12.8 -- macOS 11+][]
+- [Textadept 12.8 -- Linux][]
+- [Textadept 12.8 -- Linux ARM][]
+- [Textadept 12.8 -- Modules][]
+
+Bugfixes:
+
+- Added missing menu mnemonic for Tools > Show Keys.
+- Fixed inability to escape escape sequences in regex replace.
+- Disable mouse and bracketed paste in terminal version after selecting "save all" when quitting.
+- Autoupdate: lack of internet connection should not cause autoupdate check error.
+- LSP: only shutdown language servers when actually quitting.
+- Scintilla: prevent wrapping between '\r\n'.
+- Scintilla: fixed crash during painting when scrollbars are changed.
+- Scintilla: fixed GTK bug where scroll position is not restored in non-wrap mode.
+
+Changes:
+
+- Added Japanese translation.
+- Support building on macOS with Homebrew Qt.
+- Only check for non-existent recent files on session load instead of on dialog open.
+- Autoupdate: added button for copying release link to clipboard instead of auto-clobbering it.
+- Open file mode: added autocompletion list icons.
+- Open file mode: emulate bash completion better, including `~` expansion.
+- Scratch: add ability to save/restore indicators, including for Files Found buffers.
+- Scintilla: added `view:scroll_vertical()` for easily scrolling to wrapped sub-lines.
+- Updated to [Lua][] 5.4.8.
+- Updated to [Scintilla][] 5.5.7.
+
+[Textadept 12.8 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.win.zip
+[Textadept 12.8 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.macOS.zip
+[Textadept 12.8 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.linux.tgz
+[Textadept 12.8 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.linux.arm.tgz
+[Textadept 12.8 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.modules.zip
+[Lua]: https://lua.org
+[Scintilla]: https://scintilla.org
+
+
 ## 12.7 (01 Jun 2025)
 
 Download:
