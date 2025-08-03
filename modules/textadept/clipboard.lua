@@ -22,7 +22,7 @@ if not OSX and not WIN32 and not os.execute('xsel') then M.paste_command = 'wl-p
 -- - Linux/BSD: `xsel -n -b -i` if it exists, or `wl-copy -f` otherwise. Note: commands should
 --	not fork.
 M.copy_command = OSX and 'pbcopy' or WIN32 and 'clip' or 'xsel -n -b -i'
-if not OSX and not WIN32 and not os.execute('xsel') then M.paste_command = 'wl-copy -f' end
+if not OSX and not WIN32 and not os.execute('xsel') then M.copy_command = 'wl-copy -f' end
 
 local get_scintilla_clipboard = ui.get_clipboard_text
 -- Documentation is in core/ui.lua.
