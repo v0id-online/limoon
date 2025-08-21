@@ -283,6 +283,28 @@ test("editing.select_enclosed should be able to recognize it's between XML tags"
 	test.assert_equal(buffer:get_sel_text(), test.lines{'', text, ''})
 end)
 
+test("editing.select_enclosed should be able to recognize it's at the start of a string", function()
+	local text = "'word' 'word2'"
+	buffer:append_text(text)
+	buffer:set_lexer('lua')
+
+	textadept.editing.select_enclosed()
+
+	test.assert_equal(buffer:get_sel_text(), 'word')
+end)
+
+test("editing.select_enclosed should be able to recognize it's at the end of a string", function()
+	local text = "'word' 'word2'"
+	buffer:append_text(text)
+	buffer:set_lexer('lua')
+	buffer:word_right()
+	buffer:word_right()
+
+	textadept.editing.select_enclosed()
+
+	test.assert_equal(buffer:get_sel_text(), 'word')
+end)
+
 test('editing.select_enclosed should select the delimiters when called again', function()
 	local contents = '(word)'
 	buffer:append_text(contents)

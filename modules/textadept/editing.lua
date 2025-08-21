@@ -185,6 +185,7 @@ function M.select_enclosed(left, right)
 		s, e = buffer:search_prev(0, left), buffer:search_next(0, right)
 	elseif M.auto_pairs then
 		s = buffer.selection_start
+		local style_at = buffer.style_at
 		repeat
 			-- Backtrack, looking for an auto-paired range that includes the current position.
 			local char = buffer:text_range(s, buffer:position_after(s))
@@ -195,9 +196,12 @@ function M.select_enclosed(left, right)
 			e = buffer:brace_match(s, 0)
 			if e >= buffer.selection_end - 1 then break end
 			if e ~= -1 then e = -1 end
+			-- If the current position is at the end of an auto-paired, non-brace range (e.g. quotes),
+			-- keep backtracking.
+			if left == right and s == pos and style_at[s - 1] == style_at[pos] then goto continue end
 			-- If the auto-paired non-brace range (e.g. quotes) is in the same style as, and includes
 			-- the current position, use it.
-			if buffer.style_at[s] ~= buffer.style_at[buffer.selection_start] then goto continue end
+			if style_at[s] ~= style_at[buffer.selection_start] then goto continue end
 			buffer.search_flags = 0
 			buffer:set_target_range(s + 1, buffer.length + 1)
 			if buffer:search_in_target(match) >= buffer.selection_end - 1 then
