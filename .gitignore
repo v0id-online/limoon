@@ -9,7 +9,6 @@ docs/Gemfile.lock
 lexers
 
 # Modules.
-modules/autoupdate
 modules/debugger
 modules/export
 modules/file_diff
@@ -20,6 +19,7 @@ modules/ollama
 modules/open_file_mode
 modules/scratch
 modules/spellcheck
+modules/update_notifier
 
 # Profiling, coverage, and test data.
 luacov.*.out

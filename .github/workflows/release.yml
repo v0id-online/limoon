@@ -37,7 +37,6 @@ jobs:
             textadept
             scintillua
             scinterm
-            textadept-autoupdate
             textadept-debugger
             textadept-export
             textadept-file-diff
@@ -47,6 +46,7 @@ jobs:
             textadept-open-file-mode
             textadept-scratch
             textadept-spellcheck
+            textadept-update-notifier
           '
           for repo in $(echo $repos); do
             git clone --depth 1 https://github.com/orbitalquark/$repo
@@ -167,8 +167,8 @@ jobs:
       - name: Package modules
         run: |
           mkdir textadept-modules
-          modules="autoupdate debugger export file_diff format lsp lua_repl open_file_mode scratch
-            spellcheck"
+          modules="debugger export file_diff format lsp lua_repl open_file_mode scratch spellcheck
+            update_notifier"
           for module in $(echo $modules); do
             gh_name="$(echo -n $module | sed -e 's/_/-/g;')"
             gh_prefix="https://github.com/orbitalquark/textadept-$gh_name"
@@ -579,8 +579,8 @@ jobs:
       - name: Checkout modules
         run: |
           cd modules
-          modules="autoupdate debugger export file-diff format lsp lua-repl open-file-mode scratch
-            spellcheck"
+          modules="debugger export file-diff format lsp lua-repl open-file-mode scratch spellcheck
+            update_notifier"
           for module in $(echo $modules); do
             name="$(echo -n $module | sed -e 's/-/_/g;')"
             git clone --depth 1 https://github.com/orbitalquark/textadept-$module $name
