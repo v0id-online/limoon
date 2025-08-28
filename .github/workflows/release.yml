@@ -580,7 +580,7 @@ jobs:
         run: |
           cd modules
           modules="debugger export file-diff format lsp lua-repl open-file-mode scratch spellcheck
-            update_notifier"
+            update-notifier"
           for module in $(echo $modules); do
             name="$(echo -n $module | sed -e 's/-/_/g;')"
             git clone --depth 1 https://github.com/orbitalquark/textadept-$module $name
