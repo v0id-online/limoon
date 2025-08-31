@@ -108,14 +108,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            if: ${{ inputs.linux }}
+            if: ${{ inputs.linux || github.event_name == 'schedule' }}
           - os: ubuntu-22.04-arm
-            if: ${{ inputs.linux }}
+            if: ${{ inputs.linux || github.event_name == 'schedule' }}
           - os: windows-2022
-            if: ${{ inputs.windows }}
+            if: ${{ inputs.windows || github.event_name == 'schedule' }}
             qt: '6.9'
           - os: macOS-13
-            if: ${{ inputs.macOS }}
+            if: ${{ inputs.macOS || github.event_name == 'schedule' }}
             qt: '6.9'
     runs-on: ${{ matrix.os }}
     steps:
@@ -353,7 +353,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Qt, Gtk, xterm, matchbox-window-manager, and module dependencies (Linux)
-        if: inputs.linux && runner.os == 'Linux'
+        if: runner.os == 'Linux' && (inputs.linux || github.event_name == 'schedule')
         run: |
           sudo apt-get update
           sudo apt-get install qtbase5-dev libgtk-3-dev xterm matchbox-window-manager \
@@ -365,24 +365,27 @@ jobs:
           merge-multiple: true
 
       - name: Unpack Textadept (Windows)
-        if: inputs.windows && runner.os == 'Windows'
+        if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'schedule')
         shell: bash
         run: unzip textadept_*.win.zip
 
       - name: Unpack Textadept (macOS)
-        if: inputs.macOS && runner.os == 'macOS'
+        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'schedule')
         run: unzip textadept_*.macOS.zip
 
       - name: Unpack Textadept (Linux)
-        if: inputs.linux && runner.os == 'Linux' && !contains(matrix.os, 'arm')
+        if: runner.os == 'Linux' && !contains(matrix.os, 'arm') &&
+          (inputs.linux || github.event_name == 'schedule')
         run: tar xzf textadept_*.linux.tgz
 
       - name: Unpack Textadept (Linux ARM)
-        if: inputs.linux && runner.os == 'Linux' && contains(matrix.os, 'arm')
+        if: runner.os == 'Linux' && contains(matrix.os, 'arm') &&
+          (inputs.linux || github.event_name == 'schedule')
         run: tar xzf textadept_*.linux.arm.tgz
 
       - name: Unpack modules (Windows, Linux)
-        if: (inputs.windows || inputs.linux) && runner.os != 'macOS'
+        if: runner.os != 'macOS' &&
+          (inputs.windows || inputs.linux || github.event_name == 'scheduled')
         shell: bash
         run: |
           unzip textadept_*.modules.zip
@@ -390,19 +393,19 @@ jobs:
           mv textadept-modules/* textadept/modules
 
       - name: Unpack modules (macOS)
-        if: inputs.macOS && runner.os == 'macOS'
+        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'scheduled')
         run: |
           unzip textadept_*modules.zip
           mv textadept-modules/* Textadept.app/Contents/Resources/modules
 
       - name: Run unit tests (Windows)
-        if: inputs.windows && runner.os == 'Windows'
+        if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'scheduled')
         shell: cmd
         run: start "" /d ${{ github.workspace }} /wait ${{ matrix.exe }}.exe -t
         timeout-minutes: 2
 
       - name: Run unit tests (macOS)
-        if: inputs.macOS && runner.os == 'macOS'
+        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'scheduled')
         run: ${{ matrix.exe }} -t
         #run: |
         #  echo "cd ${{ github.workspace }}" > run.sh
@@ -411,7 +414,7 @@ jobs:
         timeout-minutes: 2
 
       - name: Run unit tests (Linux)
-        if: inputs.linux && runner.os == 'Linux'
+        if: runner.os == 'Linux' && (inputs.linux || github.event_name == 'scheduled')
         run: xvfb-run -a xterm -e ${{ matrix.exe }} -t
         env:
           LANG: en_US.UTF-8
@@ -427,7 +430,8 @@ jobs:
 
   smoke-test-gtk2:
     needs: check-for-changes
-    if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests && inputs.linux
+    if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests &&
+      (inputs.linux || github.event_name == 'scheduled')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -470,7 +474,8 @@ jobs:
 
   smoke-test-bsd:
     needs: check-for-changes
-    if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests && inputs.bsd
+    if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests &&
+      (inputs.bsd || github.event_name == 'scheduled')
     runs-on: ubuntu-latest
     env:
       TEXTADEPT_HOME: ${{ github.workspace }}
