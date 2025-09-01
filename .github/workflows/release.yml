@@ -385,7 +385,7 @@ jobs:
 
       - name: Unpack modules (Windows, Linux)
         if: runner.os != 'macOS' &&
-          (inputs.windows || inputs.linux || github.event_name == 'scheduled')
+          (inputs.windows || inputs.linux || github.event_name == 'schedule')
         shell: bash
         run: |
           unzip textadept_*.modules.zip
@@ -393,19 +393,19 @@ jobs:
           mv textadept-modules/* textadept/modules
 
       - name: Unpack modules (macOS)
-        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'scheduled')
+        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'schedule')
         run: |
           unzip textadept_*modules.zip
           mv textadept-modules/* Textadept.app/Contents/Resources/modules
 
       - name: Run unit tests (Windows)
-        if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'scheduled')
+        if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'schedule')
         shell: cmd
         run: start "" /d ${{ github.workspace }} /wait ${{ matrix.exe }}.exe -t
         timeout-minutes: 2
 
       - name: Run unit tests (macOS)
-        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'scheduled')
+        if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'schedule')
         run: ${{ matrix.exe }} -t
         #run: |
         #  echo "cd ${{ github.workspace }}" > run.sh
@@ -414,7 +414,7 @@ jobs:
         timeout-minutes: 2
 
       - name: Run unit tests (Linux)
-        if: runner.os == 'Linux' && (inputs.linux || github.event_name == 'scheduled')
+        if: runner.os == 'Linux' && (inputs.linux || github.event_name == 'schedule')
         run: xvfb-run -a xterm -e ${{ matrix.exe }} -t
         env:
           LANG: en_US.UTF-8
@@ -431,7 +431,7 @@ jobs:
   smoke-test-gtk2:
     needs: check-for-changes
     if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests &&
-      (inputs.linux || github.event_name == 'scheduled')
+      (inputs.linux || github.event_name == 'schedule')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -475,7 +475,7 @@ jobs:
   smoke-test-bsd:
     needs: check-for-changes
     if: needs.check-for-changes.outputs.new-commits == 'true' && ! inputs.no_tests &&
-      (inputs.bsd || github.event_name == 'scheduled')
+      (inputs.bsd || github.event_name == 'schedule')
     runs-on: ubuntu-latest
     env:
       TEXTADEPT_HOME: ${{ github.workspace }}
