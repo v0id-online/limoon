@@ -428,9 +428,10 @@ int save_dialog(DialogOptions opts, lua_State *L) { return open_save_dialog(&opt
 // Updates the given progressbar dialog with the given percentage and text.
 static void update(double percent, const char *text, void *dialog_) {
 	auto dialog = static_cast<QProgressDialog *>(dialog_);
-	if (percent >= 0)
-		dialog->setValue(percent), dialog->setMaximum(100); // also remove indeterminate status if set
-	else if (dialog->maximum() > 0)
+	if (percent >= 0) {
+		dialog->setValue(percent);
+		if (dialog->maximum() == 0) dialog->setMaximum(100); // remove indeterminate status
+	} else if (dialog->maximum() > 0)
 		dialog->setMaximum(0), dialog->show(); // switch to indeterminate and show immediately
 	if (text) dialog->setLabelText(text);
 }
