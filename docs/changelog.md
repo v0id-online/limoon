@@ -2,6 +2,40 @@
 
 [Atom Feed](https://github.com/orbitalquark/textadept/releases.atom)
 
+## 12.9 (01 Oct 2025)
+
+Download:
+
+- [Textadept 12.9 -- Windows][]
+- [Textadept 12.9 -- macOS 11+][]
+- [Textadept 12.9 -- Linux][]
+- [Textadept 12.9 -- Linux ARM][]
+- [Textadept 12.9 -- Modules][]
+
+Bugfixes:
+
+- Fixed Wayland copy clipboard command in the terminal version.
+- Selecting between matching quotes should recognize when it's at the end of a string.
+- Fixed Qt progress dialog being stuck in an indeterminate state.
+- Fixed Pascal lexer numeric literals.
+- Fixed folding of HTML/XML comments and XML processing instructions.
+- Fixed incorrectly highlighting '..' range operators between numbers.
+
+Changes:
+
+- Updated Windows and macOS binaries to use Qt 6.9.
+- Added support for Janet and todo.txt.
+- Updated Python lexer to support t-strings.
+- Updated ini, Dart, and org lexers.
+- Autoupdate: renamed module from "autoupdate" to "update_notifier" to better reflect functionality.
+
+[Textadept 12.9 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.win.zip
+[Textadept 12.9 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.macOS.zip
+[Textadept 12.9 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.linux.tgz
+[Textadept 12.9 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.linux.arm.tgz
+[Textadept 12.9 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.modules.zip
+
+
 ## 12.8 (01 Aug 2025)
 
 Download:
