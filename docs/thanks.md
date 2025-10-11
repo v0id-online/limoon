@@ -25,6 +25,7 @@ amazing editor that it is today.
 - Giovanni Salmeri
 - Heck Fy
 - Ivan Baidakou
+- Jamie Drinkell
 - Jay Gould
 - Jeff Stone
 - John Benediktsson
