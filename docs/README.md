@@ -51,7 +51,7 @@ and a Qt runtime is distributed with Windows and macOS builds.
 [Qt]: https://www.qt.io/
 [GTK]: https://gtk.org
 [ncurses]: https://invisible-island.net/ncurses/ncurses.html
-[third-party dependencies]: manual.html#technologies
+[third-party dependencies]: manual.md#technologies
 
 ## Download
 
@@ -177,7 +177,7 @@ The "[Compiling][]" section of the manual contains more information about this p
 [Qt]: https://www.qt.io
 [GTK]: https://gtk.org
 [ncurses]: https://invisible-island.net/ncurses/ncurses.html
-[Compiling]: manual.html#compiling
+[Compiling]: manual.md#compiling
 
 ## Support
 
