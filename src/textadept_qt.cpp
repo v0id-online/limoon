@@ -779,7 +779,7 @@ private:
 
 int main(int argc, char *argv[]) {
 #if _WIN32
-	setStyle(QStyleFactory::create("Fusion"));
+	QApplication::setStyle(QStyleFactory::create("Fusion"));
 #endif
 	return Application{argc, argv}.exec();
 }
