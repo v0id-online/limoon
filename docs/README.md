@@ -146,6 +146,7 @@ Compiling Textadept from source requires the following:
 	- [Qt][] 5.15+ development libraries for the GUI version
 	- [GTK][] 2.24+ development libraries for the GUI version
 	- [ncurses][](w) development libraries (wide character support) for the terminal version
+- Unix `patch` command
 
 Basic procedure:
 

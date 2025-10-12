@@ -1421,6 +1421,9 @@ Textadept requires the following:
 	- [Qt][] 5.15+ development libraries for the GUI version
 	- [GTK][] 2.24+ development libraries for the GUI version
 	- [ncurses][](w) development libraries (wide character support) for the terminal version
+- Unix `patch` command
+
+**Windows Note:** [Git for Windows][] includes a `patch` command.
 
 **macOS Note:** [XCode][] provides Clang.
 
@@ -1436,6 +1439,7 @@ packages are all that is needed.
 [GTK]: https://www.gtk.org/download/linux.php
 [ncurses]: https://invisible-island.net/ncurses/#download_ncurses
 [XCode]: https://developer.apple.com/xcode/
+[Git for Windows]: https://gitforwindows.org/
 
 ### Compiling
 
