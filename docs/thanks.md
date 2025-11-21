@@ -8,6 +8,7 @@ amazing editor that it is today.
 - Ahed Eid
 - Alex Bepple
 - Ana Balan
+- Andrew Geng
 - Anton Verbitski
 - Benjamin Barenblat
 - Bill Meahan

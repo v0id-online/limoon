@@ -289,6 +289,11 @@ void *read_menu(lua_State *L, int index) {
 		if (bool isSubmenu = lua_getfield(L, -1, "title"); lua_pop(L, 1), isSubmenu) {
 			auto submenu = static_cast<QMenu *>(read_menu(L, -1));
 			menu->addMenu(submenu); // menu does not take ownership
+			// Qt 5 on Wayland needs to mark submenus as popups.
+			QObject::connect(submenu, &QMenu::aboutToShow, menu, [submenu, menu]() {
+				if (QWindow *handle = submenu->windowHandle(); handle)
+					handle->setTransientParent(menu->windowHandle());
+			});
 			continue;
 		}
 		const char *label = (lua_rawgeti(L, -1, 1), lua_tostring(L, -1));
@@ -327,6 +332,11 @@ void set_menubar(lua_State *L, int index) {
 	for (size_t i = 1; i <= lua_rawlen(L, index); lua_pop(L, 1), i++) {
 		auto menu = static_cast<QMenu *>(lua_rawgeti(L, index, i), lua_touserdata(L, -1));
 		ta->menuBar()->addMenu(menu); // menubar does not take ownership
+		// Qt 5 on Wayland needs to mark top-level menus as popups.
+		QObject::connect(menu, &QMenu::aboutToShow, ta->menuBar(), [menu]() {
+			if (QWindow *handle = menu->windowHandle(); handle)
+				handle->setTransientParent(ta->windowHandle());
+		});
 	}
 	ta->menuBar()->setVisible(lua_rawlen(L, index) > 0);
 }
