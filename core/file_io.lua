@@ -413,8 +413,8 @@ function io.quick_open(paths, filter)
 	for _, path in ipairs(paths) do
 		for filename in lfs.walk(path, filter) do
 			if #utf8_list >= io.quick_open_max then break end
-			if prefix then filename = filename:sub(#prefix + 1) end
-			utf8_list[#utf8_list + 1] = filename:iconv('UTF-8', _CHARSET)
+			utf8_list[#utf8_list + 1] = (prefix and filename:sub(#prefix + 1) or filename):iconv('UTF-8',
+				_CHARSET)
 		end
 	end
 	if #utf8_list == 0 then return end
