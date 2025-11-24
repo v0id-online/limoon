@@ -61,7 +61,7 @@ links below.
 Stable Release<br/>(12.9) | Beta Release<br/>(N/A) | Experimental<br/>nightly build
 -|-|-
 [Windows][stable win] | | [Windows][nightly win]
-[macOS][stable mac] | | [macOS][nightly mac]
+[macOS][stable mac] | | [macOS][nightly mac] (Apple Silicon)
 [Linux x64][stable linux] / [ARM][stable arm] | | [Linux x64][nightly linux] / [ARM][nightly arm]
 [Extra modules][stable modules] | | [Extra modules][nightly modules]
 [Source code][stable source] | | [Source code][nightly source]

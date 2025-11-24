@@ -114,7 +114,7 @@ jobs:
           - os: windows-2022
             if: ${{ inputs.windows || github.event_name == 'schedule' }}
             qt: '6.9'
-          - os: macOS-13
+          - os: macOS-15
             if: ${{ inputs.macOS || github.event_name == 'schedule' }}
             qt: '6.9'
     runs-on: ${{ matrix.os }}
