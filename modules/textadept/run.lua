@@ -159,7 +159,7 @@ local function run_command(label, command, dir, event, commands, key, macros)
 		command_entry_f[id](command, working_dir or dir, env, event, commands, key, macros, not is_func)
 	else
 		ui.command_entry.run(label, command_entry_f[id], 'bash', command, working_dir or dir, env,
-			event, commands, key, macros, not is_func)
+			event, commands, key, macros or false, not is_func)
 	end
 end
 
