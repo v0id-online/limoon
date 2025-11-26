@@ -168,7 +168,6 @@ test('find should allow advancing backwards through zero-width matches', functio
 	test.assert_equal(first_match_line, 2)
 	test.assert_equal(second_match_line, 1)
 end)
-if OSX and os.getenv('CI') == 'true' then expected_failure() end -- TODO: only fails on CI
 
 test('find should highlight results if ui.find.highlight_all_matches is enabled', function()
 	local _<close> = test.mock(ui.find, 'highlight_all_matches', true)
