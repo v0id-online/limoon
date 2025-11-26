@@ -39,7 +39,7 @@ Quick links: [Download][] \| [Manual][] \| [Lua API Docs][] \| [Project Page][]
 Textadept's pre-built binaries require the following:
 
 - Windows 10+ (64-bit or ARM)
-- macOS 11+
+- macOS 13+
 - Linux: [Qt][] 5 or [GTK][] 3 for the GUI version, and [ncurses][] for the terminal version.
 
 You can [compile](#compile) Textadept from source for use with different UI library versions,

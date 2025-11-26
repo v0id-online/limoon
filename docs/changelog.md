@@ -7,7 +7,7 @@
 Download:
 
 - [Textadept 12.9 -- Windows][]
-- [Textadept 12.9 -- macOS 11+][]
+- [Textadept 12.9 -- macOS 13+][]
 - [Textadept 12.9 -- Linux][]
 - [Textadept 12.9 -- Linux ARM][]
 - [Textadept 12.9 -- Modules][]
