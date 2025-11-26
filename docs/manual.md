@@ -1,4 +1,4 @@
-# Textadept 12.9 Manual
+# Textadept 13.0 nightly Manual
 
 **Contents**
 
