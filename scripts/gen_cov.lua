@@ -2,7 +2,7 @@
 -- Copyright 2024-2025 Mitchell. See LICENSE.
 
 -- Outputs an actionable code coverage list from LuaCov and Gcovr reports.
--- Requires luacov and gcovr to be installed.
+-- Requires gcovr to be installed.
 -- Usage: gen_cov.lua [format] [textadept_home]
 -- format is optional and may be one of:
 --   - github: outputs markdown tables showing coverage with GitHub links to uncovered lines.

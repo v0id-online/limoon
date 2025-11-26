@@ -572,8 +572,8 @@ jobs:
             xsel gdb lua-socket clang-format clangd hunspell-en-us --no-install-recommends -y
 
           patch -d luacov -p1 < src/luacov.patch
-          sudo mkdir -p /usr/share/lua/5.4
-          sudo cp -r luacov/src/luacov* /usr/share/lua/5.4
+          sudo mkdir -p /usr/share/lua/5.5
+          sudo cp -r luacov/src/luacov* /usr/share/lua/5.5
           sudo cp luacov/src/bin/luacov /usr/bin
           rm -r luacov
 
