@@ -1,6 +1,9 @@
 allow_defined_top = true
 codes = true
-ignore = {'611'} -- line contains only whitespace
+ignore = {
+	'011', -- ignore syntax errors caused by Lua 5.5 vararg params
+	'611' -- line contains only whitespace
+}
 std = 'lua54'
 formatter = 'plain'
 max_line_length = false
