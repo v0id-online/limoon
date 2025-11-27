@@ -572,7 +572,9 @@ jobs:
             xsel gdb lua-socket clang-format clangd hunspell-en-us --no-install-recommends -y
 
           patch -d luacov -p1 < src/luacov.patch
-          sudo mkdir -p /usr/share/lua/5.5
+          sudo mkdir -p /usr/share/lua/5.5 # for Textadept's `require('luacov')`
+          sudo mkdir -p /usr/share/lua/5.4 # for `os.execute('luacov')`
+          sudo cp -r luacov/src/luacov* /usr/share/lua/5.4
           sudo cp -r luacov/src/luacov* /usr/share/lua/5.5
           sudo cp luacov/src/bin/luacov /usr/bin
           rm -r luacov
@@ -676,4 +678,7 @@ jobs:
           sudo apt-get install lua-check --no-install-recommends -y
 
       - name: Run luacheck
-        run: luacheck .
+        run: |
+          output=$(luacheck . | grep -v E011) # ignore syntax errors due to Lua 5.5's vararg params
+          echo $output
+          if [[ ! -z "$output" ]]; then exit 1; fi
