@@ -8820,7 +8820,6 @@ The default value is `true`.
 ### `ui.buffer_statusbar_text`
 
 The text displayed in the buffer statusbar.
-(Write-only)
 
 <a id="ui.context_menu"></a>
 ### `ui.context_menu`
@@ -9027,7 +9026,6 @@ ui.size = {1000, 625} -- resize window
 ### `ui.statusbar_text`
 
 The text displayed in the statusbar.
-(Write-only)
 
 <a id="ui.suspend"></a>
 ### `ui.suspend`()

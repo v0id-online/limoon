@@ -222,7 +222,6 @@ end)
 
 test('Tools > Show Keys... should show typed keys in the statusbar', function()
 	local _<close> = test.defer(function() test.type('esc') end)
-	local _<close> = test.disable_metafield(ui, 'statusbar_text')
 	click('Tools/Show Keys...')
 
 	test.type('\t')

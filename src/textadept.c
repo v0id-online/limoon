@@ -663,6 +663,8 @@ static int suspend_lua(lua_State *L) { return (suspend(), 0); }
 // `ui.__index` Lua metamethod.
 static int ui_index(lua_State *L) {
 	const char *key = lua_tostring(L, 2);
+	if (strcmp(key, "statusbar_text") == 0 || strcmp(key, "buffer_statusbar_text") == 0)
+		return (lua_pushstring(L, get_statusbar_text(*key == 's' ? 0 : 1)), 1);
 	if (strcmp(key, "maximized") == 0) return (lua_pushboolean(L, is_maximized()), 1);
 	if (strcmp(key, "size") == 0) {
 		int width, height;

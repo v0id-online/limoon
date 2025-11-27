@@ -34,6 +34,7 @@ static bool find_options[4];
 static char *button_labels[4], *option_labels[4], *find_history[HIST_MAX], *repl_history[HIST_MAX];
 static WINDOW *command_entry_label;
 static bool command_entry_active;
+static char *statusbar_text[2];
 static int statusbar_length[2];
 TermKey *ta_tk; // global for CDK use
 
@@ -426,13 +427,14 @@ void set_command_entry_height(int height) {
 	wresize(win, height, COLS - label_width), mvwin(win, LINES - 1 - height, label_width);
 }
 
+const char *get_statusbar_text(int bar) { return statusbar_text[bar]; }
 void set_statusbar_text(int bar, const char *text) {
 	int start = bar == 0 ? 0 : statusbar_length[0];
 	int end = bar == 0 ? COLS - statusbar_length[1] : COLS;
 	for (int i = start; i < end; i++) mvaddch(LINES - 1, i, ' '); // clear
 	int len = (int)utf8strlen(text);
 	mvaddstr(LINES - 1, bar == 0 ? 0 : COLS - len, text);
-	statusbar_length[bar] = len;
+	copyfree(&statusbar_text[bar], text), statusbar_length[bar] = len;
 }
 
 void *read_menu(lua_State *L, int index) { return NULL; }
@@ -1038,5 +1040,7 @@ int main(int argc, char **argv) {
 		if (i < 4) free(button_labels[i]), free(option_labels[i] - (find_options[i] ? 0 : 4));
 	}
 	if (command_entry_label) delwin(command_entry_label);
+	if (statusbar_text[0]) free(statusbar_text[0]);
+	if (statusbar_text[1]) free(statusbar_text[1]);
 	return exit_status;
 }

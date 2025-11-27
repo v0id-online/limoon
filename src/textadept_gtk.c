@@ -442,6 +442,7 @@ void set_command_entry_height(int height) {
 	gtk_paned_set_position(GTK_PANED(paned), allocation.height - height);
 }
 
+const char *get_statusbar_text(int i) { return gtk_label_get_text(GTK_LABEL(statusbar[i])); }
 void set_statusbar_text(int i, const char *s) { gtk_label_set_text(GTK_LABEL(statusbar[i]), s); }
 
 // Signal for a menu item click.

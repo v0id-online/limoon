@@ -998,8 +998,6 @@ end)
 -- Coverage tests.
 
 test('editing.filter_through should write command errors to the statusbar', function()
-	local _<close> = test.disable_metafield(ui, 'statusbar_text')
-
 	textadept.editing.filter_through('false')
 
 	test.assert_contains(ui.statusbar_text, '"false"') -- returned non-zero status

@@ -34,7 +34,6 @@ end)
 test('find should count how many occurrences it found', function()
 	buffer:append_text(find .. find)
 	ui.find.find_entry_text = find
-	local _<close> = test.disable_metafield(ui, 'statusbar_text')
 
 	ui.find.find_next()
 
@@ -74,7 +73,6 @@ end)
 
 test('find should display a statusbar message if it could not find anything', function()
 	ui.find.find_entry_text = 'will not be found'
-	local _<close> = test.disable_metafield(ui, 'statusbar_text')
 
 	ui.find.find_next()
 
@@ -558,7 +556,6 @@ end)
 test('replace all should count the number of replacements made', function()
 	buffer:append_text(find .. find)
 	ui.find.find_entry_text = find
-	local _<close> = test.disable_metafield(ui, 'statusbar_text')
 
 	ui.find.replace_all()
 

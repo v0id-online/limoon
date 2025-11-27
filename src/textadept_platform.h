@@ -203,6 +203,8 @@ int get_command_entry_height(void);
 /** Sets the height of the command entry. The command entry must be active. */
 void set_command_entry_height(int height);
 
+/** Returns the text content of statusbar number 0 or 1. */
+const char *get_statusbar_text(int bar);
 /** Sets the content of statusbar number 0 or 1 to the given text. */
 void set_statusbar_text(int bar, const char *text);
 

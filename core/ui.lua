@@ -406,10 +406,10 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- `textadept.menu.tab_context_menu`.
 -- @field tab_context_menu
 
---- The text displayed in the statusbar. (Write-only)
+--- The text displayed in the statusbar.
 -- @field statusbar_text
 
---- The text displayed in the buffer statusbar. (Write-only)
+--- The text displayed in the buffer statusbar.
 -- @field buffer_statusbar_text
 
 --- Whether or not Textadept's window is maximized.
