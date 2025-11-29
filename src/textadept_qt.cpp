@@ -277,6 +277,8 @@ void set_command_entry_height(int height) {
 	ta->ui->splitter->setSizes(QList<int>{ta->height()});
 }
 
+bool is_statusbar_visible() { return ta->statusBar()->isVisible(); }
+void set_statusbar_visible(bool visible) { ta->statusBar()->setVisible(visible); }
 const char *get_statusbar_text(int bar) {
 	static std::string text;
 	text = (bar == 0 ? ta->statusBar()->currentMessage() : ta->docStatusBar->text()).toStdString();

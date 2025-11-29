@@ -33,7 +33,7 @@ static bool find_options[4];
 #define HIST_MAX 100
 static char *button_labels[4], *option_labels[4], *find_history[HIST_MAX], *repl_history[HIST_MAX];
 static WINDOW *command_entry_label;
-static bool command_entry_active;
+static bool command_entry_active, statusbar;
 static char *statusbar_text[2];
 static int statusbar_length[2];
 TermKey *ta_tk; // global for CDK use
@@ -97,7 +97,7 @@ static void resize_pane(struct Pane *pane, int rows, int cols, int y, int x) {
 }
 
 void new_window(SciObject *(*get_view)(void)) {
-	root_pane = new_pane(get_view()), resize_pane(root_pane, LINES - 2, COLS, 1, 0);
+	root_pane = new_pane(get_view()), resize_pane(root_pane, LINES - statusbar - 1, COLS, 1, 0);
 }
 
 void set_title(const char *title) {
@@ -349,7 +349,7 @@ void focus_find(void) {
 	if (findbox) return; // already active
 	WINDOW *win = scintilla_get_window(focused_view);
 	wresize(win, getmaxy(win) - 2, COLS), emit("find_pane_show", -1);
-	findbox = initCDKScreen(newwin(2, 0, LINES - 3, 0)), eraseCDKScreen(findbox);
+	findbox = initCDKScreen(newwin(2, 0, LINES - statusbar - 2, 0)), eraseCDKScreen(findbox);
 	int b_width = (int)(fmax(strlen(button_labels[0]), strlen(button_labels[1])) +
 		fmax(strlen(button_labels[2]), strlen(button_labels[3])) + 3);
 	int o_width = (int)(fmax(strlen(option_labels[0]), strlen(option_labels[1])) +
@@ -402,7 +402,7 @@ void focus_find(void) {
 static void resize_command_entry(void) {
 	WINDOW *win = scintilla_get_window(command_entry);
 	int height = get_command_entry_height(), label_width = getmaxx(command_entry_label);
-	wresize(win, height, COLS - label_width), mvwin(win, LINES - 1 - height, label_width);
+	wresize(win, height, COLS - label_width), mvwin(win, LINES - statusbar - height, label_width);
 }
 
 void focus_command_entry(void) {
@@ -415,7 +415,7 @@ void focus_command_entry(void) {
 bool is_command_entry_active(void) { return command_entry_active; }
 
 void set_command_entry_label(const char *text) {
-	if (!command_entry_label) command_entry_label = newwin(1, 1, LINES - 2, 0);
+	if (!command_entry_label) command_entry_label = newwin(1, 1, LINES - statusbar - 1, 0);
 	wresize(command_entry_label, 1, utf8strlen(text)), mvwaddstr(command_entry_label, 0, 0, text);
 }
 
@@ -424,16 +424,25 @@ int get_command_entry_height(void) { return getmaxy(scintilla_get_window(command
 void set_command_entry_height(int height) {
 	WINDOW *win = scintilla_get_window(command_entry);
 	int label_width = getmaxx(command_entry_label);
-	wresize(win, height, COLS - label_width), mvwin(win, LINES - 1 - height, label_width);
+	wresize(win, height, COLS - label_width), mvwin(win, LINES - statusbar - height, label_width);
+}
+
+bool is_statusbar_visible() { return statusbar; }
+
+void set_statusbar_visible(bool visible) {
+	statusbar = visible;
+	if (command_entry_label) mvwin(command_entry_label, LINES - statusbar - 1, 0);
+	resize_pane(root_pane, LINES - statusbar - 1, COLS, 1, 0), resize_command_entry(), refresh_all();
 }
 
 const char *get_statusbar_text(int bar) { return statusbar_text[bar]; }
+
 void set_statusbar_text(int bar, const char *text) {
 	int start = bar == 0 ? 0 : statusbar_length[0];
 	int end = bar == 0 ? COLS - statusbar_length[1] : COLS;
-	for (int i = start; i < end; i++) mvaddch(LINES - 1, i, ' '); // clear
+	for (int i = start; i < end; i++) mvaddch(LINES - statusbar, i, ' '); // clear
 	int len = (int)utf8strlen(text);
-	mvaddstr(LINES - 1, bar == 0 ? 0 : COLS - len, text);
+	mvaddstr(LINES - statusbar, bar == 0 ? 0 : COLS - len, text);
 	copyfree(&statusbar_text[bar], text), statusbar_length[bar] = len;
 }
 
@@ -635,10 +644,11 @@ int input_dialog(DialogOptions opts, lua_State *L) {
 static int open_save(DialogOptions *opts, lua_State *L, bool open) {
 	char cwd[FILENAME_MAX];
 	getcwd(cwd, FILENAME_MAX); // save because cdk changes it
-	WINDOW *window = newwin(LINES - 2, COLS - 2, 1, 1);
+	WINDOW *window = newwin(LINES - statusbar - 1, COLS - 2, 1, 1);
 	CDKSCREEN *dialog = initCDKScreen(window);
-	CDKFSELECT *select = newCDKFselect(dialog, LEFT, TOP, LINES - 2, COLS - 2, (char *)opts->title,
-		(char *)opts->text, A_NORMAL, '_', A_REVERSE, "</B>", "</N>", "</N>", "</N>", TRUE, FALSE);
+	CDKFSELECT *select =
+		newCDKFselect(dialog, LEFT, TOP, LINES - statusbar - 1, COLS - 2, (char *)opts->title,
+			(char *)opts->text, A_NORMAL, '_', A_REVERSE, "</B>", "</N>", "</N>", "</N>", TRUE, FALSE);
 	if (opts->dir) setCDKFselectDirectory(select, (char *)opts->dir);
 	if (opts->file) {
 		char *dir = dirName((char *)opts->file);
@@ -772,7 +782,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 		if (i >= 0) filtered_rows[i / num_columns] = row;
 	}
 
-	Dialog dialog = new_dialog(&opts, LINES - 2, COLS - 2);
+	Dialog dialog = new_dialog(&opts, LINES - statusbar - 1, COLS - 2);
 	CDKENTRY *entry = newCDKEntry(dialog.screen, LEFT, TOP, (char *)opts.title, "", A_NORMAL, '_',
 		vMIXED, 0, 0, 100, false, false);
 	CDKSCROLL *scroll = newCDKScroll(dialog.screen, LEFT, CENTER, RIGHT, -6, 0,
@@ -929,7 +939,7 @@ static void signalled(int signal) {
 	if (signal == SIGCONT) termkey_start(ta_tk);
 	struct winsize w;
 	ioctl(0, TIOCGWINSZ, &w);
-	resizeterm(w.ws_row, w.ws_col), resize_pane(root_pane, LINES - 2, COLS, 1, 0),
+	resizeterm(w.ws_row, w.ws_col), resize_pane(root_pane, LINES - statusbar - 1, COLS, 1, 0),
 		resize_command_entry();
 	if (signal == SIGCONT) emit("resume", -1);
 	emit("update_ui", LUA_TNUMBER, 0, -1), refresh_all();
@@ -977,6 +987,7 @@ int main(int argc, char **argv) {
 	find_next = &button_labels[0], replace = &button_labels[1], find_prev = &button_labels[2],
 	replace_all = &button_labels[3], match_case = &find_options[0], whole_word = &find_options[1],
 	regex = &find_options[2], in_files = &find_options[3]; // typedefed, so cannot static initialize
+	statusbar = true;
 
 	if (!init_textadept(argc, argv)) return (endwin(), termkey_destroy(ta_tk), exit_status);
 

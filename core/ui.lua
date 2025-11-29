@@ -406,6 +406,10 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- `textadept.menu.tab_context_menu`.
 -- @field tab_context_menu
 
+--- Whether or not the statusbar is visible.
+-- The default value is `true`.
+-- @field statusbar
+
 --- The text displayed in the statusbar.
 -- @field statusbar_text
 

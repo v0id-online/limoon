@@ -472,6 +472,23 @@ if CURSES then
 	end)
 end
 
+test('ui.statusbar = false should hide the statusbar', function()
+	local _<close> = test.mock(ui, 'statusbar', false)
+
+	test.assert_equal(ui.statusbar, false)
+end)
+
+test('ui.statusbar_text should be readable', function()
+	local text = 'text'
+	ui.statusbar_text = text
+
+	test.assert_equal(ui.statusbar_text, text)
+end)
+
+test('ui.buffer_statusbar_text should be readable', function()
+	test.assert(#ui.buffer_statusbar_text > 0, 'ui.buffer_statusbar_text is not readable')
+end)
+
 test("ui.maximized = true should change the window's maximized state", function()
 	local _<close> = test.mock(ui, 'maximized', true)
 

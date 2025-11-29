@@ -20,6 +20,7 @@ amazing editor that it is today.
 - coolvitto
 - Daniel Wutke
 - Franck Guadagnini
+- Fwirt
 - Gabriel Dubatti
 - Georger Araújo
 - Gilles Grégoire

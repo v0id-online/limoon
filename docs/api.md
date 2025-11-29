@@ -9022,6 +9022,13 @@ Usage:
 ui.size = {1000, 625} -- resize window
 ```
 
+<a id="ui.statusbar"></a>
+### `ui.statusbar`
+
+Whether or not the statusbar is visible.
+
+The default value is `true`.
+
 <a id="ui.statusbar_text"></a>
 ### `ui.statusbar_text`
 
