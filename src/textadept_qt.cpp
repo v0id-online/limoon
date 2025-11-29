@@ -105,6 +105,7 @@ protected:
 
 SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, void *)) {
 	auto view = new ScintillaEditBase;
+	view->setMinimumHeight(1), view->setMinimumWidth(1);
 	if (notified)
 		QObject::connect(
 			view, &ScintillaEditBase::notify, view, [notified, view](Scintilla::NotificationData *pscn) {
