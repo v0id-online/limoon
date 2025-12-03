@@ -573,7 +573,26 @@ bool spawn(lua_State *L, Process *proc, int /*index*/, const char *cmd, const ch
 	cmd = full_cmd.c_str();
 #endif
 	// Construct argv from cmd and envp from envi.
-	QStringList args = QProcess::splitCommand(QString{cmd});
+	// Note: cannot use QProcess::splitCommand() because it does not handle single quotes.
+	// It also requires non-standard triple-double-quotes for single quotes instead of '\' escapes.
+	QStringList args;
+	const char *p = cmd;
+	while (*p) {
+		while (*p == ' ') p++;
+		std::string arg;
+		do {
+			const char *s = p;
+			while (*p && *p != ' ' && *p != '"' && *p != '\'') p++;
+			arg.append(s, p - s);
+			if (*p == '"' || *p == '\'') {
+				s = p + 1;
+				for (char q = *p++; *p && (*p != q || *(p - 1) == '\\'); p++) {}
+				arg.append(s, p - s);
+				if (*p == '"' || *p == '\'') p++;
+			}
+		} while (*p && *p != ' ');
+		args.append(arg.c_str());
+	}
 	QProcessEnvironment env;
 	if (envi)
 		for (size_t i = 1; i <= lua_rawlen(L, envi); lua_pop(L, 1), i++) {

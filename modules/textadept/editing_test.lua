@@ -580,6 +580,17 @@ test('editing.filter_through should not do anything if output == input', functio
 	test.assert_equal(buffer.modify, false)
 end)
 
+test('editing.filter_through should handle single-quotes', function()
+	local find, replace = 'find', 'replace'
+	buffer:append_text(find)
+
+	-- Note: double-quotes were tested earlier.
+	textadept.editing.filter_through(string.format("sed 's/%s/%s/;'", find, replace))
+
+	test.assert_equal(buffer:get_text(), replace)
+end)
+if WIN32 then skip('sed does not exist') end
+
 test("editing.autocomplete('word') should show a list of word completions", function()
 	local word = 'word'
 	buffer:add_text(string.format('%s %s', word, word:sub(1, 1)))
