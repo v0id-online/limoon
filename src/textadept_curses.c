@@ -63,6 +63,7 @@ const char *get_charset(void) {
 	}
 	return charset;
 #elif _WIN32
+	if (GetACP() == 65001) return "UTF-8";
 	static char codepage[8];
 	return (sprintf(codepage, "CP%d", GetACP()), codepage);
 #endif

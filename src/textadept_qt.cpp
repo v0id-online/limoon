@@ -45,7 +45,8 @@ const char *get_charset() {
 	return QTextCodec::codecForLocale()->name().data();
 #else
 	// Ask Windows for its charset encoding because QTextCodec returns "System", which is not a
-	// valid iconv encoding.
+	// valid iconv encoding. However, CP65001 (UTF-8) is not valid either.
+	if (GetACP() == 65001) return "UTF-8";
 	static char codepage[8];
 	return (sprintf(codepage, "CP%d", GetACP()), codepage);
 #endif
