@@ -26,9 +26,15 @@ Why does Textadept fail to correctly display my non-English file?
 **A:**
 Textadept failed to detect the file's encoding. You'll need to [help it][].
 
-On Windows, if you are seeing strange characters in the filename (including '?'), your file's
-name contains characters outside the system's encoding. Due to limitations in Lua and Microsoft's
-C runtime library (MSVCRT), Textadept cannot open files like those.
+On Windows, if you are seeing strange characters in the filename (including '?'), your file's name
+contains characters outside the system's encoding. You can try the following as an administrator:
+1. Open Settings
+2. Select "Time & language"
+3. Select "Administrative language settings"
+4. Click "Change system locale..."
+5. Check the "Beta: Use Unicode UTF-8 for worldwide language support" box
+6. Restart your computer
+7. Try opening the file again
 
 [help it]: manual.html#encoding
 
