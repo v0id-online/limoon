@@ -17,7 +17,7 @@ BEGIN
 		BEGIN
 			VALUE	"CompanyName",	"Mitchell\0"
 			VALUE	"FileDescription",	"textadept\0"
-			VALUE	"FileVersion",	"13.0 alpha\0"
+			VALUE	"FileVersion",	"13.0 nightly\0"
 			VALUE	"InternalName",	"textadept\0"
 			VALUE	"LegalCopyright",	"Copyright 2006-2025 by Mitchell\0"
 			VALUE	"OriginalFilename",	"textadept.exe\0"
