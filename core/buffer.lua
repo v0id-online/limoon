@@ -96,11 +96,11 @@ end)
 
 --- The split resizer's pixel position if the view is a split one.
 -- @see ui.get_split_table
--- @field view.size
+-- @field view.split_pos
 
 --- The parent split resizer's pixel position if the view's parent is a split one.
 -- @see ui.get_split_table
--- @field view.parent_size
+-- @field view.parent_split_pos
 
 --- Work with Files.
 -- **Note:** this module does not open files. `io.open_file()` does.

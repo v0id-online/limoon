@@ -72,7 +72,7 @@ local exceptions = {
 	}, --
 	[file('modules/textadept/history.lua')] = {'record.filename', 'record.column'},
 	[file('modules/textadept/session.lua')] = {
-		'buf.filename', 'buf.anchor', 'buf.current_pos', 'split.size', 'split.buffer'
+		'buf.filename', 'buf.anchor', 'buf.current_pos', 'split.buffer'
 	}, --
 	[file('modules/textadept/snippets.lua')] = {'snippet.new', 'placeholder.length', 'ph.length'}
 }

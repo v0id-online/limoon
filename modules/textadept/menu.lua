@@ -137,7 +137,8 @@ end
 -- @param view The view to resize.
 -- @param grow Whether to grow or shrink the view.
 local function resize_view(view, grow)
-	if view.size then view.size = view.size + (grow and 1 or -1) * 10 * view:text_height(1) end
+	if not view.split_pos then return end
+	view.split_pos = view.split_pos + (grow and 1 or -1) * 10 * view:text_height(1)
 end
 
 --- Wrapper around `view:fold_all()`.

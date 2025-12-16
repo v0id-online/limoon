@@ -1628,6 +1628,11 @@ Textadept is composed of the following technologies:
 Old API | Change | New API
 -|:-:|-
 **ui**||
-[get_split_table()] | Changed | `size` field is now a {width, height, split pos} table
+[get_split_table()][] | Changed | `size` field is now a {width, height, split pos} table
+**view**||
+size | Renamed | [split_pos][]
+parent_size | Renamed | [parent_split_pos][]
 
 [get_split_table()]: api.html#ui.get_split_table
+[split_pos]: api.html#view.split_pos
+[parent_split_pos]: api.html#view.parent_split_pos

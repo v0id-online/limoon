@@ -121,16 +121,16 @@ test('sessions should save view state', function()
 	local sf<close> = test.tmpfile()
 	view:split()
 	view:split(true)
-	local view1_size = _VIEWS[1].size
-	local view2_size = _VIEWS[2].size
+	local view1_split_pos = _VIEWS[1].split_pos
+	local view2_split_pos = _VIEWS[2].split_pos
 
 	textadept.session.save(sf.filename)
 	while view:unsplit() do end
 	textadept.session.load(sf.filename)
 
 	test.assert_equal(#_VIEWS, 3)
-	test.assert_equal(_VIEWS[1].size, view1_size)
-	test.assert_equal(_VIEWS[2].size, view2_size)
+	test.assert_equal(_VIEWS[1].split_pos, view1_split_pos)
+	test.assert_equal(_VIEWS[2].split_pos, view2_split_pos)
 end)
 
 test('sessions should restore the view states of files opened in more than one view', function()

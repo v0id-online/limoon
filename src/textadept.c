@@ -1154,7 +1154,8 @@ static int unsplit_view_lua(lua_State *L) {
 static int view_index(lua_State *L) {
 	if (strcmp(lua_tostring(L, 2), "buffer") == 0)
 		return (lua_pushdoc(L, SS(lua_toview(L, 1), SCI_GETDOCPOINTER, 0, 0)), 1);
-	if (strcmp(lua_tostring(L, 2), "size") == 0 || strcmp(lua_tostring(L, 2), "parent_size") == 0) {
+	if (strcmp(lua_tostring(L, 2), "split_pos") == 0 ||
+		strcmp(lua_tostring(L, 2), "parent_split_pos") == 0) {
 		PaneInfo info = get_pane_info_from_view(lua_toview(L, 1));
 		if (*lua_tostring(L, 2) == 'p' && info.is_split) info = get_parent_pane_info(info);
 		return (info.is_split ? lua_pushinteger(L, info.split_pos) : lua_pushnil(L), 1);
@@ -1175,7 +1176,8 @@ static int view_index(lua_State *L) {
 static int view_newindex(lua_State *L) {
 	if (strcmp(lua_tostring(L, 2), "buffer") == 0)
 		return (luaL_argerror(L, 2, "read-only property"), 0);
-	if (strcmp(lua_tostring(L, 2), "size") == 0 || strcmp(lua_tostring(L, 2), "parent_size") == 0) {
+	if (strcmp(lua_tostring(L, 2), "split_pos") == 0 ||
+		strcmp(lua_tostring(L, 2), "parent_split_pos") == 0) {
 		PaneInfo info = get_pane_info_from_view(lua_toview(L, 1));
 		if (*lua_tostring(L, 2) == 'p' && info.is_split) info = get_parent_pane_info(info);
 		if (info.is_split) set_pane_split_pos(info.self, fmax(luaL_checkinteger(L, 3), 0));

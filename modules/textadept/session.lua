@@ -79,7 +79,7 @@ function M.load(filename)
 			return
 		end
 		for i, view in ipairs{view:split(split.vertical)} do
-			if i == 1 then view.size = split.size end
+			if i == 1 then view.split_pos = split.size end -- TODO: split.split_pos?
 			ui.goto_view(view)
 			load_split(split[i])
 		end

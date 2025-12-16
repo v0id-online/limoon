@@ -338,21 +338,21 @@ end)
 test('View > Grow View should do so', function()
 	view:split()
 	ui.goto_view(-1)
-	local size = view.size
+	local split_pos = view.split_pos
 
 	click('View/Grow View')
 
-	test.assert(view.size > size, 'should have grown view')
+	test.assert(view.split_pos > split_pos, 'should have grown view')
 end)
 
 test('View > Shrink View should do so', function()
 	view:split()
 	ui.goto_view(-1)
-	local size = view.size
+	local split_pos = view.split_pos
 
 	click('View/Shrink View')
 
-	test.assert(view.size < size or size == 0, 'should have shrunk view')
+	test.assert(view.split_pos < split_pos or split_pos == 0, 'should have shrunk view')
 end)
 
 test('View > Code Folding > Toggle Current Fold should do so', function()

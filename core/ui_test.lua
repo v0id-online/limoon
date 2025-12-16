@@ -463,12 +463,12 @@ if CURSES then
 	test('clicking and dragging on a splitter bar should resize split view', function()
 		view:split(true)
 		view:split()
-		_VIEWS[1].size = 1
+		_VIEWS[1].split_pos = 1
 
 		events.emit(events.MOUSE, view.MOUSE_PRESS, 1, 0, 2, 1) -- simulate clock
 		events.emit(events.MOUSE, view.MOUSE_DRAG, 1, 0, 2, 2) -- simulate drag
 
-		test.assert_equal(_VIEWS[1].size, 2)
+		test.assert_equal(_VIEWS[1].split_pos, 2)
 	end)
 end
 
@@ -531,7 +531,7 @@ test('ui.get_split_table should report the current split view state', function()
 end)
 if GTK then
 	local gtk2 = os.getenv('CI') == 'true' and io.popen('dpkg --list'):read('a'):find('gtk2%.0%-dev')
-	if not gtk2 then expected_failure() end -- TODO: splits[2].size == 0
+	if not gtk2 then expected_failure() end -- TODO: splits[2].size[3] == 0
 end
 
 test('ui.goto_view should focus a given view', function()

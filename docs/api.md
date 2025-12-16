@@ -480,15 +480,15 @@ Returns: whether or not the view was unsplit.
 The [buffer](#the-buffer-module) the view currently contains.
 (Read-only)
 
-<a id="view.size"></a>
-#### `view.size`
+<a id="view.split_pos"></a>
+#### `view.split_pos`
 
 The split resizer's pixel position if the view is a split one.
 
 See also: [`ui.get_split_table`](#ui.get_split_table)
 
-<a id="view.parent_size"></a>
-#### `view.parent_size`
+<a id="view.parent_split_pos"></a>
+#### `view.parent_split_pos`
 
 The parent split resizer's pixel position if the view's parent is a split one.
 
