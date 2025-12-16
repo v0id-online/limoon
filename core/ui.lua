@@ -352,12 +352,12 @@ if CURSES then
 	-- @param x X terminal coordinate.
 	local function get_view(view, y, x)
 		if not view[1] and not view[2] then return view end
-		local vertical, size = view.vertical, view.size
-		if vertical and x < size or not vertical and y < size then
+		local vertical, split = view.vertical, view.size[3]
+		if vertical and x < split or not vertical and y < split then
 			return get_view(view[1], y, x)
-		elseif vertical and x > size or not vertical and y > size then
+		elseif vertical and x > split or not vertical and y > split then
 			-- Zero y or x relative to the other view based on split orientation.
-			return get_view(view[2], vertical and y or y - size - 1, vertical and x - size - 1 or x)
+			return get_view(view[2], vertical and y or y - split - 1, vertical and x - split - 1 or x)
 		else
 			return view -- in-between views; return the split itself
 		end
@@ -450,7 +450,7 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- @return table of split views. Each split view entry is a table with 4 fields: `1`, `2`,
 --	`vertical`, and `size`. `1` and `2` have values of either nested split view entries or
 --	the views themselves; `vertical` is a flag that indicates if the split is vertical or
---	not; and `size` is the integer position of the split resizer.
+--	not; and `size` is a table of width, height, and split position integers.
 -- @function get_split_table
 
 --- Switches focus to another view.

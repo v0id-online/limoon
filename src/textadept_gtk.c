@@ -291,13 +291,15 @@ Pane *get_top_pane(void) {
 }
 
 PaneInfo get_pane_info(Pane *pane) {
-	PaneInfo info = {GTK_IS_PANED(pane), false, pane, pane, NULL, NULL, 0};
+	GtkAllocation alloc;
+	gtk_widget_get_allocation(GTK_WIDGET(pane), &alloc);
+	PaneInfo info = {GTK_IS_PANED(pane), false, pane, pane, NULL, NULL, alloc.width, alloc.height, 0};
 	if (info.is_split)
 		info.vertical =
 			gtk_orientable_get_orientation(GTK_ORIENTABLE(pane)) == GTK_ORIENTATION_HORIZONTAL,
 		info.child1 = gtk_paned_get_child1(GTK_PANED(pane)),
 		info.child2 = gtk_paned_get_child2(GTK_PANED(pane)),
-		info.size = gtk_paned_get_position(GTK_PANED(pane));
+		info.split_pos = gtk_paned_get_position(GTK_PANED(pane));
 	return info;
 }
 
@@ -307,7 +309,7 @@ PaneInfo get_parent_pane_info(PaneInfo info) {
 
 PaneInfo get_pane_info_from_view(SciObject *v) { return get_pane_info(gtk_widget_get_parent(v)); }
 
-void set_pane_size(Pane *pane, int size) { gtk_paned_set_position(GTK_PANED(pane), size); }
+void set_pane_split_pos(Pane *pane, int pos) { gtk_paned_set_position(GTK_PANED(pane), pos); }
 
 void show_tabs(bool show) { gtk_widget_set_visible(tabbar, show); }
 

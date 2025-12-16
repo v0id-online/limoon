@@ -43,7 +43,7 @@ static bool quitting;
 
 // Implementation of a Pane.
 struct Pane {
-	int y, x, rows, cols, split_size; // dimensions
+	int y, x, rows, cols, split_pos; // dimensions
 	enum { SINGLE, VSPLIT, HSPLIT } type; // pane type
 	WINDOW *win; // either the Scintilla curses window or the split bar's window
 	SciObject *view; // Scintilla view for a non-split view
@@ -79,16 +79,16 @@ static Pane *new_pane(SciObject *view) {
 // Resizes and repositions the given pane.
 static void resize_pane(struct Pane *pane, int rows, int cols, int y, int x) {
 	if (pane->type == VSPLIT) {
-		int ssize = (int)(pane->split_size * cols / fmax(pane->cols, 1));
+		int ssize = (int)(pane->split_pos * cols / fmax(pane->cols, 1));
 		if (ssize < 1 || ssize >= cols - 1) ssize = ssize < 1 ? 1 : cols - 2;
-		pane->split_size = ssize;
+		pane->split_pos = ssize;
 		resize_pane(pane->child1, rows, ssize, y, x);
 		resize_pane(pane->child2, rows, cols - ssize - 1, y, x + ssize + 1);
 		wresize(pane->win, rows, 1), mvwin(pane->win, y, x + ssize); // split bar
 	} else if (pane->type == HSPLIT) {
-		int ssize = (int)(pane->split_size * rows / fmax(pane->rows, 1));
+		int ssize = (int)(pane->split_pos * rows / fmax(pane->rows, 1));
 		if (ssize < 1 || ssize >= rows - 1) ssize = ssize < 1 ? 1 : rows - 2;
-		pane->split_size = ssize;
+		pane->split_pos = ssize;
 		resize_pane(pane->child1, ssize, cols, y, x);
 		resize_pane(pane->child2, rows - ssize - 1, cols, y + ssize + 1, x);
 		wresize(pane->win, 1, cols), mvwin(pane->win, y + ssize, x); // split bar
@@ -155,17 +155,17 @@ void split_view(SciObject *view, SciObject *view2, bool vertical) {
 	parent->child1 = child1, parent->child2 = child2, parent->view = NULL;
 	// Resize children and create a split bar.
 	if (vertical) {
-		parent->split_size = parent->cols / 2;
-		resize_pane(child1, parent->rows, parent->split_size, parent->y, parent->x);
-		resize_pane(child2, parent->rows, parent->cols - parent->split_size - 1, parent->y,
-			parent->x + parent->split_size + 1);
-		parent->win = newwin(parent->rows, 1, parent->y, parent->x + parent->split_size);
+		parent->split_pos = parent->cols / 2;
+		resize_pane(child1, parent->rows, parent->split_pos, parent->y, parent->x);
+		resize_pane(child2, parent->rows, parent->cols - parent->split_pos - 1, parent->y,
+			parent->x + parent->split_pos + 1);
+		parent->win = newwin(parent->rows, 1, parent->y, parent->x + parent->split_pos);
 	} else {
-		parent->split_size = parent->rows / 2;
-		resize_pane(child1, parent->split_size, parent->cols, parent->y, parent->x);
-		resize_pane(child2, parent->rows - parent->split_size - 1, parent->cols,
-			parent->y + parent->split_size + 1, parent->x);
-		parent->win = newwin(1, parent->cols, parent->y + parent->split_size, parent->x);
+		parent->split_pos = parent->rows / 2;
+		resize_pane(child1, parent->split_pos, parent->cols, parent->y, parent->x);
+		resize_pane(child2, parent->rows - parent->split_pos - 1, parent->cols,
+			parent->y + parent->split_pos + 1, parent->x);
+		parent->win = newwin(1, parent->cols, parent->y + parent->split_pos, parent->x);
 	}
 	refresh_pane(parent);
 }
@@ -190,7 +190,7 @@ bool unsplit_view(SciObject *view, void (*delete_view)(SciObject *)) {
 	remove_views(child == parent->child1 ? parent->child2 : parent->child1, delete_view);
 	delwin(parent->win); // delete split bar
 	// Inherit child's properties.
-	parent->type = child->type, parent->split_size = child->split_size, parent->win = child->win,
+	parent->type = child->type, parent->split_pos = child->split_pos, parent->win = child->win,
 	parent->view = child->view, parent->child1 = child->child1, parent->child2 = child->child2;
 	free(child);
 	resize_pane(parent, parent->rows, parent->cols, parent->y, parent->x); // update
@@ -202,12 +202,16 @@ void delete_scintilla(SciObject *view) { scintilla_delete(view); }
 Pane *get_top_pane(void) { return root_pane; }
 
 PaneInfo get_pane_info(Pane *pane) {
-	PaneInfo info = {
-		pane && PANE(pane)->type != SINGLE, false, pane ? PANE(pane)->view : NULL, pane, NULL, NULL, 0};
-	if (info.is_split)
-		info.vertical = PANE(pane)->type == VSPLIT, info.view = PANE(pane)->view,
-		info.child1 = PANE(pane)->child1, info.child2 = PANE(pane)->child2,
-		info.size = PANE(pane)->split_size;
+	PaneInfo info = {pane && PANE(pane)->type != SINGLE, false, pane ? PANE(pane)->view : NULL, pane,
+		NULL, NULL, pane ? PANE(pane)->rows : 0, pane ? PANE(pane)->cols : 0, 0};
+	if (info.is_split) {
+		info.vertical = PANE(pane)->type == VSPLIT;
+		struct Pane *child1 = PANE(pane)->child1, *child2 = PANE(pane)->child2;
+		info.child1 = child1, info.child2 = child2,
+		info.width = info.vertical ? child1->cols + child2->cols + 1 : child1->cols,
+		info.height = info.vertical ? child1->rows : child1->rows + child2->rows + 1,
+		info.split_pos = PANE(pane)->split_pos;
+	}
 	return info;
 }
 
@@ -219,8 +223,8 @@ PaneInfo get_pane_info_from_view(SciObject *v) {
 	return get_pane_info(get_parent_pane(root_pane, v));
 }
 
-void set_pane_size(Pane *pane, int size) {
-	PANE(pane)->split_size = size;
+void set_pane_split_pos(Pane *pane, int pos) {
+	PANE(pane)->split_pos = pos;
 	resize_pane(PANE(pane), PANE(pane)->rows, PANE(pane)->cols, PANE(pane)->y, PANE(pane)->x);
 }
 

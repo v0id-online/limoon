@@ -23,7 +23,7 @@ typedef struct {
 	bool is_split, vertical;
 	SciObject *view;
 	Pane *self, *child1, *child2;
-	int size;
+	int width, height, split_pos;
 } PaneInfo;
 
 /** Contains dialog options.
@@ -128,8 +128,8 @@ PaneInfo get_parent_pane_info(PaneInfo info);
  * @see get_pane_info
  */
 PaneInfo get_pane_info_from_view(SciObject *view);
-/** Sets the given pane's divider position to the given size. */
-void set_pane_size(Pane *pane, int size);
+/** Sets the given pane's split position to the given one. */
+void set_pane_split_pos(Pane *pane, int pos);
 
 /** Sets whether or not the Textadept window should show tabs for its buffers. */
 void show_tabs(bool show);

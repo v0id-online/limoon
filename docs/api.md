@@ -8852,7 +8852,7 @@ This is primarily used in session saving.
 Returns:  table of split views. Each split view entry is a table with 4 fields: `1`, `2`,
 	`vertical`, and `size`. `1` and `2` have values of either nested split view entries or
 	the views themselves; `vertical` is a flag that indicates if the split is vertical or
-	not; and `size` is the integer position of the split resizer.
+	not; and `size` is a table of width, height, and split position integers.
 
 <a id="ui.goto_file"></a>
 ### `ui.goto_file`(*filename*[, *split*=false[, *preferred_view*[, *sloppy*=false]]])

@@ -55,6 +55,20 @@ test('view.split should split the current view in two', function()
 	test.assert_equal(_VIEWS[new], 2)
 end)
 
+test('view.split should split the current view into roughly equal halves', function()
+	view:split(true)
+	view:split()
+
+	test.wait(function()
+		local size = ui.get_split_table().size
+		local half_width, split_pos = size[1] / 2, size[3]
+		return math.abs(half_width - split_pos) / half_width < 0.1
+	end)
+	local size = ui.get_split_table()[2].size
+	local half_height, split_pos = size[2] / 2, size[3]
+	test.assert(math.abs(half_height - split_pos) / half_height < 0.1, 'split sizes are unequal')
+end)
+
 test('view.split should preserve buffer state', function()
 	buffer:append_text(test.lines(100))
 	buffer:set_sel(buffer:position_from_line(50), buffer.line_end_position[50])

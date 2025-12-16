@@ -181,11 +181,13 @@ Pane *get_top_pane() {
 }
 
 PaneInfo get_pane_info(Pane *pane_) {
-	auto pane = qobject_cast<QSplitter *>(static_cast<QWidget *>(pane_));
-	PaneInfo info{pane != nullptr, false, pane_, pane_, nullptr, nullptr, 0};
+	auto pane_or_view = static_cast<QWidget *>(pane_);
+	auto pane = qobject_cast<QSplitter *>(pane_or_view);
+	PaneInfo info{pane != nullptr, false, pane_, pane_, nullptr, nullptr,
+		pane_or_view->size().width(), pane_or_view->size().height(), 0};
 	if (info.is_split)
 		info.vertical = pane->orientation() == Qt::Horizontal, info.child1 = pane->widget(0),
-		info.child2 = pane->widget(1), info.size = pane->sizes().front();
+		info.child2 = pane->widget(1), info.split_pos = pane->sizes().front();
 	return info;
 }
 
@@ -195,10 +197,10 @@ PaneInfo get_parent_pane_info(PaneInfo info) {
 
 PaneInfo get_pane_info_from_view(SciObject *view) { return get_pane_info(SCI(view)->parent()); }
 
-void set_pane_size(Pane *pane_, int size) {
+void set_pane_split_pos(Pane *pane_, int pos) {
 	auto pane = static_cast<QSplitter *>(pane_);
 	int max = pane->orientation() == Qt::Horizontal ? pane->width() : pane->height();
-	pane->setSizes(QList<int>{size, max - size - pane->handleWidth()});
+	pane->setSizes(QList<int>{pos, max - pos - pane->handleWidth()});
 }
 
 void show_tabs(bool show) { ta->ui->tabFrame->setVisible(show); }

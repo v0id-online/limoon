@@ -1620,3 +1620,14 @@ Textadept is composed of the following technologies:
 [iconv]: https://www.gnu.org/software/libiconv
 [SingleApplication]: https://github.com/itay-grudev/SingleApplication
 [reproc]: https://github.com/DaanDeMeyer/reproc
+
+### Migrating  from Textadept 12 to 13
+
+#### API Changes
+
+Old API | Change | New API
+-|:-:|-
+**ui**||
+[get_split_table()] | Changed | `size` field is now a {width, height, split pos} table
+
+[get_split_table()]: api.html#ui.get_split_table

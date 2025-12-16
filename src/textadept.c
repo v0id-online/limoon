@@ -620,7 +620,9 @@ static void lua_pushsplit(lua_State *L, Pane *pane) {
 		lua_pushsplit(L, info.child1), lua_rawseti(L, -2, 1);
 		lua_pushsplit(L, info.child2), lua_rawseti(L, -2, 2);
 		lua_pushboolean(L, info.vertical), lua_setfield(L, -2, "vertical");
-		lua_pushinteger(L, info.size), lua_setfield(L, -2, "size");
+		lua_newtable(L), lua_pushnumber(L, info.width), lua_rawseti(L, -2, 1),
+			lua_pushnumber(L, info.height), lua_rawseti(L, -2, 2), lua_pushnumber(L, info.split_pos),
+			lua_rawseti(L, -2, 3), lua_setfield(L, -2, "size");
 	} else
 		lua_pushview(L, info.view);
 }
@@ -1155,7 +1157,7 @@ static int view_index(lua_State *L) {
 	if (strcmp(lua_tostring(L, 2), "size") == 0 || strcmp(lua_tostring(L, 2), "parent_size") == 0) {
 		PaneInfo info = get_pane_info_from_view(lua_toview(L, 1));
 		if (*lua_tostring(L, 2) == 'p' && info.is_split) info = get_parent_pane_info(info);
-		return (info.is_split ? lua_pushinteger(L, info.size) : lua_pushnil(L), 1);
+		return (info.is_split ? lua_pushinteger(L, info.split_pos) : lua_pushnil(L), 1);
 	}
 	if (lua_getglobal(L, "_SCINTILLA"), lua_pushvalue(L, 2), lua_rawget(L, -2)) {
 		if (lua_type(L, -1) != LUA_TTABLE) return 1; // constant or function
@@ -1176,7 +1178,7 @@ static int view_newindex(lua_State *L) {
 	if (strcmp(lua_tostring(L, 2), "size") == 0 || strcmp(lua_tostring(L, 2), "parent_size") == 0) {
 		PaneInfo info = get_pane_info_from_view(lua_toview(L, 1));
 		if (*lua_tostring(L, 2) == 'p' && info.is_split) info = get_parent_pane_info(info);
-		if (info.is_split) set_pane_size(info.self, fmax(luaL_checkinteger(L, 3), 0));
+		if (info.is_split) set_pane_split_pos(info.self, fmax(luaL_checkinteger(L, 3), 0));
 		return 0;
 	}
 	// If the key is a Scintilla property (more than 4 iface values), call Scintilla to set its value.

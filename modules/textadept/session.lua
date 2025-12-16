@@ -169,7 +169,7 @@ function M.save(filename)
 	-- Serialize views.
 	local function save_split(split)
 		return split.buffer and _BUFFERS[split.buffer] or
-			{save_split(split[1]), save_split(split[2]), vertical = split.vertical, size = split.size}
+			{save_split(split[1]), save_split(split[2]), vertical = split.vertical, size = split.size[3]}
 	end
 	session.views = {save_split(ui.get_split_table()), current = _VIEWS[view]}
 
