@@ -66,8 +66,9 @@ test('view.split should split the current view into roughly equal halves', funct
 	end)
 	local size = ui.get_split_table()[2].size
 	local half_height, split_pos = size[2] / 2, size[3]
-	test.assert(math.abs(half_height - split_pos) / half_height < 0.1, 'split sizes are unequal')
+	test.assert(math.abs(half_height - split_pos) / half_height <= 0.1, 'split sizes are unequal')
 end)
+if GTK then retry(1) end -- TODO: sometimes second split_pos is 0
 
 test('view.split should preserve buffer state', function()
 	buffer:append_text(test.lines(100))

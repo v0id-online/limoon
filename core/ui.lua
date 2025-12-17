@@ -375,7 +375,7 @@ if CURSES then
 			else
 				resize = function(y2, x2)
 					local i = getmetatable(view[1]) == getmetatable(_G.view) and 1 or 2
-					view[i].split_pos = view.split_pos + (view.vertical and x2 - x or y2 - y)
+					view[i].split_pos = view.size[3] + (view.vertical and x2 - x or y2 - y)
 				end
 			end
 		elseif resize then
