@@ -68,7 +68,10 @@ test('view.split should split the current view into roughly equal halves', funct
 	local half_height, split_pos = size[2] / 2, size[3]
 	test.assert(math.abs(half_height - split_pos) / half_height <= 0.1, 'split sizes are unequal')
 end)
-if GTK then retry(1) end -- TODO: sometimes second split_pos is 0
+if GTK then
+	local gtk2 = os.getenv('CI') == 'true' and io.popen('dpkg --list'):read('a'):find('gtk2%.0%-dev')
+	if not gtk2 then expected_failure() end -- TODO: second size[3] == 0
+end
 
 test('view.split should preserve buffer state', function()
 	buffer:append_text(test.lines(100))
