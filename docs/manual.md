@@ -1636,3 +1636,20 @@ parent_size | Renamed | [parent_split_pos][]
 [get_split_table()]: api.html#ui.get_split_table
 [split_pos]: api.html#view.split_pos
 [parent_split_pos]: api.html#view.parent_split_pos
+
+#### Lua 5.5 Changes
+
+Textadept 13 uses Lua 5.5, which has some incompatibilities compared to Textadept 12's Lua 5.4:
+
+- The word `global` is a reserved word. Do not use it as a regular name.
+- The control variable in for loops is read only. If you need to change it, declare a local
+	variable with the same name in the loop body.
+- A chain of `__call` metamethods can have at most 15 objects.
+- In an error, a `nil` as the error object is replaced by a string message.
+
+You may need to update your *~/.textadept/init.lua* or any custom modules, particularly if your
+loops modify control variables.
+
+See [this page][] for more details on incompatibilities between Lua 5.4 and 5.5.
+
+[this page]: https://lua.org/manual/5.5/manual.html#8
