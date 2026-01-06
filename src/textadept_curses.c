@@ -432,7 +432,7 @@ void set_command_entry_height(int height) {
 	wresize(win, height, COLS - label_width), mvwin(win, LINES - statusbar - height, label_width);
 }
 
-bool is_statusbar_visible() { return statusbar; }
+bool is_statusbar_visible(void) { return statusbar; }
 
 void set_statusbar_visible(bool visible) {
 	statusbar = visible;

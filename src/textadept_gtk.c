@@ -444,7 +444,7 @@ void set_command_entry_height(int height) {
 	gtk_paned_set_position(GTK_PANED(paned), allocation.height - height);
 }
 
-bool is_statusbar_visible() { return gtk_widget_get_visible(statusbar_box); }
+bool is_statusbar_visible(void) { return gtk_widget_get_visible(statusbar_box); }
 void set_statusbar_visible(bool visible) { gtk_widget_set_visible(statusbar_box, visible); }
 const char *get_statusbar_text(int i) { return gtk_label_get_text(GTK_LABEL(statusbar[i])); }
 void set_statusbar_text(int i, const char *s) { gtk_label_set_text(GTK_LABEL(statusbar[i]), s); }
