@@ -1,4 +1,4 @@
--- Copyright 2007-2025 Mitchell. See LICENSE.
+-- Copyright 2007-2026 Mitchell. See LICENSE.
 
 --- Utilities for interacting with Textadept's user interface.
 -- @module ui

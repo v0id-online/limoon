@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 test('editing.toggle_comment should comment out the current line', function()
 	local comment_char = '#'

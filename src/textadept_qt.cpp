@@ -1,4 +1,4 @@
-// Copyright 2022-2025 Mitchell. See LICENSE.
+// Copyright 2022-2026 Mitchell. See LICENSE.
 // Qt platform for Textadept.
 
 extern "C" {

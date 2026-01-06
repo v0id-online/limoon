@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 test('ui.print_to should print to a typed buffer in the current view if ui.tabs is enabled',
 	function()

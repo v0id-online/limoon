@@ -1,4 +1,4 @@
--- Copyright 2007-2025 Mitchell. See LICENSE.
+-- Copyright 2007-2026 Mitchell. See LICENSE.
 
 -- Scintilla constants, functions, and properties.
 -- Do not modify anything in this module. Doing so will have unpredictable consequences.

@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 test('view.goto_buffer should switch to a given buffer', function()
 	buffer.new()

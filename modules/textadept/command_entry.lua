@@ -1,4 +1,4 @@
--- Copyright 2007-2025 Mitchell. See LICENSE.
+-- Copyright 2007-2026 Mitchell. See LICENSE.
 -- Abbreviated environment and commands from Jay Gould.
 
 --- Textadept's Command Entry.

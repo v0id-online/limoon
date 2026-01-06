@@ -1,4 +1,4 @@
--- Copyright 2007-2025 Mitchell. See LICENSE.
+-- Copyright 2007-2026 Mitchell. See LICENSE.
 
 --- Defines key bindings for Textadept.
 -- This set of key bindings is pretty standard among other text editors, at least for basic

@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 test('test.assert_equal should assert two values are equal', function()
 	local equal = pcall(test.assert_equal, 'foo', 'foo')

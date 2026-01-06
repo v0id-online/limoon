@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 test('io.open_file should open a file and set it up for editing', function()
 	local contents = 'text'

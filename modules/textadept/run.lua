@@ -1,4 +1,4 @@
--- Copyright 2007-2025 Mitchell. See LICENSE.
+-- Copyright 2007-2026 Mitchell. See LICENSE.
 
 --- Execute compile, run, build, test, and project shell commands with Textadept.
 -- The editor prompts you with/for shell commands to run, prints output in real-time, and marks

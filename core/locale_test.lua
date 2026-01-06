@@ -1,4 +1,4 @@
--- Copyright 2020-2025 Mitchell. See LICENSE.
+-- Copyright 2020-2026 Mitchell. See LICENSE.
 
 --- Load localizations from a locale file and return them in a table.
 -- @param locale_conf String path to a local file to load.
