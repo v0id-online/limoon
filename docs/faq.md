@@ -41,6 +41,21 @@ contains characters outside the system's encoding. You can try the following as 
 - - -
 
 **Q:**
+
+On my Windows HiDPI display at fractional scaling (e.g. 125% or 150%), Textadept does not render
+text lines correctly. How do I fix it?
+
+**A:**
+
+Either use integer scaling (e.g. 200%), or instruct Windows to take over font rendering for
+the application: right-click on the Textadept executable and select "Properties"; click on the
+"Compatibility" tab and then the "Change high DPI settings" button; and check the "Override high
+DPI scaling" checkbox towards the bottom of the pop-up dialog. The next time you run Textadept,
+things should look better.
+
+- - -
+
+**Q:**
 Why doesn't middle-clicking in the terminal version on Linux paste the primary selection? Why
 doesn't selecting text copy to the primary selection?
 
