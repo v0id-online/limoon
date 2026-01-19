@@ -270,6 +270,10 @@ local default_menubar = {
 		{_L['Replace All'], ui.find.replace_all},
 		{_L['Find Incremental'], function() ui.find.focus{incremental = true} end}, --
 		SEPARATOR, --
+		{_L['Toggle Match Case'], function() ui.find.match_case = not ui.find.match_case end},
+		{_L['Toggle Whole Word'], function() ui.find.whole_word = not ui.find.whole_word end},
+		{_L['Toggle Regex'], function() ui.find.regex = not ui.find.regex end}, --
+		SEPARATOR, --
 		{_L['Find in Files'], function() ui.find.focus{in_files = true} end},
 		{_L['Go To Next File Found'], function() ui.find.goto_file_found(true) end},
 		{_L['Go To Previous File Found'], function() ui.find.goto_file_found(false) end}, --
