@@ -91,6 +91,9 @@
 -- None | None | None | Replace
 -- None | None | None | Replace all
 -- Ctrl+Alt+F | ^⌘F | M-F | Find incremental
+-- None | ⌥⌘M | None | Toggle Match Case
+-- None | ⌥⌘W | None | Toggle Whole Word
+-- None | ⌥⌘X | None | Toggle Regex
 -- Ctrl+Shift+F | ⌘⇧F | M-^F | Find in files
 -- Ctrl+Alt+G | ^⌘G | M-G | Go to next file found
 -- Ctrl+Alt+Shift+G | ^⌘⇧G | M-S-G | Go to previous file found
@@ -392,6 +395,9 @@ keys.assign_platform_bindings{
 	-- Replace is alt+r when find pane is focused in GUI.
 	-- Replace All is alt+a when find pane is focused in GUI.
 	[m('Search/Find Incremental')] = {'ctrl+alt+f', 'ctrl+cmd+f', 'meta+f'},
+	[m('Search/Toggle Match Case')] = {nil, 'alt+cmd+m', nil},
+	[m('Search/Toggle Whole Word')] = {nil, 'alt+cmd+w', nil},
+	[m('Search/Toggle Regex')] = {nil, 'alt+cmd+x', nil},
 	[m('Search/Find in Files')] = {'ctrl+F', 'cmd+F', {'ctrl+meta+f', 'ctrl+meta+F'}},
 	-- Find in Files is alt+i when find pane is focused in GUI.
 	[m('Search/Go To Next File Found')] = {'ctrl+alt+g', 'ctrl+cmd+g', 'meta+g'},

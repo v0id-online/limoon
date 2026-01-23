@@ -457,8 +457,9 @@ In the GUI version:
 	respectively.
 - Perform "Replace" and "Replace All" in the "Replace" entry via `Enter` and `Shift+Enter`,
 	respectively.
-- For at least the English locale on Windows and Linux/BSD, toggle the find options using their
-	button mnemonics: `Alt+M`, `Alt+W`, `Alt+X`, `Alt+I`.
+- For at least the English locale on Windows and Linux/BSD, toggle the find options using
+	their button mnemonics: `Alt+M`, `Alt+W`, `Alt+X`, `Alt+I`. On macOS, use `⌥⌘M`,
+	`⌥⌘W`, and `⌥⌘X` instead.
 - Cycle through find/replace history via `Up` and `Down` on Windows, Linux, BSD, and the terminal
 	version; and `⇡` and `⇣` on macOS.
 - Dismiss the pane via `Esc`.

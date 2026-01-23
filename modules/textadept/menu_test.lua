@@ -156,6 +156,18 @@ test('Search > Find Incremental should start incremental search', function()
 	test.assert_equal(find_focus.args[1].incremental, true)
 end)
 
+for _, option in ipairs{'Match Case', 'Whole Word', 'Regex'} do
+	test('Search > Toggle ' .. option .. ' should toggle that find option', function()
+		local option_key = option:lower():gsub(' ', '_')
+		local default = ui.find[option_key]
+		local _<close> = test.defer(function() ui.find[option_key] = default end)
+
+		click('Search/Toggle ' .. option)
+
+		test.assert_equal(ui.find[option_key], not default)
+	end)
+end
+
 test('Search > Find in Files should start searching in files', function()
 	local find_focus = test.stub()
 	local _<close> = test.mock(ui.find, 'focus', find_focus)
