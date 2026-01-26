@@ -130,8 +130,8 @@
 -- Ctrl+Shift+H | ⌘⇧H | M-S-H | Show typed keys in statusbar
 -- None | None | None | Show style
 -- **Buffer**| | |
--- Ctrl+Tab<br/>Ctrl+PgDn | ^⇥<br/>⌘⇟ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
--- Ctrl+Shift+Tab<br/>Ctrl+PgUp | ^⇧⇥<br/>⌘⇞ | M-PgUp<br/>S-^Tab<sup>d</sup> | Previous buffer
+-- Ctrl+Tab<br/>Ctrl+PgDn | ⌘}<br/>^⇥ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
+-- Ctrl+Shift+Tab<br/>Ctrl+PgUp | ⌘{<br/>^⇧⇥ | M-PgUp<br/>S-^Tab<sup>d</sup> | Previous buffer
 -- Ctrl+B | ⌘B | ^B | Switch to buffer...
 -- None | None | None | Tab width: 2
 -- None | None | None | Tab width: 3
@@ -443,9 +443,9 @@ keys.assign_platform_bindings{
 	
 	-- Buffer.
 	[m('Buffer/Next Buffer')] = {
-		{'ctrl+\t', 'ctrl+pgdn'}, {'ctrl+\t', 'cmd+pgdn'}, WIN32 and 'ctrl+\t' or 'meta+pgdn'
+		{'ctrl+\t', 'ctrl+pgdn'}, {'cmd+}', 'ctrl+\t'}, WIN32 and 'ctrl+\t' or 'meta+pgdn'
 	}, [m('Buffer/Previous Buffer')] = {
-		{'ctrl+shift+\t', 'ctrl+pgup'}, {'ctrl+shift+\t', 'cmd+pgup'},
+		{'ctrl+shift+\t', 'ctrl+pgup'}, {'cmd+{', 'ctrl+shift+\t'},
 		WIN32 and 'ctrl+shift+\t' or 'meta+pgup'
 	}, [ui.switch_buffer] = {'ctrl+b', 'cmd+b', 'ctrl+b'},
 	-- Indentation.

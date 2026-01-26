@@ -383,9 +383,9 @@ ui.tabs = false
 
 [`ui.tabs`]: api.html#ui.tabs
 
-Cycle to the next buffer via `Ctrl+Tab` or `Ctrl+PgDn` on Windows and Linux/BSD, `^⇥` or
-`⌘⇟`on macOS, and `M-PgDn` in the terminal version. Cycle to the previous buffer via
-`Ctrl+Shift+Tab` or `Ctrl+PgUp`, `^⇧⇥` or `⌘⇞`, and `M-PgUp`.
+Cycle to the next buffer via `Ctrl+Tab` or `Ctrl+PgDn` on Windows and Linux/BSD, `^⇥` or `⌘}`
+on macOS, and `M-PgDn` in the terminal version. Cycle to the previous buffer via `Ctrl+Shift+Tab`
+or `Ctrl+PgUp`, `^⇧⇥` or `⌘{`, and `M-PgUp`.
 
 Textadept's tabs are also accessible in the form of a searchable dialog via `Ctrl+B` on Windows
 and Linux/BSD, `⌘B` on macOS, and `^B` in the terminal version. (Despite the fact that the
