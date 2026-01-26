@@ -1114,7 +1114,7 @@ Many of Textadept's lexers can identify blocks of code and mark their fold point
 left-hand margin.
 
 - Toggle the visibility of a code block by clicking on its marker, or toggle the visibility
-	of the current block via `Ctrl+}` on Windows and Linux/BSD, `⌘}` on macOS, and `M-}` in the
+	of the current block via `Ctrl+)` on Windows and Linux/BSD, `⌘)` on macOS, and `M-)` in the
 	terminal version.
 - Use the "View > Code Folding" submenu to manipulate folds.
 - Turn off/on code folding for a buffer using the "Buffer > Toggle Code Folding" menu item.

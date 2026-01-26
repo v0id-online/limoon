@@ -157,7 +157,7 @@
 -- Ctrl+Alt+Shift+W | ^⌘⇧W | M-S-W | Unsplit all views
 -- Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 -- Ctrl+Alt+- | ^⌘- | M-- | Shrink view
--- Ctrl+} | ⌘} | M-} | Toggle current fold
+-- Ctrl+) | ⌘) | M-) | Toggle current fold
 -- None | None | None | Toggle Level 1 Folds
 -- None | None | None | Toggle Level 2 Folds
 -- None | None | None | Toggle Level 3 Folds
@@ -270,14 +270,14 @@
 -- Windows, Linux, and BSD key bindings.
 --
 -- Unassigned keys:
--- ctrl:  EGhiIJNQtY_(){;:'",<.>?\s
+-- ctrl:  EGhiIJNQtY_({};:'",<.>?\s
 -- alt: -_=+)]}\|;:/?\s\n
 -- ctrl+alt: aAbBcCDFHiIjJlLmMnNoOpPqQsSTUvVxXyYzZ()[]{}\;:'",<.>/?\s\t\n
 --
 -- macOS key bindings.
 --
 -- Unassigned keys:
--- cmd:  EGhiIJNQtY_(){;:'"<.>?\s
+-- cmd:  EGhiIJNQtY_(;:'"<.>?\s
 -- ctrl: cCDgGHiIjJKLmMoOqQrRsStTuUvVwWxXyYzZ-_=+)]}\|;:/?\s
 -- ctrl+cmd: aAbBcCDFHiIjJlLmMnNoOpPqQsSTUvVxXyYzZ()[]{}\;:'",<.>/?\s\t\n
 --
@@ -296,7 +296,7 @@
 --
 -- Unassigned keys:
 -- ctrl: t\s
--- meta: aAbBcCDiIjJlLMnNoOpPQUvVxXyYzZ);:?\s
+-- meta: aAbBcCDiIjJlLMnNoOpPQUvVxXyYzZ};:?\s
 -- ctrl+meta:  eghijnqy_]\^
 --
 -- Note: meta+[befhstv] may be used by Linux/BSD GUI terminals for menu access.
@@ -479,7 +479,7 @@ keys.assign_platform_bindings{
 	[m('View/Grow View')] = {
 		{'ctrl+alt++', 'ctrl+alt+='}, {'ctrl+cmd++', 'ctrl+cmd+='}, {'meta++', 'meta+='}
 	}, [m('View/Shrink View')] = {'ctrl+alt+-', 'ctrl+cmd+-', 'meta+-'},
-	[m('View/Code Folding/Toggle Current Fold')] = {'ctrl+}', 'cmd+}', 'meta+}'},
+	[m('View/Code Folding/Toggle Current Fold')] = {'ctrl+)', 'cmd+)', 'meta+)'},
 	-- TODO: m('View/Code Folding/Toggle Level 1 Folds')
 	-- TODO: m('View/Code Folding/Toggle Level 2 Folds')
 	-- TODO: m('View/Code Folding/Toggle Level 3 Folds')
