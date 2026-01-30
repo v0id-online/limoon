@@ -1,4 +1,4 @@
-# Textadept 13.0 nightly API Documentation
+# Textadept 13.0 alpha 2 API Documentation
 
 1. [_G](#_G)
 2. [_L](#_L)
@@ -7966,6 +7966,9 @@ None | None | None | Find previous
 None | None | None | Replace
 None | None | None | Replace all
 Ctrl+Alt+F | ^⌘F | M-F | Find incremental
+None | ⌥⌘M | None | Toggle Match Case
+None | ⌥⌘W | None | Toggle Whole Word
+None | ⌥⌘X | None | Toggle Regex
 Ctrl+Shift+F | ⌘⇧F | M-^F | Find in files
 Ctrl+Alt+G | ^⌘G | M-G | Go to next file found
 Ctrl+Alt+Shift+G | ^⌘⇧G | M-S-G | Go to previous file found
@@ -8002,8 +8005,8 @@ None | None | None | Complete trigger word
 Ctrl+Shift+H | ⌘⇧H | M-S-H | Show typed keys in statusbar
 None | None | None | Show style
 **Buffer**| | |
-Ctrl+Tab<br/>Ctrl+PgDn | ^⇥<br/>⌘⇟ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
-Ctrl+Shift+Tab<br/>Ctrl+PgUp | ^⇧⇥<br/>⌘⇞ | M-PgUp<br/>S-^Tab<sup>d</sup> | Previous buffer
+Ctrl+Tab<br/>Ctrl+PgDn | ⌘}<br/>^⇥ | M-PgDn<br/> ^Tab<sup>d</sup> | Next buffer
+Ctrl+Shift+Tab<br/>Ctrl+PgUp | ⌘{<br/>^⇧⇥ | M-PgUp<br/>S-^Tab<sup>d</sup> | Previous buffer
 Ctrl+B | ⌘B | ^B | Switch to buffer...
 None | None | None | Tab width: 2
 None | None | None | Tab width: 3
@@ -8029,7 +8032,7 @@ Ctrl+Alt+W | ^⌘W | M-W | Unsplit view
 Ctrl+Alt+Shift+W | ^⌘⇧W | M-S-W | Unsplit all views
 Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 Ctrl+Alt+- | ^⌘- | M-- | Shrink view
-Ctrl+} | ⌘} | M-} | Toggle current fold
+Ctrl+) | ⌘) | M-) | Toggle current fold
 None | None | None | Toggle Level 1 Folds
 None | None | None | Toggle Level 2 Folds
 None | None | None | Toggle Level 3 Folds
