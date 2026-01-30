@@ -1622,7 +1622,7 @@ Textadept is composed of the following technologies:
 [SingleApplication]: https://github.com/itay-grudev/SingleApplication
 [reproc]: https://github.com/DaanDeMeyer/reproc
 
-### Migrating  from Textadept 12 to 13
+### Migrating from Textadept 12 to 13
 
 #### API Changes
 
