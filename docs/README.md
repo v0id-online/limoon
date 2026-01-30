@@ -145,8 +145,8 @@ Compiling Textadept from source requires the following:
 
 - [CMake][] 3.22+
 - A C and C++ compiler, such as:
-	- [GNU C compiler][] (*gcc*) 7.1+
-	- [Microsoft Visual Studio][] 2019+
+	- [GNU C compiler][] (*gcc*) 8.1+
+	- [Microsoft Visual Studio][] 2019 (16.8)+
 	- [Clang][] 13+
 - A UI toolkit (at least one of the following):
 	- [Qt][] 5.15+ development libraries for the GUI version
