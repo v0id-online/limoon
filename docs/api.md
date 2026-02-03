@@ -8024,8 +8024,8 @@ None | None | None | Toggle Tab Bar
 None | None | None | Toggle Code Folding
 Ctrl+Shift+L | ⌘⇧L | M-^L | Select lexer...
 **View**| | |
-Ctrl+Alt+PgDn | ^⌘⇟ | M-^PgDn<br/>M-PgUp<sup>d</sup> | Next view
-Ctrl+Alt+PgUp | ^⌘⇞ | M-^PgUp<br/>M-PgDn<sup>d</sup> | Previous view
+Ctrl+Alt+PgDn | ^⌘}<br/>^⌘⇟ | M-^PgDn<br/>M-PgUp<sup>d</sup> | Next view
+Ctrl+Alt+PgUp | ^⌘{<br/>^⌘⇞ | M-^PgUp<br/>M-PgDn<sup>d</sup> | Previous view
 Ctrl+Alt+_ | ^⌘_ | M-_ | Split view horizontal
 Ctrl+Alt+&#124; | ^⌘&#124; | M-&#124; | Split view vertical
 Ctrl+Alt+W | ^⌘W | M-W | Unsplit view

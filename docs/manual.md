@@ -422,10 +422,10 @@ separates them. Right-clicking inside a view brings up a context menu.
 	`^⌘_` on macOS, and `M-_` in the terminal version.
 - Split a view vertically into side-by-side views via `Ctrl+Alt+|` on Windows and Linux/BSD,
 	`^⌘|` on macOS, and `M-|` in the terminal version.
-- Cycle to the next split view via `Ctrl+Alt+PgDn` on Windows and Linux/BSD, `^⌘⇟`
+- Cycle to the next split view via `Ctrl+Alt+PgDn` on Windows and Linux/BSD, `^⌘}` or `^⌘⇟`
 	on macOS, and `M-^PgDn` in the terminal version.
-- Cycle to the previous split view via `Ctrl+Alt+PgUp` on Windows and Linux/BSD, `^⌘⇞`
-	on macOS, and `M-^PgUp` in the terminal version.
+- Cycle to the previous split view via `Ctrl+Alt+PgUp` on Windows and Linux/BSD, `^⌘{` or
+ `^⌘⇞` on macOS, and `M-^PgUp` in the terminal version.
 - Grow or shrink a view via `Ctrl+Alt++` or `Ctrl+Alt+-`, respectively, on Windows and Linux/BSD;
 	`^⌘+` or `^⌘-`, respectively, on macOS; and `M-+` or `M--` in the terminal version.
 - Unsplit the current view by removing its complement view(s) via `Ctrl+Alt+W` on Windows and
