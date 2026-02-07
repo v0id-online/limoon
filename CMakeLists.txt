@@ -32,6 +32,8 @@ if(NOT WIN32)
 	# Note: can use if(LINUX) in CMake 3.25.
 	if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
 		set(CURSES_NEED_WIDE TRUE)
+	elseif(NOT APPLE)
+		set(BSD TRUE) # note: not needed in CMake 3.25
 	endif()
 	find_package(Curses)
 endif()
@@ -164,7 +166,11 @@ if(CURSES)
 	target_include_directories(scintilla_curses
 		PUBLIC ${scinterm_SOURCE_DIR}
 		PRIVATE ${scintilla_SOURCE_DIR}/src ${CURSES_INCLUDE_DIRS})
-	target_compile_definitions(scintilla_curses PUBLIC CURSES)
+	# Note: macOS and BSD need _XOPEN_SOURCE_EXTENDED for NCURSES_WIDECHAR.
+	target_compile_definitions(scintilla_curses
+		PUBLIC CURSES
+		PRIVATE $<IF:$<BOOL:${WIN32}>,PDC_WIDE,
+			$<IF:$<OR:$<BOOL:${APPLE}>,$<BOOL:${BSD}>>,_XOPEN_SOURCE_EXTENDED,>>)
 	target_compile_options(scintilla_curses PRIVATE $<IF:$<NOT:$<BOOL:${WIN32}>>,-pedantic -Wall,/W4>)
 	target_link_directories(scintilla_curses PRIVATE ${CURSES_LIBRARY_DIRS})
 	target_link_libraries(scintilla_curses PUBLIC scintilla PRIVATE ${CURSES_LIBRARIES})
