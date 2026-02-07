@@ -679,6 +679,7 @@ jobs:
 
       - name: Run luacheck
         run: |
+          set +e
           output=$(luacheck . | grep -v E011) # ignore syntax errors due to Lua 5.5's vararg params
           echo $output
           if [[ ! -z "$output" ]]; then exit 1; fi
