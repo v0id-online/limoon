@@ -462,8 +462,8 @@ static void update(double percent, const char *text, void *dialog_) {
 
 int progress_dialog(
 	DialogOptions opts, lua_State *L, bool (*work)(void (*)(double, const char *, void *), void *)) {
-	QProgressDialog dialog{opts.title ? opts.title : "", opts.buttons[0], 0, 100};
-	dialog.setWindowModality(Qt::WindowModal), dialog.setMinimumDuration(0);
+	QProgressDialog dialog{opts.title ? opts.title : "", opts.buttons[0], 0, 100, ta};
+	dialog.setModal(true), dialog.setMinimumDuration(0);
 	while (work(update, &dialog))
 		if (QApplication::processEvents(), dialog.wasCanceled()) break;
 	return dialog.wasCanceled() ? (lua_pushboolean(L, true), 1) : 0;
