@@ -2,6 +2,9 @@
 // Qt platform for Textadept.
 
 #include "ui_textadept_qt.h"
+#if __APPLE__
+#include "textadept_qt_mac.h"
+#endif
 
 namespace Ui {
 class Textadept;

@@ -264,7 +264,8 @@ set(ta_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${A
 
 # Textadept Qt.
 if(QT)
-	add_library(textadept_qt OBJECT src/textadept_qt.cpp src/textadept_qt.ui)
+	add_library(textadept_qt OBJECT
+		src/textadept_qt.cpp src/textadept_qt.ui $<$<BOOL:${APPLE}>:src/textadept_qt_mac.mm>)
 	target_compile_definitions(textadept_qt PRIVATE QT_NO_KEYWORDS)
 	target_compile_options(textadept_qt PRIVATE ${ta_compile_opts})
 	target_link_libraries(textadept_qt PRIVATE scintilla_qt lua ${qt_libraries}

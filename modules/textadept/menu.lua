@@ -435,6 +435,11 @@ local default_menubar = {
 		}
 	}
 }
+if QT and OSX then
+	-- Note: do not localize "Window" since it's hardcoded until Qt supports it natively.
+	table.insert(default_menubar, #default_menubar,
+		{title = 'Window', {_L['Zoom'], function() ui.maximized = not ui.maximized end}})
+end
 
 --- The default right-click context menu.
 -- @usage table.insert(textadept.menu.context_menu, {'Label', function() ... end})

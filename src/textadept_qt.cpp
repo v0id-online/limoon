@@ -343,6 +343,9 @@ void set_menubar(lua_State *L, int index) {
 	for (size_t i = 1; i <= lua_rawlen(L, index); lua_pop(L, 1), i++) {
 		auto menu = static_cast<QMenu *>(lua_rawgeti(L, index, i), lua_touserdata(L, -1));
 		ta->menuBar()->addMenu(menu); // menubar does not take ownership
+#if __APPLE__
+		if (menu->title() == "Window") setWindowsMenu(menu->toNSMenu());
+#endif
 		// Qt 5 on Wayland needs to mark top-level menus as popups.
 		QObject::connect(menu, &QMenu::aboutToShow, ta->menuBar(), [menu]() {
 			if (QWindow *handle = menu->windowHandle(); handle)
