@@ -219,7 +219,10 @@ void move_tab(int from, int to) {
 	ta->ui->tabbar->moveTab(from, to);
 }
 
-void remove_tab(int index) { ta->ui->tabbar->removeTab(index); }
+void remove_tab(int index) {
+	QSignalBlocker blocker{ta->ui->tabbar}; // prevent currentChanged
+	ta->ui->tabbar->removeTab(index);
+}
 
 const char *get_find_text() {
 	static std::string text;

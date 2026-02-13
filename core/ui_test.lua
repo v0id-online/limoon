@@ -323,6 +323,17 @@ test("clicking a buffer's tab should switch to that buffer", function()
 	test.assert_equal(_BUFFERS[buffer], 1)
 end)
 
+test("closing a buffer should not result in clicking on another tab", function()
+	local tab_clicked = test.stub()
+	local _<close> = test.connect(events.TAB_CLICKED, tab_clicked)
+
+	buffer.new()
+	view:goto_buffer(-1)
+	buffer:close()
+
+	test.assert(not tab_clicked.called, 'events.TAB_CLICKED was emitted')
+end)
+
 test("clicking a buffer's tab close button should close that buffer", function()
 	buffer.new()
 	local contents = 'text'
