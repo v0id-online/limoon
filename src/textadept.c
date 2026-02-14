@@ -818,6 +818,7 @@ static int reset(lua_State *L) {
 // Platforms should repeatedly call this function when the timeout interval has passed for as
 // long as it returns true.
 static bool call_timeout_function(int *refs) {
+	if (!lua) return false; // quitting
 	int nargs = 0;
 	lua_rawgeti(lua, LUA_REGISTRYINDEX, refs[0]); // function
 	while (refs[++nargs]) lua_rawgeti(lua, LUA_REGISTRYINDEX, refs[nargs]);
