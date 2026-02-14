@@ -77,6 +77,24 @@ test('sessions should save open buffers and their states', function()
 	test.assert_equal(view.first_visible_line, first_visible_line)
 end)
 
+test('sessions should save folded line state', function()
+	local sf<close> = test.tmpfile()
+	local _<close> = test.tmpfile('.lua', test.lines{
+		'-- Comment', --
+		'for i = 1, 3 do', --
+		'\tprint(i)', --
+		'end'
+	}, true)
+	buffer:colorize(1, -1)
+	buffer:toggle_fold(2)
+
+	textadept.session.save(sf.filename)
+	buffer:close()
+	textadept.session.load(sf.filename)
+
+	test.assert_equal(2, view:contracted_fold_next(1))
+end)
+
 test('sessions should save bookmarks', function()
 	local sf<close> = test.tmpfile()
 	local _<close> = test.tmpfile(true)

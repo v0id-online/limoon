@@ -63,6 +63,10 @@ function M.load(filename)
 		io.open_file(buf.filename)
 		if not buf.selection then buf.selection = buf.anchor - 1 .. '-' .. buf.current_pos - 1 end
 		buffer.selection_serialized, view.first_visible_line = buf.selection, buf.top_line
+		if buf.folds and #buf.folds > 0 then buffer:colorize(1, -1) end
+		for _, line in ipairs(buf.folds or {}) do
+			if buffer.fold_level[line] & buffer.FOLDLEVELHEADERFLAG > 0 then view:toggle_fold(line) end
+		end
 		for _, line in ipairs(buf.bookmarks) do buffer:marker_add(line, MARK_BOOKMARK) end
 		::continue::
 	end
@@ -152,6 +156,12 @@ function M.save(filename)
 			selection = current and buffer.selection_serialized or buffer._selection or '0',
 			top_line = current and view.first_visible_line or buffer._top_line or 1
 		}
+		local folds = not current and buffer._folds or {}
+		if current then
+			local i = view:contracted_fold_next(1)
+			while i >= 1 do folds[#folds + 1], i = i, view:contracted_fold_next(i + 1) end
+		end
+		session.buffers[#session.buffers].folds = folds
 		local bookmarks = {}
 		local BOOKMARK_BIT = 1 << textadept.bookmarks.MARK_BOOKMARK - 1
 		local line = buffer:marker_next(1, BOOKMARK_BIT)
