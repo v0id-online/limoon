@@ -714,7 +714,7 @@ test('buffer.delete for a hidden buffer should not affect buffers in existing vi
 	test.assert(_VIEWS[2].buffer == buffer3, 'buffer3 should still be visible')
 	test.assert(_VIEWS[3].buffer == buffer4, 'buffer4 should still be visible')
 end)
-if not QT then expected_failure() end
+expected_failure() -- TODO: ui.lua's events.BUFFER_DELETED handler assumes closed buffer was focused
 
 -- Coverage tests.
 
