@@ -40,7 +40,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `is_maximized` | implementado |
 | `set_maximized` | implementado |
 | `get_size` | implementado |
-| `set_size` | implementado |
+| `set_size` | implementado (stub) |
 | `new_scintilla` | implementado |
 | `focus_view` | implementado |
 | `SS` | implementado |
@@ -161,3 +161,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Implementadas as funções restantes: `open_dialog`, `save_dialog`, `progress_dialog`, `list_dialog`, `get_clipboard_text`, `add_timeout`, `suspend`, `quit`.
 - Implementadas funções de painel, abas, menu e processos (stubs funcionais).
 - Atualizado o status de todas as funções no tracking para "implementado".
+### 2026-02-26 (manhã)
+- Adicionados logs de depuração em funções cruciais (new_window, focus_view, etc.) para rastreamento de chamadas.
+- Ajustado o loop principal para exibir teclas pressionadas.
+- Clarificado status de algumas funções como "implementado (stub)" na tabela.

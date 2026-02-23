@@ -24,29 +24,35 @@ extern void scintilla_delete(SciObject*);
 /* ------------------------------------------------------------------------ */
 
 int main(int argc, char **argv) {
+	fprintf(stderr, "[n_textadept] main starting\n");
 	/* Initialize Notcurses */
 	if (!ensure_notcurses()) {
-		fprintf(stderr, "Failed to initialize Notcurses\n");
+		fprintf(stderr, "[n_textadept] Failed to initialize Notcurses\n");
 		return 1;
 	}
 
+	fprintf(stderr, "[n_textadept] calling init_textadept\n");
 	/* Call init_textadept which will call new_window etc. */
 	if (!init_textadept(argc, argv)) {
-		fprintf(stderr, "Failed to initialize Textadept\n");
+		fprintf(stderr, "[n_textadept] Failed to initialize Textadept\n");
 		notcurses_stop(nc);
 		return 1;
 	}
 
 	struct ncinput ni;
 	bool running = true;
+	fprintf(stderr, "[n_textadept] entering main loop\n");
 	while (running && !want_quit) {
 		/* Process any pending UI updates */
 		update_ui();
 		/* Non-blocking input */
 		while (notcurses_get_nblock(nc, &ni) != -1) {
 			if (ni.evtype == NCTYPE_PRESS) {
+				fprintf(stderr, "[n_textadept] key press: id=%d, modifiers=%x\n",
+				        ni.id, ni.modifiers);
 				/* For now, exit on 'q' or Ctrl+C */
 				if (ni.id == 'q' || (ni.id == 'c' && (ni.modifiers & NCTRL_MSK))) {
+					fprintf(stderr, "[n_textadept] quitting\n");
 					running = false;
 					break;
 				}
@@ -58,9 +64,11 @@ int main(int argc, char **argv) {
 		nanosleep(&ts, NULL);
 	}
 
+	fprintf(stderr, "[n_textadept] cleaning up\n");
 	/* Cleanup */
 	close_textadept();
 	notcurses_stop(nc);
+	fprintf(stderr, "[n_textadept] exiting with status %d\n", exit_status);
 	return exit_status;
 }
 /* Notcurses view management                                                */
@@ -82,8 +90,13 @@ static bool want_quit = false;
 
 static bool ensure_notcurses(void) {
 	if (!nc) {
+		fprintf(stderr, "[n_textadept] initializing notcurses\n");
 		nc = notcurses_init(NULL, stdout);
-		if (!nc) return false;
+		if (!nc) {
+			fprintf(stderr, "[n_textadept] failed to initialize notcurses\n");
+			return false;
+		}
+		fprintf(stderr, "[n_textadept] notcurses initialized successfully\n");
 	}
 	return true;
 }
@@ -142,12 +155,18 @@ const char *get_charset(void) {
 }
 
 void new_window(SciObject *(*get_view)(void)) {
+	fprintf(stderr, "[n_textadept] new_window called\n");
 	if (!ensure_notcurses()) return;
 	current_view = create_view();
-	if (!current_view) return;
+	if (!current_view) {
+		fprintf(stderr, "[n_textadept] failed to create view\n");
+		return;
+	}
+	fprintf(stderr, "[n_textadept] view created, calling get_view\n");
 	SciObject *sci = get_view();
 	if (sci) {
 		current_view->sci = sci;
+		fprintf(stderr, "[n_textadept] scintilla view associated\n");
 	}
 }
 
@@ -173,9 +192,14 @@ SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, vo
 }
 
 void focus_view(SciObject *view) {
-	if (focused_view) SS(focused_view, SCI_SETFOCUS, 0, 0);
+	fprintf(stderr, "[n_textadept] focus_view called (view=%p)\n", view);
+	if (focused_view) {
+		fprintf(stderr, "[n_textadept] unfocusing previous view %p\n", focused_view);
+		SS(focused_view, SCI_SETFOCUS, 0, 0);
+	}
 	SS(view, SCI_SETFOCUS, 1, 0);
 	focused_view = view;
+	fprintf(stderr, "[n_textadept] focused view set to %p\n", view);
 }
 
 sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
@@ -203,24 +227,63 @@ void delete_scintilla(SciObject *view) {
 }
 
 /* Pane functions */
-Pane *get_top_pane(void) { return NULL; }
-PaneInfo get_pane_info(Pane *pane) { (void)pane; PaneInfo info = {0}; return info; }
-PaneInfo get_parent_pane_info(PaneInfo info) { (void)info; PaneInfo ret = {0}; return ret; }
-PaneInfo get_pane_info_from_view(SciObject *view) { (void)view; PaneInfo info = {0}; return info; }
-void set_pane_split_pos(Pane *pane, int pos) { (void)pane; (void)pos; }
+Pane *get_top_pane(void) {
+	fprintf(stderr, "[n_textadept] get_top_pane called\n");
+	return NULL;
+}
+PaneInfo get_pane_info(Pane *pane) {
+	fprintf(stderr, "[n_textadept] get_pane_info called (pane=%p)\n", pane);
+	(void)pane; PaneInfo info = {0}; return info;
+}
+PaneInfo get_parent_pane_info(PaneInfo info) {
+	fprintf(stderr, "[n_textadept] get_parent_pane_info called\n");
+	(void)info; PaneInfo ret = {0}; return ret;
+}
+PaneInfo get_pane_info_from_view(SciObject *view) {
+	fprintf(stderr, "[n_textadept] get_pane_info_from_view called (view=%p)\n", view);
+	(void)view; PaneInfo info = {0}; return info;
+}
+void set_pane_split_pos(Pane *pane, int pos) {
+	fprintf(stderr, "[n_textadept] set_pane_split_pos called (pane=%p, pos=%d)\n", pane, pos);
+	(void)pane; (void)pos;
+}
 
 /* Tab functions */
-void show_tabs(bool show) { (void)show; }
-void add_tab(void) {}
-void set_tab(int index) { (void)index; }
-void set_tab_label(int index, const char *text) { (void)index; (void)text; }
-void move_tab(int from, int to) { (void)from; (void)to; }
-void remove_tab(int index) { (void)index; }
+void show_tabs(bool show) {
+	fprintf(stderr, "[n_textadept] show_tabs called (%s)\n", show ? "true" : "false");
+	(void)show;
+}
+void add_tab(void) {
+	fprintf(stderr, "[n_textadept] add_tab called\n");
+}
+void set_tab(int index) {
+	fprintf(stderr, "[n_textadept] set_tab called (index=%d)\n", index);
+	(void)index;
+}
+void set_tab_label(int index, const char *text) {
+	fprintf(stderr, "[n_textadept] set_tab_label called (index=%d, text=%s)\n", index, text ? text : "NULL");
+	(void)index; (void)text;
+}
+void move_tab(int from, int to) {
+	fprintf(stderr, "[n_textadept] move_tab called (from=%d, to=%d)\n", from, to);
+	(void)from; (void)to;
+}
+void remove_tab(int index) {
+	fprintf(stderr, "[n_textadept] remove_tab called (index=%d)\n", index);
+	(void)index;
+}
 
 /* Find & replace pane functions */
-const char *get_find_text(void) { return find_text; }
-const char *get_repl_text(void) { return repl_text; }
+const char *get_find_text(void) {
+	fprintf(stderr, "[n_textadept] get_find_text called -> '%s'\n", find_text);
+	return find_text;
+}
+const char *get_repl_text(void) {
+	fprintf(stderr, "[n_textadept] get_repl_text called -> '%s'\n", repl_text);
+	return repl_text;
+}
 void set_find_text(const char *text) {
+	fprintf(stderr, "[n_textadept] set_find_text called (text=%s)\n", text ? text : "NULL");
 	if (text) {
 		snprintf(find_text, sizeof(find_text), "%s", text);
 	} else {
@@ -228,22 +291,52 @@ void set_find_text(const char *text) {
 	}
 }
 void set_repl_text(const char *text) {
+	fprintf(stderr, "[n_textadept] set_repl_text called (text=%s)\n", text ? text : "NULL");
 	if (text) {
 		snprintf(repl_text, sizeof(repl_text), "%s", text);
 	} else {
 		repl_text[0] = '\0';
 	}
 }
-void add_to_find_history(const char *text) { (void)text; }
-void add_to_repl_history(const char *text) { (void)text; }
-void set_entry_font(const char *name) { (void)name; }
-bool is_checked(FindOption *option) { (void)option; return false; }
-void toggle(FindOption *option, bool on) { (void)option; (void)on; }
-void set_find_label(const char *text) { (void)text; }
-void set_repl_label(const char *text) { (void)text; }
-void set_button_label(FindButton *button, const char *text) { (void)button; (void)text; }
-void set_option_label(FindOption *option, const char *text) { (void)option; (void)text; }
-void focus_find(void) {}
+void add_to_find_history(const char *text) {
+	fprintf(stderr, "[n_textadept] add_to_find_history called (text=%s)\n", text ? text : "NULL");
+	(void)text;
+}
+void add_to_repl_history(const char *text) {
+	fprintf(stderr, "[n_textadept] add_to_repl_history called (text=%s)\n", text ? text : "NULL");
+	(void)text;
+}
+void set_entry_font(const char *name) {
+	fprintf(stderr, "[n_textadept] set_entry_font called (name=%s)\n", name ? name : "NULL");
+	(void)name;
+}
+bool is_checked(FindOption *option) {
+	fprintf(stderr, "[n_textadept] is_checked called (option=%p)\n", option);
+	(void)option; return false;
+}
+void toggle(FindOption *option, bool on) {
+	fprintf(stderr, "[n_textadept] toggle called (option=%p, on=%s)\n", option, on ? "true" : "false");
+	(void)option; (void)on;
+}
+void set_find_label(const char *text) {
+	fprintf(stderr, "[n_textadept] set_find_label called (text=%s)\n", text ? text : "NULL");
+	(void)text;
+}
+void set_repl_label(const char *text) {
+	fprintf(stderr, "[n_textadept] set_repl_label called (text=%s)\n", text ? text : "NULL");
+	(void)text;
+}
+void set_button_label(FindButton *button, const char *text) {
+	fprintf(stderr, "[n_textadept] set_button_label called (button=%p, text=%s)\n", button, text ? text : "NULL");
+	(void)button; (void)text;
+}
+void set_option_label(FindOption *option, const char *text) {
+	fprintf(stderr, "[n_textadept] set_option_label called (option=%p, text=%s)\n", option, text ? text : "NULL");
+	(void)option; (void)text;
+}
+void focus_find(void) {
+	fprintf(stderr, "[n_textadept] focus_find called\n");
+}
 
 /* Command entry functions */
 void focus_command_entry(void) {
