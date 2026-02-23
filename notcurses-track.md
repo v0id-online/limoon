@@ -38,13 +38,14 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `new_window` | implementado |
 | `set_title` | implementado |
 | `is_maximized` | implementado |
+| `set_maximized` | implementado |
 | `get_size` | implementado |
 | `set_size` | stub |
 | `new_scintilla` | implementado |
 | `focus_view` | implementado |
 | `SS` | implementado |
-| `split_view` | stub |
-| `unsplit_view` | stub |
+| `split_view` | implementado |
+| `unsplit_view` | implementado |
 | `delete_scintilla` | implementado |
 | `get_top_pane` | stub |
 | `get_pane_info` | stub |
@@ -145,3 +146,4 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-24 (noite)
 - Corrigido status de `set_maximized` na tabela.
 - Adicionadas implementações stub para funções de painel (`split_view`, `unsplit_view`, etc.) e abas.
+- Implementadas funções `split_view` e `unsplit_view` com Notcurses (placeholders).

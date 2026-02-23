@@ -181,12 +181,19 @@ sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
 }
 
 void split_view(SciObject *view, SciObject *view2, bool vertical) {
-	(void)view; (void)view2; (void)vertical;
+	(void)view; (void)view2;
+	if (!ensure_notcurses()) return;
+	struct ncplane *std = notcurses_stdplane(nc);
+	ncplane_putstr_yx(std, 0, 0, "[Split %s]", vertical ? "vertical" : "horizontal");
+	// TODO: actual split pane management with Notcurses planes
 }
 
 bool unsplit_view(SciObject *view, void (*delete_view)(SciObject *)) {
 	(void)view; (void)delete_view;
-	return false;
+	if (!ensure_notcurses()) return false;
+	struct ncplane *std = notcurses_stdplane(nc);
+	ncplane_putstr_yx(std, 1, 0, "[Unsplit]");
+	return false; // no split pane found for the given view (TODO)
 }
 
 void delete_scintilla(SciObject *view) {
