@@ -20,19 +20,58 @@ else
 $(warning "pkg-config notcurses not found, using default flags")
 endif
 
-# Scintilla flags (try pkg-config, then find header location)
+# Scintilla flags (try pkg-config for scintilla and qscintilla, then find header location)
+SCINTILLA_FOUND := no
+
+# First, try pkg-config for scintilla (standalone)
 ifneq ($(shell $(PKG_CONFIG) --exists scintilla && echo yes),)
 CFLAGS  += $(shell $(PKG_CONFIG) --cflags scintilla)
 LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs scintilla) $(filter -l%,$(LIBS))
-else
-# Try to find Scintilla.h using find command and take the first result's parent directory
-SCINTILLA_HEADER := $(shell find /usr/include /usr/local/include -name "Scintilla.h" 2>/dev/null | head -1)
+SCINTILLA_FOUND := yes
+endif
+
+# If not found, try pkg-config for qscintilla2-qt6 (Fedora)
+ifeq ($(SCINTILLA_FOUND),no)
+ifneq ($(shell $(PKG_CONFIG) --exists qscintilla2-qt6 && echo yes),)
+CFLAGS  += $(shell $(PKG_CONFIG) --cflags qscintilla2-qt6)
+LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs qscintilla2-qt6) $(filter -l%,$(LIBS))
+SCINTILLA_FOUND := yes
+# Define macro so that we can include <Qsci/qscintilla.h> instead
+CFLAGS  += -DHAVE_QSCI_QSCINTILLA_H
+endif
+endif
+
+# If still not found, try pkg-config for qscintilla2-qt5
+ifeq ($(SCINTILLA_FOUND),no)
+ifneq ($(shell $(PKG_CONFIG) --exists qscintilla2-qt5 && echo yes),)
+CFLAGS  += $(shell $(PKG_CONFIG) --cflags qscintilla2-qt5)
+LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs qscintilla2-qt5) $(filter -l%,$(LIBS))
+SCINTILLA_FOUND := yes
+CFLAGS  += -DHAVE_QSCI_QSCINTILLA_H
+endif
+endif
+
+# If still not found, search for header in common locations
+ifeq ($(SCINTILLA_FOUND),no)
+# Try to find Scintilla.h or qscintilla.h using find command
+SCINTILLA_HEADER := $(shell find /usr/include /usr/local/include -name "Scintilla.h" -o -name "qscintilla.h" 2>/dev/null | head -1)
 ifneq ($(SCINTILLA_HEADER),)
 SCINTILLA_INCLUDE := $(patsubst %/Scintilla.h,%,$(SCINTILLA_HEADER))
+SCINTILLA_INCLUDE := $(patsubst %/qscintilla.h,%,$(SCINTILLA_INCLUDE))
 CFLAGS += -I$(SCINTILLA_INCLUDE)
+# Determine which header we found
+ifeq ($(suffix $(SCINTILLA_HEADER)),.h)
+ifneq ($(findstring qscintilla,$(SCINTILLA_HEADER)),)
+CFLAGS += -DHAVE_QSCI_QSCINTILLA_H
+endif
+endif
+SCINTILLA_FOUND := yes
 else
 $(warning "Scintilla.h not found in standard locations, trying common paths")
-SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla -I/usr/include -I/usr/local/include -I/usr/include/scintilla/include
+SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla \
+                      -I/usr/include -I/usr/local/include \
+                      -I/usr/include/qt6 -I/usr/include/qt5 \
+                      -I/usr/include/qscintilla2 -I/usr/include/Qsci
 CFLAGS  += $(SCINTILLA_INCLUDES)
 endif
 endif

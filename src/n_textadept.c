@@ -18,7 +18,7 @@
 #include <sys/wait.h>
 #include "textadept.h"
 #include "textadept_platform.h"
-#include "Scintilla.h"
+/* Scintilla.h already included via textadept_platform.h */
 
 /* Lua core functions */
 extern int lua_processprocs(lua_State *L);

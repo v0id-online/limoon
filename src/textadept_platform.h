@@ -11,7 +11,14 @@
 #include "lua.h"
 #include <stdbool.h>
 
+/* Scintilla header inclusion */
+#if defined(HAVE_QSCI_QSCINTILLA_H)
+/* QScintilla (Qt) provides <Qsci/qscintilla.h> which in turn includes Scintilla.h */
+#include <Qsci/qscintilla.h>
+#else
+/* Assume standard Scintilla.h is in include path */
 #include <Scintilla.h>
+#endif
 
 typedef void SciObject;
 typedef void Pane;
