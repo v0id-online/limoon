@@ -9,11 +9,7 @@
 // up and release resources before quitting for good.
 
 #include "lua.h"
-#ifdef __linux__
-#include <scintilla/Scintilla.h>
-#else
-#include "Scintilla.h"
-#endif
+#include <Scintilla.h>
 
 #include <stdbool.h>
 
