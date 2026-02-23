@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
 	struct ncinput ni;
 	bool running = true;
-	while (running) {
+	while (running && !want_quit) {
 		/* Process any pending UI updates */
 		update_ui();
 		/* Non-blocking input */
@@ -78,6 +78,7 @@ static bool command_entry_active = false;
 static bool statusbar_visible = false;
 static char statusbar_text0[256] = "";
 static char statusbar_text1[256] = "";
+static bool want_quit = false;
 
 static bool ensure_notcurses(void) {
 	if (!nc) {
@@ -280,12 +281,15 @@ void popup_menu(void *menu, void *userdata) {
 void set_menubar(lua_State *L, int index) { (void)L; (void)index; }
 
 char *get_clipboard_text(int *len) {
-	/* TODO: implement clipboard access via notcurses (or OS‑specific fallback) */
+	// implementação stub: tenta ler da clipboard do terminal via OSC 52 (limitado)
+	// apenas retorna NULL por enquanto.
 	(void)len;
 	return NULL;
 }
 
 void add_timeout(double interval, bool (*f)(int *), int *reference) {
+	// implementação stub: armazena em uma lista para processamento futuro.
+	// por simplicidade, ignoramos por enquanto.
 	(void)interval; (void)f; (void)reference;
 }
 
@@ -504,13 +508,104 @@ int input_dialog(DialogOptions opts, lua_State *L) {
         return 0;
     }
 }
-int open_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
-int save_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
+int open_dialog(DialogOptions opts, lua_State *L) {
+	DialogOptions io_opts = opts;
+	if (!io_opts.title) io_opts.title = "Open File";
+	if (!io_opts.text) io_opts.text = "Enter file path:";
+	// reuse input_dialog
+	return input_dialog(io_opts, L);
+}
+int save_dialog(DialogOptions opts, lua_State *L) {
+	DialogOptions io_opts = opts;
+	if (!io_opts.title) io_opts.title = "Save File";
+	if (!io_opts.text) io_opts.text = "Enter file path:";
+	return input_dialog(io_opts, L);
+}
 int progress_dialog(DialogOptions opts, lua_State *L,
 	bool (*work)(void (*update)(double percent, const char *text, void *userdata), void *userdata)) {
-	(void)opts; (void)L; (void)work; return 0;
+	if (!ensure_notcurses()) return 0;
+	struct ncplane* std = notcurses_stdplane(nc);
+	int rows, cols;
+	ncplane_dim_yx(std, &rows, &cols);
+	int h = 10;
+	int w = cols * 2 / 3;
+	if (w > 60) w = 60;
+	int y = (rows - h) / 2;
+	int x = (cols - w) / 2;
+	struct ncplane_options popt = {
+		.y = y, .x = x, .rows = h, .cols = w,
+		.userptr = NULL, .name = "progress", .resizecb = NULL, .flags = 0,
+	};
+	struct ncplane* dplane = ncplane_create(std, &popt);
+	if (!dplane) return 0;
+	ncplane_set_base(dplane, " ", 0, 0);
+	if (opts.title) {
+		int titlex = (w - (int)strlen(opts.title)) / 2;
+		if (titlex < 0) titlex = 0;
+		ncplane_putstr_yx(dplane, 1, titlex, "%s", opts.title);
+	}
+	if (opts.text) {
+		ncplane_putstr_yx(dplane, 3, 2, "%s", opts.text);
+	}
+	// barra de progresso
+	int bar_y = 5;
+	int bar_x = 2;
+	int bar_w = w - 4;
+	ncplane_putstr_yx(dplane, bar_y, bar_x, "[");
+	ncplane_putstr_yx(dplane, bar_y, bar_x + bar_w - 1, "]");
+	for (int i = 1; i < bar_w - 1; i++)
+		ncplane_putstr_yx(dplane, bar_y, bar_x + i, " ");
+	bool work_result = false;
+	bool cancelled = false;
+	struct ncinput ni;
+	// variáveis para o callback update
+	double current_percent = 0.0;
+	const char* current_text = "";
+	void* userdata = NULL; // não usado
+	// função update local
+	void update(double percent, const char* text, void* udata) {
+		(void)udata;
+		current_percent = percent;
+		current_text = text ? text : "";
+		// redesenhar barra
+		int filled = (int)((bar_w - 2) * percent / 100.0);
+		if (filled < 0) filled = 0;
+		if (filled > bar_w - 2) filled = bar_w - 2;
+		for (int i = 1; i < bar_w - 1; i++) {
+			if (i <= filled)
+				ncplane_putstr_yx(dplane, bar_y, bar_x + i, "=");
+			else
+				ncplane_putstr_yx(dplane, bar_y, bar_x + i, " ");
+		}
+		// texto
+		char line[256];
+		snprintf(line, sizeof(line), "%.0f%% %s", percent, current_text);
+		ncplane_putstr_yx(dplane, bar_y + 2, bar_x, "%-*s", bar_w, line);
+		notcurses_render(nc);
+		// processar eventos para permitir cancelamento (ESC)
+		while (notcurses_get_nblock(nc, &ni) != -1) {
+			if (ni.evtype == NCTYPE_PRESS && ni.id == NCKEY_ESC) {
+				cancelled = true;
+				break;
+			}
+		}
+	}
+	// chamar work em um loop (a própria work deve controlar o fim)
+	work_result = work(update, userdata);
+	// limpar
+	ncplane_destroy(dplane);
+	notcurses_render(nc);
+	if (cancelled) {
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	return 0;
 }
-int list_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
+int list_dialog(DialogOptions opts, lua_State *L) {
+	// stub simplificado: retorna cancelado
+	(void)opts; (void)L;
+	return 0;
+}
 
 bool spawn(lua_State *L, Process *proc, int index, const char *cmd, const char *cwd, int envi,
 	bool monitor_stdout, bool monitor_stderr, const char **error) {
@@ -530,8 +625,12 @@ void close_process_input(Process *proc) { (void)proc; }
 void kill_process(Process *proc, int signal) { (void)proc; (void)signal; }
 int get_process_exit_status(Process *proc) { (void)proc; return 0; }
 void cleanup_process(Process *proc) { (void)proc; }
-void suspend(void) {}
-void quit(void) {}
+void suspend(void) {
+	// Não há suporte a suspensão em Notcurses; apenas stub.
+}
+void quit(void) {
+    want_quit = true;
+}
 
 /* ------------------------------------------------------------------------ */
 

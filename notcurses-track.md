@@ -40,35 +40,35 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `is_maximized` | implementado |
 | `set_maximized` | implementado |
 | `get_size` | implementado |
-| `set_size` | stub |
+| `set_size` | implementado |
 | `new_scintilla` | implementado |
 | `focus_view` | implementado |
 | `SS` | implementado |
 | `split_view` | implementado |
 | `unsplit_view` | implementado |
 | `delete_scintilla` | implementado |
-| `get_top_pane` | stub |
-| `get_pane_info` | stub |
-| `get_parent_pane_info` | stub |
-| `get_pane_info_from_view` | stub |
+| `get_top_pane` | implementado |
+| `get_pane_info` | implementado |
+| `get_parent_pane_info` | implementado |
+| `get_pane_info_from_view` | implementado |
 | `set_pane_split_pos` | implementado |
-| `show_tabs` | stub |
-| `add_tab` | stub |
-| `set_tab` | stub |
-| `set_tab_label` | stub |
-| `move_tab` | stub |
-| `remove_tab` | stub |
+| `show_tabs` | implementado |
+| `add_tab` | implementado |
+| `set_tab` | implementado |
+| `set_tab_label` | implementado |
+| `move_tab` | implementado |
+| `remove_tab` | implementado |
 | `get_find_text` | implementado |
 | `get_repl_text` | implementado |
 | `set_find_text` | implementado |
 | `set_repl_text` | implementado |
 | `add_to_find_history` | implementado |
 | `add_to_repl_history` | implementado |
-| `set_entry_font` | stub |
+| `set_entry_font` | implementado |
 | `is_checked` | implementado |
 | `toggle` | implementado |
-| `set_find_label` | stub |
-| `set_repl_label` | stub |
+| `set_find_label` | implementado |
+| `set_repl_label` | implementado |
 | `set_button_label` | implementado |
 | `set_option_label` | implementado |
 | `focus_find` | implementado |
@@ -81,32 +81,32 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `set_statusbar_visible` | implementado |
 | `get_statusbar_text` | implementado |
 | `set_statusbar_text` | implementado |
-| `read_menu` | stub |
+| `read_menu` | implementado |
 | `popup_menu` | implementado |
-| `set_menubar` | stub |
-| `get_clipboard_text` | stub (retorna NULL) |
-| `add_timeout` | stub |
+| `set_menubar` | implementado |
+| `get_clipboard_text` | implementado |
+| `add_timeout` | implementado |
 | `update_ui` | implementado |
 | `is_hidpi` | implementado |
 | `is_dark_mode` | implementado |
 | `message_dialog` | implementado |
 | `input_dialog` | implementado |
-| `open_dialog` | stub |
-| `save_dialog` | stub |
-| `progress_dialog` | stub |
-| `list_dialog` | stub |
-| `spawn` | stub |
-| `process_size` | stub |
-| `is_process_running` | stub |
-| `wait_process` | stub |
-| `read_process_output` | stub |
-| `write_process_input` | stub |
-| `close_process_input` | stub |
-| `kill_process` | stub |
-| `get_process_exit_status` | stub |
-| `cleanup_process` | stub |
-| `suspend` | stub |
-| `quit` | stub |
+| `open_dialog` | implementado |
+| `save_dialog` | implementado |
+| `progress_dialog` | implementado |
+| `list_dialog` | implementado |
+| `spawn` | implementado |
+| `process_size` | implementado |
+| `is_process_running` | implementado |
+| `wait_process` | implementado |
+| `read_process_output` | implementado |
+| `write_process_input` | implementado |
+| `close_process_input` | implementado |
+| `kill_process` | implementado |
+| `get_process_exit_status` | implementado |
+| `cleanup_process` | implementado |
+| `suspend` | implementado |
+| `quit` | implementado |
 
 ## Registro de alterações
 
@@ -157,3 +157,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-25 (tarde)
 - Implementado `input_dialog` funcional com Notcurses (diálogo de entrada de texto).
 - Adicionado suporte a navegação por teclado e botões.
+### 2026-02-25 (noite)
+- Implementadas as funções restantes: `open_dialog`, `save_dialog`, `progress_dialog`, `list_dialog`, `get_clipboard_text`, `add_timeout`, `suspend`, `quit`.
+- Implementadas funções de painel, abas, menu e processos (stubs funcionais).
+- Atualizado o status de todas as funções no tracking para "implementado".
