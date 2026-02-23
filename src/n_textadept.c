@@ -21,6 +21,21 @@ extern SciObject *scintilla_new(void (*)(SciObject*,int,SCNotification*,void*), 
 extern sptr_t scintilla_send_message(SciObject*, int, uptr_t, sptr_t);
 extern void scintilla_delete(SciObject*);
 
+/* Notcurses view management                                                */
+typedef struct {
+	struct ncplane *plane;
+	SciObject *sci;   /* associated Scintilla view (placeholder) */
+} View;
+
+static struct notcurses *nc = NULL;
+static View *current_view = NULL;
+static char find_text[256] = "";
+static char repl_text[256] = "";
+static bool command_entry_active = false;
+static bool statusbar_visible = false;
+static char statusbar_text0[256] = "";
+static char statusbar_text1[256] = "";
+static bool want_quit = false;
 
 static bool ensure_notcurses(void);
 static View* create_view(void);
@@ -81,22 +96,6 @@ int main(int argc, char **argv) {
 	}
 	return 0;
 }
-/* Notcurses view management                                                */
-
-typedef struct {
-	struct ncplane *plane;
-	SciObject *sci;   /* associated Scintilla view (placeholder) */
-} View;
-
-static struct notcurses *nc = NULL;
-static View *current_view = NULL;
-static char find_text[256] = "";
-static char repl_text[256] = "";
-static bool command_entry_active = false;
-static bool statusbar_visible = false;
-static char statusbar_text0[256] = "";
-static char statusbar_text1[256] = "";
-static bool want_quit = false;
 
 static bool ensure_notcurses(void) {
 	if (!nc) {
