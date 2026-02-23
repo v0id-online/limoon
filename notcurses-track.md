@@ -203,3 +203,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Ajustado Makefile para usar `pkg-config` para flags do Notcurses (se disponível).
 - Adicionada mensagem após compilação bem-sucedida.
 - O projeto agora está pronto para tentar a compilação com `make`.
+
+### 2026-03-01 (manhã)
+- Corrigida busca de cabeçalho Scintilla: expandidos os caminhos de include (`/usr/include/scintilla`, `/usr/local/include/scintilla`, etc.) e alterada a diretiva `#include <Scintilla.h>` para `#include "Scintilla.h"` no arquivo `textadept_platform.h`.
+- Espera-se que a compilação agora proceda, caso o pacote `scintilla-devel` (ou equivalente) esteja instalado.

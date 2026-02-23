@@ -20,12 +20,14 @@ else
 $(warning "pkg-config notcurses not found, using default flags")
 endif
 
-# Scintilla flags (try pkg-config, fallback to /usr/include/scintilla)
+# Scintilla flags (try pkg-config, fallback to common include paths)
 ifneq ($(shell $(PKG_CONFIG) --exists scintilla && echo yes),)
 CFLAGS  += $(shell $(PKG_CONFIG) --cflags scintilla)
 LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs scintilla) $(filter -l%,$(LIBS))
 else
-CFLAGS  += -I/usr/include/scintilla
+# Try several common include paths for Scintilla.h
+SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla -I/usr/include -I/usr/local/include
+CFLAGS  += $(SCINTILLA_INCLUDES)
 endif
 
 # Source directories
