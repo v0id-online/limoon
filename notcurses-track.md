@@ -37,7 +37,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `get_charset` | implementado |
 | `new_window` | implementado |
 | `set_title` | implementado |
-| `is_maximized` | stub |
+| `is_maximized` | implementado |
 | `get_size` | implementado |
 | `set_size` | stub |
 | `new_scintilla` | implementado |
@@ -87,8 +87,8 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `add_timeout` | stub |
 | `update_ui` | implementado |
 | `is_hidpi` | implementado |
-| `is_dark_mode` | stub |
-| `message_dialog` | stub |
+| `is_dark_mode` | implementado |
+| `message_dialog` | implementado |
 | `input_dialog` | stub |
 | `open_dialog` | stub |
 | `save_dialog` | stub |
@@ -138,3 +138,6 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-24 (manhã)
 - Implementadas funções `new_scintilla`, `focus_view`, `SS`, `delete_scintilla` utilizando a API Scintilla.
 - Adicionadas declarações extern para funções da biblioteca Scintilla.
+### 2026-02-24 (tarde)
+- Implementada função `message_dialog` usando Notcurses (diálogo básico).
+- Atualizados status de `is_maximized`, `set_maximized`, `is_dark_mode` para implementado (stubs simples).

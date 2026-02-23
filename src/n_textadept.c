@@ -289,7 +289,62 @@ void update_ui(void) {
 bool is_hidpi(void) { return false; }
 bool is_dark_mode(void) { return false; }
 
-int message_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
+int message_dialog(DialogOptions opts, lua_State *L) {
+	if (!ensure_notcurses()) return 0;
+	struct ncplane* std = notcurses_stdplane(nc);
+	int rows, cols;
+	ncplane_dim_yx(std, &rows, &cols);
+	// Tamanho do diálogo
+	int h = 8;
+	int w = cols * 2 / 3;
+	if (w > 70) w = 70;
+	int y = (rows - h) / 2;
+	int x = (cols - w) / 2;
+
+	struct ncplane_options popt = {
+		.y = y,
+		.x = x,
+		.rows = h,
+		.cols = w,
+		.userptr = NULL,
+		.name = "dialog",
+		.resizecb = NULL,
+		.flags = 0,
+	};
+	struct ncplane* dplane = ncplane_create(std, &popt);
+	if (!dplane) return 0;
+
+	// Preencher fundo
+	ncplane_set_base(dplane, " ", 0, 0);
+	// Título
+	if (opts.title) {
+		int titlex = (w - (int)strlen(opts.title)) / 2;
+		if (titlex < 0) titlex = 0;
+		ncplane_putstr_yx(dplane, 1, titlex, "%s", opts.title);
+	}
+	// Texto (primeira linha apenas, por simplicidade)
+	if (opts.text) {
+		char line[256];
+		snprintf(line, sizeof(line), "%.*s", w - 4, opts.text);
+		ncplane_putstr_yx(dplane, 3, 2, "%s", line);
+	}
+	// Botões (usa o primeiro botão fornecido ou "OK")
+	const char* btn = opts.buttons[0] ? opts.buttons[0] : "OK";
+	int btnx = (w - (int)strlen(btn)) / 2;
+	ncplane_putstr_yx(dplane, h - 3, btnx, "[ %s ]", btn);
+	notcurses_render(nc);
+
+	// Esperar uma tecla (qualquer uma)
+	struct ncinput ni;
+	notcurses_get_blocking(nc, &ni);
+	// Destruir plano do diálogo
+	ncplane_destroy(dplane);
+	notcurses_render(nc);
+
+	// Retorna índice 1 (primeiro botão)
+	lua_pushinteger(L, 1);
+	return 1;
+}
 int input_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
 int open_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
 int save_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
