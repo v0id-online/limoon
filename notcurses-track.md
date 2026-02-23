@@ -188,3 +188,9 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Modificado `update_ui` para renderizar sempre, garantindo que mudanças na Scintilla sejam refletidas.
 - Atualizado loop principal para chamar `handle_keypress` e continuar permitindo saída com 'q' ou Ctrl+C.
 - Progresso rumo a uma versão inicial funcional que pode aceitar entrada de teclado.
+
+### 2026-02-28 (manhã)
+- Identificado que para compilar e testar o frontend Notcurses, é necessário ajustar o sistema de construção (Makefile) para incluir a biblioteca Notcurses e substituir o backend curses.
+- **Falta**: adicionar o Makefile ao chat para que possamos modificá-lo, criando o alvo `textadept-notcurses`.
+- **Falta**: garantir que todas as variáveis globais externas (`focused_view`, `lua`, etc.) sejam resolvidas durante o linking com os objetos do core.
+- **Próximo passo**: solicitar ao usuário que adicione o Makefile atual ao chat.
