@@ -16,6 +16,10 @@
 #include "textadept.h"
 #include "textadept_platform.h"
 
+/* Lua core functions */
+extern int lua_processprocs(lua_State *L);
+extern int lua_processtimeouts(lua_State *L);
+
 /* External Scintilla functions */
 extern SciObject *scintilla_new(void (*)(SciObject*,int,SCNotification*,void*), void*);
 extern sptr_t scintilla_send_message(SciObject*, int, uptr_t, sptr_t);
@@ -41,6 +45,41 @@ static bool ensure_notcurses(void);
 static View* create_view(void);
 static void destroy_view(View *view);
 static void update_view(View *view, int y, int x, const char *str);
+
+/* Timeout handling */
+typedef struct Timeout {
+    double interval;
+    bool (*f)(int*);
+    int *reference;
+    double trigger_time;
+    struct Timeout* next;
+} Timeout;
+
+static Timeout* timeout_list = NULL;
+
+static void process_timeouts(void) {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    double now = ts.tv_sec + ts.tv_nsec / 1e9;
+    Timeout **pt = &timeout_list;
+    while (*pt) {
+        Timeout *t = *pt;
+        if (now >= t->trigger_time) {
+            bool repeat = t->f(t->reference);
+            if (repeat) {
+                // reschedule
+                t->trigger_time = now + t->interval;
+                pt = &(*pt)->next;
+            } else {
+                // remove
+                *pt = t->next;
+                free(t);
+            }
+        } else {
+            pt = &(*pt)->next;
+        }
+    }
+}
 
 /* ------------------------------------------------------------------------ */
 
@@ -353,17 +392,23 @@ void focus_find(void) {
 }
 
 /* Command entry functions */
+static char command_entry_label[256] = "";
+static int command_entry_height_stored = 0;
+
 void focus_command_entry(void) {
 	command_entry_active = !command_entry_active;
 	/* TODO: show/hide command entry UI */
 }
 bool is_command_entry_active(void) { return command_entry_active; }
 void set_command_entry_label(const char *text) {
-	/* placeholder for command entry label */
-	(void)text;
+	if (text) {
+		snprintf(command_entry_label, sizeof(command_entry_label), "%s", text);
+	} else {
+		command_entry_label[0] = '\0';
+	}
 }
-int get_command_entry_height(void) { return command_entry_active ? 1 : 0; }
-void set_command_entry_height(int height) { (void)height; }
+int get_command_entry_height(void) { return command_entry_active ? command_entry_height_stored : 0; }
+void set_command_entry_height(int height) { command_entry_height_stored = height; }
 
 /* Statusbar functions */
 bool is_statusbar_visible(void) { return statusbar_visible; }
@@ -395,14 +440,32 @@ char *get_clipboard_text(int *len) {
 }
 
 void add_timeout(double interval, bool (*f)(int *), int *reference) {
-	// implementação stub: armazena em uma lista para processamento futuro.
-	// por simplicidade, ignoramos por enquanto.
-	(void)interval; (void)f; (void)reference;
+    Timeout* t = malloc(sizeof(Timeout));
+    if (!t) return;
+    t->interval = interval;
+    t->f = f;
+    t->reference = reference;
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    t->trigger_time = ts.tv_sec + ts.tv_nsec / 1e9 + interval;
+    t->next = timeout_list;
+    timeout_list = t;
 }
 
 void update_ui(void) {
 	if (!ensure_notcurses()) return;
-	notcurses_render(nc);
+	/* Process Lua async callbacks and timeouts */
+	bool need_render = false;
+	if (lua) {
+		if (lua_processprocs(lua)) need_render = true;
+		if (lua_processtimeouts(lua)) need_render = true;
+	}
+	/* Process platform timeouts */
+	process_timeouts();
+	/* Render any changes */
+	if (need_render || timeout_list != NULL) {
+		notcurses_render(nc);
+	}
 }
 
 bool is_hidpi(void) { return false; }
