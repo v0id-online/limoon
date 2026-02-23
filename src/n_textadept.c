@@ -21,6 +21,12 @@ extern SciObject *scintilla_new(void (*)(SciObject*,int,SCNotification*,void*), 
 extern sptr_t scintilla_send_message(SciObject*, int, uptr_t, sptr_t);
 extern void scintilla_delete(SciObject*);
 
+
+static bool ensure_notcurses(void);
+static View* create_view(void);
+static void destroy_view(View *view);
+static void update_view(View *view, int y, int x, const char *str);
+
 /* ------------------------------------------------------------------------ */
 
 int main(int argc, char **argv) {
@@ -171,6 +177,7 @@ void new_window(SciObject *(*get_view)(void)) {
 	if (sci) {
 		current_view->sci = sci;
 		fprintf(stderr, "[n_textadept] scintilla view associated\n");
+		focus_view(sci);
 	}
 }
 
@@ -356,7 +363,7 @@ void set_command_entry_label(const char *text) {
 	/* placeholder for command entry label */
 	(void)text;
 }
-int get_command_entry_height(void) { return 1; }
+int get_command_entry_height(void) { return command_entry_active ? 1 : 0; }
 void set_command_entry_height(int height) { (void)height; }
 
 /* Statusbar functions */
