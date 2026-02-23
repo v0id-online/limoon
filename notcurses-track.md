@@ -90,7 +90,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `is_hidpi` | implementado |
 | `is_dark_mode` | implementado |
 | `message_dialog` | implementado |
-| `input_dialog` | stub |
+| `input_dialog` | implementado |
 | `open_dialog` | stub |
 | `save_dialog` | stub |
 | `progress_dialog` | stub |
@@ -154,3 +154,6 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Implementadas funções de comando (`get_command_entry_height`, `set_command_entry_height`).
 - Implementadas funções de painel (`set_pane_split_pos`).
 - Implementadas funções `is_checked` e `toggle`.
+### 2026-02-25 (tarde)
+- Implementado `input_dialog` funcional com Notcurses (diálogo de entrada de texto).
+- Adicionado suporte a navegação por teclado e botões.

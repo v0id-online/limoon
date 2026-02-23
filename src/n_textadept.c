@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <ctype.h>
 #include "textadept.h"
 #include "textadept_platform.h"
 
@@ -352,7 +353,157 @@ int message_dialog(DialogOptions opts, lua_State *L) {
 	lua_pushinteger(L, 1);
 	return 1;
 }
-int input_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
+int input_dialog(DialogOptions opts, lua_State *L) {
+    if (!ensure_notcurses()) return 0;
+    struct ncplane* std = notcurses_stdplane(nc);
+    int rows, cols;
+    ncplane_dim_yx(std, &rows, &cols);
+    int h = 10;
+    int w = cols * 2 / 3;
+    if (w > 70) w = 70;
+    int y = (rows - h) / 2;
+    int x = (cols - w) / 2;
+
+    struct ncplane_options popt = {
+        .y = y,
+        .x = x,
+        .rows = h,
+        .cols = w,
+        .userptr = NULL,
+        .name = "input_dialog",
+        .resizecb = NULL,
+        .flags = 0,
+    };
+    struct ncplane* dplane = ncplane_create(std, &popt);
+    if (!dplane) return 0;
+    ncplane_set_base(dplane, " ", 0, 0);
+    // Título
+    if (opts.title) {
+        int titlex = (w - (int)strlen(opts.title)) / 2;
+        if (titlex < 0) titlex = 0;
+        ncplane_putstr_yx(dplane, 1, titlex, "%s", opts.title);
+    }
+    // Texto do prompt
+    if (opts.text) {
+        ncplane_putstr_yx(dplane, 3, 2, "%s", opts.text);
+    }
+    // Campo de entrada com borda
+    int input_y = 5;
+    int input_x = 2;
+    int input_w = w - 4;
+    // Desenhar borda superior
+    ncplane_putstr_yx(dplane, input_y, input_x, "┌");
+    for (int i = 0; i < input_w-2; i++) ncplane_putstr_yx(dplane, input_y, input_x+1+i, "─");
+    ncplane_putstr_yx(dplane, input_y, input_x+input_w-1, "┐");
+    // Lados
+    ncplane_putstr_yx(dplane, input_y+1, input_x, "│");
+    ncplane_putstr_yx(dplane, input_y+1, input_x+input_w-1, "│");
+    // Borda inferior
+    ncplane_putstr_yx(dplane, input_y+2, input_x, "└");
+    for (int i = 0; i < input_w-2; i++) ncplane_putstr_yx(dplane, input_y+2, input_x+1+i, "─");
+    ncplane_putstr_yx(dplane, input_y+2, input_x+input_w-1, "┘");
+    // Área de entrada interna
+    int text_x = input_x + 1;
+    int text_y = input_y + 1;
+    int max_len = input_w - 2;
+    char *buf = malloc(max_len + 1);
+    if (!buf) { ncplane_destroy(dplane); return 0; }
+    memset(buf, 0, max_len + 1);
+    int curpos = 0;
+    int offset = 0;
+
+    // Botões
+    const char* btn_ok = opts.buttons[0] ? opts.buttons[0] : "OK";
+    const char* btn_cancel = opts.buttons[1] ? opts.buttons[1] : "Cancel";
+    int btn_ok_len = strlen(btn_ok);
+    int btn_cancel_len = strlen(btn_cancel);
+    int btn_y = h - 3;
+    int btn_ok_x = (w - (btn_ok_len + btn_cancel_len + 4)) / 2;
+    int btn_cancel_x = btn_ok_x + btn_ok_len + 2;
+
+    bool done = false;
+    bool accepted = false;
+    int ret_button = 1; // 1 para primeiro botão (OK), 2 para segundo (Cancel)
+    struct ncinput ni;
+    while (!done) {
+        // Limpar área dos botões
+        ncplane_putstr_yx(dplane, btn_y, btn_ok_x-1, "   ");
+        ncplane_putstr_yx(dplane, btn_y, btn_ok_x, "%s", btn_ok);
+        ncplane_putstr_yx(dplane, btn_y, btn_cancel_x-1, "   ");
+        ncplane_putstr_yx(dplane, btn_y, btn_cancel_x, "%s", btn_cancel);
+        // Destacar botão selecionado
+        if (ret_button == 1) {
+            ncplane_putstr_yx(dplane, btn_y, btn_ok_x-1, "[");
+            ncplane_putstr_yx(dplane, btn_y, btn_ok_x+btn_ok_len, "]");
+        } else {
+            ncplane_putstr_yx(dplane, btn_y, btn_cancel_x-1, "[");
+            ncplane_putstr_yx(dplane, btn_y, btn_cancel_x+btn_cancel_len, "]");
+        }
+        // Atualizar texto visível
+        char visible[max_len+1];
+        // Ajustar offset para manter cursor visível
+        if (curpos - offset >= max_len) offset = curpos - max_len + 1;
+        if (offset > curpos) offset = curpos;
+        int copy_len = max_len;
+        if (offset + copy_len > (int)strlen(buf)) copy_len = strlen(buf) - offset;
+        if (copy_len < 0) copy_len = 0;
+        strncpy(visible, buf + offset, copy_len);
+        visible[copy_len] = '\0';
+        ncplane_putstr_yx(dplane, text_y, text_x, "%-*s", max_len, visible);
+        // Posicionar cursor
+        int cursor_scr = curpos - offset;
+        ncplane_cursor_move_yx(dplane, text_y, text_x + cursor_scr);
+
+        notcurses_render(nc);
+
+        notcurses_get_blocking(nc, &ni);
+        if (ni.evtype == NCTYPE_PRESS) {
+            if (ni.id == NCKEY_ENTER || ni.id == '\n' || ni.id == '\r') {
+                accepted = (ret_button == 1);
+                done = true;
+            } else if (ni.id == NCKEY_ESC) {
+                accepted = false;
+                done = true;
+            } else if (ni.id == NCKEY_TAB) {
+                ret_button = (ret_button == 1) ? 2 : 1;
+            } else if (ni.id == NCKEY_LEFT) {
+                if (curpos > 0) curpos--;
+            } else if (ni.id == NCKEY_RIGHT) {
+                if (curpos < (int)strlen(buf)) curpos++;
+            } else if (ni.id == NCKEY_BACKSPACE || ni.id == NCKEY_DEL) {
+                if (curpos > 0) {
+                    memmove(buf + curpos - 1, buf + curpos, strlen(buf) - curpos + 1);
+                    curpos--;
+                }
+            } else if (ni.id == NCKEY_HOME) {
+                curpos = 0;
+            } else if (ni.id == NCKEY_END) {
+                curpos = strlen(buf);
+            } else if (isprint((unsigned char)ni.id) && strlen(buf) < max_len) {
+                memmove(buf + curpos + 1, buf + curpos, strlen(buf) - curpos + 1);
+                buf[curpos] = (char)ni.id;
+                curpos++;
+            }
+        }
+    }
+
+    ncplane_destroy(dplane);
+    notcurses_render(nc);
+
+    if (accepted) {
+        lua_pushstring(L, buf);
+        if (opts.return_button) {
+            lua_pushinteger(L, ret_button);
+            free(buf);
+            return 2;
+        }
+        free(buf);
+        return 1;
+    } else {
+        free(buf);
+        return 0;
+    }
+}
 int open_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
 int save_dialog(DialogOptions opts, lua_State *L) { (void)opts; (void)L; return 0; }
 int progress_dialog(DialogOptions opts, lua_State *L,
