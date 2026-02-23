@@ -20,14 +20,21 @@ else
 $(warning "pkg-config notcurses not found, using default flags")
 endif
 
-# Scintilla flags (try pkg-config, fallback to common include paths)
+# Scintilla flags (try pkg-config, then find header location)
 ifneq ($(shell $(PKG_CONFIG) --exists scintilla && echo yes),)
 CFLAGS  += $(shell $(PKG_CONFIG) --cflags scintilla)
 LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs scintilla) $(filter -l%,$(LIBS))
 else
-# Try several common include paths for Scintilla.h
-SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla -I/usr/include -I/usr/local/include
+# Try to find Scintilla.h using find command and take the first result's parent directory
+SCINTILLA_HEADER := $(shell find /usr/include /usr/local/include -name "Scintilla.h" 2>/dev/null | head -1)
+ifneq ($(SCINTILLA_HEADER),)
+SCINTILLA_INCLUDE := $(patsubst %/Scintilla.h,%,$(SCINTILLA_HEADER))
+CFLAGS += -I$(SCINTILLA_INCLUDE)
+else
+$(warning "Scintilla.h not found in standard locations, trying common paths")
+SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla -I/usr/include -I/usr/local/include -I/usr/include/scintilla/include
 CFLAGS  += $(SCINTILLA_INCLUDES)
+endif
 endif
 
 # Source directories

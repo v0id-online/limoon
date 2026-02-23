@@ -9,9 +9,21 @@
 // up and release resources before quitting for good.
 
 #include "lua.h"
-#include "Scintilla.h"
-
 #include <stdbool.h>
+
+/* Try to include Scintilla.h with various possible paths */
+#if defined(__linux__)
+#  if __has_include(<scintilla/Scintilla.h>)
+#    include <scintilla/Scintilla.h>
+#  elif __has_include(<Scintilla.h>)
+#    include <Scintilla.h>
+#  else
+#    error "Scintilla.h not found. Please install scintilla-devel or equivalent package."
+#  endif
+#else
+/* Non‑Linux: assume Scintilla.h is in include path */
+#  include <Scintilla.h>
+#endif
 
 typedef void SciObject;
 typedef void Pane;
