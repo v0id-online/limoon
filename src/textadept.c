@@ -40,7 +40,7 @@ static const char *BUFFERS = "ta_buffers", *VIEWS = "ta_views", *ARG = "ta_arg";
 static bool initing, closing;
 static int tabs = 1; // int for more options than true/false
 enum { SVOID, SINT, SLEN, SINDEX, SCOLOR, SBOOL, SKEYMOD, SSTRING, SSTRINGRET };
-LUALIB_API int luaopen_lpeg(lua_State *), luaopen_lfs(lua_State *), luaopen_regex(lua_State *);
+LUALIB_API int luaopen_lpeg(lua_State *), luaopen_lfs(lua_State *), luaopen_regex(lua_State *), luaopen_scintillua(lua_State *);
 
 // Forward declarations.
 static void add_doc(sptr_t doc);
@@ -65,7 +65,7 @@ bool emit(const char *name, ...) {
 	for (int type = va_arg(ap, int); type != -1; type = va_arg(ap, int), n++) switch (type) {
 		case LUA_TBOOLEAN: lua_pushboolean(lua, va_arg(ap, int)); break;
 		case LUA_TNUMBER: lua_pushinteger(lua, va_arg(ap, int)); break;
-		case LUA_TSTRING: lua_pushstring(lua, va_arg(ap, char *)); break;
+		case LUA_TSTRING: lua_pushstring(lua, va_arg(ap, const char *)); break;
 		case LUA_TLIGHTUSERDATA:
 		case LUA_TTABLE:
 			ref = va_arg(ap, int);
@@ -886,6 +886,7 @@ static bool init_lua(int argc, char **argv) {
 	luaL_requiref(L, "lpeg", luaopen_lpeg, 1), lua_pop(L, 1);
 	luaL_requiref(L, "lfs", luaopen_lfs, 1), lua_pop(L, 1);
 	luaL_requiref(L, "regex", luaopen_regex, 1), lua_pop(L, 1);
+	luaL_requiref(L, "scintillua", luaopen_scintillua, 1), lua_pop(L, 1);
 
 	// Check for invoking Textadept as a Lua interpreter.
 	for (int i = 0; i < argc; i++)
