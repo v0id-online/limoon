@@ -141,3 +141,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-24 (tarde)
 - Implementada função `message_dialog` usando Notcurses (diálogo básico).
 - Atualizados status de `is_maximized`, `set_maximized`, `is_dark_mode` para implementado (stubs simples).
+
+### 2026-02-24 (noite)
+- Corrigido status de `set_maximized` na tabela.
+- Adicionadas implementações stub para funções de painel (`split_view`, `unsplit_view`, etc.) e abas.
