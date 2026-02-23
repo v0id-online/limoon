@@ -67,6 +67,14 @@ typedef struct {
 static struct notcurses *nc = NULL;
 static View *current_view = NULL;
 
+static bool ensure_notcurses(void) {
+	if (!nc) {
+		nc = notcurses_init(NULL, stdout);
+		if (!nc) return false;
+	}
+	return true;
+}
+
 /* Render a string at (y, x) inside the view's plane and refresh the screen */
 static void update_view(View *view, int y, int x, const char *str) {
 	if (view && view->plane && str) {
@@ -121,18 +129,30 @@ const char *get_charset(void) {
 }
 
 void new_window(SciObject *(*get_view)(void)) {
-	/* TODO: create main window and call get_view() when ready */
-	(void)get_view;
+	if (!ensure_notcurses()) return;
+	current_view = create_view();
+	if (!current_view) return;
+	SciObject *sci = get_view();
+	if (sci) {
+		current_view->sci = sci;
+	}
 }
 
 void set_title(const char *title) {
-	/* TODO: set terminal title via notcurses */
-	(void)title;
+	if (title) {
+		printf("\x1b]0;%s\x07", title);
+		fflush(stdout);
+	}
 }
 
 bool is_maximized(void) { return false; }
 void set_maximized(bool maximize) { (void)maximize; }
-void get_size(int *w, int *h) { if(w) *w = 80; if(h) *h = 24; }
+void get_size(int *w, int *h) {
+	if (!ensure_notcurses()) { if(w) *w=80; if(h) *h=24; return; }
+	struct ncplane *std = notcurses_stdplane(nc);
+	if (w) *w = ncplane_dim_x(std);
+	if (h) *h = ncplane_dim_y(std);
+}
 void set_size(int width, int height) { (void)width; (void)height; }
 
 SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, void *)) {
@@ -227,7 +247,8 @@ void add_timeout(double interval, bool (*f)(int *), int *reference) {
 }
 
 void update_ui(void) {
-	/* TODO: implement UI update */
+	if (!ensure_notcurses()) return;
+	notcurses_render(nc);
 }
 
 bool is_hidpi(void) { return false; }
@@ -266,57 +287,3 @@ void quit(void) {}
 
 /* ------------------------------------------------------------------------ */
 
-int main(int argc, char **argv)
-{
-	/* Initialize Notcurses */
-	nc = notcurses_init(NULL, stdout);
-	if (!nc)
-		return 1;
-
-	/* Create a demo view */
-	current_view = create_view();
-	if (!current_view) {
-		notcurses_stop(nc);
-		return 1;
-	}
-
-	/* Write a welcome message */
-	update_view(current_view, 0, 0, "Textadept (Notcurses) - initializing...");
-	notcurses_render(nc);
-
-	/* Initialize the core Textadept engine */
-	if (!init_textadept(argc, argv))
-	{
-		destroy_view(current_view);
-		notcurses_stop(nc);
-		return 1;
-	}
-
-	/* TODO: set up initial windows, input handling, and the main event loop */
-
-	/* Simple event loop: exit on 'q' */
-	struct ncinput ni;
-	bool running = true;
-	while (running) {
-		notcurses_get_blocking(nc, &ni);
-		if (ni.evtype == NCTYPE_PRESS) {
-			switch (ni.id) {
-			case 'q':
-				running = false;
-				break;
-			default:
-				/* Echo typed character (just for demo) */
-				char buf[2] = { (char)ni.id, '\0' };
-				update_view(current_view, 1, 0, "Key pressed: ");
-				ncplane_putstr_yx(current_view->plane, 1, 13, "%s", buf);
-				notcurses_render(nc);
-				break;
-			}
-		}
-	}
-
-	/* Clean up */
-	destroy_view(current_view);
-	notcurses_stop(nc);
-	return 0;
-}
