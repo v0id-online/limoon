@@ -9,13 +9,23 @@ CFLAGS  = -I. -I./src -I./core -std=c99 -Wall -Wextra -pedantic -D_GNU_SOURCE
 LDFLAGS =
 LIBS    = -lnotcurses -lscintilla -llua -lm -lutil -lpanelw -lncursesw
 
-# Try to use pkg-config for notcurses
+# Try to use pkg-config for notcurses and scintilla
 PKG_CONFIG = pkg-config
+
+# Notcurses flags
 ifneq ($(shell $(PKG_CONFIG) --exists notcurses && echo yes),)
 CFLAGS  += $(shell $(PKG_CONFIG) --cflags notcurses)
 LIBS    := $(shell $(PKG_CONFIG) --libs notcurses) -lscintilla -llua -lm -lutil -lpanelw -lncursesw
 else
 $(warning "pkg-config notcurses not found, using default flags")
+endif
+
+# Scintilla flags (try pkg-config, fallback to /usr/include/scintilla)
+ifneq ($(shell $(PKG_CONFIG) --exists scintilla && echo yes),)
+CFLAGS  += $(shell $(PKG_CONFIG) --cflags scintilla)
+LIBS    := $(filter-out -lscintilla,$(LIBS)) $(shell $(PKG_CONFIG) --libs scintilla) $(filter -l%,$(LIBS))
+else
+CFLAGS  += -I/usr/include/scintilla
 endif
 
 # Source directories
