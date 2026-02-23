@@ -7,7 +7,7 @@
 CC      = gcc
 CFLAGS  = -I. -I./src -I./core -std=c99 -Wall -Wextra -pedantic -D_GNU_SOURCE
 LDFLAGS =
-LIBS    = -lnotcurses -lscintilla -llua -lm -lutil -lpanelw -lncursesw
+LIBS    = -lnotcurses -lscintilla -lscintillua -llua -lm -lutil -lpanelw -lncursesw
 
 # Try to use pkg-config for notcurses and scintilla
 PKG_CONFIG = pkg-config
@@ -15,7 +15,7 @@ PKG_CONFIG = pkg-config
 # Notcurses flags
 ifneq ($(shell $(PKG_CONFIG) --exists notcurses && echo yes),)
 CFLAGS  += $(shell $(PKG_CONFIG) --cflags notcurses)
-LIBS    := $(shell $(PKG_CONFIG) --libs notcurses) -lscintilla -llua -lm -lutil -lpanelw -lncursesw
+LIBS    := $(shell $(PKG_CONFIG) --libs notcurses) -lscintilla -lscintillua -llua -lm -lutil -lpanelw -lncursesw
 else
 $(warning "pkg-config notcurses not found, using default flags")
 endif
@@ -75,6 +75,9 @@ SCINTILLA_INCLUDES := -I/usr/include/scintilla -I/usr/local/include/scintilla \
 CFLAGS  += $(SCINTILLA_INCLUDES)
 endif
 endif
+
+# Adiciona a biblioteca scintillua ao linker em todas as configurações
+LIBS += -lscintillua
 
 # Source directories
 SRCDIR  = src
