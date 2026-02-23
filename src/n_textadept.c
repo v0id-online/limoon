@@ -71,6 +71,12 @@ typedef struct {
 
 static struct notcurses *nc = NULL;
 static View *current_view = NULL;
+static char find_text[256] = "";
+static char repl_text[256] = "";
+static bool command_entry_active = false;
+static bool statusbar_visible = false;
+static char statusbar_text0[256] = "";
+static char statusbar_text1[256] = "";
 
 static bool ensure_notcurses(void) {
 	if (!nc) {
@@ -203,10 +209,22 @@ void move_tab(int from, int to) { (void)from; (void)to; }
 void remove_tab(int index) { (void)index; }
 
 /* Find & replace pane functions */
-const char *get_find_text(void) { return ""; }
-const char *get_repl_text(void) { return ""; }
-void set_find_text(const char *text) { (void)text; }
-void set_repl_text(const char *text) { (void)text; }
+const char *get_find_text(void) { return find_text; }
+const char *get_repl_text(void) { return repl_text; }
+void set_find_text(const char *text) {
+	if (text) {
+		snprintf(find_text, sizeof(find_text), "%s", text);
+	} else {
+		find_text[0] = '\0';
+	}
+}
+void set_repl_text(const char *text) {
+	if (text) {
+		snprintf(repl_text, sizeof(repl_text), "%s", text);
+	} else {
+		repl_text[0] = '\0';
+	}
+}
 void add_to_find_history(const char *text) { (void)text; }
 void add_to_repl_history(const char *text) { (void)text; }
 void set_entry_font(const char *name) { (void)name; }
@@ -219,17 +237,30 @@ void set_option_label(FindOption *option, const char *text) { (void)option; (voi
 void focus_find(void) {}
 
 /* Command entry functions */
-void focus_command_entry(void) {}
-bool is_command_entry_active(void) { return false; }
-void set_command_entry_label(const char *text) { (void)text; }
+void focus_command_entry(void) {
+	command_entry_active = !command_entry_active;
+	/* TODO: show/hide command entry UI */
+}
+bool is_command_entry_active(void) { return command_entry_active; }
+void set_command_entry_label(const char *text) {
+	/* placeholder for command entry label */
+	(void)text;
+}
 int get_command_entry_height(void) { return 1; }
 void set_command_entry_height(int height) { (void)height; }
 
 /* Statusbar functions */
-bool is_statusbar_visible(void) { return false; }
-void set_statusbar_visible(bool visible) { (void)visible; }
-const char *get_statusbar_text(int bar) { (void)bar; return ""; }
-void set_statusbar_text(int bar, const char *text) { (void)bar; (void)text; }
+bool is_statusbar_visible(void) { return statusbar_visible; }
+void set_statusbar_visible(bool visible) { statusbar_visible = visible; }
+const char *get_statusbar_text(int bar) {
+	if (bar == 0) return statusbar_text0;
+	if (bar == 1) return statusbar_text1;
+	return "";
+}
+void set_statusbar_text(int bar, const char *text) {
+	if (bar == 0 && text) snprintf(statusbar_text0, sizeof(statusbar_text0), "%s", text);
+	else if (bar == 1 && text) snprintf(statusbar_text1, sizeof(statusbar_text1), "%s", text);
+}
 
 /* Menu functions */
 void *read_menu(lua_State *L, int index) { (void)L; (void)index; return NULL; }
