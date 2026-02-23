@@ -65,7 +65,7 @@ bool emit(const char *name, ...) {
 	for (int type = va_arg(ap, int); type != -1; type = va_arg(ap, int), n++) switch (type) {
 		case LUA_TBOOLEAN: lua_pushboolean(lua, va_arg(ap, int)); break;
 		case LUA_TNUMBER: lua_pushinteger(lua, va_arg(ap, int)); break;
-		case LUA_TSTRING: lua_pushstring(lua, va_arg(ap, char *)); break;
+		case LUA_TSTRING: lua_pushstring(lua, va_arg(ap, const char *)); break;
 		case LUA_TLIGHTUSERDATA:
 		case LUA_TTABLE:
 			ref = va_arg(ap, int);
