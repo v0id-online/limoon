@@ -101,6 +101,74 @@ static void process_timeouts(void) {
     }
 }
 
+static void handle_keypress(struct ncinput *ni) {
+    if (!focused_view) return;
+    int key = ni->id;
+    int modifiers = ni->modifiers;
+
+    // printable character without Ctrl/Alt (Shift is allowed for capital letters)
+    if (isprint(key) && !(modifiers & (NCTRL_MSK | NALT_MSK))) {
+        SS(focused_view, SCI_CHAR, key, 0);
+        return;
+    }
+
+    // special keys
+    int sci_key = 0;
+    switch (key) {
+        case NCKEY_ENTER:
+        case NCKEY_ENTER2:
+            sci_key = SCK_RETURN;
+            break;
+        case NCKEY_TAB:
+            sci_key = SCK_TAB;
+            break;
+        case NCKEY_BACKSPACE:
+            sci_key = SCK_BACK;
+            break;
+        case NCKEY_ESC:
+            sci_key = SCK_ESCAPE;
+            break;
+        case NCKEY_UP:
+            sci_key = SCK_UP;
+            break;
+        case NCKEY_DOWN:
+            sci_key = SCK_DOWN;
+            break;
+        case NCKEY_LEFT:
+            sci_key = SCK_LEFT;
+            break;
+        case NCKEY_RIGHT:
+            sci_key = SCK_RIGHT;
+            break;
+        case NCKEY_INS:
+            sci_key = SCK_INSERT;
+            break;
+        case NCKEY_DEL:
+            sci_key = SCK_DELETE;
+            break;
+        case NCKEY_HOME:
+            sci_key = SCK_HOME;
+            break;
+        case NCKEY_END:
+            sci_key = SCK_END;
+            break;
+        case NCKEY_PGUP:
+            sci_key = SCK_PRIOR;
+            break;
+        case NCKEY_PGDOWN:
+            sci_key = SCK_NEXT;
+            break;
+        default:
+            // possibly a printable with Ctrl or Alt, ignore for now
+            // but still allow character if Ctrl not pressed (e.g., Shift+key already handled above)
+            if (key >= 32 && key <= 126 && !(modifiers & NCTRL_MSK)) {
+                SS(focused_view, SCI_CHAR, key, 0);
+            }
+            return;
+    }
+    SS(focused_view, SCI_KEYDOWN, sci_key, 0);
+}
+
 /* ------------------------------------------------------------------------ */
 
 int main(int argc, char **argv) {
@@ -136,7 +204,8 @@ int main(int argc, char **argv) {
 					running = false;
 					break;
 				}
-				/* TODO: forward keypress to focused view */
+				/* Forward keypress to focused view */
+				handle_keypress(&ni);
 			}
 		}
 		/* Small sleep to reduce CPU usage */
@@ -475,17 +544,14 @@ void add_timeout(double interval, bool (*f)(int *), int *reference) {
 void update_ui(void) {
 	if (!ensure_notcurses()) return;
 	/* Process Lua async callbacks and timeouts */
-	bool need_render = false;
 	if (lua) {
-		if (lua_processprocs(lua)) need_render = true;
-		if (lua_processtimeouts(lua)) need_render = true;
+		lua_processprocs(lua);
+		lua_processtimeouts(lua);
 	}
 	/* Process platform timeouts */
 	process_timeouts();
-	/* Render any changes */
-	if (need_render || timeout_list != NULL) {
-		notcurses_render(nc);
-	}
+	/* Always render to reflect any changes in Scintilla */
+	notcurses_render(nc);
 }
 
 bool is_hidpi(void) { return false; }

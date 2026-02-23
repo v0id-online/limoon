@@ -182,3 +182,9 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Implementadas funções de processo (`spawn`, `process_size`, `is_process_running`, `wait_process`, `read_process_output`, `write_process_input`, `close_process_input`, `kill_process`, `get_process_exit_status`, `cleanup_process`) com stubs mínimos para Unix (fork/exec não implementado, retornam falha).
 - Corrigida função `process_size` para retornar tamanho da estrutura interna.
 - Atualizado tracking.
+
+### 2026-02-27 (noite)
+- Adicionada função `handle_keypress` para encaminhar eventos de teclado para a view Scintilla focada (suporte básico a caracteres e teclas especiais).
+- Modificado `update_ui` para renderizar sempre, garantindo que mudanças na Scintilla sejam refletidas.
+- Atualizado loop principal para chamar `handle_keypress` e continuar permitindo saída com 'q' ou Ctrl+C.
+- Progresso rumo a uma versão inicial funcional que pode aceitar entrada de teclado.
