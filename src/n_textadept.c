@@ -396,10 +396,6 @@ void add_timeout(double interval, bool (*f)(int *), int *reference) {
 
 void update_ui(void) {
 	if (!ensure_notcurses()) return;
-	/* Only render if there is something to render */
-	static int64_t last_render = 0;
-	int64_t now = 0; // placeholder, we could use notcurses functions for time
-	/* For now always render */
 	notcurses_render(nc);
 }
 
@@ -553,8 +549,12 @@ int input_dialog(DialogOptions opts, lua_State *L) {
         // Ajustar offset para manter cursor visível
         if (curpos - offset >= max_len) offset = curpos - max_len + 1;
         if (offset > curpos) offset = curpos;
+        // Garantir que offset não esteja além do fim do buffer
+        size_t buflen = strlen(buf);
+        if (offset > (int)buflen) offset = (int)buflen;
+        if (offset < 0) offset = 0;
         int copy_len = max_len;
-        if (offset + copy_len > (int)strlen(buf)) copy_len = strlen(buf) - offset;
+        if (offset + copy_len > (int)buflen) copy_len = (int)buflen - offset;
         if (copy_len < 0) copy_len = 0;
         strncpy(visible, buf + offset, copy_len);
         visible[copy_len] = '\0';

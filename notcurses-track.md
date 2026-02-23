@@ -171,3 +171,8 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Adicionada verificação de `view` não nulo.
 - Melhorada a lógica de desfoque apenas se a view anterior for diferente da nova.
 - Ajustado `main` para garantir que o valor de retorno seja válido mesmo se `exit_status` não tiver sido definido.
+
+### 2026-02-27 (manhã)
+- Corrigido bug em `input_dialog` onde `offset` poderia exceder o comprimento do buffer, causando cálculo negativo.
+- Simplificada função `update_ui` removendo variáveis não utilizadas.
+- Atualizado registro de progresso.
