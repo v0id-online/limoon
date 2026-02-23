@@ -33,12 +33,12 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 
 | Função | Status |
 |--------|--------|
-| `get_platform` | stub |
-| `get_charset` | stub |
-| `new_window` | stub |
-| `set_title` | stub |
+| `get_platform` | implementado |
+| `get_charset` | implementado |
+| `new_window` | implementado |
+| `set_title` | implementado |
 | `is_maximized` | stub |
-| `get_size` | stub |
+| `get_size` | implementado |
 | `set_size` | stub |
 | `new_scintilla` | stub |
 | `focus_view` | stub |
@@ -81,12 +81,12 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `get_statusbar_text` | stub |
 | `set_statusbar_text` | stub |
 | `read_menu` | stub |
-| `popup_menu` | stub |
+| `popup_menu` | implementado |
 | `set_menubar` | stub |
 | `get_clipboard_text` | stub (retorna NULL) |
 | `add_timeout` | stub |
-| `update_ui` | stub |
-| `is_hidpi` | stub |
+| `update_ui` | implementado |
+| `is_hidpi` | implementado |
 | `is_dark_mode` | stub |
 | `message_dialog` | stub |
 | `input_dialog` | stub |

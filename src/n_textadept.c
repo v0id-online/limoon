@@ -14,6 +14,47 @@
 #include "textadept_platform.h"
 
 /* ------------------------------------------------------------------------ */
+
+int main(int argc, char **argv) {
+	/* Initialize Notcurses */
+	if (!ensure_notcurses()) {
+		fprintf(stderr, "Failed to initialize Notcurses\n");
+		return 1;
+	}
+
+	/* Call init_textadept which will call new_window etc. */
+	if (!init_textadept(argc, argv)) {
+		fprintf(stderr, "Failed to initialize Textadept\n");
+		notcurses_stop(nc);
+		return 1;
+	}
+
+	struct ncinput ni;
+	bool running = true;
+	while (running) {
+		/* Process any pending UI updates */
+		update_ui();
+		/* Non-blocking input */
+		while (notcurses_get_nblock(nc, &ni) != -1) {
+			if (ni.evtype == NCTYPE_PRESS) {
+				/* For now, exit on 'q' or Ctrl+C */
+				if (ni.id == 'q' || (ni.id == 'c' && (ni.modifiers & NCTRL_MSK))) {
+					running = false;
+					break;
+				}
+				/* TODO: forward keypress to focused view */
+			}
+		}
+		/* Small sleep to reduce CPU usage */
+		struct timespec ts = { .tv_sec = 0, .tv_nsec = 10 * 1000000 }; // 10ms
+		nanosleep(&ts, NULL);
+	}
+
+	/* Cleanup */
+	close_textadept();
+	notcurses_stop(nc);
+	return exit_status;
+}
 /* Notcurses view management                                                */
 
 typedef struct {
@@ -166,7 +207,11 @@ void set_statusbar_text(int bar, const char *text) { (void)bar; (void)text; }
 
 /* Menu functions */
 void *read_menu(lua_State *L, int index) { (void)L; (void)index; return NULL; }
-void popup_menu(void *menu, void *userdata) { (void)menu; (void)userdata; }
+void popup_menu(void *menu, void *userdata) {
+	(void)menu; (void)userdata;
+	// Notcurses popup menu not implemented yet.
+	fprintf(stderr, "popup_menu called (menu=%p)\n", menu);
+}
 void set_menubar(lua_State *L, int index) { (void)L; (void)index; }
 
 char *get_clipboard_text(int *len) {
