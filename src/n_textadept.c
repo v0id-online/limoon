@@ -13,12 +13,32 @@
 #include <stdio.h>
 #include <time.h>
 #include <ctype.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "textadept.h"
 #include "textadept_platform.h"
 
 /* Lua core functions */
 extern int lua_processprocs(lua_State *L);
 extern int lua_processtimeouts(lua_State *L);
+
+/* Textadept globals */
+extern SciObject *focused_view, *command_entry;
+extern FindButton *find_next, *find_prev, *replace, *replace_all;
+extern FindOption *match_case, *whole_word, *regex, *in_files;
+extern lua_State *lua;
+extern int exit_status;
+
+/* Process implementation */
+typedef struct {
+    pid_t pid;
+    int exit_status;
+    bool running;
+    int stdin_fd;
+    int stdout_fd;
+    int stderr_fd;
+} NProcess;
 
 /* External Scintilla functions */
 extern SciObject *scintilla_new(void (*)(SciObject*,int,SCNotification*,void*), void*);
@@ -783,22 +803,70 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 
 bool spawn(lua_State *L, Process *proc, int index, const char *cmd, const char *cwd, int envi,
 	bool monitor_stdout, bool monitor_stderr, const char **error) {
-	(void)L; (void)proc; (void)index; (void)cmd; (void)cwd; (void)envi;
-	(void)monitor_stdout; (void)monitor_stderr; (void)error;
-	return false;
+    (void)L; (void)index; (void)cmd; (void)cwd; (void)envi;
+    (void)monitor_stdout; (void)monitor_stderr;
+    NProcess *np = (NProcess*)proc;
+    // Initialize as not running
+    np->pid = -1;
+    np->exit_status = 0;
+    np->running = false;
+    np->stdin_fd = -1;
+    np->stdout_fd = -1;
+    np->stderr_fd = -1;
+    // Stub: not implemented
+    if (error) *error = "process spawning not yet implemented in Notcurses frontend";
+    return false;
 }
-size_t process_size(void) { return 0; }
-bool is_process_running(Process *proc) { (void)proc; return false; }
-void wait_process(Process *proc) { (void)proc; }
+size_t process_size(void) { return sizeof(NProcess); }
+bool is_process_running(Process *proc) {
+    NProcess *np = (NProcess*)proc;
+    if (!np) return false;
+    if (!np->running) return false;
+    // For stub, always false
+    return false;
+}
+void wait_process(Process *proc) {
+    NProcess *np = (NProcess*)proc;
+    if (np && np->running) {
+        // Not implemented
+    }
+}
 char *read_process_output(Process *proc, char option, size_t *len, const char **error, int *code) {
-	(void)proc; (void)option; (void)len; (void)error; (void)code;
-	return NULL;
+    (void)proc; (void)option;
+    if (len) *len = 0;
+    if (error) *error = "no output available";
+    if (code) *code = ENOSYS;
+    return NULL;
 }
-void write_process_input(Process *proc, const char *s, size_t len) { (void)proc; (void)s; (void)len; }
-void close_process_input(Process *proc) { (void)proc; }
-void kill_process(Process *proc, int signal) { (void)proc; (void)signal; }
-int get_process_exit_status(Process *proc) { (void)proc; return 0; }
-void cleanup_process(Process *proc) { (void)proc; }
+void write_process_input(Process *proc, const char *s, size_t len) {
+    (void)proc; (void)s; (void)len;
+}
+void close_process_input(Process *proc) {
+    NProcess *np = (NProcess*)proc;
+    if (np && np->stdin_fd != -1) {
+        close(np->stdin_fd);
+        np->stdin_fd = -1;
+    }
+}
+void kill_process(Process *proc, int signal) {
+    NProcess *np = (NProcess*)proc;
+    if (np && np->pid > 0) {
+        // Not implemented
+        (void)signal;
+    }
+}
+int get_process_exit_status(Process *proc) {
+    NProcess *np = (NProcess*)proc;
+    if (np) return np->exit_status;
+    return -1;
+}
+void cleanup_process(Process *proc) {
+    NProcess *np = (NProcess*)proc;
+    if (!np) return;
+    close_process_input(np);
+    if (np->stdout_fd != -1) { close(np->stdout_fd); np->stdout_fd = -1; }
+    if (np->stderr_fd != -1) { close(np->stderr_fd); np->stderr_fd = -1; }
+}
 void suspend(void) {
 	// Não há suporte a suspensão em Notcurses; apenas stub.
 }

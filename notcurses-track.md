@@ -176,3 +176,9 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Corrigido bug em `input_dialog` onde `offset` poderia exceder o comprimento do buffer, causando cálculo negativo.
 - Simplificada função `update_ui` removendo variáveis não utilizadas.
 - Atualizado registro de progresso.
+
+### 2026-02-27 (tarde)
+- Adicionadas declarações `extern` para variáveis globais do Textadept (`lua`, `focused_view`, `exit_status`, etc.) em `n_textadept.c`.
+- Implementadas funções de processo (`spawn`, `process_size`, `is_process_running`, `wait_process`, `read_process_output`, `write_process_input`, `close_process_input`, `kill_process`, `get_process_exit_status`, `cleanup_process`) com stubs mínimos para Unix (fork/exec não implementado, retornam falha).
+- Corrigida função `process_size` para retornar tamanho da estrutura interna.
+- Atualizado tracking.
