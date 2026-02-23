@@ -165,3 +165,9 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Adicionados logs de depuração em funções cruciais (new_window, focus_view, etc.) para rastreamento de chamadas.
 - Ajustado o loop principal para exibir teclas pressionadas.
 - Clarificado status de algumas funções como "implementado (stub)" na tabela.
+
+### 2026-02-26 (tarde)
+- Corrigido bug em `focus_view` que poderia chamar `SS` com `view` NULL.
+- Adicionada verificação de `view` não nulo.
+- Melhorada a lógica de desfoque apenas se a view anterior for diferente da nova.
+- Ajustado `main` para garantir que o valor de retorno seja válido mesmo se `exit_status` não tiver sido definido.

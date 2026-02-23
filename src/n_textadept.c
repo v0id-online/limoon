@@ -69,7 +69,11 @@ int main(int argc, char **argv) {
 	close_textadept();
 	notcurses_stop(nc);
 	fprintf(stderr, "[n_textadept] exiting with status %d\n", exit_status);
-	return exit_status;
+	/* Avoid returning uninitialized exit_status if something went wrong */
+	if (exit_status != 0) {
+		return exit_status;
+	}
+	return 0;
 }
 /* Notcurses view management                                                */
 
@@ -193,7 +197,11 @@ SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, vo
 
 void focus_view(SciObject *view) {
 	fprintf(stderr, "[n_textadept] focus_view called (view=%p)\n", view);
-	if (focused_view) {
+	if (!view) {
+		fprintf(stderr, "[n_textadept] WARNING: view is NULL\n");
+		return;
+	}
+	if (focused_view && focused_view != view) {
 		fprintf(stderr, "[n_textadept] unfocusing previous view %p\n", focused_view);
 		SS(focused_view, SCI_SETFOCUS, 0, 0);
 	}
@@ -388,6 +396,10 @@ void add_timeout(double interval, bool (*f)(int *), int *reference) {
 
 void update_ui(void) {
 	if (!ensure_notcurses()) return;
+	/* Only render if there is something to render */
+	static int64_t last_render = 0;
+	int64_t now = 0; // placeholder, we could use notcurses functions for time
+	/* For now always render */
 	notcurses_render(nc);
 }
 
