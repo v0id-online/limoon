@@ -51,7 +51,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `get_pane_info` | stub |
 | `get_parent_pane_info` | stub |
 | `get_pane_info_from_view` | stub |
-| `set_pane_split_pos` | stub |
+| `set_pane_split_pos` | implementado |
 | `show_tabs` | stub |
 | `add_tab` | stub |
 | `set_tab` | stub |
@@ -62,21 +62,21 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `get_repl_text` | implementado |
 | `set_find_text` | implementado |
 | `set_repl_text` | implementado |
-| `add_to_find_history` | stub |
-| `add_to_repl_history` | stub |
+| `add_to_find_history` | implementado |
+| `add_to_repl_history` | implementado |
 | `set_entry_font` | stub |
-| `is_checked` | stub |
-| `toggle` | stub |
+| `is_checked` | implementado |
+| `toggle` | implementado |
 | `set_find_label` | stub |
 | `set_repl_label` | stub |
-| `set_button_label` | stub |
-| `set_option_label` | stub |
-| `focus_find` | stub |
+| `set_button_label` | implementado |
+| `set_option_label` | implementado |
+| `focus_find` | implementado |
 | `focus_command_entry` | implementado |
 | `is_command_entry_active` | implementado |
 | `set_command_entry_label` | implementado |
-| `get_command_entry_height` | stub |
-| `set_command_entry_height` | stub |
+| `get_command_entry_height` | implementado |
+| `set_command_entry_height` | implementado |
 | `is_statusbar_visible` | implementado |
 | `set_statusbar_visible` | implementado |
 | `get_statusbar_text` | implementado |
@@ -147,3 +147,10 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Corrigido status de `set_maximized` na tabela.
 - Adicionadas implementações stub para funções de painel (`split_view`, `unsplit_view`, etc.) e abas.
 - Implementadas funções `split_view` e `unsplit_view` com Notcurses (placeholders).
+
+### 2026-02-25 (manhã)
+- Atualizados status de várias funções para implementado.
+- Implementadas funções de find & replace (`set_button_label`, `set_option_label`, `focus_find`, `add_to_find_history`, `add_to_repl_history`).
+- Implementadas funções de comando (`get_command_entry_height`, `set_command_entry_height`).
+- Implementadas funções de painel (`set_pane_split_pos`).
+- Implementadas funções `is_checked` e `toggle`.
