@@ -23,79 +23,79 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 
 | Função | Status |
 |--------|--------|
-| `get_platform` | pendente |
-| `get_charset` | pendente |
-| `new_window` | pendente |
+| `get_platform` | stub |
+| `get_charset` | stub |
+| `new_window` | stub |
 | `set_title` | stub |
-| `is_maximized` | pendente |
-| `get_size` | pendente |
-| `set_size` | pendente |
-| `new_scintilla` | pendente |
+| `is_maximized` | stub |
+| `get_size` | stub |
+| `set_size` | stub |
+| `new_scintilla` | stub |
 | `focus_view` | stub |
-| `SS` | pendente |
-| `split_view` | pendente |
-| `unsplit_view` | pendente |
-| `delete_scintilla` | pendente |
-| `get_top_pane` | pendente |
-| `get_pane_info` | pendente |
-| `get_parent_pane_info` | pendente |
-| `get_pane_info_from_view` | pendente |
-| `set_pane_split_pos` | pendente |
-| `show_tabs` | pendente |
-| `add_tab` | pendente |
-| `set_tab` | pendente |
-| `set_tab_label` | pendente |
-| `move_tab` | pendente |
-| `remove_tab` | pendente |
-| `get_find_text` | pendente |
-| `get_repl_text` | pendente |
-| `set_find_text` | pendente |
-| `set_repl_text` | pendente |
-| `add_to_find_history` | pendente |
-| `add_to_repl_history` | pendente |
-| `set_entry_font` | pendente |
-| `is_checked` | pendente |
-| `toggle` | pendente |
-| `set_find_label` | pendente |
-| `set_repl_label` | pendente |
-| `set_button_label` | pendente |
-| `set_option_label` | pendente |
-| `focus_find` | pendente |
-| `focus_command_entry` | pendente |
-| `is_command_entry_active` | pendente |
-| `set_command_entry_label` | pendente |
-| `get_command_entry_height` | pendente |
-| `set_command_entry_height` | pendente |
-| `is_statusbar_visible` | pendente |
-| `set_statusbar_visible` | pendente |
-| `get_statusbar_text` | pendente |
-| `set_statusbar_text` | pendente |
-| `read_menu` | pendente |
-| `popup_menu` | pendente |
-| `set_menubar` | pendente |
+| `SS` | stub |
+| `split_view` | stub |
+| `unsplit_view` | stub |
+| `delete_scintilla` | stub |
+| `get_top_pane` | stub |
+| `get_pane_info` | stub |
+| `get_parent_pane_info` | stub |
+| `get_pane_info_from_view` | stub |
+| `set_pane_split_pos` | stub |
+| `show_tabs` | stub |
+| `add_tab` | stub |
+| `set_tab` | stub |
+| `set_tab_label` | stub |
+| `move_tab` | stub |
+| `remove_tab` | stub |
+| `get_find_text` | stub |
+| `get_repl_text` | stub |
+| `set_find_text` | stub |
+| `set_repl_text` | stub |
+| `add_to_find_history` | stub |
+| `add_to_repl_history` | stub |
+| `set_entry_font` | stub |
+| `is_checked` | stub |
+| `toggle` | stub |
+| `set_find_label` | stub |
+| `set_repl_label` | stub |
+| `set_button_label` | stub |
+| `set_option_label` | stub |
+| `focus_find` | stub |
+| `focus_command_entry` | stub |
+| `is_command_entry_active` | stub |
+| `set_command_entry_label` | stub |
+| `get_command_entry_height` | stub |
+| `set_command_entry_height` | stub |
+| `is_statusbar_visible` | stub |
+| `set_statusbar_visible` | stub |
+| `get_statusbar_text` | stub |
+| `set_statusbar_text` | stub |
+| `read_menu` | stub |
+| `popup_menu` | stub |
+| `set_menubar` | stub |
 | `get_clipboard_text` | stub (retorna NULL) |
-| `add_timeout` | pendente |
-| `update_ui` | pendente |
-| `is_hidpi` | pendente |
-| `is_dark_mode` | pendente |
-| `message_dialog` | pendente |
-| `input_dialog` | pendente |
-| `open_dialog` | pendente |
-| `save_dialog` | pendente |
-| `progress_dialog` | pendente |
-| `list_dialog` | pendente |
-| `spawn` | pendente |
-| `process_size` | pendente |
-| `is_process_running` | pendente |
-| `wait_process` | pendente |
-| `read_process_output` | pendente |
-| `write_process_input` | pendente |
-| `close_process_input` | pendente |
-| `kill_process` | pendente |
-| `get_process_exit_status` | pendente |
-| `cleanup_process` | pendente |
-| `suspend` | pendente |
-| `quit` | pendente |
+| `add_timeout` | stub |
+| `update_ui` | stub |
+| `is_hidpi` | stub |
+| `is_dark_mode` | stub |
+| `message_dialog` | stub |
+| `input_dialog` | stub |
+| `open_dialog` | stub |
+| `save_dialog` | stub |
+| `progress_dialog` | stub |
+| `list_dialog` | stub |
+| `spawn` | stub |
+| `process_size` | stub |
+| `is_process_running` | stub |
+| `wait_process` | stub |
+| `read_process_output` | stub |
+| `write_process_input` | stub |
+| `close_process_input` | stub |
+| `kill_process` | stub |
+| `get_process_exit_status` | stub |
+| `cleanup_process` | stub |
+| `suspend` | stub |
+| `quit` | stub |
 
 ## Registro de alterações
 
@@ -109,3 +109,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-22 (mais tarde)
 - Analisado cabeçalho `textadept_platform.h` e mapeadas todas as funções a serem implementadas.
 - Adicionada tabela de mapeamento no arquivo de tracking.
+
+### 2026-02-22 (noite)
+- Criado arquivo `src/n_textadept.c` completo com inicialização Notcurses, substituindo `initscr()`, mapeando view para `struct ncplane *plane`, usando `ncplane_putstr_yx` para renderização e `notcurses_render()`.
+- Atualizado status das funções na tabela para "stub".
