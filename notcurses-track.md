@@ -12,10 +12,20 @@ Substituir a interface baseada em ncurses (atualmente via CDK?) pela biblioteca 
 
 - [x] Analisar a estrutura atual do backend curses (`src/textadept_curses.c`)
 - [x] Criar um novo backend `src/n_textadept.c`
-- [ ] Adaptar a construção (Makefile, CMake) para incluir notcurses
+- [ ] Adaptar a construção (Makefile, CMake) para incluir notcurses ** (aguardando adição do Makefile ao chat) **
 - [ ] Implementar as funções de plataforma necessárias (set_title, focus_view, etc.)
 - [ ] Testar a integração
 - [ ] Documentar
+
+## Próximos Passos
+
+1. **Adicionar Makefile ao chat** para que possamos adicionar o alvo `textadept-notcurses` e as flags de linkagem `-lnotcurses`.
+2. **Implementar as funções essenciais** que conectam Notcurses com o core do Textadept:
+   - `new_scintilla()` – criar view Scintilla via notcurses
+   - `focus_view()` – gerenciar foco entre views
+   - `update_ui()` – integração com o loop de eventos do Notcurses
+3. **Criar um painel principal** para abrigar múltiplas views e barras de status.
+4. **Tratar entrada do teclado** e redirecionar para Scintilla.
 
 ## Mapeamento de Funções da Plataforma
 
@@ -113,3 +123,6 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-22 (noite)
 - Criado arquivo `src/n_textadept.c` completo com inicialização Notcurses, substituindo `initscr()`, mapeando view para `struct ncplane *plane`, usando `ncplane_putstr_yx` para renderização e `notcurses_render()`.
 - Atualizado status das funções na tabela para "stub".
+
+### 2026-02-23
+- Adicionada seção "Próximos Passos" ao tracking.
