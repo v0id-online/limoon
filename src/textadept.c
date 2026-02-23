@@ -783,8 +783,9 @@ static int quit_lua(lua_State *L) {
 // Runs the given Lua file, which is relative to `textadept_home`, and returns `true` on success.
 // If there are errors, shows an error dialog and returns `false`.
 static bool run_file(const char *filename) {
-	char *file = malloc(strlen(textadept_home) + 1 + strlen(filename) + 1);
-	sprintf(file, "%s/%s", textadept_home, filename);
+	size_t file_size = strlen(textadept_home) + 1 + strlen(filename) + 1;
+	char *file = malloc(file_size);
+	snprintf(file, file_size, "%s/%s", textadept_home, filename);
 	bool ok = luaL_dofile(lua, file) == LUA_OK;
 	if (!ok) show_error("Initialization Error", lua_tostring(lua, -1)), lua_settop(lua, 0);
 	return (free(file), ok);
@@ -1304,9 +1305,9 @@ bool init_textadept(int argc, char **argv) {
 #error platform not supported
 #endif
 #ifdef TEXTADEPT_HOME
-	textadept_home = strcpy(textadept_home, TEXTADEPT_HOME);
+	snprintf(textadept_home, FILENAME_MAX + 1, "%s", TEXTADEPT_HOME);
 #endif
-	if (getenv("TEXTADEPT_HOME")) strcpy(textadept_home, getenv("TEXTADEPT_HOME"));
+	if (getenv("TEXTADEPT_HOME")) snprintf(textadept_home, FILENAME_MAX + 1, "%s", getenv("TEXTADEPT_HOME"));
 
 	setlocale(LC_COLLATE, "C"), setlocale(LC_NUMERIC, "C"); // for Lua
 	bool ok = init_lua(argc, argv);

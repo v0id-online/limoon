@@ -2,6 +2,7 @@
 
 --- @module lexer
 local M = dofile(_HOME .. '/lexers/lexer.lua')
+local lexer = M
 
 --- A ';'-separated list of directory paths that contain lexers for syntax highlighting.
 -- The default value contains *~/.textadept/lexers/* and Textadept's *lexers/* directory.
@@ -10,8 +11,8 @@ _G._LEXERPATH = string.format('%s/lexers;%s/lexers', _USERHOME, _HOME)
 -- Textadept uses Scintillua as a stand-alone Lua library but avoids Scintillua's
 -- auto-initialization routines by predefining `lexer.property`. However, some constants are
 -- left undefined, so define them here.
-M.property = {['scintillua.lexers'] = _LEXERPATH}
-M.FOLD_BASE, M.FOLD_HEADER, M.FOLD_BLANK = 0x400, 0x2000, 0x1000
+lexer.property = {['scintillua.lexers'] = _LEXERPATH}
+lexer.FOLD_BASE, lexer.FOLD_HEADER, lexer.FOLD_BLANK = 0x400, 0x2000, 0x1000
 
 --- Emitted after loading a language lexer.
 -- This is useful for automatically loading language modules as source files are opened, or
