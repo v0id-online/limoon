@@ -40,12 +40,12 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 | `is_maximized` | stub |
 | `get_size` | implementado |
 | `set_size` | stub |
-| `new_scintilla` | stub |
-| `focus_view` | stub |
-| `SS` | stub |
+| `new_scintilla` | implementado |
+| `focus_view` | implementado |
+| `SS` | implementado |
 | `split_view` | stub |
 | `unsplit_view` | stub |
-| `delete_scintilla` | stub |
+| `delete_scintilla` | implementado |
 | `get_top_pane` | stub |
 | `get_pane_info` | stub |
 | `get_parent_pane_info` | stub |
@@ -134,3 +134,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Adicionada função `main` e loop de eventos básico.
 ### 2026-02-23 (noite)
 - Revisão completa do projeto; entendimento dos arquivos e funções necessárias estabelecido.
+
+### 2026-02-24 (manhã)
+- Implementadas funções `new_scintilla`, `focus_view`, `SS`, `delete_scintilla` utilizando a API Scintilla.
+- Adicionadas declarações extern para funções da biblioteca Scintilla.

@@ -15,6 +15,11 @@
 #include "textadept.h"
 #include "textadept_platform.h"
 
+/* External Scintilla functions */
+extern SciObject *scintilla_new(void (*)(SciObject*,int,SCNotification*,void*), void*);
+extern sptr_t scintilla_send_message(SciObject*, int, uptr_t, sptr_t);
+extern void scintilla_delete(SciObject*);
+
 /* ------------------------------------------------------------------------ */
 
 int main(int argc, char **argv) {
@@ -156,18 +161,17 @@ void get_size(int *w, int *h) {
 void set_size(int width, int height) { (void)width; (void)height; }
 
 SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, void *)) {
-	(void)notified;
-	return NULL; /* TODO */
+	return scintilla_new(notified, NULL);
 }
 
 void focus_view(SciObject *view) {
-	/* TODO: bring a particular Scintilla view to front */
-	(void)view;
+	if (focused_view) SS(focused_view, SCI_SETFOCUS, 0, 0);
+	SS(view, SCI_SETFOCUS, 1, 0);
+	focused_view = view;
 }
 
 sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
-	(void)view; (void)message; (void)wparam; (void)lparam;
-	return 0;
+	return scintilla_send_message(view, message, wparam, lparam);
 }
 
 void split_view(SciObject *view, SciObject *view2, bool vertical) {
@@ -180,7 +184,7 @@ bool unsplit_view(SciObject *view, void (*delete_view)(SciObject *)) {
 }
 
 void delete_scintilla(SciObject *view) {
-	(void)view;
+	scintilla_delete(view);
 }
 
 /* Pane functions */
