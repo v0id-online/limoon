@@ -861,6 +861,28 @@ static bool init_lua(int argc, char **argv) {
 		lua_pop(L, 2), lua_gc(L, LUA_GCCOLLECT, 0); // pop package.loaded, _G
 	}
 	luaL_openlibs(L);
+	// Ajustar package.cpath e package.path para incluir caminhos do sistema Lua 5.4
+	lua_getglobal(L, "package");
+	// cpath
+	lua_getfield(L, -1, "cpath");
+	const char *old_cpath = lua_tostring(L, -1);
+	char new_cpath[2048];
+	snprintf(new_cpath, sizeof(new_cpath),
+	         "/usr/local/lib/lua/5.4/?.so;/usr/local/lib/lua/5.4/scintillua/?.so;%s",
+	         old_cpath ? old_cpath : "");
+	lua_pushstring(L, new_cpath);
+	lua_setfield(L, -3, "cpath");
+	lua_pop(L, 1); // remove old cpath value, leaving package at -1
+	// path
+	lua_getfield(L, -1, "path");
+	const char *old_path = lua_tostring(L, -1);
+	char new_path[2048];
+	snprintf(new_path, sizeof(new_path),
+	         "/usr/local/share/lua/5.4/?.lua;/usr/local/share/lua/5.4/?/init.lua;%s",
+	         old_path ? old_path : "");
+	lua_pushstring(L, new_path);
+	lua_setfield(L, -3, "path");
+	lua_pop(L, 2); // remove old path value and package table
 	luaL_requiref(L, "lpeg", luaopen_lpeg, 1), lua_pop(L, 1);
 	luaL_requiref(L, "lfs", luaopen_lfs, 1), lua_pop(L, 1);
 	luaL_requiref(L, "regex", luaopen_regex, 1), lua_pop(L, 1);
