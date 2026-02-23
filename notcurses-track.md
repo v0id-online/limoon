@@ -132,3 +132,5 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 ### 2026-02-23 (tarde)
 - Implementadas funções de plataforma: `get_platform`, `get_charset`, `new_window`, `set_title`, `get_size`, `update_ui`.
 - Adicionada função `main` e loop de eventos básico.
+### 2026-02-23 (noite)
+- Revisão completa do projeto; entendimento dos arquivos e funções necessárias estabelecido.
