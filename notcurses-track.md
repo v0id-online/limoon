@@ -194,3 +194,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - **Falta**: adicionar o Makefile ao chat para que possamos modificá-lo, criando o alvo `textadept-notcurses`.
 - **Falta**: garantir que todas as variáveis globais externas (`focused_view`, `lua`, etc.) sejam resolvidas durante o linking com os objetos do core.
 - **Próximo passo**: solicitar ao usuário que adicione o Makefile atual ao chat.
+
+### 2026-02-28 (tarde)
+- Atualizada a seção **Próximos Passos** com etapas mais concretas para a compilação e teste.
+- Revisão geral do código: todas as funções da plataforma estão implementadas (stubs ou funcionais). O próximo obstáculo é puramente de construção (build system).
