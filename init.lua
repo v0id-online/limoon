@@ -89,6 +89,11 @@ if CURSES then
 
   -- Short command-entry aliases (type aliases() to list them).
   require('aliases')
+
+  -- CURSES-friendly Tab completion for the Lua command entry.
+  -- Replaces Scintilla's popup (which crashes in the terminal) with
+  -- a statusbar-based cycling completion (Tab cycles, statusbar shows options).
+  require('cmdentry_ext')
 end
 
 -- Multiple Selection and Virtual Space.
