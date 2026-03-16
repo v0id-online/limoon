@@ -88,27 +88,28 @@ local CONTENT = table.concat({
 -- ── Open / toggle ─────────────────────────────────────────────────────────
 
 local function open_help()
-  -- If help buffer is the active buffer, switch away (toggle off).
+  -- Toggle off: close and remove from buffer/tab list entirely.
   if buffer._type == HELP_TYPE then
-    view:goto_buffer(-1)
+    buffer.modify = false  -- prevent save dialog
+    buffer:close()
     return
   end
-  -- If help buffer exists elsewhere, switch to it.
+  -- If help buffer exists elsewhere in the list, just switch to it.
   for _, b in ipairs(_BUFFERS) do
     if b._type == HELP_TYPE then
       view:goto_buffer(b)
       return
     end
   end
-  -- Create a new read-only buffer with the help content.
+  -- Create a new read-only help buffer.
   local buf = buffer.new()
-  buf._type   = HELP_TYPE
+  buf._type     = HELP_TYPE
   buf.read_only = false
   buf:append_text(CONTENT)
   buf:set_lexer('text')
-  buf.read_only = true
+  buf:goto_pos(0)   -- position cursor BEFORE locking (avoids modify flag side-effects)
   buf.modify    = false
-  buf:goto_pos(0)
+  buf.read_only = true
 end
 
 keys['ctrl+h'] = open_help
