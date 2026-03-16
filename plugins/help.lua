@@ -106,7 +106,7 @@ local CONTENT = table.concat({
 local function open_help()
   -- Toggle off: close and remove from buffer/tab list entirely.
   if buffer._type == HELP_TYPE then
-    buffer.modify = false  -- prevent save dialog
+    buffer:set_save_point()  -- clear modify flag to skip save dialog
     buffer:close()
     return
   end
@@ -123,8 +123,8 @@ local function open_help()
   buf.read_only = false
   buf:append_text(CONTENT)
   buf:set_lexer('text')
-  buf:goto_pos(0)   -- position cursor BEFORE locking (avoids modify flag side-effects)
-  buf.modify    = false
+  buf:goto_pos(0)     -- position cursor BEFORE locking (avoids modify flag side-effects)
+  buf:set_save_point()  -- clear the modify flag set by append_text
   buf.read_only = true
 end
 
