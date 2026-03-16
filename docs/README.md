@@ -97,6 +97,9 @@ repository is the working implementation.
 
 ---
 
+## SNAPSHOTS
+
+
 ## License
 
 MIT — same as Textadept.
