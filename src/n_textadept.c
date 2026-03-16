@@ -301,7 +301,7 @@ static void handle_keypress(struct ncinput *ni) {
         }
     }
 
-    /* Saída de emergência — 3 Ctrl+C consecutivos */
+    /* Emergency exit — 3 consecutive Ctrl+C presses */
     if (emit_key == 'c' && (sci_mods & SCMOD_CTRL)) {
         if (++ctrl_c_count >= 3) { want_quit = true; return; }
     } else {
@@ -319,7 +319,7 @@ static void handle_keypress(struct ncinput *ni) {
                             command_entry : focused_view;
 
     /* Fallback direto para Ctrl+Z → undo e Ctrl+Y → redo,
-     * caso Lua não tenha tratado (binding não carregado ainda, etc.). */
+     * in case Lua has not handled them (binding not loaded yet, etc.). */
     if (sci_mods & SCMOD_CTRL) {
         end_word_group();
         if (emit_key == 'z') { SS(key_target, SCI_UNDO, 0, 0); return; }
@@ -327,9 +327,9 @@ static void handle_keypress(struct ncinput *ni) {
     }
 
     /* Word-level undo grouping.
-     * Printable non-separator chars (letras, dígitos, símbolos exceto espaço/enter)
-     * são agrupados em uma undo action por palavra.
-     * Espaço, tab, enter, backspace e teclas especiais fecham o grupo atual. */
+     * Printable non-separator chars (letters, digits, symbols except space/enter)
+     * are grouped into a single undo action per word.
+     * Space, tab, enter, backspace and special keys close the current group. */
     bool is_word_char = (emit_key >= 33 && emit_key <= 0x10FFFF)
                         && !(sci_mods & (SCMOD_CTRL | SCMOD_ALT));
     if (is_word_char) {
@@ -346,8 +346,8 @@ static void handle_keypress(struct ncinput *ni) {
         end_word_group();
     }
 
-    /* Para control codes remapeados (não-Kitty), passa a letra + NCKEY_MOD_CTRL
-     * para scinterm não confundir 8→BS, 9→Tab, 13→CR. */
+    /* For remapped control codes (non-Kitty), pass letter + NCKEY_MOD_CTRL
+     * so scinterm does not misread 8→BS, 9→Tab, 13→CR. */
     if (remapped_ctrl)
         scintilla_send_key(key_target, emit_key, (int)(nc_mods | NCKEY_MOD_CTRL));
     else

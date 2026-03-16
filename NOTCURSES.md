@@ -1,55 +1,55 @@
-# Textadept — Frontend Notcurses
+# Textadept — Notcurses Frontend
 
-Este documento explica a arquitetura, dependências, build e funcionamento interno
-do fork do Textadept que usa **Notcurses** como backend de terminal, substituindo
-o backend ncurses/CDK original.
+This document explains the architecture, dependencies, build process, and internal
+workings of the Textadept fork that uses **Notcurses** as its terminal backend,
+replacing the original ncurses/CDK backend.
 
 ---
 
-## Índice
+## Table of Contents
 
-1. [Visão Geral](#1-visão-geral)
-2. [Dependências](#2-dependências)
+1. [Overview](#1-overview)
+2. [Dependencies](#2-dependencies)
 3. [Build](#3-build)
-4. [Estrutura de Arquivos](#4-estrutura-de-arquivos)
-5. [Arquitetura Interna](#5-arquitetura-interna)
-6. [Sistema de Temas](#6-sistema-de-temas)
-7. [Sistema de Plugins](#7-sistema-de-plugins)
-8. [Aliases de Linha de Comando](#8-aliases-de-linha-de-comando)
-9. [Referência de Teclas](#9-referência-de-teclas)
-10. [Guia do Desenvolvedor](#10-guia-do-desenvolvedor)
-11. [Limitações Conhecidas](#11-limitações-conhecidas)
+4. [File Structure](#4-file-structure)
+5. [Internal Architecture](#5-internal-architecture)
+6. [Theme System](#6-theme-system)
+7. [Plugin System](#7-plugin-system)
+8. [Command Entry Aliases](#8-command-entry-aliases)
+9. [Key Reference](#9-key-reference)
+10. [Developer Guide](#10-developer-guide)
+11. [Known Limitations](#11-known-limitations)
 
 ---
 
-## 1. Visão Geral
+## 1. Overview
 
-O Textadept original suporta dois frontends: **GTK** (GUI) e **curses** (terminal
-via ncurses). Este fork substitui o backend curses por **Notcurses**, uma biblioteca
-de terminal moderna que oferece:
+The original Textadept supports two frontends: **GTK** (GUI) and **curses** (terminal
+via ncurses). This fork replaces the curses backend with **Notcurses**, a modern
+terminal library that provides:
 
-- Cores true-color (24-bit RGB) em terminais compatíveis
-- Renderização baseada em planos (`ncplane`) compostos em camadas
-- API mais limpa e previsível que ncurses
-- Suporte nativo a Unicode/UTF-8
+- True-color (24-bit RGB) in compatible terminals
+- Plane-based (`ncplane`) composited rendering in layers
+- A cleaner, more predictable API than ncurses
+- Native Unicode/UTF-8 support
 
-O componente de edição continua sendo **Scintilla** — a mesma biblioteca usada
-no editor GUI. A ponte entre Scintilla e Notcurses é feita pela biblioteca
-**scinterm-notcurses** (submodule git).
+The editing component remains **Scintilla** — the same library used in the GUI
+editor. The bridge between Scintilla and Notcurses is provided by the
+**scinterm-notcurses** library (git submodule).
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │               textadept-notcurses                   │
 ├─────────────────┬───────────────────────────────────┤
 │  Core Lua/C     │  Frontend: src/n_textadept.c       │
-│  (textadept     │  • loop de eventos Notcurses       │
-│   original)     │  • renderização de UI (find bar,   │
-│                 │    statusbar, diálogos)             │
-│                 │  • despacho de teclado/mouse        │
+│  (original      │  • Notcurses event loop            │
+│   textadept)    │  • UI rendering (find bar,         │
+│                 │    statusbar, dialogs)              │
+│                 │  • keyboard/mouse dispatch          │
 ├─────────────────┴───────────────────────────────────┤
 │           scinterm-notcurses  (submodule)            │
 │  • libscinterm_notcurses_static.a                   │
-│  • adapta Scintilla para renderizar em ncplane      │
+│  • adapts Scintilla to render into an ncplane       │
 ├─────────────────────────────────────────────────────┤
 │  Notcurses   │   Scintilla   │   Lua 5.4            │
 └─────────────────────────────────────────────────────┘
@@ -57,16 +57,16 @@ no editor GUI. A ponte entre Scintilla e Notcurses é feita pela biblioteca
 
 ---
 
-## 2. Dependências
+## 2. Dependencies
 
-### Dependências do sistema
+### System dependencies
 
-| Pacote | Versão mínima | Para que serve |
+| Package | Minimum version | Purpose |
 |---|---|---|
-| **notcurses** | 3.0 | Backend de terminal |
-| **gcc** | com suporte C17 (`-std=gnu17`) | Compilação |
-| **cmake** | 3.10 | Build do submodule scinterm-notcurses |
-| **pkg-config** | qualquer | Localizar flags do notcurses |
+| **notcurses** | 3.0 | Terminal backend |
+| **gcc** | with C17 support (`-std=gnu17`) | Compilation |
+| **cmake** | 3.10 | Build the scinterm-notcurses submodule |
+| **pkg-config** | any | Locate notcurses flags |
 
 #### Fedora / RHEL
 
@@ -86,31 +86,30 @@ sudo apt install libnotcurses-dev cmake gcc g++ pkg-config
 sudo pacman -S notcurses cmake gcc pkg-config
 ```
 
-### Dependências embutidas (baixadas pelo CMake)
+### Bundled dependencies (fetched by CMake)
 
-O build do core do Textadept usa CMake `FetchContent` para baixar e compilar
-automaticamente:
+The Textadept core build uses CMake `FetchContent` to automatically download
+and compile:
 
-| Biblioteca | Localização após build |
+| Library | Location after build |
 |---|---|
 | Lua 5.4 | `build/_deps/lua-src/` |
 | LPeg | `build/_deps/lpeg-src/` |
 | LFS (LuaFileSystem) | `build/_deps/lfs-src/` |
 | Regex (TRE) | `build/_deps/regex-src/` |
 
-Estas já devem estar compiladas em `build/*.a` se o projeto foi clonado com
-histórico completo. Se não estiverem, rode o build original do Textadept uma
-vez (`cmake -S . -B build && cmake --build build`) antes de usar o Makefile
-deste fork.
+These should already be compiled under `build/*.a` if the project was cloned
+with full history. If not, run the original Textadept build once
+(`cmake -S . -B build && cmake --build build`) before using this fork's Makefile.
 
 ### Submodule: scinterm-notcurses
 
 ```
 scinterm-notcurses/          ← git submodule
-├── include/                 ← cabeçalhos (ScintillaNotCurses.h, etc.)
-├── scintilla/               ← Scintilla fonte
+├── include/                 ← headers (ScintillaNotCurses.h, etc.)
+├── scintilla/               ← Scintilla source
 │   └── include/             ← Scintilla.h, ScintillaTypes.h, etc.
-└── build/                   ← gerado pelo cmake
+└── build/                   ← generated by cmake
     └── libscinterm_notcurses_static.a
 ```
 
@@ -118,13 +117,13 @@ scinterm-notcurses/          ← git submodule
 
 ## 3. Build
 
-### Primeira vez (clone limpo)
+### First time (clean clone)
 
 ```bash
-# 1. Inicializar o submodule
+# 1. Initialize the submodule
 git submodule update --init scinterm-notcurses
 
-# 2. Compilar scinterm-notcurses (biblioteca estática)
+# 2. Build scinterm-notcurses (static library)
 cmake -S scinterm-notcurses -B scinterm-notcurses/build \
   -DBUILD_SHARED_LIBS=OFF \
   -DBUILD_EXAMPLES=OFF \
@@ -132,182 +131,182 @@ cmake -S scinterm-notcurses -B scinterm-notcurses/build \
   -DENABLE_SCINTILLUA=OFF
 cmake --build scinterm-notcurses/build --parallel
 
-# 3. Garantir que as dependências Lua/LPeg/LFS estão compiladas
-#    (necessário apenas uma vez; pula se build/*.a já existirem)
+# 3. Ensure Lua/LPeg/LFS dependencies are compiled
+#    (only needed once; skip if build/*.a already exist)
 cmake -S . -B build
 cmake --build build --target liblua liblpeg liblfs libregex
 
-# 4. Compilar o executável
+# 4. Build the executable
 make
 ```
 
-### Builds seguintes
+### Subsequent builds
 
 ```bash
-make          # recompila apenas o que mudou
-make clean    # remove objetos e executável (mantém scinterm-notcurses/build)
-make clean-all  # remove tudo inclusive scinterm-notcurses/build
+make          # recompile only changed files
+make clean    # remove objects and executable (keeps scinterm-notcurses/build)
+make clean-all  # remove everything including scinterm-notcurses/build
 ```
 
-### Executar
+### Run
 
 ```bash
-./textadept-notcurses [arquivo]
+./textadept-notcurses [file]
 ```
 
 ---
 
-## 4. Estrutura de Arquivos
+## 4. File Structure
 
 ```
 textadept/
 │
 ├── src/
-│   ├── n_textadept.c        ★ Frontend principal (Notcurses)
-│   ├── textadept.h          ★ Declarações do core modificadas
-│   ├── textadept_platform.h ★ Interface de plataforma (funções que o
-│   │                           frontend deve implementar)
-│   └── textadept_curses.c   ← frontend ncurses original (não usado)
+│   ├── n_textadept.c        ★ Main frontend (Notcurses)
+│   ├── textadept.h          ★ Modified core declarations
+│   ├── textadept_platform.h ★ Platform interface (functions the
+│   │                           frontend must implement)
+│   └── textadept_curses.c   ← original ncurses frontend (unused)
 │
-├── core/                    ← Lua core do Textadept (não modificado exceto)
+├── core/                    ← Textadept Lua core (unmodified except)
 │   ├── ui.lua               ★ statusbar, find bar, command entry
-│   └── file_io.lua          ★ diálogo de saída (botão "Quit")
+│   └── file_io.lua          ★ quit dialog ("Quit" button)
 │
-├── modules/                 ← Módulos Lua carregados por init.lua
-│   ├── ui_widgets.lua       ★ Componentes reutilizáveis (statusbar, notify,
-│   │                           dialogs, output buffers)
-│   ├── themes.lua           ★ Gerenciador de temas
-│   ├── plugin_manager.lua   ★ Carregamento automático de plugins
-│   └── aliases.lua          ★ Atalhos de linha de comando
+├── modules/                 ← Lua modules loaded by init.lua
+│   ├── ui_widgets.lua       ★ Reusable components (statusbar segments,
+│   │                           notify, dialogs, output buffers)
+│   ├── themes.lua           ★ Theme manager
+│   ├── plugin_manager.lua   ★ Automatic plugin loader
+│   └── aliases.lua          ★ Command entry shortcuts
 │
-├── plugins/                 ← Plugins auto-carregados
+├── plugins/                 ← Auto-loaded plugins
 │   ├── word_count.lua       statusbar W:N L:N  +  Ctrl+Shift+W
 │   ├── git_status.lua       statusbar branch   +  Ctrl+Shift+G
-│   ├── scratch_pad.lua      buffer de notas       Ctrl+Shift+N
-│   └── help.lua             referência rápida     Ctrl+H
+│   ├── scratch_pad.lua      persistent notes buffer  Ctrl+Shift+N
+│   └── help.lua             read-only quick reference  Ctrl+H
 │
-├── themes/                  ← Temas de cores
-│   ├── _base.lua            ★ Aplicador base (chamado por cada tema)
-│   ├── monokai.lua          ... e outros 19 temas comunitários
+├── themes/                  ← Color themes
+│   ├── _base.lua            ★ Base style applicator (called by each theme)
+│   ├── monokai.lua          ... and 19 other community themes
 │   └── ...
 │
-├── init.lua                 ★ Inicialização principal (modificado)
-├── Makefile                 ★ Build deste fork
-├── scinterm-notcurses/      ← Submodule git
-└── NOTCURSES.md             este arquivo
+├── init.lua                 ★ Main initialization (modified)
+├── Makefile                 ★ Build for this fork
+├── scinterm-notcurses/      ← git submodule
+└── NOTCURSES.md             this file
 ```
 
-Arquivos marcados com ★ foram criados ou modificados neste fork.
+Files marked with ★ were created or modified in this fork.
 
 ---
 
-## 5. Arquitetura Interna
+## 5. Internal Architecture
 
-### 5.1 n_textadept.c — o frontend
+### 5.1 n_textadept.c — the frontend
 
-Este arquivo implementa todas as funções declaradas em `textadept_platform.h`.
-É o equivalente Notcurses de `textadept_curses.c`.
+This file implements all functions declared in `textadept_platform.h`.
+It is the Notcurses equivalent of `textadept_curses.c`.
 
-#### Estruturas principais
+#### Main structures
 
 ```c
-/* Uma view Scintilla renderizada em um ncplane */
+/* A Scintilla view rendered into an ncplane */
 struct SciPanel {
-    ScintillaNotCurses *sci;   // instância Scintilla
-    struct ncplane     *plane; // plano Notcurses onde é renderizada
-    int row, col, rows, cols;  // posição e tamanho em células
+    ScintillaNotCurses *sci;   // Scintilla instance
+    struct ncplane     *plane; // Notcurses plane it renders into
+    int row, col, rows, cols;  // position and size in cells
 };
 
-/* Estado global do editor */
-static struct notcurses    *nc;           // contexto Notcurses
-static struct ncplane      *stdplane;     // plano raiz
-static struct SciPanel     *current_view; // view com foco
+/* Global editor state */
+static struct notcurses    *nc;           // Notcurses context
+static struct ncplane      *stdplane;     // root plane
+static struct SciPanel     *current_view; // focused view
 static struct ncplane      *statusbar_plane;
 static struct ncplane      *tabbar_plane;
 ```
 
-#### Loop de eventos
+#### Event loop
 
 ```c
-// Simplificado — veja main() em n_textadept.c
+// Simplified — see main() in n_textadept.c
 while (!should_quit) {
-    update_ui();                      // atualiza statusbar, renderiza
-    notcurses_render(nc);             // compõe e envia ao terminal
-    notcurses_get_blocking(nc, &ni);  // aguarda próximo evento
-    handle_keypress(&ni);             // despacha para Scintilla ou UI
+    update_ui();                      // refresh statusbar, render
+    notcurses_render(nc);             // compose and flush to terminal
+    notcurses_get_blocking(nc, &ni);  // wait for next event
+    handle_keypress(&ni);             // dispatch to Scintilla or UI
 }
 ```
 
-#### Renderização da Scintilla
+#### Scintilla rendering
 
-A Scintilla mantém estado interno e renderiza em seu `ncplane` quando chamada:
+Scintilla maintains internal state and renders into its `ncplane` when called:
 
 ```c
 scintilla_render(current_view->sci);
 ```
 
-Esta chamada deve ocorrer **antes** de `notcurses_render()` para que a edição
-fique visível. É crítico chamá-la também dentro de loops modais (find bar,
-diálogos), pois nesses casos o loop principal fica bloqueado.
+This must be called **before** `notcurses_render()` so that edits are visible.
+It is critical to call it inside modal loops (find bar, dialogs) as well, since
+those loops block the main loop.
 
 ### 5.2 Find Bar (Ctrl+F)
 
-A find bar é implementada inteiramente em C como um loop modal:
+The find bar is implemented entirely in C as a modal loop:
 
 ```
-┌─ find bar (última linha da tela) ───────────────────────────────┐
-│ Find: [________________] [◀Prev] [Next▶] [HiAll] [✕]           │
-│ Repl: [________________] [Replace] [Replace All]                │
-└─────────────────────────────────────────────────────────────────┘
+┌─ find bar (last line of the screen) ───────────────────────────────┐
+│ Find: [________________] [◀Prev] [Next▶] [HiAll] [✕]              │
+│ Repl: [________________] [Replace] [Replace All]                   │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**Navegação:** Tab/Shift+Tab circula entre os 8 elementos (2 entradas + 6 botões).
-O botão com foco é desenhado com cores invertidas.
+**Navigation:** Tab/Shift+Tab cycles through all 8 elements (2 text entries + 6
+buttons). The focused button is drawn with inverted colors.
 
-**Loop modal:**
+**Modal loop:**
 
 ```c
 while (!done) {
-    scintilla_render(current_view->sci);   // ← crítico: mostra resultados
+    scintilla_render(current_view->sci);   // ← critical: show search results
     draw_findbar(...);
     notcurses_render(nc);
     notcurses_get_blocking(nc, &ni);
-    // processa Tab, Enter, Esc, texto...
+    // handle Tab, Enter, Esc, text input...
 }
 ```
 
-**Highlight de resultados:** configurado via `INDIC_ROUNDBOX` em `_base.lua`;
-a cor vem de `colors.find` definida em cada tema.
+**Match highlight:** configured via `INDIC_ROUNDBOX` in `_base.lua`; the color
+comes from `colors.find` defined in each theme.
 
-**Seleção do texto encontrado:** usa `ELEMENT_SELECTION_BACK` com alpha `0xFF`.
-O alpha é obrigatório pois `ColourRGBA::IsValid()` da Scintilla retorna `false`
-quando o byte de alpha é zero, desabilitando o highlight.
+**Selected match:** uses `ELEMENT_SELECTION_BACK` with alpha `0xFF`.
+The alpha is mandatory because Scintilla's `ColourRGBA::IsValid()` returns
+`false` when the alpha byte is zero, disabling the highlight.
 
-### 5.3 Diálogos
+### 5.3 Dialogs
 
-Todos os diálogos são implementados como loops modais em C usando `ncplane`:
+All dialogs are implemented as modal C loops using `ncplane`:
 
-| Diálogo | Função C | Usa |
+| Dialog | C function | Notes |
 |---|---|---|
-| Mensagem / Confirmação | `message_dialog()` | box-drawing chars, aceleradores sublinhados |
-| Entrada de texto | `input_dialog()` | campo editável com cursor |
-| Lista | `list_dialog()` | scroll, seleção por teclado |
-| Abrir / Salvar arquivo | `open_dialog()` / `save_dialog()` | navegação de diretório |
+| Message / Confirm | `message_dialog()` | box-drawing chars, underlined accelerators |
+| Text input | `input_dialog()` | editable field with cursor |
+| List | `list_dialog()` | scroll, keyboard selection |
+| Open / Save file | `open_dialog()` / `save_dialog()` | directory browsing |
 
-O diálogo de saída (Ctrl+Q) exibe botões **S**ave / **C**ancel / **Q**uit com
-a primeira letra sublinhada e em cor de acento. Pressionar a letra correspondente
-ativa o botão diretamente.
+The quit dialog (Ctrl+Q) shows **S**ave / **C**ancel / **Q**uit buttons with
+the first letter underlined and in accent color. Pressing the letter activates
+the button directly.
 
 ### 5.4 Statusbar
 
-A statusbar é composta via `ui_widgets.lua`. Plugins registram segmentos:
+The statusbar is composed via `ui_widgets.lua`. Plugins register segments:
 
 ```lua
 local W = require('ui_widgets')
-W.status_add('meu_plugin', function() return 'texto' end, prioridade)
+W.status_add('my_plugin', function() return 'text' end, priority)
 ```
 
-Menor prioridade = aparece mais à esquerda. Layout atual:
+Lower priority = appears further left. Current layout:
 
 ```
  branch*  │  W:1234  L:56  │  ? Ctrl+H
@@ -316,143 +315,143 @@ Menor prioridade = aparece mais à esquerda. Layout atual:
 
 ---
 
-## 6. Sistema de Temas
+## 6. Theme System
 
-### Aplicar um tema
+### Applying a theme
 
 ```lua
--- No command entry (Ctrl+;):
-theme "monokai"    -- aplica imediatamente e salva preferência
-themes()           -- abre seletor interativo
+-- In the command entry (Ctrl+;):
+theme "monokai"    -- apply immediately and save preference
+themes()           -- open interactive picker
 ```
 
-A preferência é salva em `~/.textadept/theme` e recarregada na próxima abertura.
+The preference is saved to `~/.textadept/theme` and restored on next launch.
 
-### Estrutura de um tema
+### Theme structure
 
 ```lua
--- themes/meutema.lua
+-- themes/mytheme.lua
 local view, colors, styles = view, view.colors, view.styles
 
--- Cores em formato 0xBBGGRR (Blue=byte alto, Green=meio, Red=byte baixo)
--- Para converter de #RRGGBB: inverta os bytes → 0xBBGGRR
-colors.bg      = 0x222827 -- #272822 (fundo)
-colors.fg      = 0xF2F8F8 -- #F8F8F2 (texto)
+-- Colors in 0xBBGGRR format (Blue=high byte, Green=mid, Red=low byte)
+-- To convert from #RRGGBB: reverse the bytes → 0xBBGGRR
+colors.bg      = 0x222827 -- #272822 (background)
+colors.fg      = 0xF2F8F8 -- #F8F8F2 (foreground text)
 colors.comment = 0x5E7175 -- #75715E
 colors.str     = 0x74DBE6 -- #E6DB74
 colors.kw      = 0x7226F9 -- #F92672 (keywords)
 colors.func    = 0x2EE2A6 -- #A6E22E
 colors.num     = 0xFF81AE -- #AE81FF
-colors.cls     = 0xE8D966 -- #66D9E8 (classes/tipos)
+colors.cls     = 0xE8D966 -- #66D9E8 (classes/types)
 colors.builtin = 0xE8D966
 colors.attr    = 0x2EE2A6
 colors.err     = 0x2F00CC -- #CC002F
-colors.sel     = 0x3E4849 -- #49483E (seleção de texto normal)
-colors.find    = 0x1F97FD -- #FD971F (highlight do find / seleção de busca)
-colors.cur     = 0x323D3E -- #3E3D32 (linha atual)
-colors.lnum    = 0x5E7175 -- linha de número
+colors.sel     = 0x3E4849 -- #49483E (normal text selection)
+colors.find    = 0x1F97FD -- #FD971F (find highlight / search selection)
+colors.cur     = 0x323D3E -- #3E3D32 (current line)
+colors.lnum    = 0x5E7175 -- line numbers
 
 dofile(_HOME .. '/themes/_base.lua')(view, colors, styles)
 ```
 
-### Cor `colors.find`
+### The `colors.find` color
 
-`colors.find` é usada em dois lugares pelo `_base.lua`:
+`colors.find` is used in two places by `_base.lua`:
 
-1. **`ELEMENT_SELECTION_BACK`** — cor de fundo da seleção (inclui texto
-   encontrado pelo Ctrl+F). Aplicada com `| 0xFF000000` para garantir alpha opaco.
+1. **`ELEMENT_SELECTION_BACK`** — background color of the selection (including
+   text found by Ctrl+F). Applied with `| 0xFF000000` to guarantee opaque alpha.
 
-2. **`INDIC_FIND`** — indicador `INDIC_ROUNDBOX` do "Highlight All" com
-   alpha semitransparente (100/255).
+2. **`INDIC_FIND`** — the `INDIC_ROUNDBOX` indicator for "Highlight All" with
+   semi-transparent alpha (100/255).
 
-Para temas escuros recomenda-se um âmbar quente (ex: `#E8B44B` → `0x4BB4E8`).
-Para temas claros, um laranja mais saturado (ex: `#FF8600` → `0x0086FF`).
+For dark themes, a warm amber is recommended (e.g. `#E8B44B` → `0x4BB4E8`).
+For light themes, a more saturated orange (e.g. `#FF8600` → `0x0086FF`).
 
-### Adicionar um novo tema
+### Adding a new theme
 
-1. Crie `themes/meutema.lua` seguindo o modelo acima.
-2. Adicione o nome à lista `M.available` em `modules/themes.lua`.
-3. Pronto — o seletor interativo (`themes()`) vai listá-lo.
+1. Create `themes/mytheme.lua` following the template above.
+2. Add the name to the `M.available` list in `modules/themes.lua`.
+3. Done — the interactive picker (`themes()`) will list it.
 
 ---
 
-## 7. Sistema de Plugins
+## 7. Plugin System
 
-### Como funciona
+### How it works
 
-`modules/plugin_manager.lua` carrega automaticamente todos os arquivos `.lua`
-de dois diretórios (na ordem):
+`modules/plugin_manager.lua` automatically loads all `.lua` files from two
+directories (in order):
 
-1. `~/.textadept/plugins/` — plugins do usuário (sobrescrevem os built-in)
-2. `_HOME/plugins/` — plugins built-in do editor
+1. `~/.textadept/plugins/` — user plugins (override built-in ones)
+2. `_HOME/plugins/` — built-in editor plugins
 
-### Estrutura de um plugin
+### Plugin structure
 
 ```lua
--- plugins/meu_plugin.lua
+-- plugins/my_plugin.lua
 local W = require('ui_widgets')
 
--- Registrar segmento na statusbar (opcional)
-W.status_add('meu_plugin', function()
+-- Register a statusbar segment (optional)
+W.status_add('my_plugin', function()
   return 'info'
-end, 50)  -- prioridade 50
+end, 50)  -- priority 50
 
--- Registrar atalho de teclado (opcional)
+-- Register a keyboard shortcut (optional)
 keys['ctrl+shift+m'] = function()
-  local buf = W.output_buffer('[Meu Plugin]')
-  W.write(buf, 'Olá mundo\n', true)
+  local buf = W.output_buffer('[My Plugin]')
+  W.write(buf, 'Hello world\n', true)
 end
 
--- Metadados (exibidos pelo Ctrl+Shift+P)
+-- Metadata (shown by Ctrl+Shift+P)
 return {
   _meta = {
-    name        = 'Meu Plugin',
-    description = 'Descrição curta',
+    name        = 'My Plugin',
+    description = 'Short description',
     version     = '1.0',
-    author      = 'Seu Nome',
+    author      = 'Your Name',
   }
 }
 ```
 
-### API ui_widgets
+### ui_widgets API
 
 ```lua
 local W = require('ui_widgets')
 
 -- Statusbar
-W.status_add(id, fn, priority)  -- registra segmento; fn() → string
-W.status_remove(id)             -- remove segmento
-W.notify(text, secs)            -- mensagem temporária
+W.status_add(id, fn, priority)  -- register segment; fn() → string
+W.status_remove(id)             -- unregister segment
+W.notify(text, secs)            -- temporary message
 
--- Diálogos
-W.input(title, prompt, default) -- → string ou nil
+-- Dialogs
+W.input(title, prompt, default) -- → string or nil
 W.confirm(title, msg)           -- → true/false
-W.pick(title, items, columns)   -- → índice ou nil
+W.pick(title, items, columns)   -- → index or nil
 
--- Buffers de saída (somente-leitura, identificados por _type)
-buf = W.output_buffer(name)     -- cria ou foca buffer nomeado
-W.write(buf, text, clear)       -- escreve no buffer
+-- Output buffers (read-only, identified by _type)
+buf = W.output_buffer(name)     -- create or focus named buffer
+W.write(buf, text, clear)       -- write into the buffer
 ```
 
-### Plugins built-in
+### Built-in plugins
 
-| Arquivo | Atalho | Descrição |
+| File | Shortcut | Description |
 |---|---|---|
-| `word_count.lua` | Ctrl+Shift+W | Contagem de palavras/linhas/chars |
-| `git_status.lua` | Ctrl+Shift+G | Branch git na statusbar + painel de status |
-| `scratch_pad.lua` | Ctrl+Shift+N | Buffer de notas persistente (`~/.textadept/scratch.txt`) |
-| `help.lua` | Ctrl+H | Referência rápida somente-leitura |
+| `word_count.lua` | Ctrl+Shift+W | Word/line/char count dialog |
+| `git_status.lua` | Ctrl+Shift+G | Git branch in statusbar + status panel |
+| `scratch_pad.lua` | Ctrl+Shift+N | Persistent notes buffer (`~/.textadept/scratch.txt`) |
+| `help.lua` | Ctrl+H | Read-only quick reference (toggle) |
 
 ---
 
-## 8. Aliases de Linha de Comando
+## 8. Command Entry Aliases
 
-O command entry (`Ctrl+;`) aceita qualquer expressão Lua. O módulo
-`modules/aliases.lua` define funções curtas no namespace global:
+The command entry (`Ctrl+;`) accepts any Lua expression. The module
+`modules/aliases.lua` defines short functions in the global namespace:
 
-| Alias | Equivalente completo |
+| Alias | Full equivalent |
 |---|---|
-| `theme "nome"` | `textadept.themes.set("nome")` |
+| `theme "name"` | `textadept.themes.set("name")` |
 | `themes()` | `textadept.themes.select()` |
 | `e "path"` | `io.open_file("path")` |
 | `save()` | `buffer:save()` |
@@ -461,102 +460,102 @@ O command entry (`Ctrl+;`) aceita qualquer expressão Lua. O módulo
 | `reload()` | `buffer:reload()` |
 | `bnext()` / `bprev()` | `view:goto_buffer(1/−1)` |
 | `ln(n)` | `textadept.editing.goto_line(n)` |
-| `lex "nome"` | `buffer:set_lexer("nome")` |
+| `lex "name"` | `buffer:set_lexer("name")` |
 | `wrap()` | toggle `view.wrap_mode` |
 | `tabs(n)` | `buffer.use_tabs=true; buffer.tab_width=n` |
 | `spaces(n)` | `buffer.use_tabs=false; buffer.tab_width=n` |
-| `zoom(n)` | `buffer:zoom_in/out()` ou reset |
+| `zoom(n)` | `buffer:zoom_in/out()` or reset |
 | `run()` | `textadept.run.run()` |
 | `plugins()` | `textadept.plugins.show()` |
-| `aliases()` | lista todos os aliases num buffer |
+| `aliases()` | list all aliases in an output buffer |
 
 ---
 
-## 9. Referência de Teclas
+## 9. Key Reference
 
-### Arquivos e Buffers
+### Files and Buffers
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| Ctrl+O | Abrir arquivo |
-| Ctrl+S | Salvar |
-| Ctrl+Shift+S | Salvar como |
-| Ctrl+W | Fechar buffer |
-| Ctrl+N | Novo buffer |
-| Ctrl+Tab | Próximo buffer |
-| Ctrl+Shift+Tab | Buffer anterior |
-| Ctrl+Q | Sair |
+| Ctrl+O | Open file |
+| Ctrl+S | Save |
+| Ctrl+Shift+S | Save As |
+| Ctrl+W | Close buffer |
+| Ctrl+N | New buffer |
+| Ctrl+Tab | Next buffer |
+| Ctrl+Shift+Tab | Previous buffer |
+| Ctrl+Q | Quit |
 
-### Edição
+### Editing
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| Ctrl+Z / Ctrl+Y | Desfazer / Refazer |
-| Ctrl+X / C / V | Recortar / Copiar / Colar |
-| Ctrl+A | Selecionar tudo |
-| Ctrl+D | Duplicar linha |
-| Ctrl+/ | Comentar/descomentar |
-| Tab / Shift+Tab | Indentar / Desdentar |
+| Ctrl+Z / Ctrl+Y | Undo / Redo |
+| Ctrl+X / C / V | Cut / Copy / Paste |
+| Ctrl+A | Select all |
+| Ctrl+D | Duplicate line |
+| Ctrl+/ | Toggle comment |
+| Tab / Shift+Tab | Indent / Unindent |
 
-### Busca
+### Search
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| Ctrl+F | Abrir/fechar find bar |
-| Enter | Buscar próximo |
-| Shift+Enter | Buscar anterior |
-| Tab / Shift+Tab | Ciclar botões da find bar |
-| Esc | Fechar find bar |
+| Ctrl+F | Open/close find bar |
+| Enter | Find next |
+| Shift+Enter | Find previous |
+| Tab / Shift+Tab | Cycle find bar buttons |
+| Esc | Close find bar |
 
-### Plugins e UI
+### Plugins and UI
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| Ctrl+H | Ajuda (este buffer, toggle) |
+| Ctrl+H | Help (this buffer — toggle) |
 | Ctrl+Shift+N | Scratch Pad |
-| Ctrl+Shift+G | Painel Git Status |
-| Ctrl+Shift+W | Diálogo Word Count |
-| Ctrl+Shift+P | Lista de plugins |
+| Ctrl+Shift+G | Git Status panel |
+| Ctrl+Shift+W | Word Count dialog |
+| Ctrl+Shift+P | Plugin list |
 | Ctrl+; | Command entry (Lua) |
 
 ---
 
-## 10. Guia do Desenvolvedor
+## 10. Developer Guide
 
-### Onde adicionar uma nova função de plataforma
+### Adding a new platform function
 
-Todas as funções que o core do Textadept chama para interagir com a UI estão
-declaradas em `src/textadept_platform.h`. A implementação deve estar em
+All functions that the Textadept core calls to interact with the UI are
+declared in `src/textadept_platform.h`. The implementation must be in
 `src/n_textadept.c`.
 
-Exemplo — adicionar um indicador de modo na statusbar:
+Example — adding a mode indicator to the statusbar:
 
 ```c
-// Em n_textadept.c, dentro de draw_statusbar():
+// In n_textadept.c, inside draw_statusbar():
 ncplane_printf_yx(statusbar_plane, 0, col, " [%s]", insert_mode ? "INS" : "OVR");
 ```
 
-### Criar um diálogo modal
+### Creating a modal dialog
 
-O padrão usado neste fork é:
+The pattern used in this fork:
 
 ```c
-static int meu_dialogo(const char *titulo, ...) {
-    // 1. criar ncplane sobre o stdplane
+static int my_dialog(const char *title, ...) {
+    // 1. create an ncplane over stdplane
     struct ncplane_options opts = { .y=y, .x=x, .rows=h, .cols=w };
     struct ncplane *dp = ncplane_create(stdplane, &opts);
 
-    // 2. desenhar borda e conteúdo
+    // 2. draw border and content
     draw_border(dp, ...);
 
-    // 3. loop modal
+    // 3. modal loop
     bool done = false;
     int result = 0;
     while (!done) {
         notcurses_render(nc);
         struct ncinput ni;
         notcurses_get_blocking(nc, &ni);
-        // processar ni.id (tecla), ni.modifiers, etc.
+        // handle ni.id (key), ni.modifiers, etc.
         if (ni.id == NCKEY_ENTER) { result = 1; done = true; }
         if (ni.id == NCKEY_ESC)   { result = 0; done = true; }
     }
@@ -566,33 +565,33 @@ static int meu_dialogo(const char *titulo, ...) {
 }
 ```
 
-### Cores nos planos Notcurses
+### Colors in Notcurses planes
 
 ```c
-// Definir foreground/background em um ncplane
+// Set foreground/background on an ncplane
 ncplane_set_fg_rgb8(plane, r, g, b);
 ncplane_set_bg_rgb8(plane, r, g, b);
 
-// Escrever com estilo
+// Write with style
 ncplane_set_styles(plane, NCSTYLE_BOLD | NCSTYLE_UNDERLINE);
-ncplane_putstr_yx(plane, row, col, "texto");
+ncplane_putstr_yx(plane, row, col, "text");
 ncplane_set_styles(plane, NCSTYLE_NONE);
 ```
 
-### Formato de cores nos temas Lua
+### Color format in Lua themes
 
-O Textadept e a Scintilla usam o formato `0xBBGGRR` internamente (diferente
-do `0xRRGGBB` usual):
+Textadept and Scintilla use `0xBBGGRR` format internally (unlike the usual
+`0xRRGGBB`):
 
 ```lua
--- #RRGGBB → 0xBBGGRR: trocar a ordem dos bytes
--- Exemplo: #FF8600 (laranja) → R=FF G=86 B=00 → 0x0086FF
-colors.find = 0x0086FF  -- exibe como laranja #FF8600
+-- #RRGGBB → 0xBBGGRR: reverse the byte order
+-- Example: #FF8600 (orange) → R=FF G=86 B=00 → 0x0086FF
+colors.find = 0x0086FF  -- displays as orange #FF8600
 ```
 
-Para `ELEMENT_SELECTION_BACK` é necessário o OR com `0xFF000000` para que o
-byte de alpha seja 0xFF (opaco), caso contrário `ColourRGBA::IsValid()` retorna
-`false` e o highlight não aparece:
+For `ELEMENT_SELECTION_BACK`, the OR with `0xFF000000` is required so that the
+alpha byte is 0xFF (opaque); otherwise `ColourRGBA::IsValid()` returns `false`
+and the highlight does not appear:
 
 ```lua
 view.element_color[view.ELEMENT_SELECTION_BACK] = colors.find | 0xFF000000
@@ -600,30 +599,30 @@ view.element_color[view.ELEMENT_SELECTION_BACK] = colors.find | 0xFF000000
 
 ### Scintilla via SCI_* messages
 
-A comunicação com a Scintilla é feita por `SS()` (Send Scintilla):
+Communication with Scintilla goes through `SS()` (Send Scintilla):
 
 ```c
-// Em C:
-sptr_t resultado = SS(view, SCI_GETLENGTH, 0, 0);
-SS(view, SCI_GOTOPOS, posicao, 0);
+// In C:
+sptr_t result = SS(view, SCI_GETLENGTH, 0, 0);
+SS(view, SCI_GOTOPOS, position, 0);
 
-// O tipo ScintillaNotCurses é opaco; use sempre SS() ou a API C++ interna
+// ScintillaNotCurses is opaque; always use SS() or the internal C++ API
 ```
 
 ---
 
-## 11. Limitações Conhecidas
+## 11. Known Limitations
 
-| Área | Limitação |
+| Area | Limitation |
 |---|---|
-| **Split de views** | `split_view` / `unsplit_view` são stubs; múltiplas views ainda não renderizam corretamente lado a lado |
-| **Mouse** | Eventos de mouse são recebidos mas o suporte é parcial (cliques na find bar funcionam; drag de seleção pode ser inconsistente) |
-| **Processos externos** | `spawn()` usa `fork/exec` básico; pipes de leitura assíncrona (`read_process_output`) são bloqueantes |
-| **Diálogo de arquivo** | `open_dialog` / `save_dialog` mostram campo de texto simples; não há navegação de diretório com lista |
-| **Redimensionamento** | `SIGWINCH` (redimensionamento do terminal) não é tratado; reinicie o editor se redimensionar a janela |
-| **Clipboard** | Usa seleção X11 (`xclip`/`xsel`) quando disponível; em terminais sem X, o clipboard é interno ao processo |
-| **Scrollbar** | Não renderizada; scroll funciona via teclado e roda do mouse |
+| **Split views** | `split_view` / `unsplit_view` are stubs; multiple views do not render side-by-side correctly |
+| **Mouse** | Mouse events are received but support is partial (find bar clicks work; selection drag may be inconsistent) |
+| **External processes** | `spawn()` uses basic `fork/exec`; async pipe reading (`read_process_output`) is blocking |
+| **File dialog** | `open_dialog` / `save_dialog` show a plain text field; no directory listing navigation |
+| **Terminal resize** | `SIGWINCH` (terminal resize) is not handled; restart the editor after resizing the window |
+| **Clipboard** | Uses X11 selection (`xclip`/`xsel`) when available; in terminals without X, clipboard is internal to the process |
+| **Scrollbar** | Not rendered; scrolling works via keyboard and mouse wheel |
 
 ---
 
-*Última atualização: 2026-03-15*
+*Last updated: 2026-03-15*
