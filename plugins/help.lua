@@ -50,6 +50,11 @@ local CONTENT = table.concat({
   '  Ctrl+F2            Toggle bookmark\n',
   '  F2                 Next bookmark         Shift+F2       Prev bookmark\n',
 
+  section('CODE FOLDING'),
+  '  F6                 Toggle fold at current line\n',
+  '  (Click fold margin +/- to collapse/expand with mouse)\n',
+  '  FOLD_ENABLED=true  Flag in init.lua to enable/disable folding\n',
+
   section('THEMES'),
   '  In command entry (Ctrl+;):\n',
   '    theme "name"   — apply a theme directly\n',

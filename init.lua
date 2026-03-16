@@ -277,7 +277,16 @@ view.call_tip_use_style = buffer.tab_width * view:text_width(view.STYLE_CALLTIP,
 -- view.call_tip_position = true
 
 -- Folding.
-buffer.folding = true
+-- ┌─────────────────────────────────────────────────────────┐
+-- │  FOLD_ENABLED — set to false to disable code folding.   │
+-- │  In terminal mode (CURSES) the fold margin uses 1-cell  │
+-- │  ASCII/Unicode characters (+/-/│/└/├) drawn by          │
+-- │  scinterm_plat.cpp :: SurfaceImpl::DrawLineMarker().    │
+-- │  Keyboard shortcut: F6 = toggle fold at current line.   │
+-- └─────────────────────────────────────────────────────────┘
+FOLD_ENABLED = true
+
+buffer.folding = FOLD_ENABLED
 -- buffer.fold_by_indentation = true
 -- buffer.fold_on_zero_sum_lines = true
 -- buffer.fold_compact = true
@@ -285,10 +294,17 @@ buffer.folding = true
 events.connect(events.RESET_BEFORE, function()
 	for k in pairs(_G.buffer) do if k:find('^fold') then _G.buffer[k] = nil end end
 end)
-view.automatic_fold = view.AUTOMATICFOLD_SHOW | view.AUTOMATICFOLD_CLICK | view.AUTOMATICFOLD_CHANGE
--- view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
-view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED
-view:set_default_fold_display_text(not CURSES and ' ... ' or '[...]')
+if FOLD_ENABLED then
+	view.automatic_fold = view.AUTOMATICFOLD_SHOW | view.AUTOMATICFOLD_CLICK | view.AUTOMATICFOLD_CHANGE
+	-- view.fold_flags = not CURSES and view.FOLDFLAG_LINEAFTER_CONTRACTED or 0
+	view.fold_display_text_style = view.FOLDDISPLAYTEXT_BOXED
+	view:set_default_fold_display_text(not CURSES and ' ... ' or '[...]')
+	-- F6: toggle fold at the current line (or its parent if on a body/tail line).
+	keys['f6'] = function()
+		local line = buffer:line_from_position(buffer.current_pos)
+		view:toggle_fold(math.max(buffer.fold_parent[line], line))
+	end
+end
 
 -- Line Wrapping.
 -- view.wrap_mode = view.WRAP_WHITESPACE
