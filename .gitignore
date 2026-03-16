@@ -1,5 +1,10 @@
 # Build and documentation.
 build/
+scinterm-notcurses/build/
+
+# Compiled objects and binary.
+src/*.o
+textadept-notcurses
 docs/_site
 docs/Gemfile.lock
 *.css
@@ -24,3 +29,4 @@ modules/update_notifier
 # Profiling, coverage, and test data.
 luacov.*.out
 test.log
+.aider*

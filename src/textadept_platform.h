@@ -1,5 +1,7 @@
 // Copyright 2007-2026 Mitchell. See LICENSE.
 // Interface between Textadept and platforms.
+#ifndef TEXTADEPT_PLATFORM_H
+#define TEXTADEPT_PLATFORM_H
 // Textadept calls these functions to communicate with the platform.
 //
 // Platforms are expected to implement the `main()` entry point of the program, perform any
@@ -411,3 +413,5 @@ void suspend(void);
  * `true`.
  */
 void quit(void);
+
+#endif /* TEXTADEPT_PLATFORM_H */

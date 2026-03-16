@@ -1,6 +1,8 @@
 // Copyright 2007-2026 Mitchell. See LICENSE.
 // Interface between platforms and Textadept.
 // Platforms use this interface to communicate with Textadept.
+#ifndef TEXTADEPT_H
+#define TEXTADEPT_H
 
 #include "textadept_platform.h"
 
@@ -105,3 +107,5 @@ void close_textadept(void);
  * @return integer
  */
 int get_int_field(lua_State *L, int index, int n);
+
+#endif /* TEXTADEPT_H */

@@ -6,7 +6,7 @@ local ui = ui
 
 --- Option for `ui.tabs` that always shows the tab bar, even if only one buffer is open.
 ui.SHOW_ALL_TABS = 2 -- ui.tabs options must be greater than 1
-if CURSES then ui.tabs = false end -- not supported right now
+-- ui.tabs is now supported via Notcurses tabbar (n_textadept.c)
 
 --- List buffers by their z-order (most recently viewed to least recently viewed) in the switcher
 -- dialog, instead of listing buffers in their left-to-right tab order.

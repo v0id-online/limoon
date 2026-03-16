@@ -265,7 +265,7 @@ local function close(buffer, force)
 			title = _L['Close without saving?'],
 			text = string.format('%s\n%s', _L['There are unsaved changes in'], filename),
 			icon = 'dialog-question', button1 = _L['Save'], button2 = _L['Cancel'],
-			button3 = _L['Close without saving']
+			button3 = CURSES and 'Quit' or _L['Close without saving']
 		}
 		if button == 1 then return buffer:save() end
 		if button ~= 3 then return nil end -- do not propagate key command

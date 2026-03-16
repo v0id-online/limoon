@@ -74,7 +74,22 @@ end)
 
 local buffer, view = buffer, view
 
-if CURSES then view:set_theme('term') end
+if CURSES then
+  -- Load theme manager and apply saved/default theme.
+  textadept.themes = require('themes')
+  view:set_theme(textadept.themes.current)
+
+  -- Widget library and plugin system.
+  textadept.widgets = require('ui_widgets')
+  textadept.plugins = require('plugin_manager')
+  textadept.plugins.load_all()
+
+  -- Ctrl+Shift+P → show loaded-plugin list.
+  keys['ctrl+shift+p'] = function() textadept.plugins.show() end
+
+  -- Short command-entry aliases (type aliases() to list them).
+  require('aliases')
+end
 
 -- Multiple Selection and Virtual Space.
 buffer.multiple_selection, buffer.additional_selection_typing = true, true
