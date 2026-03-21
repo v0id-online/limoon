@@ -169,6 +169,9 @@ static NCPane *ncpane_new(SciObject *view) {
 /* Recursively resize/reposition a pane and all its children. */
 static void ncpane_resize(NCPane *pane, int rows, int cols, int y, int x) {
     if (!pane || rows < 1 || cols < 1) return;
+    /* Protecao adicional contra divisao por zero */
+    if (pane->cols < 1) pane->cols = cols;
+    if (pane->rows < 1) pane->rows = rows;
     if (pane->type == NC_VSPLIT) {
         int ssize = pane->cols > 0
             ? (int)((double)pane->split_pos * cols / pane->cols)
@@ -282,11 +285,12 @@ static void draw_scrollbar(NCPane *pane) {
 /* Find the leaf pane containing screen position (y, x). */
 static NCPane *ncpane_find_at(NCPane *pane, int y, int x) {
     if (!pane) return NULL;
-    if (pane->type == NC_SINGLE) {
-        if (y >= pane->y && y < pane->y + pane->rows &&
-            x >= pane->x && x < pane->x + pane->cols)
-            return pane;
+    /* Early out: coordenadas fora deste pane */
+    if (y < pane->y || y >= pane->y + pane->rows ||
+        x < pane->x || x >= pane->x + pane->cols)
         return NULL;
+    if (pane->type == NC_SINGLE) {
+        return pane;
     }
     NCPane *f = ncpane_find_at(pane->child1, y, x);
     return f ? f : ncpane_find_at(pane->child2, y, x);
@@ -524,17 +528,18 @@ static void handle_keypress(struct ncinput *ni) {
     unsigned nc_mods = ni->modifiers;
     int sci_mods = nc_to_sci_mods(nc_mods);
 
-    /* Normalize Kitty-protocol Shift+letter: terminals such as Kitty, Alacritty
-     * and foot (when notcurses enables the Kitty keyboard protocol) report
-     * Shift+a as id='a' + NCKEY_MOD_SHIFT instead of the legacy id='A'.
-     * Textadept and Scintilla both expect the uppercase codepoint with no SHIFT
-     * for printable characters (see keys.lua line: "disable shift for printable
-     * chars").  Convert early so both the Lua path and the Scintilla path see
-     * the same representation as legacy terminals. */
+    /* Normalize Kitty-protocol Shift+printable: terminals such as Kitty,
+     * Alacritty and foot report Shift+a as id='a'+SHIFT and Shift+1 as
+     * id='1'+SHIFT instead of id='A' / id='!'.  notcurses fills eff_text[0]
+     * with the actual produced codepoint (e.g. '!' for Shift+1, 'A' for
+     * Shift+a).  Textadept expects the shifted codepoint with no SHIFT modifier
+     * for printable chars (keys.lua strips SHIFT for code >= 32).  Use
+     * eff_text[0] when it is a single printable codepoint and no Ctrl/Alt. */
     if ((nc_mods & NCKEY_MOD_SHIFT) &&
         !(nc_mods & (NCKEY_MOD_CTRL | NCKEY_MOD_ALT)) &&
-        key >= 'a' && key <= 'z') {
-        key  -= (uint32_t)('a' - 'A');
+        !nckey_synthesized_p(key) &&
+        ni->eff_text[0] >= 0x20 && ni->eff_text[1] == 0) {
+        key = ni->eff_text[0];
         nc_mods &= ~(unsigned)NCKEY_MOD_SHIFT;
         sci_mods &= ~SCMOD_SHIFT;
     }
@@ -719,10 +724,12 @@ int main(int argc, char **argv) {
                             intptr_t total  = SS(sp->view, SCI_GETLINECOUNT, 0, 0);
                             int track_h = sp->rows - 2;
                             int vis     = sp->rows;
-                            int max_s   = (int)(total - vis); if (max_s < 0) max_s = 0;
+                            int max_s   = (int)(total - vis);
+                            if (max_s < 0) max_s = 0;
                             int th = (total > 0)
                                 ? (int)((double)track_h * vis / total) : track_h;
-                            if (th < 1) th = 1; if (th > track_h) th = track_h;
+                            if (th < 1) th = 1;
+                            if (th > track_h) th = track_h;
                             int tp = (max_s > 0)
                                 ? (int)((double)(track_h - th) * first / max_s) : 0;
                             int track_row = ni.y - sp->y - 1; /* relative to track */
@@ -1133,8 +1140,10 @@ void split_view(SciObject *view, SciObject *view2, bool vertical) {
     pane->split_plane = ncplane_create(notcurses_stdplane(nc), &spopt);
     if (!pane->split_plane) {
         /* Split plane creation failed — undo the split */
-        ncpane_resize(pane, pane->rows, pane->cols, pane->y, pane->x);
-        free(c1); free(c2);
+        /* Limpar corretamente os panes filhos */
+        pane->view = c1 ? c1->view : NULL;
+        if (c1) { c1->view = NULL; ncpane_free(c1, NULL); }
+        if (c2) { c2->view = NULL; ncpane_free(c2, NULL); }
         return;
     }
     pane->type      = vertical ? NC_VSPLIT : NC_HSPLIT;
@@ -2226,9 +2235,9 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         /* ── Border ── */
         DLG_FGHEX(C_BORDER); DLG_BGHEX(C_BG);
         ncplane_putstr_yx(dplane, 0, 0, "╭");
-        ncplane_putstr_yx(dplane, 0, w - 3, "╮"); /* 3-byte UTF-8 per char */
+        ncplane_putstr_yx(dplane, 0, w - 1, "╮");
         ncplane_putstr_yx(dplane, h - 1, 0, "╰");
-        ncplane_putstr_yx(dplane, h - 1, w - 3, "╯");
+        ncplane_putstr_yx(dplane, h - 1, w - 1, "╯");
         for (int c = 1; c < w - 1; c++) {
             ncplane_putstr_yx(dplane, 0,     c, "─");
             ncplane_putstr_yx(dplane, h - 1, c, "─");
@@ -2796,13 +2805,27 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
             } else if (focus == 3) {
                 /* OK */
                 if (save_mode && fname[0]) {
-                    snprintf(result, sizeof(result), "%s/%s", cwd, fname);
-                    accepted = true; done = true;
+                    /* Verificar bounds antes de concatenar */
+                    size_t cwd_len = strlen(cwd);
+                    size_t fname_len = strlen(fname);
+                    if (cwd_len + 1 + fname_len >= sizeof(result)) {
+                        /* Path muito longo */
+                        accepted = false; done = true;
+                    } else {
+                        snprintf(result, sizeof(result), "%s/%s", cwd, fname);
+                        accepted = true; done = true;
+                    }
                 } else if (!save_mode && n_filtered > 0) {
                     int ei = filtered[cur_item];
                     if (!entries[ei].is_dir || opts.only_dirs) {
-                        snprintf(result, sizeof(result), "%s/%s", cwd, entries[ei].name);
-                        accepted = true; done = true;
+                        size_t cwd_len = strlen(cwd);
+                        size_t name_len = strlen(entries[ei].name);
+                        if (cwd_len + 1 + name_len >= sizeof(result)) {
+                            accepted = false; done = true;
+                        } else {
+                            snprintf(result, sizeof(result), "%s/%s", cwd, entries[ei].name);
+                            accepted = true; done = true;
+                        }
                     }
                 }
             } else if (focus == 0) {
@@ -2819,6 +2842,9 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
                             /* Check bounds: need space for '/' + name + '\0' */
                             if (cl + 1 + name_len < sizeof(cwd)) {
                                 snprintf(cwd + cl, sizeof(cwd) - cl, "/%s", entries[ei].name);
+                            } else {
+                                /* Path muito longo - nao navegar */
+                                continue;
                             }
                         }
                         filter[0] = '\0'; filter_cur = 0;
