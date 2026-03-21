@@ -58,9 +58,24 @@ typedef struct {
     SciObject *sci;
 } View;
 
+/* ------------------------------------------------------------------ */
+/* Pane tree (split view support)                                       */
+
+typedef enum { NC_SINGLE, NC_VSPLIT, NC_HSPLIT } NCPaneType;
+
+typedef struct NCPane {
+    NCPaneType type;
+    int y, x, rows, cols, split_pos;
+    struct ncplane *split_plane;    /* split bar plane (non-SINGLE)  */
+    struct ncplane *scrollbar_plane;/* vertical scrollbar (SINGLE only) */
+    SciObject *view;                /* Scintilla view (SINGLE only)  */
+    struct NCPane *child1, *child2;
+} NCPane;
+
 /* Global Notcurses context */
 static struct notcurses *nc = NULL;
 static View *current_view = NULL;
+static NCPane *root_pane = NULL;
 
 /* ------------------------------------------------------------------ */
 /* Tab bar state                                                         */
@@ -74,7 +89,7 @@ typedef struct {
 static TabEntry tabs[MAX_TABS];
 static int num_tabs = 0;
 static int active_tab = 0;
-static bool tabs_shown = true;
+static bool tabs_shown = false;
 
 /* Per-tab pixel positions for mouse hit-testing (set by draw_tabbar) */
 static int tab_x0[MAX_TABS];    /* x of tab start */
@@ -100,6 +115,13 @@ static char *find_label_str = NULL;
 static char *repl_label_str = NULL;
 static bool find_visible = false;
 
+/* Find/replace history (move-to-front, most recent at index 0) */
+#define FIND_HIST_MAX 20
+static char find_hist[FIND_HIST_MAX][256];
+static int  find_hist_n = 0;
+static char repl_hist[FIND_HIST_MAX][256];
+static int  repl_hist_n = 0;
+
 /* Command entry state */
 static bool command_entry_active = false;
 static char command_entry_label[256] = "";
@@ -107,12 +129,15 @@ static int command_entry_height_stored = 1;
 static SciObject *saved_focused_view = NULL;
 
 /* Statusbar state */
-static bool statusbar_visible = false;
+static bool statusbar_visible = true;
 static char statusbar_text0[256] = "";
 static char statusbar_text1[256] = "";
 
 /* Mouse state (Bug B) */
 static int mouse_pressed_button = 0;
+
+/* Scrollbar state */
+static bool scrollbar_enabled = false;
 
 /* Emergency exit */
 static bool want_quit = false;
@@ -127,6 +152,277 @@ static void end_word_group(void) {
         SS(word_undo_target, SCI_ENDUNDOACTION, 0, 0);
         in_word_undo = false;
         word_undo_target = NULL;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* NCPane helper functions                                              */
+
+static NCPane *ncpane_new(SciObject *view) {
+    NCPane *p = calloc(1, sizeof(NCPane));
+    if (!p) return NULL;
+    p->type = NC_SINGLE;
+    p->view = view;
+    return p;
+}
+
+/* Recursively resize/reposition a pane and all its children. */
+static void ncpane_resize(NCPane *pane, int rows, int cols, int y, int x) {
+    if (!pane || rows < 1 || cols < 1) return;
+    if (pane->type == NC_VSPLIT) {
+        int ssize = pane->cols > 0
+            ? (int)((double)pane->split_pos * cols / pane->cols)
+            : cols / 2;
+        if (ssize < 1) ssize = 1;
+        if (ssize >= cols - 1) ssize = cols - 2;
+        pane->split_pos = ssize;
+        ncpane_resize(pane->child1, rows, ssize, y, x);
+        ncpane_resize(pane->child2, rows, cols - ssize - 1, y, x + ssize + 1);
+        if (pane->split_plane) {
+            ncplane_resize_simple(pane->split_plane, (unsigned)rows, 1);
+            ncplane_move_yx(pane->split_plane, y, x + ssize);
+        }
+    } else if (pane->type == NC_HSPLIT) {
+        int ssize = pane->rows > 0
+            ? (int)((double)pane->split_pos * rows / pane->rows)
+            : rows / 2;
+        if (ssize < 1) ssize = 1;
+        if (ssize >= rows - 1) ssize = rows - 2;
+        pane->split_pos = ssize;
+        ncpane_resize(pane->child1, ssize, cols, y, x);
+        ncpane_resize(pane->child2, rows - ssize - 1, cols, y + ssize + 1, x);
+        if (pane->split_plane) {
+            ncplane_resize_simple(pane->split_plane, 1, (unsigned)cols);
+            ncplane_move_yx(pane->split_plane, y + ssize, x);
+        }
+    } else {
+        int sci_cols = (scrollbar_enabled && cols > 1) ? cols - 1 : cols;
+        struct ncplane *p = scintilla_get_plane(pane->view);
+        if (p) {
+            ncplane_resize_simple(p, (unsigned)rows, (unsigned)sci_cols);
+            ncplane_move_yx(p, y, x);
+        }
+        scintilla_resize(pane->view);
+        /* Create or resize scrollbar plane */
+        if (scrollbar_enabled && cols > 1) {
+            if (!pane->scrollbar_plane) {
+                struct ncplane_options sopt = {
+                    .y = y, .x = x + sci_cols,
+                    .rows = (unsigned)rows, .cols = 1, .name = "scrollbar"
+                };
+                pane->scrollbar_plane = ncplane_create(notcurses_stdplane(nc), &sopt);
+            } else {
+                ncplane_resize_simple(pane->scrollbar_plane, (unsigned)rows, 1);
+                ncplane_move_yx(pane->scrollbar_plane, y, x + sci_cols);
+            }
+        } else if (pane->scrollbar_plane) {
+            ncplane_destroy(pane->scrollbar_plane);
+            pane->scrollbar_plane = NULL;
+        }
+    }
+    pane->y = y; pane->x = x; pane->rows = rows; pane->cols = cols;
+}
+
+/* Draw the vertical scrollbar for a single-view pane. */
+static void draw_scrollbar(NCPane *pane) {
+    if (!pane || !pane->scrollbar_plane || !pane->view) return;
+    struct ncplane *sp = pane->scrollbar_plane;
+    int rows = pane->rows;
+    if (rows < 2) return;
+
+    intptr_t first_line  = SS(pane->view, SCI_GETFIRSTVISIBLELINE, 0, 0);
+    intptr_t total_lines = SS(pane->view, SCI_GETLINECOUNT, 0, 0);
+    int visible_rows = rows;
+
+    int track_h = rows - 2; /* exclude top/bottom arrows */
+    if (track_h < 1) track_h = 1;
+
+    int thumb_h = (total_lines > 0)
+        ? (int)((double)track_h * visible_rows / total_lines)
+        : track_h;
+    if (thumb_h < 1) thumb_h = 1;
+    if (thumb_h > track_h) thumb_h = track_h;
+
+    int max_scroll = (int)(total_lines - visible_rows);
+    if (max_scroll < 0) max_scroll = 0;
+    int thumb_pos = (max_scroll > 0)
+        ? (int)((double)(track_h - thumb_h) * first_line / max_scroll)
+        : 0;
+    if (thumb_pos < 0) thumb_pos = 0;
+    if (thumb_pos + thumb_h > track_h) thumb_pos = track_h - thumb_h;
+
+    ncplane_erase(sp);
+    ncplane_set_styles(sp, NCSTYLE_NONE);
+
+    /* Top arrow */
+    ncplane_set_fg_rgb8(sp, 180, 180, 200);
+    ncplane_set_bg_rgb8(sp, 30, 30, 40);
+    ncplane_putstr_yx(sp, 0, 0, "▲");
+
+    /* Track and thumb */
+    for (int r = 0; r < track_h; r++) {
+        bool in_thumb = (r >= thumb_pos && r < thumb_pos + thumb_h);
+        if (in_thumb) {
+            ncplane_set_fg_rgb8(sp, 140, 140, 180);
+            ncplane_set_bg_rgb8(sp, 30, 30, 40);
+            ncplane_putstr_yx(sp, r + 1, 0, "█");
+        } else {
+            ncplane_set_fg_rgb8(sp, 55, 55, 70);
+            ncplane_set_bg_rgb8(sp, 30, 30, 40);
+            ncplane_putstr_yx(sp, r + 1, 0, "│");
+        }
+    }
+
+    /* Bottom arrow */
+    ncplane_set_fg_rgb8(sp, 180, 180, 200);
+    ncplane_set_bg_rgb8(sp, 30, 30, 40);
+    ncplane_putstr_yx(sp, rows - 1, 0, "▼");
+}
+
+/* Find the leaf pane containing screen position (y, x). */
+static NCPane *ncpane_find_at(NCPane *pane, int y, int x) {
+    if (!pane) return NULL;
+    if (pane->type == NC_SINGLE) {
+        if (y >= pane->y && y < pane->y + pane->rows &&
+            x >= pane->x && x < pane->x + pane->cols)
+            return pane;
+        return NULL;
+    }
+    NCPane *f = ncpane_find_at(pane->child1, y, x);
+    return f ? f : ncpane_find_at(pane->child2, y, x);
+}
+
+/* Render all views and split bars. */
+static void ncpane_render(NCPane *pane) {
+    if (!pane) return;
+    if (pane->type == NC_SINGLE) {
+        if (pane->view) {
+            scintilla_render(pane->view);
+            if (scrollbar_enabled) draw_scrollbar(pane);
+        }
+    } else {
+        if (pane->split_plane) {
+            ncplane_set_fg_rgb8(pane->split_plane, 100, 100, 100);
+            ncplane_set_bg_rgb8(pane->split_plane, 40, 40, 40);
+            ncplane_set_styles(pane->split_plane, NCSTYLE_NONE);
+            if (pane->type == NC_VSPLIT) {
+                for (int r = 0; r < pane->rows; r++)
+                    ncplane_putstr_yx(pane->split_plane, r, 0, "│");
+            } else {
+                for (int c = 0; c < pane->cols; c++)
+                    ncplane_putstr_yx(pane->split_plane, 0, c, "─");
+            }
+        }
+        ncpane_render(pane->child1);
+        ncpane_render(pane->child2);
+    }
+}
+
+/* Update cursors for all views in the pane tree. */
+static void ncpane_update_cursors(NCPane *pane) {
+    if (!pane) return;
+    if (pane->type == NC_SINGLE) {
+        if (pane->view && pane->view != focused_view)
+            scintilla_update_cursor(pane->view);
+    } else {
+        ncpane_update_cursors(pane->child1);
+        ncpane_update_cursors(pane->child2);
+    }
+}
+
+/* Return the parent pane of child (searched by view pointer or NCPane pointer). */
+static NCPane *ncpane_get_parent(NCPane *root, void *child) {
+    if (!root || root->type == NC_SINGLE || !root->child1 || !root->child2) return NULL;
+    if ((void *)root->child1->view == child || (void *)root->child2->view == child ||
+        (void *)root->child1 == child || (void *)root->child2 == child)
+        return root;
+    NCPane *p = ncpane_get_parent(root->child1, child);
+    if (p) return p;
+    return ncpane_get_parent(root->child2, child);
+}
+
+/* Free a pane subtree, calling delete_view for each leaf view. */
+static void ncpane_free(NCPane *pane, void (*delete_view)(SciObject *)) {
+    if (!pane) return;
+    if (pane->type == NC_SINGLE) {
+        if (delete_view && pane->view) delete_view(pane->view);
+        if (pane->scrollbar_plane) {
+            ncplane_destroy(pane->scrollbar_plane);
+            pane->scrollbar_plane = NULL;
+        }
+    } else {
+        ncpane_free(pane->child1, delete_view);
+        ncpane_free(pane->child2, delete_view);
+        if (pane->split_plane) {
+            ncplane_destroy(pane->split_plane);
+            pane->split_plane = NULL;
+        }
+    }
+    free(pane);
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout helpers — centralize view geometry calculations               */
+
+/* First row of the main view (0 = tabbar hidden, 1 = shown). */
+static inline int view_top_row(void) { return tabs_shown ? 1 : 0; }
+
+/* Rows consumed by chrome (tabbar + statusbar). */
+static inline unsigned view_overhead(void) {
+    return (tabs_shown ? 1u : 0u) + (statusbar_visible ? 1u : 0u);
+}
+
+/* Row index of the status bar (-1 = off screen when not visible). */
+static inline int statusbar_row(unsigned rows) {
+    return statusbar_visible ? (int)rows - 1 : (int)rows;
+}
+
+/* ------------------------------------------------------------------ */
+
+/* Find the leaf NCPane containing a given Scintilla view. */
+static NCPane *ncpane_find_sci(NCPane *pane, SciObject *sci) {
+    if (!pane) return NULL;
+    if (pane->type == NC_SINGLE) return (pane->view == sci) ? pane : NULL;
+    NCPane *f = ncpane_find_sci(pane->child1, sci);
+    return f ? f : ncpane_find_sci(pane->child2, sci);
+}
+
+/* Centralized resize handler: refreshes display and resizes all panes. */
+static void handle_resize(void) {
+    if (!nc) return;
+    notcurses_refresh(nc, NULL, NULL);
+    unsigned rows, cols;
+    ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
+
+    if (tabbar_plane)
+        ncplane_resize_simple(tabbar_plane, 1, cols);
+    if (statusbar_plane) {
+        ncplane_resize_simple(statusbar_plane, 1, cols);
+        ncplane_move_yx(statusbar_plane, (int)rows - 1, 0);
+    }
+    if (root_pane) {
+        unsigned over = view_overhead();
+        unsigned view_h = rows > over ? rows - over : 1;
+        if (find_visible)
+            view_h = view_h > 3 ? view_h - 3 : 1;
+        if (command_entry_active) {
+            unsigned ce_h = command_entry_height_stored > 0 ?
+                            (unsigned)command_entry_height_stored : 1;
+            view_h = view_h > ce_h ? view_h - ce_h : 1;
+        }
+        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+    }
+    if (command_entry_active && command_entry) {
+        unsigned ce_h = command_entry_height_stored > 0 ?
+                        (unsigned)command_entry_height_stored : 1;
+        struct ncplane *ce_p = scintilla_get_plane(command_entry);
+        if (ce_p) {
+            int ce_y = statusbar_row(rows) - (int)ce_h;
+            if (ce_y < 1) ce_y = 1;
+            ncplane_resize_simple(ce_p, ce_h, cols);
+            ncplane_move_yx(ce_p, ce_y, 0);
+            scintilla_resize(command_entry);
+        }
     }
 }
 
@@ -227,6 +523,22 @@ static void handle_keypress(struct ncinput *ni) {
     uint32_t key = ni->id;
     unsigned nc_mods = ni->modifiers;
     int sci_mods = nc_to_sci_mods(nc_mods);
+
+    /* Normalize Kitty-protocol Shift+letter: terminals such as Kitty, Alacritty
+     * and foot (when notcurses enables the Kitty keyboard protocol) report
+     * Shift+a as id='a' + NCKEY_MOD_SHIFT instead of the legacy id='A'.
+     * Textadept and Scintilla both expect the uppercase codepoint with no SHIFT
+     * for printable characters (see keys.lua line: "disable shift for printable
+     * chars").  Convert early so both the Lua path and the Scintilla path see
+     * the same representation as legacy terminals. */
+    if ((nc_mods & NCKEY_MOD_SHIFT) &&
+        !(nc_mods & (NCKEY_MOD_CTRL | NCKEY_MOD_ALT)) &&
+        key >= 'a' && key <= 'z') {
+        key  -= (uint32_t)('a' - 'A');
+        nc_mods &= ~(unsigned)NCKEY_MOD_SHIFT;
+        sci_mods &= ~SCMOD_SHIFT;
+    }
+
     int emit_key = 0;
     /* Set when a non-Kitty control code (1–26) was remapped to letter+CTRL.
      * In that case scintilla_send_key must receive the letter + NCKEY_MOD_CTRL
@@ -358,16 +670,9 @@ static void handle_keypress(struct ncinput *ni) {
 /* Main event loop                                                       */
 
 int main(int argc, char **argv) {
-    fprintf(stderr, "[n_textadept] main starting\n");
+    if (!scintilla_notcurses_init()) return 1;
 
-    if (!scintilla_notcurses_init()) {
-        fprintf(stderr, "[n_textadept] Failed to initialize scinterm-notcurses\n");
-        return 1;
-    }
-
-    fprintf(stderr, "[n_textadept] calling init_textadept\n");
     if (!init_textadept(argc, argv)) {
-        fprintf(stderr, "[n_textadept] Failed to initialize Textadept\n");
         scintilla_notcurses_shutdown();
         return 1;
     }
@@ -382,7 +687,6 @@ int main(int argc, char **argv) {
 
     struct ncinput ni;
     bool running = true;
-    fprintf(stderr, "[n_textadept] entering main loop\n");
     while (running && !want_quit) {
         update_ui();
 
@@ -391,42 +695,7 @@ int main(int argc, char **argv) {
             if (nc_key == (uint32_t)-1) break;
 
             if (nc_key == NCKEY_RESIZE) {
-                notcurses_refresh(nc, NULL, NULL);
-                if (current_view && current_view->plane && current_view->sci) {
-                    unsigned rows, cols;
-                    ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
-                    /* Resize tab bar and status bar to new width */
-                    if (tabbar_plane)
-                        ncplane_resize_simple(tabbar_plane, 1, cols);
-                    if (statusbar_plane) {
-                        ncplane_resize_simple(statusbar_plane, 1, cols);
-                        ncplane_move_yx(statusbar_plane, (int)rows - 1, 0);
-                    }
-                    unsigned view_h = rows > 2 ? rows - 2 : 1;
-                    /* Shrink further if command entry is active */
-                    if (command_entry_active) {
-                        unsigned ce_h = (unsigned)command_entry_height_stored;
-                        if (ce_h < 1) ce_h = 1;
-                        view_h = view_h > ce_h ? view_h - ce_h : 1;
-                    }
-                    ncplane_resize_simple(current_view->plane, view_h, cols);
-                    ncplane_move_yx(current_view->plane, 1, 0);
-                    scintilla_resize(current_view->sci);
-                    /* Resize command entry too */
-                    if (command_entry_active && command_entry) {
-                        unsigned ce_h = (unsigned)command_entry_height_stored;
-                        if (ce_h < 1) ce_h = 1;
-                        unsigned rows2, cols2;
-                        ncplane_dim_yx(notcurses_stdplane(nc), &rows2, &cols2);
-                        struct ncplane *ce_p = scintilla_get_plane(command_entry);
-                        if (ce_p) {
-                            unsigned ce_y = rows2 > 1 + ce_h ? rows2 - 1 - ce_h : 1;
-                            ncplane_resize_simple(ce_p, ce_h, cols2);
-                            ncplane_move_yx(ce_p, (int)ce_y, 0);
-                            scintilla_resize(command_entry);
-                        }
-                    }
-                }
+                handle_resize();
                 continue;
             }
 
@@ -436,6 +705,39 @@ int main(int argc, char **argv) {
                     if (ni.evtype != NCTYPE_RELEASE)
                         tabbar_click(ni.x, false);
                     continue;
+                }
+
+                /* Scrollbar click */
+                if (scrollbar_enabled && nc_key == NCKEY_BUTTON1 &&
+                    ni.evtype != NCTYPE_RELEASE) {
+                    NCPane *sp = ncpane_find_at(root_pane, ni.y, ni.x);
+                    if (sp && sp->scrollbar_plane && sp->view) {
+                        int sb_x = sp->x + sp->cols - 1;
+                        if (ni.x == sb_x) {
+                            /* Compute thumb position to decide action */
+                            intptr_t first  = SS(sp->view, SCI_GETFIRSTVISIBLELINE, 0, 0);
+                            intptr_t total  = SS(sp->view, SCI_GETLINECOUNT, 0, 0);
+                            int track_h = sp->rows - 2;
+                            int vis     = sp->rows;
+                            int max_s   = (int)(total - vis); if (max_s < 0) max_s = 0;
+                            int th = (total > 0)
+                                ? (int)((double)track_h * vis / total) : track_h;
+                            if (th < 1) th = 1; if (th > track_h) th = track_h;
+                            int tp = (max_s > 0)
+                                ? (int)((double)(track_h - th) * first / max_s) : 0;
+                            int track_row = ni.y - sp->y - 1; /* relative to track */
+                            if (ni.y == sp->y) {
+                                SS(sp->view, SCI_LINESCROLL, 0, -1);
+                            } else if (ni.y == sp->y + sp->rows - 1) {
+                                SS(sp->view, SCI_LINESCROLL, 0, 1);
+                            } else if (track_row < tp) {
+                                SS(sp->view, SCI_LINESCROLL, 0, -vis);
+                            } else if (track_row >= tp + th) {
+                                SS(sp->view, SCI_LINESCROLL, 0, vis);
+                            }
+                            continue;
+                        }
+                    }
                 }
 
                 /* Bug B: track button state for drag detection */
@@ -471,10 +773,8 @@ int main(int argc, char **argv) {
         nanosleep(&sleep_ts, NULL);
     }
 
-    fprintf(stderr, "[n_textadept] cleaning up\n");
     close_textadept();
     scintilla_notcurses_shutdown();
-    fprintf(stderr, "[n_textadept] exiting with status %d\n", exit_status);
     return exit_status;
 }
 
@@ -493,7 +793,6 @@ static void switch_to_tab(int tab_idx) {
     lua_rawgeti(lua, -1, tab_idx + 1); /* [fn, view, _BUFFERS, buf] */
     lua_remove(lua, -2);               /* [fn, view, buf] */
     if (lua_pcall(lua, 2, 0, 0) != LUA_OK) {
-        fprintf(stderr, "[tabs] switch error: %s\n", lua_tostring(lua, -1));
         lua_pop(lua, 1);
     }
 }
@@ -510,7 +809,6 @@ static void close_tab(int tab_idx) {
     if (!lua_isfunction(lua, -1)) { lua_pop(lua, 2); return; }
     lua_insert(lua, -2);               /* [fn, buf] */
     if (lua_pcall(lua, 1, 0, 0) != LUA_OK) {
-        fprintf(stderr, "[tabs] close error: %s\n", lua_tostring(lua, -1));
         lua_pop(lua, 1);
     }
 }
@@ -652,7 +950,7 @@ static void draw_tabbar(void) {
  * Left side: statusbar_text0 (plugin space via ui.statusbar_text).
  * Right side: statusbar_text1 (file info via ui.buffer_statusbar_text). */
 static void draw_statusbar(void) {
-    if (!statusbar_plane) return;
+    if (!statusbar_plane || !statusbar_visible) return;
 
     unsigned scols = ncplane_dim_x(statusbar_plane);
     ncplane_erase(statusbar_plane);
@@ -706,18 +1004,12 @@ const char *get_platform(void) { return "CURSES"; }
 const char *get_charset(void)  { return "UTF-8"; }
 
 void new_window(SciObject *(*get_view)(void)) {
-    fprintf(stderr, "[n_textadept] new_window called\n");
-
     current_view = malloc(sizeof(View));
-    if (!current_view) {
-        fprintf(stderr, "[n_textadept] failed to allocate view\n");
-        return;
-    }
+    if (!current_view) return;
     memset(current_view, 0, sizeof(View));
 
     SciObject *sci = get_view();
     if (!sci) {
-        fprintf(stderr, "[n_textadept] get_view returned NULL\n");
         free(current_view);
         current_view = NULL;
         return;
@@ -728,20 +1020,28 @@ void new_window(SciObject *(*get_view)(void)) {
 
     if (current_view->plane) {
         nc = ncplane_notcurses(current_view->plane);
-        fprintf(stderr, "[n_textadept] nc context obtained: %p\n", (void *)nc);
 
         unsigned rows, cols;
         ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
-        unsigned view_h = rows > 2 ? rows - 2 : 1;
+        unsigned view_h = rows > view_overhead() ? rows - view_overhead() : 1;
         ncplane_resize_simple(current_view->plane, view_h, cols);
-        ncplane_move_yx(current_view->plane, 1, 0);
+        ncplane_move_yx(current_view->plane, view_top_row(), 0);
         scintilla_resize(sci);
+
+        /* Initialize root pane tree with the initial view */
+        root_pane = ncpane_new(sci);
+        if (root_pane) {
+            root_pane->y = view_top_row(); root_pane->x = 0;
+            root_pane->rows = (int)view_h; root_pane->cols = (int)cols;
+        }
 
         /* Create the dedicated tab bar plane (row 0, full width, 1 row) */
         struct ncplane_options tbopt = {
             .y = 0, .x = 0, .rows = 1, .cols = cols, .name = "tabbar",
         };
         tabbar_plane = ncplane_create(notcurses_stdplane(nc), &tbopt);
+        if (tabbar_plane && !tabs_shown)
+            ncplane_move_yx(tabbar_plane, -1, 0); /* park off-screen until shown */
 
         /* Create the status bar plane (last row, full width, 1 row) */
         struct ncplane_options sbopt = {
@@ -750,7 +1050,7 @@ void new_window(SciObject *(*get_view)(void)) {
         statusbar_plane = ncplane_create(notcurses_stdplane(nc), &sbopt);
     }
 
-    /* Bug J: initialize find/replace button and option pointers.
+    /* Initialize find/replace button and option pointers.
      * These must be done here (not statically) because the pointers are typed
      * as void* and arrays cannot be statically initialized through them. */
     find_next  = &btn_labels[0];
@@ -762,12 +1062,11 @@ void new_window(SciObject *(*get_view)(void)) {
     regex      = &find_options[2];
     in_files   = &find_options[3];
 
-    fprintf(stderr, "[n_textadept] calling focus_view\n");
     focus_view(sci);
 }
 
 void set_title(const char *title) {
-    if (title) fprintf(stderr, "\x1b]0;%s\x07", title);
+    (void)title; /* Terminal title managed by notcurses; no-op */
 }
 
 bool is_maximized(void) { return false; }
@@ -782,25 +1081,20 @@ void get_size(int *w, int *h) {
 void set_size(int width, int height) { (void)width; (void)height; }
 
 SciObject *new_scintilla(void (*notified)(SciObject *, int, SCNotification *, void *)) {
-    SciObject *sci = scintilla_new(notified, NULL);
-    if (sci) {
-        struct ncplane *p = scintilla_get_plane(sci);
-        if (p) ncplane_move_bottom(p);
-    }
-    return sci;
+    return scintilla_new(notified, NULL);
 }
 
 void focus_view(SciObject *view) {
     if (!view) return;
-    if (focused_view && focused_view != view) {
+    if (focused_view && focused_view != view)
         scintilla_set_focus(focused_view, false);
-        struct ncplane *old_p = scintilla_get_plane(focused_view);
-        if (old_p) ncplane_move_bottom(old_p);
-    }
-    struct ncplane *new_p = scintilla_get_plane(view);
-    if (new_p) ncplane_move_top(new_p);
     scintilla_set_focus(view, true);
     focused_view = view;
+    /* Update current_view to track the focused sci and its plane */
+    if (current_view) {
+        current_view->sci = view;
+        current_view->plane = scintilla_get_plane(view);
+    }
 }
 
 sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
@@ -811,33 +1105,138 @@ sptr_t SS(SciObject *view, int message, uptr_t wparam, sptr_t lparam) {
 /* Split/pane (Bug H — stub: proper pane tree requires significant work) */
 
 void split_view(SciObject *view, SciObject *view2, bool vertical) {
-    /* TODO: proper split pane management */
-    (void)view; (void)view2; (void)vertical;
+    if (!nc || !root_pane || !view || !view2) return;
+    NCPane *pane = ncpane_find_sci(root_pane, view);
+    if (!pane || pane->type != NC_SINGLE) return;
+
+    int rows = pane->rows, cols = pane->cols, y = pane->y, x = pane->x;
+    NCPane *c1 = ncpane_new(pane->view);
+    NCPane *c2 = ncpane_new(view2);
+    if (!c1 || !c2) { free(c1); free(c2); return; }
+
+    struct ncplane_options spopt;
+    memset(&spopt, 0, sizeof(spopt));
+    int split_pos;
+    if (vertical) {
+        split_pos = cols / 2;
+        spopt.rows = (unsigned)rows; spopt.cols = 1;
+        spopt.y = y; spopt.x = x + split_pos;
+        ncpane_resize(c1, rows, split_pos, y, x);
+        ncpane_resize(c2, rows, cols - split_pos - 1, y, x + split_pos + 1);
+    } else {
+        split_pos = rows / 2;
+        spopt.rows = 1; spopt.cols = (unsigned)cols;
+        spopt.y = y + split_pos; spopt.x = x;
+        ncpane_resize(c1, split_pos, cols, y, x);
+        ncpane_resize(c2, rows - split_pos - 1, cols, y + split_pos + 1, x);
+    }
+    pane->split_plane = ncplane_create(notcurses_stdplane(nc), &spopt);
+    if (!pane->split_plane) {
+        /* Split plane creation failed — undo the split */
+        ncpane_resize(pane, pane->rows, pane->cols, pane->y, pane->x);
+        free(c1); free(c2);
+        return;
+    }
+    pane->type      = vertical ? NC_VSPLIT : NC_HSPLIT;
+    pane->view      = NULL;
+    pane->child1    = c1;
+    pane->child2    = c2;
+    pane->split_pos = split_pos;
 }
 
-bool unsplit_view(SciObject *view, void (*delete_view)(SciObject *)) {
-    (void)view; (void)delete_view;
-    return false;
+bool unsplit_view(SciObject *view, void (*delete_view_fn)(SciObject *)) {
+    if (!root_pane || !view) return false;
+    NCPane *target = ncpane_find_sci(root_pane, view);
+    if (!target) return false;
+    NCPane *parent = ncpane_get_parent(root_pane, (void *)view);
+    if (!parent) return false; /* already the only pane */
+
+    int py = parent->y, px = parent->x;
+    int prows = parent->rows, pcols = parent->cols;
+    NCPane *sibling = (parent->child1 == target) ? parent->child2 : parent->child1;
+
+    ncpane_free(sibling, delete_view_fn);
+
+    if (parent->split_plane) {
+        ncplane_destroy(parent->split_plane);
+        parent->split_plane = NULL;
+    }
+    parent->type   = NC_SINGLE;
+    parent->view   = target->view;
+    parent->child1 = NULL;
+    parent->child2 = NULL;
+    free(target);
+
+    ncpane_resize(parent, prows, pcols, py, px);
+    return true;
 }
 
 void delete_scintilla(SciObject *view) { scintilla_delete(view); }
 
-Pane *get_top_pane(void) { return NULL; }
-PaneInfo get_pane_info(Pane *pane) { (void)pane; PaneInfo i = {0}; return i; }
-PaneInfo get_parent_pane_info(PaneInfo info) { (void)info; PaneInfo i = {0}; return i; }
-PaneInfo get_pane_info_from_view(SciObject *view) {
-    (void)view; PaneInfo i = {0}; return i;
+Pane *get_top_pane(void) { return (Pane *)root_pane; }
+
+PaneInfo get_pane_info(Pane *pane) {
+    NCPane *np = (NCPane *)pane;
+    PaneInfo info = {0};
+    if (!np) return info;
+    info.self   = pane;
+    info.width  = np->cols;
+    info.height = np->rows;
+    if (np->type == NC_SINGLE) {
+        info.view = np->view;
+    } else {
+        info.is_split  = true;
+        info.vertical  = (np->type == NC_VSPLIT);
+        info.child1    = (Pane *)np->child1;
+        info.child2    = (Pane *)np->child2;
+        info.split_pos = np->split_pos;
+    }
+    return info;
 }
-void set_pane_split_pos(Pane *pane, int pos) { (void)pane; (void)pos; }
+
+PaneInfo get_parent_pane_info(PaneInfo info) {
+    NCPane *parent = ncpane_get_parent(root_pane, (void *)info.self);
+    return get_pane_info((Pane *)parent);
+}
+
+PaneInfo get_pane_info_from_view(SciObject *view) {
+    return get_pane_info((Pane *)ncpane_find_sci(root_pane, view));
+}
+
+void set_pane_split_pos(Pane *pane, int pos) {
+    NCPane *np = (NCPane *)pane;
+    if (!np || np->type == NC_SINGLE) return;
+    np->split_pos = pos;
+    ncpane_resize(np, np->rows, np->cols, np->y, np->x);
+}
 
 /* ------------------------------------------------------------------ */
 /* Tab functions                                                         */
 
 void show_tabs(bool show) {
-    (void)show;
-    tabs_shown = true; // always keep tabs visible
-    if (tabbar_plane)
-        draw_tabbar();
+    if (tabs_shown == show) {
+        if (show && tabbar_plane) draw_tabbar();
+        return;
+    }
+    tabs_shown = show;
+    if (tabbar_plane) {
+        if (show) {
+            ncplane_move_yx(tabbar_plane, 0, 0); /* restore from off-screen */
+            draw_tabbar();
+            ncplane_move_top(tabbar_plane);
+        } else {
+            ncplane_erase(tabbar_plane);
+            ncplane_move_yx(tabbar_plane, -1, 0); /* park off-screen */
+        }
+    }
+    /* Expand/shrink pane tree to reclaim or yield the tabbar row */
+    if (nc && root_pane) {
+        unsigned rows, cols;
+        ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
+        unsigned over = view_overhead();
+        unsigned view_h = rows > over ? rows - over : 1;
+        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+    }
 }
 
 void add_tab(void) {
@@ -893,8 +1292,24 @@ void set_repl_text(const char *text) {
     if (text) snprintf(repl_text, sizeof(repl_text), "%s", text);
     else repl_text[0] = '\0';
 }
-void add_to_find_history(const char *text) { (void)text; }
-void add_to_repl_history(const char *text) { (void)text; }
+static void push_history(char hist[][256], int *n, const char *text) {
+    if (!text || !*text) return;
+    for (int i = 0; i < *n; i++) {
+        if (strcmp(hist[i], text) == 0) {
+            if (i == 0) return; /* already at front */
+            char tmp[256];
+            memcpy(tmp, hist[i], sizeof(tmp));
+            memmove(&hist[1], &hist[0], (size_t)i * sizeof(hist[0]));
+            memcpy(hist[0], tmp, sizeof(tmp));
+            return;
+        }
+    }
+    if (*n < FIND_HIST_MAX) (*n)++;
+    memmove(&hist[1], &hist[0], (size_t)(*n - 1) * sizeof(hist[0]));
+    snprintf(hist[0], 256, "%s", text);
+}
+void add_to_find_history(const char *text) { push_history(find_hist, &find_hist_n, text); }
+void add_to_repl_history(const char *text) { push_history(repl_hist, &repl_hist_n, text); }
 void set_entry_font(const char *name)      { (void)name; }
 
 /* Bug J: is_checked/toggle use bool* semantics like the curses frontend */
@@ -1149,8 +1564,9 @@ static void draw_findbar(struct ncplane *fp, int cols,
     fb_fg(fp, C_TEXT); fb_bg(fp, C_BAR); /* restore defaults */
 }
 
-/* Insert a Unicode codepoint (already > 0x7e) into a text buffer at *cur. */
-static void fb_insert_uni(char *buf, int bufsz, int *cur, uint32_t cp) {
+/* Insert a Unicode codepoint (already > 0x7e) into a text buffer at *cur.
+ * Returns true on success, false if buffer is too small. */
+static bool fb_insert_uni(char *buf, int bufsz, int *cur, uint32_t cp) {
     /* Encode to UTF-8 */
     char enc[5] = {0};
     int n = 0;
@@ -1161,10 +1577,11 @@ static void fb_insert_uni(char *buf, int bufsz, int *cur, uint32_t cp) {
     else                   { enc[0]=(char)(0xF0|(cp>>18)); enc[1]=(char)(0x80|((cp>>12)&0x3F));
                               enc[2]=(char)(0x80|((cp>>6)&0x3F)); enc[3]=(char)(0x80|(cp&0x3F)); n=4; }
     int len = (int)strlen(buf);
-    if (len + n >= bufsz) return;
+    if (len + n >= bufsz) return false;  /* Buffer full */
     memmove(buf + *cur + n, buf + *cur, (size_t)(len - *cur + 1));
     memcpy(buf + *cur, enc, (size_t)n);
     *cur += n;
+    return true;
 }
 
 void focus_find(void) {
@@ -1175,17 +1592,17 @@ void focus_find(void) {
     unsigned rows, cols;
     ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
 
-    /* Shrink main view by 3 rows (tabbar=1, findbar=3, statusbar=1) */
-    if (current_view && current_view->plane) {
-        unsigned main_h = rows > 5 ? rows - 5 : 1;
-        ncplane_resize_simple(current_view->plane, main_h, cols);
-        scintilla_resize(current_view->sci);
+    /* Shrink main view by 3 rows for findbar */
+    if (root_pane) {
+        unsigned over = view_overhead();
+        unsigned main_h = rows > over + 3 ? rows - over - 3 : 1;
+        ncpane_resize(root_pane, (int)main_h, (int)cols, view_top_row(), 0);
     }
 
     emit("find_pane_show", -1);
 
-    /* Create find bar plane: 3 rows, above statusbar */
-    int fp_y = (int)rows - 4; /* tabbar(1) + view + findbar(3) + statusbar(1) */
+    /* Create find bar plane: 3 rows, immediately above the statusbar */
+    int fp_y = statusbar_row(rows) - 3;
     if (fp_y < 1) fp_y = 1;
     struct ncplane_options fpopt = {
         .y = fp_y, .x = 0, .rows = 3, .cols = cols, .name = "findbar"
@@ -1202,14 +1619,20 @@ void focus_find(void) {
     int rcur = (int)strlen(rtext);
     int focus_pos = 0; /* index into focus_order[], starts at find entry */
 
+    /* History cycling state (-1 = not cycling; 0 = most recent entry) */
+    int find_hist_pos = -1;
+    int repl_hist_pos = -1;
+
     FBHit hits[32];
     int nhits = 0;
     struct ncinput ni;
     bool done = false;
 
     while (!done) {
-        /* Re-render the editor view so find results are visible */
-        if (current_view && current_view->sci)
+        /* Re-render the editor view(s) so find results are visible */
+        if (root_pane)
+            ncpane_render(root_pane);
+        else if (current_view && current_view->sci)
             scintilla_render(current_view->sci);
         draw_findbar(fp, (int)cols, ftext, fcur, rtext, rcur,
                      focus_order[focus_pos], hits, &nhits);
@@ -1218,6 +1641,29 @@ void focus_find(void) {
         if (ni.evtype == NCTYPE_RELEASE) continue;
 
         uint32_t k = ni.id;
+
+        /* Handle terminal resize */
+        if (k == NCKEY_RESIZE) {
+            notcurses_refresh(nc, NULL, NULL);
+            unsigned rows2, cols2;
+            ncplane_dim_yx(notcurses_stdplane(nc), &rows2, &cols2);
+            if (tabbar_plane) ncplane_resize_simple(tabbar_plane, 1, cols2);
+            if (statusbar_plane) {
+                ncplane_resize_simple(statusbar_plane, 1, cols2);
+                ncplane_move_yx(statusbar_plane, (int)rows2 - 1, 0);
+            }
+            if (root_pane) {
+                unsigned over = view_overhead();
+                unsigned vh = rows2 > over + 3 ? rows2 - over - 3 : 1;
+                ncpane_resize(root_pane, (int)vh, (int)cols2, view_top_row(), 0);
+            }
+            fp_y = statusbar_row(rows2) - 3;
+            if (fp_y < 1) fp_y = 1;
+            ncplane_move_yx(fp, fp_y, 0);
+            ncplane_resize_simple(fp, 3, cols2);
+            cols = cols2;
+            continue;
+        }
 
         /* ── Mouse click ── */
         if (nckey_mouse_p(k) && k == NCKEY_BUTTON1
@@ -1324,13 +1770,45 @@ void focus_find(void) {
             }
 
         } else if (k == NCKEY_UP) {
-            /* Move focus to find entry */
-            for (int fi = 0; fi < FOCUS_COUNT; fi++)
-                if (focus_order[fi] == FOCUS_FIND_ENTRY) { focus_pos = fi; break; }
+            if (cur_focus == FOCUS_FIND_ENTRY) {
+                /* Cycle find history: Up = older entry */
+                int next = find_hist_pos + 1;
+                if (next < find_hist_n) {
+                    find_hist_pos = next;
+                    snprintf(ftext, sizeof(ftext), "%s", find_hist[find_hist_pos]);
+                    fcur = (int)strlen(ftext);
+                }
+            } else {
+                /* From replace entry or buttons: go to find entry */
+                for (int fi = 0; fi < FOCUS_COUNT; fi++)
+                    if (focus_order[fi] == FOCUS_FIND_ENTRY) { focus_pos = fi; break; }
+            }
         } else if (k == NCKEY_DOWN) {
-            /* Move focus to replace entry */
-            for (int fi = 0; fi < FOCUS_COUNT; fi++)
-                if (focus_order[fi] == FOCUS_REPL_ENTRY) { focus_pos = fi; break; }
+            if (cur_focus == FOCUS_FIND_ENTRY) {
+                if (find_hist_pos > 0) {
+                    /* Step forward in history (toward more recent) */
+                    find_hist_pos--;
+                    snprintf(ftext, sizeof(ftext), "%s", find_hist[find_hist_pos]);
+                    fcur = (int)strlen(ftext);
+                } else {
+                    /* Already at current text: move down to replace entry */
+                    find_hist_pos = -1;
+                    for (int fi = 0; fi < FOCUS_COUNT; fi++)
+                        if (focus_order[fi] == FOCUS_REPL_ENTRY) { focus_pos = fi; break; }
+                }
+            } else if (cur_focus == FOCUS_REPL_ENTRY) {
+                /* Cycle replace history: Down = older entry */
+                int next = repl_hist_pos + 1;
+                if (next < repl_hist_n) {
+                    repl_hist_pos = next;
+                    snprintf(rtext, sizeof(rtext), "%s", repl_hist[repl_hist_pos]);
+                    rcur = (int)strlen(rtext);
+                }
+            } else {
+                /* From buttons: go to replace entry */
+                for (int fi = 0; fi < FOCUS_COUNT; fi++)
+                    if (focus_order[fi] == FOCUS_REPL_ENTRY) { focus_pos = fi; break; }
+            }
 
         } else if (k == NCKEY_LEFT) {
             if (on_entry) {
@@ -1382,6 +1860,9 @@ void focus_find(void) {
         } else if ((k >= ' ' && k <= 0x7e) || k > 0x7e) {
             /* Printable: redirect to find entry if focus is on a button */
             if (!on_entry) { focus_pos = 0; cur_focus = FOCUS_FIND_ENTRY; }
+            /* Any manual edit breaks the history cycle */
+            if (cur_focus == FOCUS_FIND_ENTRY) find_hist_pos = -1;
+            else repl_hist_pos = -1;
             char *tx  = (cur_focus == FOCUS_FIND_ENTRY) ? ftext : rtext;
             int  *cur = (cur_focus == FOCUS_FIND_ENTRY) ? &fcur : &rcur;
             if (k <= 0x7e) {
@@ -1411,13 +1892,12 @@ void focus_find(void) {
     ncplane_destroy(fp);
 
     /* Restore main view size */
-    if (nc && current_view && current_view->plane) {
+    if (nc && root_pane) {
         unsigned rows2, cols2;
         ncplane_dim_yx(notcurses_stdplane(nc), &rows2, &cols2);
-        unsigned main_h = rows2 > 2 ? rows2 - 2 : 1;
-        ncplane_resize_simple(current_view->plane, main_h, cols2);
-        ncplane_move_yx(current_view->plane, 1, 0);
-        scintilla_resize(current_view->sci);
+        unsigned over = view_overhead();
+        unsigned main_h = rows2 > over ? rows2 - over : 1;
+        ncpane_resize(root_pane, (int)main_h, (int)cols2, view_top_row(), 0);
     }
     emit("find_pane_hide", -1);
     find_visible = false;
@@ -1428,42 +1908,33 @@ void focus_find(void) {
 /* Command entry (Bug I)                                                 */
 
 static void resize_views_for_command_entry(bool active) {
-    if (!nc || !current_view || !current_view->plane) return;
+    if (!nc || !root_pane) return;
     unsigned rows, cols;
     ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
-
-    unsigned ce_h = (command_entry_height_stored > 0) ?
+    unsigned ce_h = command_entry_height_stored > 0 ?
                     (unsigned)command_entry_height_stored : 1;
+    unsigned over = view_overhead();
 
-    if (active) {
-        /* Main view shrinks by ce_h */
-        unsigned main_h = rows > 2 + ce_h ? rows - 2 - ce_h : 1;
-        ncplane_resize_simple(current_view->plane, main_h, cols);
-        ncplane_move_yx(current_view->plane, 1, 0);
-        scintilla_resize(current_view->sci);
+    unsigned main_h;
+    if (active)
+        main_h = rows > over + ce_h ? rows - over - ce_h : 1;
+    else
+        main_h = rows > over ? rows - over : 1;
 
-        /* Position command entry above status bar */
-        if (command_entry) {
-            struct ncplane *ce_p = scintilla_get_plane(command_entry);
-            if (ce_p) {
-                unsigned ce_y = rows > 1 + ce_h ? rows - 1 - ce_h : 1;
-                ncplane_resize_simple(ce_p, ce_h, cols);
-                ncplane_move_yx(ce_p, (int)ce_y, 0);
-                scintilla_resize(command_entry);
-            }
+    ncpane_resize(root_pane, (int)main_h, (int)cols, view_top_row(), 0);
+
+    if (active && command_entry) {
+        struct ncplane *ce_p = scintilla_get_plane(command_entry);
+        if (ce_p) {
+            int ce_y = statusbar_row(rows) - (int)ce_h;
+            if (ce_y < 1) ce_y = 1;
+            ncplane_resize_simple(ce_p, ce_h, cols);
+            ncplane_move_yx(ce_p, ce_y, 0);
+            scintilla_resize(command_entry);
         }
-    } else {
-        /* Restore main view */
-        unsigned main_h = rows > 2 ? rows - 2 : 1;
-        ncplane_resize_simple(current_view->plane, main_h, cols);
-        ncplane_move_yx(current_view->plane, 1, 0);
-        scintilla_resize(current_view->sci);
-
-        /* Push command entry behind everything */
-        if (command_entry) {
-            struct ncplane *ce_p = scintilla_get_plane(command_entry);
-            if (ce_p) ncplane_move_bottom(ce_p);
-        }
+    } else if (!active && command_entry) {
+        struct ncplane *ce_p = scintilla_get_plane(command_entry);
+        if (ce_p) ncplane_move_bottom(ce_p);
     }
 }
 
@@ -1510,14 +1981,69 @@ void set_command_entry_height(int height) {
 /* ------------------------------------------------------------------ */
 /* Statusbar (Bug D)                                                     */
 
+/* Send OSC 1337 SetUserVar to tell WezTerm to update window_background_opacity.
+ * pct is 0..100; we convert to 0.0..1.0 and base64-encode the decimal string. */
+static void write_osc_bg_alpha(int pct) {
+    static const char b64[] =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    /* pct is a transparency percentage (0=opaque, 100=transparent).
+     * Convert to WezTerm opacity: opacity = 1.0 - pct/100. */
+    char val[16];
+    int len = snprintf(val, sizeof(val), "%.2f", (100 - pct) / 100.0);
+    /* Base64-encode val */
+    char enc[32];
+    int i = 0, o = 0;
+    while (i < len) {
+        int start = i;
+        unsigned b0 = (unsigned char)val[i++];
+        unsigned b1 = i < len ? (unsigned char)val[i++] : 0;
+        unsigned b2 = i < len ? (unsigned char)val[i++] : 0;
+        int nb = i - start; /* bytes consumed: 1, 2, or 3 */
+        enc[o++] = b64[b0 >> 2];
+        enc[o++] = b64[((b0 & 3) << 4) | (b1 >> 4)];
+        enc[o++] = nb >= 2 ? b64[((b1 & 0xf) << 2) | (b2 >> 6)] : '=';
+        enc[o++] = nb >= 3 ? b64[b2 & 0x3f] : '=';
+    }
+    enc[o] = '\0';
+    /* Write OSC 1337 SetUserVar sequence.  notcurses opens /dev/tty directly;
+     * write through /dev/tty to ensure the PTY master (WezTerm) receives it. */
+    FILE *tty = fopen("/dev/tty", "w");
+    if (tty) {
+        fprintf(tty, "\033]1337;SetUserVar=TA_BG_ALPHA=%s\007", enc);
+        fclose(tty);
+    }
+}
+
+void set_bg_alpha(int pct) {
+    scintilla_set_bg_alpha(pct);
+    write_osc_bg_alpha(pct);
+}
+
 bool is_statusbar_visible(void) { return statusbar_visible; }
 void set_statusbar_visible(bool visible) {
     if (statusbar_visible == visible) return;
     statusbar_visible = visible;
-    /* Resize main view: statusbar occupies the last row.
-     * Since we don't yet render the statusbar ourselves, leave view_h = rows-2
-     * regardless (the -2 already accounts for both tabbar and statusbar). */
+    if (statusbar_plane) {
+        if (visible)
+            ncplane_move_top(statusbar_plane);
+        else
+            ncplane_move_bottom(statusbar_plane);
+    }
+    /* Expand/shrink pane tree to reclaim or yield the statusbar row */
+    if (nc && root_pane) {
+        unsigned rows, cols;
+        ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
+        unsigned over = view_overhead();
+        unsigned view_h = rows > over ? rows - over : 1;
+        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+    }
 }
+void set_scrollbar_visible(bool visible) {
+    if (scrollbar_enabled == visible) return;
+    scrollbar_enabled = visible;
+    handle_resize();
+}
+
 const char *get_statusbar_text(int bar) {
     if (bar == 0) return statusbar_text0;
     if (bar == 1) return statusbar_text1;
@@ -1539,6 +2065,35 @@ void set_menubar(lua_State *L, int index)  { (void)L; (void)index; }
 /* Clipboard                                                             */
 
 char *get_clipboard_text(int *len) {
+    /* Try external clipboard tools first (Wayland, X11) */
+    const char *cmds[] = { "wl-paste 2>/dev/null", "xclip -o -sel clipboard 2>/dev/null", "xsel -bo 2>/dev/null", NULL };
+    for (int i = 0; cmds[i]; i++) {
+        FILE *f = popen(cmds[i], "r");
+        if (!f) continue;
+        char *buf = NULL;
+        size_t cap = 0, total = 0;
+        char tmp[4096];
+        size_t n;
+        while ((n = fread(tmp, 1, sizeof(tmp), f)) > 0) {
+            if (total + n + 1 > cap) {
+                cap = cap ? cap * 2 : 4096;
+                while (cap < total + n + 1) cap *= 2;
+                char *nb = realloc(buf, cap);
+                if (!nb) { free(buf); pclose(f); buf = NULL; break; }
+                buf = nb;
+            }
+            memcpy(buf + total, tmp, n);
+            total += n;
+        }
+        int rc = pclose(f);
+        if (rc == 0 && total > 0 && buf) {
+            buf[total] = '\0';
+            if (len) *len = (int)total;
+            return buf;
+        }
+        free(buf);
+    }
+    /* Fall back to Scintilla internal clipboard */
     if (!focused_view) { if (len) *len = 0; return NULL; }
     return scintilla_get_clipboard(focused_view, len);
 }
@@ -1567,18 +2122,33 @@ void update_ui(void) {
     process_timeouts();
     monitor_processes();
 
-    if (current_view && current_view->sci)
-        scintilla_render(current_view->sci);
+    /* Ensure pane geometry is always consistent with current terminal size
+     * and tabbar/statusbar visibility (guards against missed resize paths). */
+    if (root_pane && !command_entry_active && !find_visible) {
+        unsigned rows, cols;
+        ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
+        unsigned over = view_overhead();
+        int expected_h = (int)(rows > over ? rows - over : 1);
+        int expected_y = view_top_row();
+        if (root_pane->rows != expected_h || root_pane->y != expected_y)
+            ncpane_resize(root_pane, expected_h, (int)cols, expected_y, 0);
+    }
+
+    if (root_pane) ncpane_render(root_pane);
+
+    /* Update cursors: focused view gets active cursor; others get inactive cursor */
+    if (root_pane) ncpane_update_cursors(root_pane);
 
     if (command_entry_active && command_entry) {
         scintilla_render(command_entry);
         scintilla_update_cursor(command_entry);
-    } else if (current_view && current_view->sci) {
-        scintilla_update_cursor(current_view->sci);
+    } else if (focused_view) {
+        scintilla_update_cursor(focused_view);
     }
 
     draw_tabbar();
     draw_statusbar();
+
     notcurses_render(nc);
 }
 
@@ -1731,6 +2301,14 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         if (ni.evtype == NCTYPE_RELEASE) continue;
 
         uint32_t k = ni.id;
+        if (k == NCKEY_RESIZE) {
+            handle_resize();
+            /* Reposition dialog in the center */
+            unsigned dr, dc;
+            ncplane_dim_yx(notcurses_stdplane(nc), &dr, &dc);
+            ncplane_move_yx(dplane, ((int)dr - h) / 2, ((int)dc - w) / 2);
+            continue;
+        }
         if (k == NCKEY_LEFT)  cur_btn = (cur_btn + num_btn - 1) % num_btn;
         else if (k == NCKEY_RIGHT || k == '\t') cur_btn = (cur_btn + 1) % num_btn;
         else if (k == NCKEY_ENTER || k == '\r' || k == '\n') {
@@ -1828,8 +2406,9 @@ int input_dialog(DialogOptions opts, lua_State *L) {
         int copy_len = max_len;
         if (offset + copy_len > (int)buflen) copy_len = (int)buflen - offset;
         if (copy_len < 0) copy_len = 0;
+        if (copy_len > 255) copy_len = 255;
         char visible[256];
-        strncpy(visible, buf + offset, copy_len);
+        memcpy(visible, buf + offset, copy_len);
         visible[copy_len] = '\0';
         ncplane_printf_yx(dplane, text_y, text_x, "%-*s", max_len, visible);
         ncplane_cursor_move_yx(dplane, text_y, text_x + curpos - offset);
@@ -1837,6 +2416,13 @@ int input_dialog(DialogOptions opts, lua_State *L) {
 
         notcurses_get_blocking(nc, &ni);
         if (ni.evtype == NCTYPE_RELEASE) continue;
+        if (ni.id == NCKEY_RESIZE) {
+            handle_resize();
+            unsigned dr, dc;
+            ncplane_dim_yx(notcurses_stdplane(nc), &dr, &dc);
+            ncplane_move_yx(dplane, ((int)dr - h) / 2, ((int)dc - w) / 2);
+            continue;
+        }
 
         if (ni.id == NCKEY_ENTER || ni.id == '\n' || ni.id == '\r') {
             accepted = (selected_btn == 1); done = true;
@@ -1901,15 +2487,19 @@ static int load_directory(const char *path, FileEntry *entries, int max,
     if (!d) return 0;
     int n = 0;
     struct dirent *ent;
+    size_t path_len = strlen(path);
     while ((ent = readdir(d)) != NULL && n < max) {
         if (strcmp(ent->d_name, ".") == 0) continue;
-        char full[PATH_MAX];
-        snprintf(full, sizeof(full), "%s/%s", path, ent->d_name);
+        /* Allocate dynamically to avoid large stack buffer (PATH_MAX can be large) */
+        size_t full_size = path_len + strlen(ent->d_name) + 2; /* / + null */
+        char *full = malloc(full_size);
+        if (!full) continue;
+        snprintf(full, full_size, "%s/%s", path, ent->d_name);
         struct stat st;
         bool is_dir = (stat(full, &st) == 0 && S_ISDIR(st.st_mode));
+        free(full);
         if (only_dirs && !is_dir && strcmp(ent->d_name, "..") != 0) continue;
-        strncpy(entries[n].name, ent->d_name, 255);
-        entries[n].name[255] = '\0';
+        snprintf(entries[n].name, sizeof(entries[n].name), "%s", ent->d_name);
         entries[n].is_dir = is_dir;
         n++;
     }
@@ -1937,10 +2527,11 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
 
     /* Starting directory */
     char cwd[PATH_MAX];
-    if (opts.dir && opts.dir[0])
+    if (opts.dir && opts.dir[0]) {
         snprintf(cwd, sizeof(cwd), "%s", opts.dir);
-    else if (!getcwd(cwd, sizeof(cwd)))
+    } else if (!getcwd(cwd, sizeof(cwd))) {
         snprintf(cwd, sizeof(cwd), ".");
+    }
     /* Remove trailing slash except for root */
     size_t cwl = strlen(cwd);
     if (cwl > 1 && cwd[cwl - 1] == '/') cwd[cwl - 1] = '\0';
@@ -2135,6 +2726,19 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
         if (ni.evtype == NCTYPE_RELEASE) continue;
 
         uint32_t k = ni.id;
+        if (k == NCKEY_RESIZE) {
+            handle_resize();
+            unsigned ndr, ndc;
+            ncplane_dim_yx(notcurses_stdplane(nc), &ndr, &ndc);
+            dw = (int)ndc - 4; if (dw > 88) dw = 88; if (dw < 24) dw = 24;
+            dh = (int)ndr - 2; if (dh < 14) dh = 14;
+            dy = ((int)ndr - dh) / 2; dx = ((int)ndc - dw) / 2;
+            ncplane_resize_simple(dp, (unsigned)dh, (unsigned)dw);
+            ncplane_move_yx(dp, dy, dx);
+            list_h = (save_mode ? dh - 5 : dh - 3) - list_top;
+            if (list_h < 1) list_h = 1;
+            continue;
+        }
 
         /* ── Navigation ── */
         if (k == NCKEY_ESC) {
@@ -2211,7 +2815,11 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
                             if (slash && slash > cwd) *slash = '\0';
                         } else {
                             size_t cl = strlen(cwd);
-                            snprintf(cwd + cl, sizeof(cwd) - cl, "/%s", entries[ei].name);
+                            size_t name_len = strlen(entries[ei].name);
+                            /* Check bounds: need space for '/' + name + '\0' */
+                            if (cl + 1 + name_len < sizeof(cwd)) {
+                                snprintf(cwd + cl, sizeof(cwd) - cl, "/%s", entries[ei].name);
+                            }
                         }
                         filter[0] = '\0'; filter_cur = 0;
                         RELOAD();
@@ -2406,6 +3014,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 
     /* Column widths */
     int *col_w = calloc(num_cols, sizeof(int));
+    if (!col_w) { ncplane_destroy(dp); return 0; }
     for (int c = 0; c < num_cols; c++) {
         if (opts.columns) {
             lua_rawgeti(L, opts.columns, c + 1);
@@ -2429,6 +3038,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 
     /* Collect row strings for display */
     char **row_strs = calloc(num_rows, sizeof(char *));
+    if (!row_strs) { free(col_w); ncplane_destroy(dp); return 0; }
     for (int r = 0; r < num_rows; r++) {
         size_t len = 0;
         for (int c = 0; c < num_cols; c++) len += col_w[c] + 2;
@@ -2461,6 +3071,13 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 
     /* Filtered indices */
     int *filtered = calloc(num_rows, sizeof(int));
+    if (!filtered) {
+        for (int r = 0; r < num_rows; r++) free(row_strs[r]);
+        free(row_strs);
+        free(col_w);
+        ncplane_destroy(dp);
+        return 0;
+    }
     int num_filtered = 0;
 
     /* Rebuild filter */
@@ -2539,6 +3156,19 @@ int list_dialog(DialogOptions opts, lua_State *L) {
         if (ni.evtype == NCTYPE_RELEASE) continue;
 
         uint32_t k = ni.id;
+        if (k == NCKEY_RESIZE) {
+            handle_resize();
+            unsigned ndr, ndc;
+            ncplane_dim_yx(notcurses_stdplane(nc), &ndr, &ndc);
+            dw = (int)ndc - 4; if (dw > 80) dw = 80;
+            dh = (int)ndr - 4; if (dh < 8) dh = 8;
+            dy = ((int)ndr - dh) / 2; dx = ((int)ndc - dw) / 2;
+            ncplane_resize_simple(dp, (unsigned)dh, (unsigned)dw);
+            ncplane_move_yx(dp, dy, dx);
+            list_bot = dh - 3; list_h = list_bot - list_top;
+            if (list_h < 1) list_h = 1;
+            continue;
+        }
         if (k == NCKEY_ESC) {
             result_btn = 0; done = true;
         } else if (k == NCKEY_ENTER || k == '\r' || k == '\n') {
@@ -2613,6 +3243,9 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 /* ------------------------------------------------------------------ */
 /* spawn — POSIX fork/exec/pipe (Bug G)                                  */
 
+/* Forward declaration - defined after parse_cmd */
+static void free_argv(char **argv, int argc);
+
 /* Parse a command string into argv. Returns argc; argv must be freed with
  * free_argv(). Each element is strdup'd. */
 static int parse_cmd(const char *cmd, char ***argv_out) {
@@ -2642,11 +3275,29 @@ static int parse_cmd(const char *cmd, char ***argv_out) {
         tok[tlen] = '\0';
         if (argc >= cap) {
             cap *= 2;
-            argv = realloc(argv, cap * sizeof(char *));
+            char **new_argv = realloc(argv, cap * sizeof(char *));
+            if (!new_argv) {
+                free_argv(argv, argc);
+                *argv_out = NULL;
+                return 0;
+            }
+            argv = new_argv;
         }
-        argv[argc++] = strdup(tok);
+        argv[argc] = strdup(tok);
+        if (!argv[argc]) {
+            free_argv(argv, argc);
+            *argv_out = NULL;
+            return 0;
+        }
+        argc++;
     }
-    argv = realloc(argv, (argc + 1) * sizeof(char *));
+    char **new_argv = realloc(argv, (argc + 1) * sizeof(char *));
+    if (!new_argv) {
+        free_argv(argv, argc);
+        *argv_out = NULL;
+        return 0;
+    }
+    argv = new_argv;
     argv[argc] = NULL;
     *argv_out = argv;
     return argc;
@@ -2679,11 +3330,23 @@ bool spawn(lua_State *L, Process *proc, int index, const char *cmd, const char *
     if (envi) {
         envc = (int)lua_rawlen(L, envi);
         envp = malloc((envc + 1) * sizeof(char *));
+        if (!envp) {
+            free_argv(argv, argc);
+            if (error) *error = "out of memory";
+            return false;
+        }
         for (int i = 0; i < envc; i++) {
             lua_rawgeti(L, envi, i + 1);
             const char *s = lua_tostring(L, -1);
-            envp[i] = s ? strdup(s) : strdup("");
+            envp[i] = strdup(s ? s : "");
             lua_pop(L, 1);
+            if (!envp[i]) {
+                for (int j = 0; j < i; j++) free(envp[j]);
+                free(envp);
+                free_argv(argv, argc);
+                if (error) *error = "out of memory";
+                return false;
+            }
         }
         envp[envc] = NULL;
     }
@@ -2692,9 +3355,9 @@ bool spawn(lua_State *L, Process *proc, int index, const char *cmd, const char *
     int p_stdin[2] = {-1, -1}, p_stdout[2] = {-1, -1}, p_stderr[2] = {-1, -1};
     if (pipe(p_stdin) < 0 || pipe(p_stdout) < 0 || pipe(p_stderr) < 0) {
         if (error) *error = strerror(errno);
-        close(p_stdin[0]);  close(p_stdin[1]);
-        close(p_stdout[0]); close(p_stdout[1]);
-        close(p_stderr[0]); close(p_stderr[1]);
+        if (p_stdin[0] >= 0)  { close(p_stdin[0]);  close(p_stdin[1]); }
+        if (p_stdout[0] >= 0) { close(p_stdout[0]); close(p_stdout[1]); }
+        if (p_stderr[0] >= 0) { close(p_stderr[0]); close(p_stderr[1]); }
         free_argv(argv, argc);
         if (envp) { for (int i = 0; i < envc; i++) free(envp[i]); free(envp); }
         return false;
@@ -2780,6 +3443,17 @@ void wait_process(Process *proc) {
     np->exit_status = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
 }
 
+/* Poll fd with short timeout; render UI on timeout. Returns poll result. */
+static int poll_with_ui(int fd) {
+    struct pollfd pfd = { .fd = fd, .events = POLLIN };
+    int r = poll(&pfd, 1, 50);
+    if (r == 0 && nc && root_pane) {
+        ncpane_render(root_pane);
+        notcurses_render(nc);
+    }
+    return r;
+}
+
 char *read_process_output(Process *proc, char option, size_t *len, const char **error, int *code) {
     NProcess *np = (NProcess *)proc;
     if (!np || np->stdout_fd < 0) {
@@ -2789,54 +3463,69 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
     }
 
     int fd = np->stdout_fd;
-    /* Temporarily set blocking for synchronous read */
-    int flags = fcntl(fd, F_GETFL);
-    fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
-
     char *result = NULL;
     *len = 0;
 
     if (option == 'n') {
-        /* Read exactly *len bytes */
         size_t want = *len;
         result = malloc(want + 1);
-        ssize_t n = read(fd, result, want);
-        if (n > 0) {
-            *len = (size_t)n;
-            result[n] = '\0';
-        } else {
-            free(result);
-            result = NULL;
-            *len = 0;
-            if (n < 0 && error) *error = strerror(errno);
-            if (code && n < 0) *code = errno;
+        if (!result) return NULL;
+        ssize_t total = 0;
+        while ((size_t)total < want) {
+            int r = poll_with_ui(fd);
+            if (r < 0) {
+                if (error) *error = strerror(errno);
+                if (code)  *code  = errno;
+                free(result); return NULL;
+            }
+            if (r == 0) continue; /* timeout — UI was pumped */
+            ssize_t n = read(fd, result + total, want - (size_t)total);
+            if (n > 0) total += n;
+            else break; /* EOF or error */
         }
+        result[total] = '\0';
+        *len = (size_t)total;
+        if (total == 0) { free(result); return NULL; }
     } else if (option == 'a') {
-        /* Read until EOF */
         size_t cap = 4096;
         result = malloc(cap);
-        ssize_t total = 0, n;
-        while ((n = read(fd, result + total, cap - total - 1)) > 0) {
+        if (!result) return NULL;
+        ssize_t total = 0;
+        while (true) {
+            int r = poll_with_ui(fd);
+            if (r < 0) break;
+            if (r == 0) continue;
+            ssize_t n = read(fd, result + total, cap - (size_t)total - 1);
+            if (n <= 0) break;
             total += n;
             if ((size_t)total >= cap - 1) {
                 cap *= 2;
-                result = realloc(result, cap);
+                char *nb = realloc(result, cap);
+                if (!nb) { free(result); return NULL; }
+                result = nb;
             }
         }
         result[total] = '\0';
-        *len = total;
-        if (total == 0) { free(result); result = NULL; }
+        *len = (size_t)total;
+        if (total == 0) { free(result); return NULL; }
     } else {
         /* 'l' or 'L': read one line */
         size_t cap = 256;
         result = malloc(cap);
+        if (!result) return NULL;
         ssize_t total = 0;
-        char ch;
-        ssize_t n;
-        while ((n = read(fd, &ch, 1)) > 0) {
+        while (true) {
+            int r = poll_with_ui(fd);
+            if (r < 0) break;
+            if (r == 0) continue;
+            char ch;
+            ssize_t n = read(fd, &ch, 1);
+            if (n <= 0) break;
             if ((size_t)total >= cap - 1) {
                 cap *= 2;
-                result = realloc(result, cap);
+                char *nb = realloc(result, cap);
+                if (!nb) { free(result); return NULL; }
+                result = nb;
             }
             if (ch == '\n') {
                 if (option == 'L') result[total++] = ch;
@@ -2845,11 +3534,9 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
             if (ch != '\r') result[total++] = ch;
         }
         result[total] = '\0';
-        *len = total;
-        if (n <= 0 && total == 0) { free(result); result = NULL; }
+        *len = (size_t)total;
+        if (total == 0) { free(result); return NULL; }
     }
-
-    fcntl(fd, F_SETFL, flags); /* restore non-blocking */
     return result;
 }
 
@@ -2894,5 +3581,14 @@ void cleanup_process(Process *proc) {
     if (np->stderr_fd != -1) { close(np->stderr_fd); np->stderr_fd = -1; }
 }
 
-void suspend(void) {}
+void suspend(void) {
+    if (!nc) return;
+    /* Re-enable ISIG so the shell's job control handles the stop correctly */
+    notcurses_linesigs_enable(nc);
+    /* Suspend the process; execution resumes here after SIGCONT */
+    raise(SIGTSTP);
+    /* Restore notcurses input handling and repaint */
+    notcurses_linesigs_disable(nc);
+    notcurses_refresh(nc, NULL, NULL);
+}
 void quit(void)    { want_quit = true; }

@@ -105,13 +105,18 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.white
--- view.element_color[view.ELEMENT_SELECTION_BACK] = colors.black
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.white
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.black
--- view.element_color[view.ELEMENT_CARET] = colors.black
--- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
--- view.element_color[view.ELEMENT_CARET_LINE_BACK] =
+-- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla ignores the color.
+-- Selection uses reverse video: black text on white background.
+view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.white | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.white | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.white | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.light_black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black | 0xFF000000
 view.element_color[view.ELEMENT_WHITE_SPACE] = colors.black
 
 -- Fold Margin.

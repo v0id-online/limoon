@@ -1,21 +1,20 @@
--- Copyright 2007-2026 Mitchell. See LICENSE.
--- Dark theme for Textadept.
+-- Phosphor theme for Textadept.
+-- Selection with phosphor green background for retro terminal feel.
 
 local view, colors, styles = view, view.colors, view.styles
 
 -- Greyscale colors.
-colors.black = 0x1e1e1e  -- VS Code dark bg; visually distinct from pure-black terminal
-colors.light_black = 0x333333
+colors.black = 0x000000
 colors.dark_grey = 0x666666
-colors.grey = 0x999999 -- unused
+colors.grey = 0x999999
 colors.light_grey = 0xCCCCCC
-colors.white = 0xFFFFFF -- unused
+colors.white = 0xFFFFFF
 
 -- Normal colors.
-colors.red = 0x000099
+colors.red = 0x0000CC
 colors.orange = 0x0066CC
 colors.yellow = 0x009999
-colors.lime = 0x00CC99
+colors.lime = 0x00FF00      -- Bright phosphor green
 colors.green = 0x009900
 colors.teal = 0x999900
 colors.blue = 0xCC6600
@@ -23,21 +22,22 @@ colors.violet = 0xCC0066
 colors.purple = 0x990099
 colors.magenta = 0x6600CC
 
+-- Phosphor colors for selection.
+colors.phosphor_bright = 0x00FF00      -- Bright phosphor green
+colors.phosphor_dim = 0x00CC00         -- Dim phosphor green
+
 -- Default font.
 if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
 if not size then size = not OSX and 10 or 12 end
 
 -- Predefined styles.
-styles[view.STYLE_DEFAULT] = {
-	font = font, size = size, fore = colors.light_grey, back = colors.black
-}
+styles[view.STYLE_DEFAULT] = {font = font, size = size, fore = colors.light_grey, back = colors.black}
 styles[view.STYLE_LINENUMBER] = {fore = colors.dark_grey, back = colors.black}
 styles[view.STYLE_BRACELIGHT] = {fore = colors.blue, bold = true}
 styles[view.STYLE_BRACEBAD] = {fore = colors.red}
--- styles[view.STYLE_CONTROLCHAR] = {}
-styles[view.STYLE_INDENTGUIDE] = {fore = colors.light_black}
-styles[view.STYLE_CALLTIP] = {fore = colors.light_grey, back = colors.light_black}
-styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.dark_grey, back = colors.light_black}
+styles[view.STYLE_INDENTGUIDE] = {fore = colors.dark_grey}
+styles[view.STYLE_CALLTIP] = {fore = colors.light_grey, back = colors.dark_grey}
+styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.dark_grey, back = colors.dark_grey}
 
 -- Tag styles.
 styles[lexer.ANNOTATION] = {fore = colors.magenta}
@@ -46,22 +46,17 @@ styles[lexer.BOLD] = {bold = true}
 styles[lexer.CLASS] = {fore = colors.yellow}
 styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
 styles[lexer.COMMENT] = {fore = colors.dark_grey}
--- styles[lexer.CONSTANT] = {}
 styles[lexer.CONSTANT_BUILTIN] = {fore = colors.purple}
 styles[lexer.EMBEDDED] = {fore = colors.purple}
 styles[lexer.ERROR] = {fore = colors.red}
--- styles[lexer.FUNCTION] = {}
 styles[lexer.FUNCTION_BUILTIN] = {fore = colors.orange}
--- styles[lexer.FUNCTION_METHOD] = {}
 styles[lexer.HEADING] = {fore = colors.magenta}
--- styles[lexer.IDENTIFIER] = {}
 styles[lexer.ITALIC] = {italic = true}
 styles[lexer.KEYWORD] = {fore = colors.blue}
 styles[lexer.LABEL] = {fore = colors.magenta}
 styles[lexer.LINK] = {underline = true}
 styles[lexer.LIST] = {fore = colors.teal}
 styles[lexer.NUMBER] = {fore = colors.teal}
--- styles[lexer.OPERATOR] = {}
 styles[lexer.PREPROCESSOR] = {fore = colors.magenta}
 styles[lexer.REFERENCE] = {underline = true}
 styles[lexer.REGEX] = {fore = colors.lime}
@@ -69,14 +64,10 @@ styles[lexer.STRING] = {fore = colors.green}
 styles[lexer.TAG] = {fore = colors.blue}
 styles[lexer.TYPE] = {fore = colors.violet}
 styles[lexer.UNDERLINE] = {underline = true}
--- styles[lexer.VARIABLE] = {}
 styles[lexer.VARIABLE_BUILTIN] = {fore = colors.yellow}
--- styles[lexer.WHITESPACE] = {}
 
 -- CSS.
 styles.property = styles[lexer.ATTRIBUTE]
--- styles.pseudoclass = {}
--- styles.pseudoelement = {}
 -- Diff.
 styles.addition = {fore = colors.green}
 styles.deletion = {fore = colors.red}
@@ -89,10 +80,6 @@ styles.command = styles[lexer.KEYWORD]
 styles.command_section = styles[lexer.HEADING]
 styles.environment = styles[lexer.TYPE]
 styles.environment_math = styles[lexer.NUMBER]
--- Makefile.
--- styles.target = {}
--- Markdown.
--- styles.hr = {}
 -- Output.
 styles.csi = {visible = false}
 local csi_colors = {
@@ -103,63 +90,48 @@ for k, v in pairs(csi_colors) do styles['csi_' .. k] = {fore = v} end
 for k, v in pairs(csi_colors) do styles['csi_' .. k .. '_bright'] = {fore = v, bold = true} end
 -- Python.
 styles.keyword_soft = {}
--- XML.
--- styles.cdata = {}
 -- YAML.
 styles.error_indent = {back = colors.red}
 
--- Element colors.
--- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla ignores the color.
-view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.light_grey | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.light_black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.light_grey | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.light_black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.light_grey | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.light_black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.light_grey | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.light_black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.light_grey | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_black | 0xFF000000
-view.element_color[view.ELEMENT_CARET] = colors.light_grey
--- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
+-- Element colors - PHOSPHOR GREEN SELECTION (black text on phosphor green bg).
+-- Alpha must be 0xFF for IsValid() to return true.
+view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_BACK] = colors.phosphor_bright | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.phosphor_bright | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.phosphor_bright | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.phosphor_dim | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.phosphor_dim | 0xFF000000
+view.element_color[view.ELEMENT_CARET] = colors.phosphor_bright
 if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_black | 0x80000000
+	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.phosphor_dim | 0x40000000
 end
 view.caret_line_layer = view.LAYER_UNDER_TEXT
 
 -- Fold Margin.
-view:set_fold_margin_color(true, colors.light_black)
-view:set_fold_margin_hi_color(true, colors.light_black)
-
--- Fold marker shapes: [+]/[-] boxes with tree-connecting lines.
-view:marker_define(view.MARKNUM_FOLDER,        view.MARK_BOXPLUSCONNECTED)
-view:marker_define(view.MARKNUM_FOLDEROPEN,    view.MARK_BOXMINUSCONNECTED)
-view:marker_define(view.MARKNUM_FOLDEREND,     view.MARK_BOXPLUSCONNECTED)
-view:marker_define(view.MARKNUM_FOLDEROPENMID, view.MARK_BOXMINUSCONNECTED)
-view:marker_define(view.MARKNUM_FOLDERSUB,     view.MARK_VLINE)
-view:marker_define(view.MARKNUM_FOLDERTAIL,    view.MARK_LCORNERCURVE)
-view:marker_define(view.MARKNUM_FOLDERMIDTAIL, view.MARK_TCORNERCURVE)
-for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = colors.black       -- interior of [+]/[-] and lines
-	view.marker_back[i] = colors.blue        -- box fill — bright accent
-	view.marker_back_selected[i] = colors.light_grey
-end
+view:set_fold_margin_color(true, colors.black)
+view:set_fold_margin_hi_color(true, colors.black)
 
 -- Markers.
--- view.marker_fore[textadept.bookmarks.MARK_BOOKMARK] = colors.black
 view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
--- view.marker_fore[textadept.run.MARK_WARNING] = colors.black
 view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
--- view.marker_fore[textadept.run.MARK_ERROR] = colors.black
 view.marker_back[textadept.run.MARK_ERROR] = colors.red
 view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_back[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
-view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.green
-view.marker_back[view.MARKNUM_HISTORY_SAVED] = colors.green
+view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.phosphor_bright
+view.marker_back[view.MARKNUM_HISTORY_SAVED] = colors.phosphor_bright
 view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
 view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
 view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
 view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
+for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
+	view.marker_fore[i] = colors.black
+	view.marker_back[i] = colors.dark_grey
+	view.marker_back_selected[i] = colors.light_grey
+end
 
 -- Indicators.
 view.indic_fore[ui.find.INDIC_FIND] = colors.yellow
@@ -182,7 +154,7 @@ view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_DELETION] = colors.red
 view.call_tip_fore_hlt = colors.blue
 
 -- Long Lines.
-view.edge_color = colors.light_black
+view.edge_color = colors.dark_grey
 
 -- Find & replace pane entries.
 ui.find.entry_font = font .. ' ' .. size

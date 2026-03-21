@@ -46,6 +46,7 @@ LUALIB_API int luaopen_lpeg(lua_State *), luaopen_lfs(lua_State *), luaopen_rege
 static void add_doc(sptr_t doc);
 static SciObject *new_view(sptr_t);
 static bool init_lua(int, char **);
+void set_scrollbar_visible(bool visible);
 
 // Shows the given error in an error message dialog, as well as printing to stderr.
 static void show_error(const char *title, const char *message) {
@@ -381,6 +382,11 @@ static int ui_newindex(lua_State *L) {
 		return (show_tabs((tabs = show) && (n > 1 || tabs > 1)), sync_tabbar(), 0);
 	}
 	if (strcmp(key, "statusbar") == 0) return (set_statusbar_visible(lua_toboolean(L, 3)), 0);
+	if (strcmp(key, "scrollbar") == 0) return (set_scrollbar_visible(lua_toboolean(L, 3)), 0);
+	if (strcmp(key, "bg_alpha") == 0) {
+		set_bg_alpha((int)luaL_checkinteger(L, 3));
+		return (lua_rawset(L, 1), 0); /* store for reading back */
+	}
 	return (lua_rawset(L, 1), 0);
 }
 

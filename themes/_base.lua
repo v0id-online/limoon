@@ -68,12 +68,16 @@ return function(view, colors, styles)
   -- Element colors
   -- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla
   -- treats the color as "not set" and shows no selection highlight.
-  view.element_color[view.ELEMENT_SELECTION_TEXT]                    = colors.fg  | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_BACK]                    = colors.find | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]         = colors.find | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]          = colors.find | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]           = colors.find | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK]= colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.fg   | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.fg   | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.fg   | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.fg   | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.fg   | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.find | 0xFF000000
   view.element_color[view.ELEMENT_CARET] = colors.fg
   if view ~= ui.command_entry then
     view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.cur | 0x80000000
@@ -83,6 +87,20 @@ return function(view, colors, styles)
   -- Fold margin
   view:set_fold_margin_color(true, colors.bg)
   view:set_fold_margin_hi_color(true, colors.bg)
+
+  -- Fold marker shapes: [+]/[-] boxes with tree-connecting lines
+  view:marker_define(view.MARKNUM_FOLDER,        view.MARK_BOXPLUSCONNECTED)
+  view:marker_define(view.MARKNUM_FOLDEROPEN,    view.MARK_BOXMINUSCONNECTED)
+  view:marker_define(view.MARKNUM_FOLDEREND,     view.MARK_BOXPLUSCONNECTED)
+  view:marker_define(view.MARKNUM_FOLDEROPENMID, view.MARK_BOXMINUSCONNECTED)
+  view:marker_define(view.MARKNUM_FOLDERSUB,     view.MARK_VLINE)
+  view:marker_define(view.MARKNUM_FOLDERTAIL,    view.MARK_LCORNERCURVE)
+  view:marker_define(view.MARKNUM_FOLDERMIDTAIL, view.MARK_TCORNERCURVE)
+  for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do
+    view.marker_fore[i] = colors.bg    -- interior of box / line color
+    view.marker_back[i] = colors.func  -- box fill / accent color (bright)
+    view.marker_back_selected[i] = colors.fg
+  end
 
   -- Markers
   view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.func
@@ -96,11 +114,6 @@ return function(view, colors, styles)
   view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.num
   view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN]   = colors.num
   view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN]   = colors.num
-  for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do
-    view.marker_fore[i] = colors.bg
-    view.marker_back[i] = colors.comment
-    view.marker_back_selected[i] = colors.fg
-  end
 
   -- Indicators
   view.indic_style[ui.find.INDIC_FIND]         = view.INDIC_ROUNDBOX

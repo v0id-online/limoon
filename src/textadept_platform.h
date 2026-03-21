@@ -216,6 +216,8 @@ void set_command_entry_height(int height);
 bool is_statusbar_visible(void);
 /** Sets the visibility of the statusbar. */
 void set_statusbar_visible(bool visible);
+/** Sets the background transparency level (0=opaque, 100=transparent). */
+void set_bg_alpha(int pct);
 /** Returns the text content of statusbar number 0 or 1. */
 const char *get_statusbar_text(int bar);
 /** Sets the content of statusbar number 0 or 1 to the given text. */

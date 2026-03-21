@@ -107,16 +107,17 @@ styles.keyword_soft = {}
 styles.error_indent = {back = colors.red}
 
 -- Element colors.
--- view.element_color[view.ELEMENT_SELECTION_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_BACK] = colors.light_grey
--- view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK] = colors.light_grey
--- view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK] = colors.light_grey
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK] = colors.light_grey
--- view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_grey
+-- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla ignores the color.
+view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.light_grey | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.light_grey | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.light_grey | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.light_grey | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black | 0xFF000000
+view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.light_grey | 0xFF000000
 view.element_color[view.ELEMENT_CARET] = colors.black
 -- view.element_color[view.ELEMENT_CARET_ADDITIONAL] =
 if view ~= ui.command_entry then

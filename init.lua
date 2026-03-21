@@ -63,6 +63,15 @@ events.connect(events.VIEW_NEW, function() view:set_theme(theme, env) end)
 -- with light/dark GUI mode.
 events.connect(events.INITIALIZED, function()
 	ui.command_entry:set_theme(theme, env)
+	-- In CURSES, the initial view has the rawset intercept and never gets its theme applied.
+	-- ui.command_entry has the real set_theme; borrow it to apply the theme to all main views.
+	if CURSES then
+		local real_st = ui.command_entry.set_theme
+		if real_st then
+			local tname = textadept.themes and textadept.themes.current or theme
+			for _, v in ipairs(_VIEWS) do real_st(v, tname, env) end
+		end
+	end
 	events.connect(events.MODE_CHANGED, function()
 		if type(theme) == 'string' then return end -- do not override a manually set theme
 		for _, view in ipairs(_VIEWS) do view:set_theme(theme) end -- env/nil
@@ -77,7 +86,9 @@ local buffer, view = buffer, view
 if CURSES then
   -- Load theme manager and apply saved/default theme.
   textadept.themes = require('themes')
-  view:set_theme(textadept.themes.current)
+  textadept.themes.current = 'gruvbox-dark'
+  textadept.themes.bg_alpha = 85
+  view:set_theme(textadept.themes.current) -- records theme name via rawset intercept
 
   -- Widget library and plugin system.
   textadept.widgets = require('ui_widgets')

@@ -9,6 +9,10 @@ local M = {}
 M.available = {
   -- Built-in
   'dark', 'light', 'term',
+  -- High Contrast
+  'highcontrast', 'phosphor',
+  -- Argonaut
+  'argonaut',
   -- Community
   'monokai', 'dracula', 'one-dark', 'nord',
   'solarized-dark', 'solarized-light',
@@ -38,12 +42,17 @@ function M.save(name)
   if f then f:write(name .. '\n'); f:close() end
 end
 
+--- Background transparency percentage (0 = opaque, 1-99 = blend, 100 = transparent).
+-- Set this before or after calling set(); it takes effect on the next render.
+M.bg_alpha = 0
+
 -- Applies `name` to all open views and the command entry, then saves the choice.
 function M.set(name)
   for _, v in ipairs(_VIEWS) do v:set_theme(name) end
   ui.command_entry:set_theme(name)
   M.current = name
   M.save(name)
+  if CURSES then ui.bg_alpha = M.bg_alpha end
   ui.statusbar_text = 'Theme: ' .. name
 end
 
@@ -65,6 +74,20 @@ function M.select()
 end
 
 -- Initialize: apply saved preference or default.
-M.current = M.get_saved() or 'monokai'
+-- In CURSES mode, only use terminal-compatible themes.
+local saved = M.get_saved()
+if CURSES and saved and saved ~= 'term' and saved ~= 'dark' and saved ~= 'light'
+    and saved ~= 'highcontrast' and saved ~= 'phosphor' and saved ~= 'argonaut' then
+  saved = nil -- ignore incompatible saved theme
+end
+M.current = saved or 'dark'
+
+-- On startup, send the initial bg_alpha so WezTerm matches from launch.
+-- Register unconditionally: init.lua may set M.bg_alpha after this module loads.
+if CURSES then
+  events.connect(events.INITIALIZED, function()
+    if M.bg_alpha > 0 then ui.bg_alpha = M.bg_alpha end
+  end)
+end
 
 return M
