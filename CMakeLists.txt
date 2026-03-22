@@ -7,74 +7,16 @@ project(limoon LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-if(APPLE)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET 11 CACHE STRING "")
-endif()
 
-# Determine available platforms.
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets)
-if(Qt${QT_VERSION_MAJOR}_FOUND)
-	option(QT "Build Li Moon using Qt" ON)
-endif()
-find_package(PkgConfig)
-if(PKG_CONFIG_FOUND)
-	pkg_check_modules(GTK3 gtk+-3.0)
-	if(GTK3_FOUND)
-		option(GTK3 "Build Li Moon using Gtk 3" ON)
-	endif()
-	pkg_check_modules(GTK2 gtk+-2.0)
-	if(GTK2_FOUND)
-		option(GTK2 "Build Li Moon using Gtk 2" ON)
-	endif()
-endif()
-if(NOT WIN32)
-	# Note: can use if(LINUX) in CMake 3.25.
-	if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-		set(CURSES_NEED_WIDE TRUE)
-	elseif(NOT APPLE)
-		set(BSD TRUE) # note: not needed in CMake 3.25
-	endif()
-	find_package(Curses)
-endif()
-if(CURSES_FOUND OR WIN32)
-	option(CURSES "Build Li Moon using Curses" ON)
-endif()
-if(NOT (QT OR GTK3 OR GTK2 OR CURSES))
-	message(FATAL_ERROR "No suitable platform found.")
-endif()
-
-# Setup platform requirements.
-if(QT)
-	set(qt_major Qt${QT_VERSION_MAJOR})
-	if(QT_VERSION_MAJOR GREATER 5)
-		find_package(${qt_major} COMPONENTS Widgets Core5Compat REQUIRED)
-		set(qt_libraries ${qt_major}::Widgets ${qt_major}::Core5Compat)
-	else()
-		find_package(${qt_major} COMPONENTS Widgets REQUIRED)
-		set(qt_libraries ${qt_major}::Widgets)
-	endif()
-endif()
-set(CMAKE_AUTOMOC ${QT})
-set(CMAKE_AUTOUIC ${QT})
-if(GTK3)
-	pkg_search_module(GTK REQUIRED gtk+-3.0)
-elseif(GTK2)
-	pkg_search_module(GTK REQUIRED gtk+-2.0)
-endif()
-if(CURSES)
-	if(WIN32)
-		set(CURSES_LIBRARIES pdcurses)
-	else()
-		find_package(Curses REQUIRED)
-	endif()
-endif()
+# Li Moon uses notcurses as its only terminal backend.
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(NOTCURSES REQUIRED notcurses>=3.0.0)
 find_package(Threads REQUIRED)
 
 # Dependencies.
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
-set(nightlies scinterm scintillua regex) # fetch latest version if NIGHTLY is true
+set(nightlies scintillua regex) # fetch latest version if NIGHTLY is true
 set(deps_dir ${CMAKE_BINARY_DIR}/_deps)
 if(POLICY CMP0135) # CMake 3.24 adds DOWNLOAD_EXTRACT_TIMESTAMP to FetchContent_Declare()
 	cmake_policy(SET CMP0135 NEW)
@@ -94,90 +36,24 @@ function(fetch name url)
 	FetchContent_Declare(${name} URL ${url} ${patch_command})
 	# Note: cannot FetchContent_MakeAvailable(${name}) here, as name must be a literal.
 endfunction()
-fetch(scintilla https://www.scintilla.org/scintilla558.tgz)
-fetch(scinterm https://github.com/orbitalquark/scinterm/archive/7ae7912d1252097e7b6b005aba5f23defe8bae4c.zip)
 fetch(scintillua https://github.com/orbitalquark/scintillua/archive/599e14c4dc2e8439d5c2de3eb5ab20818543eb2d.zip)
 fetch(lua https://lua.org/ftp/lua-5.5.0.tar.gz)
 fetch(lpeg https://www.inf.puc-rio.br/~roberto/lpeg/lpeg-1.1.0.tar.gz)
 fetch(lfs https://github.com/keplerproject/luafilesystem/archive/v1_8_0.zip)
 fetch(regex https://github.com/orbitalquark/lua-std-regex/archive/1.0.zip)
-fetch(cdk https://github.com/ThomasDickey/cdk-snapshots/archive/refs/tags/t20260119.tar.gz)
-fetch(termkey https://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz)
-fetch(reproc https://github.com/DaanDeMeyer/reproc/archive/refs/tags/v14.2.5.zip)
-FetchContent_MakeAvailable(scintilla scinterm lua lpeg lfs regex cdk termkey)
+FetchContent_MakeAvailable(lua lpeg lfs regex)
 if(POLICY CMP0169) # CMake 3.28 adds EXCLUDE_FROM_ALL to FetchContent_MakeAvailable()
 	cmake_policy(SET CMP0169 OLD)
 endif()
 FetchContent_Populate(scintillua) # do not import targets; only need Lua lexers
-if(WIN32)
-	fetch(pdcurses https://prdownloads.sourceforge.net/pdcurses/PDCurses-3.9.zip)
-	fetch(iconv https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.17.tar.gz)
-	FetchContent_MakeAvailable(pdcurses iconv)
-endif()
-if(QT)
-	fetch(singleapp https://github.com/itay-grudev/SingleApplication/archive/refs/tags/v3.5.3.zip)
-	set(QAPPLICATION_CLASS QApplication CACHE STRING "Inheritance class for SingleApplication")
-	set(QT_DEFAULT_MAJOR_VERSION ${QT_VERSION_MAJOR})
-	FetchContent_MakeAvailable(singleapp)
-endif()
-if(CURSES)
-	set(REPROC_INSTALL OFF)
-	FetchContent_MakeAvailable(reproc)
-endif()
 option(FETCHCONTENT_UPDATES_DISCONNECTED "Do not update deps if already set up" ON)
 
-# Scintilla core.
-file(GLOB sci_src ${scintilla_SOURCE_DIR}/src/*.cxx)
-add_library(scintilla STATIC ${sci_src})
-target_include_directories(scintilla
-	PUBLIC ${scintilla_SOURCE_DIR}/include
-	PRIVATE ${scintilla_SOURCE_DIR}/src)
-target_compile_definitions(scintilla PUBLIC SCI_LEXER)
-target_compile_options(scintilla PRIVATE $<$<BOOL:${WIN32}>:/EHsc>)
-target_link_libraries(scintilla PRIVATE Threads::Threads)
-
-# Scintilla platform.
-if(QT)
-	file(GLOB sci_qt_src ${scintilla_SOURCE_DIR}/qt/ScintillaEditBase/*.cpp)
-	add_library(scintilla_qt STATIC ${sci_qt_src})
-	target_include_directories(scintilla_qt PUBLIC ${scintilla_SOURCE_DIR}/qt/ScintillaEditBase
-		${scintilla_SOURCE_DIR}/src)
-	target_compile_definitions(scintilla_qt PUBLIC SCINTILLA_QT)
-	target_link_libraries(scintilla_qt PUBLIC scintilla PRIVATE ${qt_libraries})
-endif()
-if(GTK3 OR GTK2)
-	file(GLOB sci_gtk_src ${scintilla_SOURCE_DIR}/gtk/*.c ${scintilla_SOURCE_DIR}/gtk/*.cxx)
-	add_library(scintilla_gtk STATIC ${sci_gtk_src})
-	target_include_directories(scintilla_gtk
-		PUBLIC ${scintilla_SOURCE_DIR}/gtk
-		PRIVATE ${scintilla_SOURCE_DIR}/src ${GTK_INCLUDE_DIRS})
-	target_compile_definitions(scintilla_gtk PUBLIC GTK)
-	target_compile_options(scintilla_gtk PUBLIC -Wno-deprecated-declarations)
-	target_link_directories(scintilla_gtk PRIVATE ${GTK_LIBRARY_DIRS})
-	target_link_libraries(scintilla_gtk PUBLIC scintilla PRIVATE ${GTK_LIBRARIES})
-endif()
-if(CURSES)
-	file(GLOB sci_curses_src ${scinterm_SOURCE_DIR}/*.cxx)
-	if(WIN32)
-		# Note: cannot use generator expression in file(GLOB) for some reason.
-		list(APPEND sci_curses_src ${scinterm_SOURCE_DIR}/wcwidth.c)
-	endif()
-	add_library(scintilla_curses STATIC ${sci_curses_src})
-	target_include_directories(scintilla_curses
-		PUBLIC ${scinterm_SOURCE_DIR}
-		PRIVATE ${scintilla_SOURCE_DIR}/src ${CURSES_INCLUDE_DIRS})
-	# Note: macOS and BSD need _XOPEN_SOURCE_EXTENDED for NCURSES_WIDECHAR.
-	target_compile_definitions(scintilla_curses
-		PUBLIC CURSES
-		PRIVATE $<IF:$<BOOL:${WIN32}>,PDC_WIDE,
-			$<IF:$<OR:$<BOOL:${APPLE}>,$<BOOL:${BSD}>>,_XOPEN_SOURCE_EXTENDED,>>)
-	target_compile_options(scintilla_curses PRIVATE $<IF:$<NOT:$<BOOL:${WIN32}>>,-pedantic -Wall,/W4>)
-	target_link_directories(scintilla_curses PRIVATE ${CURSES_LIBRARY_DIRS})
-	target_link_libraries(scintilla_curses PUBLIC scintilla PRIVATE ${CURSES_LIBRARIES})
-endif()
-
-# Scintillua.
-# Nothing to set up.
+# scinterm-notcurses (submodule — provides Scintilla core + notcurses platform layer).
+set(SCINTERM_NC_DIR ${CMAKE_SOURCE_DIR}/scinterm-notcurses)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTING  OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${SCINTERM_NC_DIR} scinterm-notcurses-build)
 
 # Lua.
 file(GLOB lua_src ${lua_SOURCE_DIR}/src/*.c)
@@ -204,111 +80,41 @@ file(GLOB regex_src ${regex_SOURCE_DIR}/*.cpp)
 add_library(regex STATIC ${regex_src})
 target_link_libraries(regex PRIVATE lua)
 
-if(CURSES)
-	# PDCurses.
-	if(WIN32)
-		file(GLOB pdcurses_src ${pdcurses_SOURCE_DIR}/pdcurses/*.c ${pdcurses_SOURCE_DIR}/wincon/*.c)
-		add_library(pdcurses STATIC ${pdcurses_src})
-		target_include_directories(pdcurses
-			PUBLIC ${pdcurses_SOURCE_DIR}
-			PRIVATE ${pdcurses_SOURCE_DIR}/wincon)
-		target_compile_definitions(pdcurses PRIVATE PDC_WIDE PDC_FORCE_UTF8)
-	endif()
-
-	# Termkey.
-	set(termkey_src termkey.c $<IF:$<BOOL:${UNIX}>,driver-ti.c driver-csi.c,driver-win-pdcurses.c>)
-	list(TRANSFORM termkey_src PREPEND ${termkey_SOURCE_DIR}/)
-	add_library(termkey STATIC ${termkey_src})
-	target_include_directories(termkey PUBLIC ${termkey_SOURCE_DIR})
-	target_link_directories(termkey PRIVATE ${CURSES_LIBRARY_DIRS})
-	target_link_libraries(termkey PRIVATE ${CURSES_LIBRARIES})
-
-	# CDK.
-	set(cdk_src binding buttonbox cdk cdk_display cdk_objs cdkscreen dialog draw entry fselect
-		itemlist label mentry popup_label scroll scroller select_file selection slider traverse version)
-	list(TRANSFORM cdk_src APPEND .c)
-	list(TRANSFORM cdk_src PREPEND ${cdk_SOURCE_DIR}/)
-	add_library(cdk STATIC ${cdk_src})
-	target_include_directories(cdk PUBLIC ${cdk_SOURCE_DIR}/include)
-	target_link_directories(cdk PRIVATE ${CURSES_LIBRARY_DIRS})
-	target_link_libraries(cdk PRIVATE termkey ${CURSES_LIBRARIES})
-
-	# reproc.
-	# Note: no need to do anything because reproc uses CMake and FetchContent_MakeAvailable()
-	# sets it all up!
-endif()
-
-# iconv
-if(WIN32)
-	set(iconv_src lib/iconv.c lib/relocatable.c libcharset/lib/localcharset.c
-		libcharset/lib/relocatable-stub.c windows/libiconv.rc)
-	list(TRANSFORM iconv_src PREPEND ${iconv_SOURCE_DIR}/)
-	add_library(iconv SHARED ${iconv_src})
-	target_include_directories(iconv
-		PUBLIC ${iconv_SOURCE_DIR}/include
-		PRIVATE ${iconv_SOURCE_DIR}/libcharset/include)
-	target_compile_definitions(iconv PRIVATE BUILDING_LIBICONV)
-endif()
-
 set(CMAKE_ENABLE_EXPORTS ON) # allow external Lua modules to link to exe
 
 # Li Moon core.
-set(li_src src/limoon.c $<$<BOOL:${WIN32}>:src/limoon.rc>)
+set(li_src src/limoon.c)
 set(li_compile_opts
 	$<IF:$<NOT:$<BOOL:${WIN32}>>,-pedantic -Wall -Wextra -Wno-unused-parameter
 		-Wno-missing-field-initializers,/W4>
 	$<$<BOOL:${PROFILE}>:-pg --coverage>
 	$<$<BOOL:${LIMOON_HOME}>:-DLIMOON_HOME="${LIMOON_HOME}">)
 set(li_link_opts $<$<BOOL:${PROFILE}>:--coverage>)
-set(li_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${APPLE}>>:iconv>)
+# scintilla is bundled inside scinterm_notcurses_static — do not link separately.
+set(li_link_libs lua lpeg lfs regex)
 
-# Li Moon Qt.
-if(QT)
-	add_library(limoon_qt OBJECT
-		src/limoon_qt.cpp src/limoon_qt.ui $<$<BOOL:${APPLE}>:src/limoon_qt_mac.mm>)
-	target_compile_definitions(limoon_qt PRIVATE QT_NO_KEYWORDS)
-	target_compile_options(limoon_qt PRIVATE ${li_compile_opts})
-	target_link_libraries(limoon_qt PRIVATE scintilla_qt lua ${qt_libraries}
-		SingleApplication::SingleApplication)
+# Li Moon Notcurses platform.
+# n_limoon.c uses GCC nested functions (progress_dialog) and notcurses.h
+# needs _GNU_SOURCE for wcwidth/wcswidth. Override pedantic for this file only.
+add_library(limoon_notcurses OBJECT src/n_limoon.c)
+target_include_directories(limoon_notcurses PRIVATE
+	${SCINTERM_NC_DIR}/include
+	${SCINTERM_NC_DIR}/scintilla/include
+	${NOTCURSES_INCLUDE_DIRS})
+target_compile_definitions(limoon_notcurses PRIVATE _GNU_SOURCE)
+target_compile_options(limoon_notcurses PRIVATE
+	-Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers
+	$<$<BOOL:${PROFILE}>:-pg --coverage>
+	$<$<BOOL:${LIMOON_HOME}>:-DLIMOON_HOME="${LIMOON_HOME}">)
+target_link_libraries(limoon_notcurses PRIVATE scinterm_notcurses_static lua)
 
-	add_executable(li ${li_src})
-	target_include_directories(li PRIVATE $<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
-	set_target_properties(li PROPERTIES WIN32_EXECUTABLE $<$<BOOL:${WIN32}>:ON>)
-	target_compile_options(li PRIVATE ${li_compile_opts})
-	target_link_options(li PRIVATE ${li_link_opts})
-	target_link_libraries(li PRIVATE ${li_link_libs} limoon_qt)
-endif()
-
-# Li Moon GTK.
-if(GTK3 OR GTK2)
-	add_library(limoon_gtk OBJECT src/limoon_gtk.c)
-	target_include_directories(limoon_gtk PRIVATE ${GTK_INCLUDE_DIRS})
-	target_compile_options(limoon_gtk PRIVATE ${li_compile_opts})
-	target_link_directories(limoon_gtk PRIVATE ${GTK_LIBRARY_DIRS})
-	target_link_libraries(limoon_gtk PRIVATE scintilla_gtk lua ${GTK_LIBRARIES})
-
-	add_executable(limoon-gtk ${li_src})
-	target_compile_options(limoon-gtk PRIVATE ${li_compile_opts})
-	target_link_options(limoon-gtk PRIVATE ${li_link_opts})
-	target_link_libraries(limoon-gtk PRIVATE ${li_link_libs} limoon_gtk)
-endif()
-
-# Li Moon Curses.
-if(CURSES)
-	add_library(limoon_curses OBJECT src/limoon_curses.c)
-	target_include_directories(limoon_curses PRIVATE ${CURSES_INCLUDE_DIRS})
-	target_compile_options(limoon_curses PRIVATE ${li_compile_opts})
-	target_link_directories(limoon_curses PRIVATE ${CURSES_LIBRARY_DIRS})
-	target_link_libraries(limoon_curses PRIVATE scintilla_curses lua termkey cdk reproc
-		${CURSES_LIBRARIES})
-
-	add_executable(limoon-curses ${li_src})
-	target_include_directories(limoon-curses PRIVATE
-		$<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
-	target_compile_options(limoon-curses PRIVATE ${li_compile_opts})
-	target_link_options(limoon-curses PRIVATE ${li_link_opts})
-	target_link_libraries(limoon-curses PRIVATE ${li_link_libs} limoon_curses)
-endif()
+# Li Moon executable.
+add_executable(li ${li_src})
+target_include_directories(li PRIVATE
+	${SCINTERM_NC_DIR}/scintilla/include)
+target_compile_options(li PRIVATE ${li_compile_opts})
+target_link_options(li PRIVATE ${li_link_opts})
+target_link_libraries(li PRIVATE ${li_link_libs} limoon_notcurses)
 
 # Version information.
 file(STRINGS core/init.lua version_line REGEX "^_RELEASE")
@@ -338,28 +144,12 @@ if(NOT (WIN32 OR APPLE))
 	install(CODE "file(MAKE_DIRECTORY ${li_bin_dir})")
 	set(li_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/limoon)
 	file(RELATIVE_PATH li_bin_to_data_dir ${CMAKE_INSTALL_FULL_BINDIR} ${li_data_dir})
-	install(CODE "file(MAKE_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR}/applications)")
-	file(RELATIVE_PATH li_app_to_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/applications ${li_data_dir})
-	function(install_links target)
-		if(DEFINED LIMOON_HOME)
-			install(TARGETS ${target} DESTINATION ${li_bin_dir})
-		else()
-			install(TARGETS ${target} DESTINATION ${li_data_dir})
-			install(CODE "file(CREATE_LINK ${li_bin_to_data_dir}/${target}
-				${li_bin_dir}/${target} SYMBOLIC)")
-		endif()
-		install(FILES src/${target}.desktop DESTINATION ${li_data_dir})
-		install(CODE "file(CREATE_LINK ${li_app_to_data_dir}/${target}.desktop
-			${CMAKE_INSTALL_FULL_DATADIR}/applications/${target}.desktop SYMBOLIC)")
-	endfunction()
-	if(QT)
-		install_links(li)
-	endif()
-	if(GTK3 OR GTK2)
-		install_links(limoon-gtk)
-	endif()
-	if(CURSES)
-		install_links(limoon-curses)
+	if(DEFINED LIMOON_HOME)
+		install(TARGETS li DESTINATION ${li_bin_dir})
+	else()
+		install(TARGETS li DESTINATION ${li_data_dir})
+		install(CODE "file(CREATE_LINK ${li_bin_to_data_dir}/li
+			${li_bin_dir}/li SYMBOLIC)")
 	endif()
 	install_data(${li_data_dir})
 	install(FILES core/images/limoon.svg
@@ -372,64 +162,6 @@ if(NOT (WIN32 OR APPLE))
 	add_custom_target(archive
 		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${limoon_tgz} limoon
 		WORKING_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR})
-elseif(WIN32)
-	set(li_dir ${CMAKE_INSTALL_PREFIX}/limoon)
-	if(QT)
-		install(TARGETS li DESTINATION ${li_dir})
-	endif()
-	if(CURSES)
-		install(TARGETS limoon-curses DESTINATION ${li_dir})
-	endif()
-	install_data(${li_dir})
-	install(TARGETS iconv DESTINATION ${li_dir})
-	if(NOT (EXISTS ${li_dir}/${qt_major}Core.dll OR EXISTS ${li_dir}/${qt_major}Cored.dll))
-		install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime
-			${li_dir}/li.exe)")
-		install(CODE "file(REMOVE ${li_dir}/d3dcompiler_47.dll ${li_dir}/opengl32sw.dll)")
-		set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${li_dir}) # put system libs here, not in bin/
-		include(InstallRequiredSystemLibraries)
-	endif()
-	add_custom_target(archive
-		COMMAND 7z a ${CMAKE_BINARY_DIR}/limoon_${version}.zip limoon
-		WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
-elseif(APPLE)
-	set(li_bin_dir ${CMAKE_INSTALL_PREFIX}/LiMoon.app/Contents/MacOS)
-	set(li_data_dir ${CMAKE_INSTALL_PREFIX}/LiMoon.app/Contents/Resources)
-	if(QT)
-		install(TARGETS li DESTINATION ${li_bin_dir})
-	endif()
-	if(CURSES)
-		install(TARGETS limoon-curses DESTINATION ${li_bin_dir})
-	endif()
-	install(PROGRAMS scripts/osx/limoon_osx DESTINATION ${li_bin_dir})
-	install_data(${li_data_dir})
-	install(CODE "file(RENAME ${li_data_dir}/core/images/limoon.icns
-		${li_data_dir}/limoon.icns)")
-	if(POLICY CMP0177) # CMake 3.31 auto-normalizes .. in install() paths.
-		cmake_policy(SET CMP0177 NEW)
-	endif()
-	install(FILES src/Info.plist DESTINATION ${li_data_dir}/../)
-	if(NOT EXISTS ${li_data_dir}/qt.conf)
-		install(CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE}
-			${CMAKE_INSTALL_PREFIX}/LiMoon.app -executable=${li_bin_dir}/li)")
-		# Homebrew Qt's macdeployqt cannot resolve rpaths to Homebrew's lib prefix.
-		# Work around this issue by adding Homebrew's lib to the executable's rpaths.
-		find_program(BREW brew)
-		if(BREW)
-			execute_process(COMMAND ${BREW} --prefix OUTPUT_VARIABLE BREW_PREFIX
-				OUTPUT_STRIP_TRAILING_WHITESPACE)
-			if(QT_DIR MATCHES "^${BREW_PREFIX}")
-				install(CODE "execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL} -add_rpath ${BREW_PREFIX}/lib
-					${li_bin_dir}/li)")
-				install(CODE "execute_process(COMMAND codesign --sign - --force --deep
-					${CMAKE_INSTALL_PREFIX}/LiMoon.app)")
-			endif()
-		endif()
-	endif()
-	add_custom_target(archive
-		COMMAND ${CMAKE_COMMAND} -E tar cf ${CMAKE_BINARY_DIR}/limoon_${version}.zip --format=zip
-			LiMoon.app li
-		WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 endif()
 
 # Generate HTML.
