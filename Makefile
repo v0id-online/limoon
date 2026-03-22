@@ -1,4 +1,4 @@
-# Makefile for Textadept with Notcurses frontend
+# Makefile for Li Moon with Notcurses frontend
 #
 # Setup: git submodule update --init scinterm-notcurses
 #        cmake -S scinterm-notcurses -B scinterm-notcurses/build -DBUILD_SHARED_LIBS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DENABLE_SCINTILLUA=OFF
@@ -29,14 +29,14 @@ SYS_LIBS   = $(shell pkg-config --libs notcurses) \
 LIBS = $(LOCAL_LIBS) $(SYS_LIBS)
 
 SRCDIR = src
-TARGET = textadept-notcurses
+TARGET = limoon-notcurses
 
 CORE_SRCS = $(shell find $(SRCDIR) -name "*.c" \
               ! -name "*_curses.c" \
               ! -name "*_gtk.c" \
               ! -name "*_qt.c" \
-              ! -name "n_textadept.c")
-N_SRCS    = $(SRCDIR)/n_textadept.c
+              ! -name "n_limoon.c")
+N_SRCS    = $(SRCDIR)/n_limoon.c
 
 CORE_OBJS = $(CORE_SRCS:.c=.o)
 N_OBJS    = $(N_SRCS:.c=.o)

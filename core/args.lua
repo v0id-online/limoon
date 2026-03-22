@@ -1,6 +1,6 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Processes command line arguments for Textadept.
+--- Processes command line arguments for Li Moon.
 -- You can register your own command line arguments. For example:
 --
 -- ```lua
@@ -8,15 +8,15 @@
 -- 	events.connect(events.FILE_OPENED, function()
 -- 		buffer.read_only = true -- make all opened buffers read-only
 -- 	end)
--- 	textadept.menu.menubar = nil -- hide the menubar
+-- 	limoon.menu.menubar = nil -- hide the menubar
 -- end, "Read-only mode")
 -- ```
 --
--- Running `textadept -r file.txt` will open that and all subsequent files in read-only mode.
+-- Running `limoon -r file.txt` will open that and all subsequent files in read-only mode.
 -- @module args
 local M = {}
 
---- Emitted when no filename or directory command line arguments are passed to Textadept on startup.
+--- Emitted when no filename or directory command line arguments are passed to Li Moon on startup.
 _G.events.ARG_NONE = 'arg_none'
 
 --- Map of registered command line options.
@@ -70,11 +70,11 @@ events.connect('command_line', function(arg) process(arg, true) end)
 -- Set `_G._USERHOME`.
 -- This needs to be set as soon as possible since the processing of arguments is positional.
 
---- The path to the user's *~/.textadept/* directory, where all preferences and user-data is stored.
+--- The path to the user's *~/.limoon/* directory, where all preferences and user-data is stored.
 -- On Windows machines *~/* is the value of the "USERHOME" environment variable (typically
 -- *C:\Users\username\\*). On macOS and Linux/BSD machines *~/* is the value of "$HOME"
 -- (typically */Users/username/* and */home/username/*, respectively).
-_G._USERHOME = os.getenv(not WIN32 and 'HOME' or 'USERPROFILE') .. '/.textadept'
+_G._USERHOME = os.getenv(not WIN32 and 'HOME' or 'USERPROFILE') .. '/.limoon'
 for i, option in ipairs(arg) do
 	if (option == '-u' or option == '--userhome') and arg[i + 1] then
 		_USERHOME = arg[i + 1]
@@ -104,7 +104,7 @@ M.register('-T', '--cov', 0, function() end, 'Runs unit tests with code coverage
 -- Shows all registered command line options on the command line.
 M.register('-h', '--help', 0, function()
 	if CURSES then return end -- not supported
-	print('Usage: textadept [args] [filenames]')
+	print('Usage: limoon [args] [filenames]')
 	local list = {}
 	for name in pairs(options) do list[#list + 1] = name end
 	table.sort(list, function(a, b) return a:match('^%-*(.*)$') < b:match('^%-*(.*)$') end)
@@ -116,15 +116,15 @@ M.register('-h', '--help', 0, function()
 	return true
 end, 'Shows this')
 
--- Shows Textadept version and copyright on the command line.
+-- Shows Li Moon version and copyright on the command line.
 M.register('-v', '--version', 0, function()
 	if CURSES then return end -- not supported
 	print(_RELEASE .. '\n' .. _COPYRIGHT)
 	timeout(0.01, quit, 0, false)
 	return true
-end, 'Prints Textadept version and copyright')
+end, 'Prints Li Moon version and copyright')
 
--- After Textadept finishes initializing and processes arguments, remove some options in order
+-- After Li Moon finishes initializing and processes arguments, remove some options in order
 -- to prevent another instance from quitting the first one.
 local function remove_options_that_quit()
 	for _, opt in ipairs{'-h', '--help', '-v', '--version', '-t', '--test'} do options[opt] = nil end

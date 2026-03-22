@@ -103,7 +103,7 @@ test('view.split should ensure the caret remains visible', function()
 	test.assert(line >= top_line and line <= bottom_line, 'caret was not scrolled into view')
 end)
 
--- Note: view.split_pos is tested in modules/textadept/menu_test.lua.
+-- Note: view.split_pos is tested in modules/limoon/menu_test.lua.
 test('view.parent_split_pos should give access to parent split size', function()
 	view:split(true)
 	view:split()

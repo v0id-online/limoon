@@ -1,6 +1,6 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Map of all messages used by Textadept to their localized forms.
+--- Map of all messages used by Li Moon to their localized forms.
 -- If the localized form of a given message does not exist, the non-localized message is
 -- returned. Use Lua's `rawget()` to check if a localization exists.
 --

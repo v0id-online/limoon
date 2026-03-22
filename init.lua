@@ -11,12 +11,12 @@ package.cpath = table.concat({
 
 events.emit('pre_init') -- allow core modules to operate on the first buffer and view
 
-textadept = require('textadept')
+limoon = require('limoon')
 
 -- The remainder of this file defines default buffer and view properties and applies them
 -- to subsequent buffers and views. Normally, a setting like `buffer.use_tabs = false` only
 -- applies to the current (initial) buffer. However, temporarily tap into buffer and view's
--- metatables in order to capture these initial settings (both from Textadept's init.lua and
+-- metatables in order to capture these initial settings (both from Li Moon's init.lua and
 -- from the user's init.lua) so they can be applied to subsequent buffers and views.
 
 local buffer_settings, view_settings = {}, {}
@@ -68,7 +68,7 @@ events.connect(events.INITIALIZED, function()
 	if CURSES then
 		local real_st = ui.command_entry.set_theme
 		if real_st then
-			local tname = textadept.themes and textadept.themes.current or theme
+			local tname = limoon.themes and limoon.themes.current or theme
 			for _, v in ipairs(_VIEWS) do real_st(v, tname, env) end
 		end
 	end
@@ -85,18 +85,18 @@ local buffer, view = buffer, view
 
 if CURSES then
   -- Load theme manager and apply saved/default theme.
-  textadept.themes = require('themes')
-  textadept.themes.current = 'gruvbox-dark'
-  textadept.themes.bg_alpha = 85
-  view:set_theme(textadept.themes.current) -- records theme name via rawset intercept
+  limoon.themes = require('themes')
+  limoon.themes.current = 'gruvbox-dark'
+  limoon.themes.bg_alpha = 85
+  view:set_theme(limoon.themes.current) -- records theme name via rawset intercept
 
   -- Widget library and plugin system.
-  textadept.widgets = require('ui_widgets')
-  textadept.plugins = require('plugin_manager')
-  textadept.plugins.load_all()
+  limoon.widgets = require('ui_widgets')
+  limoon.plugins = require('plugin_manager')
+  limoon.plugins.load_all()
 
   -- Ctrl+Shift+P → show loaded-plugin list.
-  keys['ctrl+shift+p'] = function() textadept.plugins.show() end
+  keys['ctrl+shift+p'] = function() limoon.plugins.show() end
 
   -- Short command-entry aliases (type aliases() to list them).
   require('aliases')
@@ -156,7 +156,7 @@ view.caret_line_visible_always = true
 -- buffer.caret_sticky = buffer.CARETSTICKY_ON
 
 -- Make `view.caret_line_visible_always` apply only to one view at a time, and only while
--- Textadept has focus.
+-- Li Moon has focus.
 local visible_always
 local function save_caret_line_visible_always()
 	visible_always, _G.view.caret_line_visible_always = _G.view.caret_line_visible_always, false
@@ -222,9 +222,9 @@ buffer.back_space_un_indents = true
 if not CURSES then view.indentation_guides = view.IV_LOOKBOTH end
 
 -- Margin Markers.
-view:marker_define(textadept.bookmarks.MARK_BOOKMARK, view.MARK_FULLRECT)
-view:marker_define(textadept.run.MARK_WARNING, view.MARK_FULLRECT)
-view:marker_define(textadept.run.MARK_ERROR, view.MARK_FULLRECT)
+view:marker_define(limoon.bookmarks.MARK_BOOKMARK, view.MARK_FULLRECT)
+view:marker_define(limoon.run.MARK_WARNING, view.MARK_FULLRECT)
+view:marker_define(limoon.run.MARK_ERROR, view.MARK_FULLRECT)
 -- Arrow Folding Symbols.
 -- view:marker_define(view.MARKNUM_FOLDEROPEN, view.MARK_ARROWDOWN)
 -- view:marker_define(view.MARKNUM_FOLDER, view.MARK_ARROW)
@@ -262,11 +262,11 @@ view:marker_define(view.MARKNUM_FOLDERMIDTAIL, view.MARK_TCORNER)
 -- Indicators.
 view.indic_style[ui.find.INDIC_FIND] = view.INDIC_ROUNDBOX
 view.indic_under[ui.find.INDIC_FIND] = not CURSES
-view.indic_style[textadept.editing.INDIC_HIGHLIGHT] = view.INDIC_ROUNDBOX
-view.indic_under[textadept.editing.INDIC_HIGHLIGHT] = not CURSES
-view.indic_style[textadept.run.INDIC_WARNING] = view.INDIC_SQUIGGLE
-view.indic_style[textadept.run.INDIC_ERROR] = view.INDIC_SQUIGGLE
-view.indic_style[textadept.snippets.INDIC_PLACEHOLDER] = not CURSES and view.INDIC_DOTBOX or
+view.indic_style[limoon.editing.INDIC_HIGHLIGHT] = view.INDIC_ROUNDBOX
+view.indic_under[limoon.editing.INDIC_HIGHLIGHT] = not CURSES
+view.indic_style[limoon.run.INDIC_WARNING] = view.INDIC_SQUIGGLE
+view.indic_style[limoon.run.INDIC_ERROR] = view.INDIC_SQUIGGLE
+view.indic_style[limoon.snippets.INDIC_PLACEHOLDER] = not CURSES and view.INDIC_DOTBOX or
 	view.INDIC_STRAIGHTBOX
 for _, kind in ipairs{'MODIFIED', 'SAVED', 'REVERTED_TO_MODIFIED', 'REVERTED_TO_ORIGIN'} do
 	view.indic_style[view['INDICATOR_HISTORY_' .. kind .. '_INSERTION']] = view.INDIC_PLAIN

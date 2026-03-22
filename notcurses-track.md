@@ -2,7 +2,7 @@
 
 Data de início: 2026-02-22
 
-Este arquivo rastreia as alterações e progresso da implementação do Textadept usando Notcurses.
+Este arquivo rastreia as alterações e progresso da implementação do Li Moon usando Notcurses.
 
 ## Objetivo
 
@@ -10,8 +10,8 @@ Substituir a interface baseada em ncurses (atualmente via CDK?) pela biblioteca 
 
 ## Tarefas
 
-- [x] Analisar a estrutura atual do backend curses (`src/textadept_curses.c`)
-- [x] Criar um novo backend `src/n_textadept.c`
+- [x] Analisar a estrutura atual do backend curses (`src/limoon_curses.c`)
+- [x] Criar um novo backend `src/n_limoon.c`
 - [ ] Adaptar a construção (Makefile, CMake) para incluir notcurses ** (aguardando adição do Makefile ao chat) **
 - [ ] Implementar as funções de plataforma necessárias (set_title, focus_view, etc.)
 - [ ] Testar a integração
@@ -19,8 +19,8 @@ Substituir a interface baseada em ncurses (atualmente via CDK?) pela biblioteca 
 
 ## Próximos Passos
 
-1. **Adicionar Makefile ao chat** para que possamos adicionar o alvo `textadept-notcurses` e as flags de linkagem `-lnotcurses`.
-2. **Implementar as funções essenciais** que conectam Notcurses com o core do Textadept:
+1. **Adicionar Makefile ao chat** para que possamos adicionar o alvo `limoon-notcurses` e as flags de linkagem `-lnotcurses`.
+2. **Implementar as funções essenciais** que conectam Notcurses com o core do Li Moon:
    - `new_scintilla()` – criar view Scintilla via notcurses
    - `focus_view()` – gerenciar foco entre views
    - `update_ui()` – integração com o loop de eventos do Notcurses
@@ -29,7 +29,7 @@ Substituir a interface baseada em ncurses (atualmente via CDK?) pela biblioteca 
 
 ## Mapeamento de Funções da Plataforma
 
-Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as seguintes funções:
+Com base em `limoon_platform.h`, a implementação Notcurses deve fornecer as seguintes funções:
 
 | Função | Status |
 |--------|--------|
@@ -114,21 +114,21 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Criado este arquivo de rastreamento.
 
 ### 2026-02-22 (continuação)
-- Criado arquivo boilerplate `src/n_textadept.c` com includes de Notcurses e stubs de funções.
+- Criado arquivo boilerplate `src/n_limoon.c` com includes de Notcurses e stubs de funções.
 - Ainda é necessário analisar o Makefile e adicionar alvo de compilação (aguardando adição do arquivo Makefile ao chat).
 
 ### 2026-02-22 (mais tarde)
-- Analisado cabeçalho `textadept_platform.h` e mapeadas todas as funções a serem implementadas.
+- Analisado cabeçalho `limoon_platform.h` e mapeadas todas as funções a serem implementadas.
 - Adicionada tabela de mapeamento no arquivo de tracking.
 
 ### 2026-02-22 (noite)
-- Criado arquivo `src/n_textadept.c` completo com inicialização Notcurses, substituindo `initscr()`, mapeando view para `struct ncplane *plane`, usando `ncplane_putstr_yx` para renderização e `notcurses_render()`.
+- Criado arquivo `src/n_limoon.c` completo com inicialização Notcurses, substituindo `initscr()`, mapeando view para `struct ncplane *plane`, usando `ncplane_putstr_yx` para renderização e `notcurses_render()`.
 - Atualizado status das funções na tabela para "stub".
 
 ### 2026-02-23
 - Adicionada seção "Próximos Passos" ao tracking.
 ### 2026-02-23 (continuação)
-- Implementadas as funções `popup_menu` e `is_hidpi` no arquivo `src/n_textadept.c`.
+- Implementadas as funções `popup_menu` e `is_hidpi` no arquivo `src/n_limoon.c`.
 - Iniciada a análise do Makefile para inclusão da biblioteca Notcurses.
 ### 2026-02-23 (tarde)
 - Implementadas funções de plataforma: `get_platform`, `get_charset`, `new_window`, `set_title`, `get_size`, `update_ui`.
@@ -178,7 +178,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - Atualizado registro de progresso.
 
 ### 2026-02-27 (tarde)
-- Adicionadas declarações `extern` para variáveis globais do Textadept (`lua`, `focused_view`, `exit_status`, etc.) em `n_textadept.c`.
+- Adicionadas declarações `extern` para variáveis globais do Li Moon (`lua`, `focused_view`, `exit_status`, etc.) em `n_limoon.c`.
 - Implementadas funções de processo (`spawn`, `process_size`, `is_process_running`, `wait_process`, `read_process_output`, `write_process_input`, `close_process_input`, `kill_process`, `get_process_exit_status`, `cleanup_process`) com stubs mínimos para Unix (fork/exec não implementado, retornam falha).
 - Corrigida função `process_size` para retornar tamanho da estrutura interna.
 - Atualizado tracking.
@@ -191,7 +191,7 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 
 ### 2026-02-28 (manhã)
 - Identificado que para compilar e testar o frontend Notcurses, é necessário ajustar o sistema de construção (Makefile) para incluir a biblioteca Notcurses e substituir o backend curses.
-- **Falta**: adicionar o Makefile ao chat para que possamos modificá-lo, criando o alvo `textadept-notcurses`.
+- **Falta**: adicionar o Makefile ao chat para que possamos modificá-lo, criando o alvo `limoon-notcurses`.
 - **Falta**: garantir que todas as variáveis globais externas (`focused_view`, `lua`, etc.) sejam resolvidas durante o linking com os objetos do core.
 - **Próximo passo**: solicitar ao usuário que adicione o Makefile atual ao chat.
 
@@ -205,5 +205,5 @@ Com base em `textadept_platform.h`, a implementação Notcurses deve fornecer as
 - O projeto agora está pronto para tentar a compilação com `make`.
 
 ### 2026-03-01 (manhã)
-- Corrigida busca de cabeçalho Scintilla: expandidos os caminhos de include (`/usr/include/scintilla`, `/usr/local/include/scintilla`, etc.) e alterada a diretiva `#include <Scintilla.h>` para `#include "Scintilla.h"` no arquivo `textadept_platform.h`.
+- Corrigida busca de cabeçalho Scintilla: expandidos os caminhos de include (`/usr/include/scintilla`, `/usr/local/include/scintilla`, etc.) e alterada a diretiva `#include <Scintilla.h>` para `#include "Scintilla.h"` no arquivo `limoon_platform.h`.
 - Espera-se que a compilação agora proceda, caso o pacote `scintilla-devel` (ou equivalente) esteja instalado.

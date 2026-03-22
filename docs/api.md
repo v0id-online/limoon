@@ -1,4 +1,4 @@
-# Textadept 13.0 alpha 2 API Documentation
+# Li Moon 13.0 alpha 2 API Documentation
 
 1. [_G](#_G)
 2. [_L](#_L)
@@ -12,17 +12,17 @@
 10. [os](#os)
 11. [string](#string)
 12. [table](#table)
-13. [textadept](#textadept)
-14. [textadept.bookmarks](#textadept.bookmarks)
-15. [textadept.clipboard](#textadept.clipboard)
-16. [textadept.editing](#textadept.editing)
-17. [textadept.history](#textadept.history)
-18. [textadept.keys](#textadept.keys)
-19. [textadept.macros](#textadept.macros)
-20. [textadept.menu](#textadept.menu)
-21. [textadept.run](#textadept.run)
-22. [textadept.session](#textadept.session)
-23. [textadept.snippets](#textadept.snippets)
+13. [limoon](#limoon)
+14. [limoon.bookmarks](#limoon.bookmarks)
+15. [limoon.clipboard](#limoon.clipboard)
+16. [limoon.editing](#limoon.editing)
+17. [limoon.history](#limoon.history)
+18. [limoon.keys](#limoon.keys)
+19. [limoon.macros](#limoon.macros)
+20. [limoon.menu](#limoon.menu)
+21. [limoon.run](#limoon.run)
+22. [limoon.session](#limoon.session)
+23. [limoon.snippets](#limoon.snippets)
 24. [ui](#ui)
 25. [ui.command_entry](#ui.command_entry)
 26. [ui.dialogs](#ui.dialogs)
@@ -32,47 +32,47 @@
 <a id="_G"></a>
 ## The `_G` module
 
-Extends Lua's _G table to provide extra functions and fields for Textadept.
+Extends Lua's _G table to provide extra functions and fields for Li Moon.
 
 <a id="BSD"></a>
 ### `BSD`
 
-Whether or not Textadept is running on BSD.
+Whether or not Li Moon is running on BSD.
 
 <a id="CURSES"></a>
 ### `CURSES`
 
-Whether or not Textadept is running in a terminal.
+Whether or not Li Moon is running in a terminal.
 
 <a id="GTK"></a>
 ### `GTK`
 
-Whether or not Textadept is running as a GTK GUI application.
+Whether or not Li Moon is running as a GTK GUI application.
 
 <a id="LINUX"></a>
 ### `LINUX`
 
-Whether or not Textadept is running on Linux.
+Whether or not Li Moon is running on Linux.
 
 <a id="OSX"></a>
 ### `OSX`
 
-Whether or not Textadept is running on macOS.
+Whether or not Li Moon is running on macOS.
 
 <a id="QT"></a>
 ### `QT`
 
-Whether or not Textadept is running as a Qt GUI application.
+Whether or not Li Moon is running as a Qt GUI application.
 
 <a id="WIN32"></a>
 ### `WIN32`
 
-Whether or not Textadept is running on Windows.
+Whether or not Li Moon is running on Windows.
 
 <a id="_BUFFERS"></a>
 ### `_BUFFERS`
 
-Table of all open buffers in Textadept.
+Table of all open buffers in Li Moon.
 
 Numeric keys have buffer values and buffer keys have their associated numeric keys as values.
 
@@ -105,29 +105,29 @@ See also: [`string.iconv`](#string.iconv)
 <a id="_COPYRIGHT"></a>
 ### `_COPYRIGHT`
 
-Textadept's copyright information.
+Li Moon's copyright information.
 
 <a id="_HOME"></a>
 ### `_HOME`
 
-The path to Textadept's home, or installation, directory.
+The path to Li Moon's home, or installation, directory.
 
 <a id="_LEXERPATH"></a>
 ### `_LEXERPATH`
 
 A ';'-separated list of directory paths that contain lexers for syntax highlighting.
 
-The default value contains *~/.textadept/lexers/* and Textadept's *lexers/* directory.
+The default value contains *~/.limoon/lexers/* and Li Moon's *lexers/* directory.
 
 <a id="_RELEASE"></a>
 ### `_RELEASE`
 
-The Textadept release version string.
+The Li Moon release version string.
 
 <a id="_THEME"></a>
 ### `_THEME`
 
-Textadept's current UI mode, either "light" or "dark".
+Li Moon's current UI mode, either "light" or "dark".
 
 Manually changing this field has no effect. It is used internally to set a theme on startup
 based on the current OS theme.
@@ -137,7 +137,7 @@ See also: [`view.set_theme`](#view.set_theme), [`events.MODE_CHANGED`](#events.M
 <a id="_USERHOME"></a>
 ### `_USERHOME`
 
-The path to the user's *~/.textadept/* directory, where all preferences and user-data is stored.
+The path to the user's *~/.limoon/* directory, where all preferences and user-data is stored.
 
 On Windows machines *~/* is the value of the "USERHOME" environment variable (typically
 *C:\Users\username\\*). On macOS and Linux/BSD machines *~/* is the value of "$HOME"
@@ -146,7 +146,7 @@ On Windows machines *~/* is the value of the "USERHOME" environment variable (ty
 <a id="_VIEWS"></a>
 ### `_VIEWS`
 
-Table of all views in Textadept.
+Table of all views in Li Moon.
 
 Numeric keys have view values and view keys have their associated numeric keys as values.
 
@@ -162,7 +162,7 @@ See also: [`view`](#view)
 <a id="arg"></a>
 ### `arg`
 
-Table of command line parameters passed to Textadept, just like in Lua.
+Table of command line parameters passed to Li Moon, just like in Lua.
 
 See also: [`args`](#args)
 
@@ -210,12 +210,12 @@ The current [buffer](#the-buffer-module) in the [current view](#_G.view).
 <a id="is_hidpi"></a>
 ### `is_hidpi`()
 
-Returns whether or not Textadept is currently running on a HiDPI/Retina display.
+Returns whether or not Li Moon is currently running on a HiDPI/Retina display.
 
 <a id="_G.keys"></a>
 ### `keys`
 
-Textadept's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
+Li Moon's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
 
 Language-specific keys are in subtables assigned to lexer names.
 
@@ -243,20 +243,20 @@ Parameters:
 <a id="quit"></a>
 ### `quit`([*status*=0[, *events*=true]])
 
-Attempts to quit Textadept.
+Attempts to quit Li Moon.
 
 Parameters:
-- *status*:  Status code for Textadept to exit with.
+- *status*:  Status code for Li Moon to exit with.
 - *events*:  Emit [`events.QUIT`](#events.QUIT), which could prevent quitting. Passing
 	`false` could result in data loss.
 
 <a id="reset"></a>
 ### `reset`()
 
-Resets Textadept's Lua State by reloading all initialization scripts.
+Resets Li Moon's Lua State by reloading all initialization scripts.
 
-This allows for testing theme and user script modifications (e.g. *~/.textadept/init.lua*)
-without having to restart Textadept.
+This allows for testing theme and user script modifications (e.g. *~/.limoon/init.lua*)
+without having to restart Li Moon.
 
 [`arg`](#arg) is `nil` during re-initialization. Scripts that need to differentiate between startup
 and reset can test [`arg`](#arg).
@@ -266,7 +266,7 @@ See also: [`events.RESET_BEFORE`](#events.RESET_BEFORE), [`events.RESET_AFTER`](
 <a id="snippets"></a>
 ### `snippets`
 
-Map of [snippet](#textadept.snippets) triggers to snippet text or functions that return
+Map of [snippet](#limoon.snippets) triggers to snippet text or functions that return
 such text.
 
 Language-specific snippets are in subtables assigned to lexer names.
@@ -302,7 +302,7 @@ The current [view](#the-view-module).
 <a id="_L"></a>
 ## The `_L` module
 
-Map of all messages used by Textadept to their localized forms.
+Map of all messages used by Li Moon to their localized forms.
 
 If the localized form of a given message does not exist, the non-localized message is
 returned. Use Lua's `rawget()` to check if a localization exists.
@@ -314,7 +314,7 @@ Terminal version note: any "_" or "&" mnemonics the GUI version would use are ig
 <a id="args"></a>
 ## The `args` module
 
-Processes command line arguments for Textadept.
+Processes command line arguments for Li Moon.
 
 You can register your own command line arguments. For example:
 
@@ -323,11 +323,11 @@ args.register('-r', '--read-only', 0, function()
 	events.connect(events.FILE_OPENED, function()
 		buffer.read_only = true -- make all opened buffers read-only
 	end)
-	textadept.menu.menubar = nil -- hide the menubar
+	limoon.menu.menubar = nil -- hide the menubar
 end, "Read-only mode")
 ```
 
-Running `textadept -r file.txt` will open that and all subsequent files in read-only mode.
+Running `limoon -r file.txt` will open that and all subsequent files in read-only mode.
 
 <a id="args.register"></a>
 ### `args.register`(*short*, *long*, *narg*, *f*, *description*)
@@ -352,10 +352,10 @@ args.register('-r', '--read-only', 0, function() ... end, 'Read-only mode')
 
 <a id="buffer"></a>
 ## The `buffer` module
-A Textadept buffer or view object.
+A Li Moon buffer or view object.
 
 
-Any buffer and view fields set on startup (e.g. in *~/.textadept/init.lua*) will be the
+Any buffer and view fields set on startup (e.g. in *~/.limoon/init.lua*) will be the
 default, initial values for all buffers and views.
 
 ### Contents
@@ -420,7 +420,7 @@ default, initial values for all buffers and views.
 ### Buffer and View Introduction
 
 
-Internally, Textadept uses the [Scintilla][] editing component for editing text. It breaks
+Internally, Li Moon uses the [Scintilla][] editing component for editing text. It breaks
 up Scintilla's monolithic API into two parts: buffers and views. Buffers are responsible for
 text editing, selections, and navigation. Views are responsible for visual things like text
 and selection display, margins, markers, and highlights. This is a best-effort attempt to
@@ -432,7 +432,7 @@ That said, this buffer and view API is largely interchangeable: `view.field` and
 and vice-versa.
 
 Only one buffer and one view at a time is considered "current" (i.e. has focus). While
-Textadept allows you to work with non-current buffers, you should only work with [`buffer`](#buffer)
+Li Moon allows you to work with non-current buffers, you should only work with [`buffer`](#buffer)
 unless you know what you are doing.  For example, [`buffer:select_all()`](#buffer.select_all) will visually
 select all text in the current buffer, but `buf:select_all()` where `buf ~= buffer` will
 not make a visible selection, even if `buf` is visible in another view. Despite this,
@@ -513,7 +513,7 @@ If the buffer does not have a file, the user is prompted for one.
 
 Returns: `true` if the file was saved; `nil` otherwise.
 
-See also: [`textadept.editing.strip_trailing_spaces`](#textadept.editing.strip_trailing_spaces), [`io.ensure_final_newline`](#io.ensure_final_newline), [`io.save_all_files`](#io.save_all_files), [`events.FILE_BEFORE_SAVE`](#events.FILE_BEFORE_SAVE), [`events.FILE_AFTER_SAVE`](#events.FILE_AFTER_SAVE)
+See also: [`limoon.editing.strip_trailing_spaces`](#limoon.editing.strip_trailing_spaces), [`io.ensure_final_newline`](#io.ensure_final_newline), [`io.save_all_files`](#io.save_all_files), [`events.FILE_BEFORE_SAVE`](#events.FILE_BEFORE_SAVE), [`events.FILE_AFTER_SAVE`](#events.FILE_AFTER_SAVE)
 
 <a id="buffer.save_as"></a>
 #### `buffer:save_as`([*filename*])
@@ -706,7 +706,7 @@ is hidden.
 Parameters:
 - *line*:  Line number to go to.
 
-See also: [`textadept.editing.goto_line`](#textadept.editing.goto_line)
+See also: [`limoon.editing.goto_line`](#limoon.editing.goto_line)
 
 <a id="buffer.line_up"></a>
 #### `buffer:line_up`()
@@ -1128,7 +1128,7 @@ See also: [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target
 Joins the lines in the target range, inserting spaces between any words joined at line
 boundaries.
 
-See also: [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_from_selection`](#buffer.target_from_selection), [`textadept.editing.join_lines`](#textadept.editing.join_lines)
+See also: [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_from_selection`](#buffer.target_from_selection), [`limoon.editing.join_lines`](#limoon.editing.join_lines)
 
 ### Undo and Redo
 
@@ -1189,7 +1189,7 @@ The default value is `true`.
 ### Employ the Clipboard
 
 
-The terminal version relies on the commands defined in [`textadept.clipboard`](#textadept.clipboard) in order to
+The terminal version relies on the commands defined in [`limoon.clipboard`](#limoon.clipboard) in order to
 interact with the system clipboard, or else it uses its own internal clipboard.
 
 <a id="buffer.cut"></a>
@@ -1261,7 +1261,7 @@ Parameters:
 Pastes the clipboard's contents into the buffer, replacing any selected text according to
 [`buffer.multi_paste`](#buffer.multi_paste).
 
-See also: [`textadept.editing.paste_reindent`](#textadept.editing.paste_reindent), [`ui.get_clipboard_text`](#ui.get_clipboard_text)
+See also: [`limoon.editing.paste_reindent`](#limoon.editing.paste_reindent), [`ui.get_clipboard_text`](#ui.get_clipboard_text)
 
 <a id="buffer.multi_paste"></a>
 #### `buffer.multi_paste`
@@ -1571,7 +1571,7 @@ range, makes that occurrence the new main selection, and scrolls it into view.
 
 If there is no selected text, the current word is used.
 
-See also: [`textadept.editing.select_word`](#textadept.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
+See also: [`limoon.editing.select_word`](#limoon.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
 
 <a id="buffer.multiple_select_add_each"></a>
 #### `buffer:multiple_select_add_each`()
@@ -1580,7 +1580,7 @@ Adds to the set of selections each occurrence of the main selection within the t
 
 If there is no selected text, the current word is used.
 
-See also: [`textadept.editing.select_word`](#textadept.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
+See also: [`limoon.editing.select_word`](#limoon.editing.select_word), [`buffer.set_target_range`](#buffer.set_target_range), [`buffer.target_whole_document`](#buffer.target_whole_document)
 
 <a id="buffer.selections"></a>
 #### `buffer.selections`
@@ -2929,7 +2929,7 @@ The default values are `false`.
 
 Map of indicator numbers to their hover indicator styles.
 
-Textadept draws an indicator's hover style when the mouse cursor is hovering over that
+Li Moon draws an indicator's hover style when the mouse cursor is hovering over that
 indicator, or when the caret is within the indicator.
 The default values are their respective indicator styles; there is no visible hover effect.
 
@@ -3005,7 +3005,7 @@ Parameters:
 	characters. The sort order of this list ([`buffer.auto_c_order`](#buffer.auto_c_order)) must have already
 	been specified.
 
-See also: [`textadept.editing.autocompleters`](#textadept.editing.autocompleters), [`textadept.editing.autocomplete`](#textadept.editing.autocomplete)
+See also: [`limoon.editing.autocompleters`](#limoon.editing.autocompleters), [`limoon.editing.autocomplete`](#limoon.editing.autocomplete)
 
 <a id="view.new_user_list_type"></a>
 #### `view.new_user_list_type`()
@@ -3601,7 +3601,7 @@ Each buffer and file has its own indentation and end-of-line character settings.
 Use tabs instead of spaces in indentation.
 
 Changing this does not convert any of the buffer's existing indentation. Use
-[`textadept.editing.convert_indentation()`](#textadept.editing.convert_indentation) to do so.
+[`limoon.editing.convert_indentation()`](#limoon.editing.convert_indentation) to do so.
 The default value is `true`.
 
 <a id="buffer.tab_width"></a>
@@ -3625,7 +3625,7 @@ Indent text when tabbing within indentation.
 
 The default value is `true`.
 
-See also: [`textadept.editing.auto_indent`](#textadept.editing.auto_indent)
+See also: [`limoon.editing.auto_indent`](#limoon.editing.auto_indent)
 
 <a id="buffer.back_space_un_indents"></a>
 #### `buffer.back_space_un_indents`
@@ -3844,7 +3844,7 @@ for normal, mixed case. The default value is `view.CASE_MIXED`.
 
 Sets the view's color theme.
 
-User themes in *~/.textadept/themes/* override Textadept's default themes when they have
+User themes in *~/.limoon/themes/* override Li Moon's default themes when they have
 the same name.
 
 Parameters:
@@ -4126,7 +4126,7 @@ The defalt value is `false`.
 
 Always show the caret line, even when the view is not in focus.
 
-The default value is `true`, but only for the current view, and only while Textadept has focus.
+The default value is `true`, but only for the current view, and only while Li Moon has focus.
 
 <a id="view.caret_line_layer"></a>
 #### `view.caret_line_layer`
@@ -4619,7 +4619,7 @@ The indentation guide column number to also highlight when highlighting matching
 Sets the buffer's lexer.
 
 Parameters:
-- *name*:  String lexer name to set. If `nil`, Textadept tries to auto-detect the
+- *name*:  String lexer name to set. If `nil`, Li Moon tries to auto-detect the
 	buffer's lexer.
 
 See also: [`lexer.detect_extensions`](#lexer.detect_extensions), [`lexer.detect_patterns`](#lexer.detect_patterns)
@@ -4733,7 +4733,7 @@ The current styling position or the last correctly styled character's position.
 
 The buffer's tab label in the tab bar.
 (Write-only)
-Textadept sets this automatically based on the buffer's filename or type, and its save status.
+Li Moon sets this automatically based on the buffer's filename or type, and its save status.
 
 <a id="buffer.read_only"></a>
 #### `buffer.read_only`
@@ -4809,13 +4809,13 @@ See also: [`events.BUFFER_DELETED`](#events.BUFFER_DELETED)
 <a id="events"></a>
 ## The `events` module
 
-Textadept's core event structure and handlers.
+Li Moon's core event structure and handlers.
 
 
-Textadept emits events when you do things like create a new buffer, press a key, click on
+Li Moon emits events when you do things like create a new buffer, press a key, click on
 a menu, etc. You can even emit events yourself using Lua. Each event has a set of event
 handlers, which are simply Lua functions called in the order they were connected to an
-event. For example, if you created a module that needs to do something each time Textadept
+event. For example, if you created a module that needs to do something each time Li Moon
 creates a new buffer, connect a Lua function to the [`events.BUFFER_NEW`](#events.BUFFER_NEW) event:
 
 ```lua
@@ -4825,17 +4825,17 @@ end)
 ```
 
 Events themselves are nothing special. You do not have to declare one before using it. Events
-are simply strings containing arbitrary event names. When either you or Textadept emits an
-event, Textadept runs all event handlers connected to the event, passing any given arguments
+are simply strings containing arbitrary event names. When either you or Li Moon emits an
+event, Li Moon runs all event handlers connected to the event, passing any given arguments
 to the event's handler functions. If an event handler explicitly returns a value that is not
-`nil`, Textadept will not call subsequent handlers. This is useful if you want to stop the
+`nil`, Li Moon will not call subsequent handlers. This is useful if you want to stop the
 propagation of an event like a keypress if your event handler handled it, or if you want to
 use the event framework to pass values.
 
 <a id="events.APPLEEVENT_ODOC"></a>
 ### `events.APPLEEVENT_ODOC`
 
-Emitted when macOS tells Textadept to open a file.
+Emitted when macOS tells Li Moon to open a file.
 
 Arguments:
 - *uri*: The UTF-8-encoded URI to open.
@@ -4843,7 +4843,7 @@ Arguments:
 <a id="events.ARG_NONE"></a>
 ### `events.ARG_NONE`
 
-Emitted when no filename or directory command line arguments are passed to Textadept on startup.
+Emitted when no filename or directory command line arguments are passed to Li Moon on startup.
 
 <a id="events.AUTO_C_CANCELED"></a>
 ### `events.AUTO_C_CANCELED`
@@ -5071,7 +5071,7 @@ See also: [`buffer.save`](#buffer.save)
 <a id="events.FILE_CHANGED"></a>
 ### `events.FILE_CHANGED`
 
-Emitted when Textadept detects that an open file was modified externally.
+Emitted when Li Moon detects that an open file was modified externally.
 
 The default behavior is to prompt the user to reload the file. In order to override this,
 connect to this event with an index of `1` and return `true`.
@@ -5105,12 +5105,12 @@ See also: [`ui.find.find_next`](#ui.find.find_next), [`ui.find.find_prev`](#ui.f
 <a id="events.FIND_PANE_HIDE"></a>
 ### `events.FIND_PANE_HIDE`
 
-Emitted when Textadept hides the find & replace pane.
+Emitted when Li Moon hides the find & replace pane.
 
 <a id="events.FIND_PANE_SHOW"></a>
 ### `events.FIND_PANE_SHOW`
 
-Emitted when Textadept shows the find & replace pane.
+Emitted when Li Moon shows the find & replace pane.
 
 <a id="events.FIND_RESULT_FOUND"></a>
 ### `events.FIND_RESULT_FOUND`
@@ -5142,9 +5142,9 @@ implement a more visual or audible notice.
 <a id="events.FOCUS"></a>
 ### `events.FOCUS`
 
-Emitted when Textadept receives focus.
+Emitted when Li Moon receives focus.
 
-This event is never emitted when Textadept is running in the terminal.
+This event is never emitted when Li Moon is running in the terminal.
 
 <a id="events.INDICATOR_CLICK"></a>
 ### `events.INDICATOR_CLICK`
@@ -5176,7 +5176,7 @@ Arguments:
 <a id="events.INITIALIZED"></a>
 ### `events.INITIALIZED`
 
-Emitted after Textadept finishes initializing.
+Emitted after Li Moon finishes initializing.
 
 <a id="events.KEYPRESS"></a>
 ### `events.KEYPRESS`
@@ -5261,7 +5261,7 @@ Arguments:
 
 Emitted by the terminal version for an unhandled mouse event.
 
-A handler should return `true` if it handled the event. Otherwise Textadept will try again.
+A handler should return `true` if it handled the event. Otherwise Li Moon will try again.
 (This side effect for `nil` return is useful for sending the original mouse event to a
 different view that a handler has switched to.)
 
@@ -5276,12 +5276,12 @@ Arguments:
 <a id="events.QUIT"></a>
 ### `events.QUIT`
 
-Emitted when quitting Textadept.
+Emitted when quitting Li Moon.
 
 The default behavior is to close all buffers and, if that was successful, quit the application.
-In order to do something before Textadept closes all open buffers, connect to this event with
-an index of `1`. If a handler returns `true`, Textadept does not quit. It is not recommended
-to return `false` from a quit handler, as that may interfere with Textadept's normal shutdown
+In order to do something before Li Moon closes all open buffers, connect to this event with
+an index of `1`. If a handler returns `true`, Li Moon does not quit. It is not recommended
+to return `false` from a quit handler, as that may interfere with Li Moon's normal shutdown
 procedure.
 
 See also: [`events.quit`](#events.quit)
@@ -5314,7 +5314,7 @@ See also: [`ui.find.replace_all`](#ui.find.replace_all)
 <a id="events.RESET_AFTER"></a>
 ### `events.RESET_AFTER`
 
-Emitted after resetting Textadept's Lua state.
+Emitted after resetting Li Moon's Lua state.
 
 Arguments:
 - *persist*: Table of data persisted by [`events.RESET_BEFORE`](#events.RESET_BEFORE). All handlers will have access
@@ -5325,7 +5325,7 @@ See also: [`events.reset`](#events.reset)
 <a id="events.RESET_BEFORE"></a>
 ### `events.RESET_BEFORE`
 
-Emitted before resetting Textadept's Lua state.
+Emitted before resetting Li Moon's Lua state.
 
 Arguments:
 - *persist*: Table to store persistent data in for use by [`events.RESET_AFTER`](#events.RESET_AFTER). All handlers
@@ -5336,7 +5336,7 @@ See also: [`events.reset`](#events.reset)
 <a id="events.RESUME"></a>
 ### `events.RESUME`
 
-Emitted when resuming Textadept from a suspended state.
+Emitted when resuming Li Moon from a suspended state.
 
 This event is only emitted by the terminal version.
 
@@ -5376,14 +5376,14 @@ Emitted when saving a session.
 
 Arguments:
 - *session*: Table of session data to save. All handlers will have access to this same table,
-	and Textadept's default handler reserves the use of some keys. Note that functions,
+	and Li Moon's default handler reserves the use of some keys. Note that functions,
 	userdata, and circular table values cannot be saved. The latter case is not recognized
 	at all, so beware of creating in infinite loop.
 
 <a id="events.SUSPEND"></a>
 ### `events.SUSPEND`
 
-Emitted prior to suspending Textadept.
+Emitted prior to suspending Li Moon.
 
 This event is only emitted by the terminal version.
 
@@ -5395,7 +5395,7 @@ Emitted when the user clicks on a buffer tab.
 The default behavior is to switch to the clicked tab's buffer. In order to do something
 before the switch, connect to this event with an index of `1`.
 
-Note that Textadept always displays a context menu for a right-click.
+Note that Li Moon always displays a context menu for a right-click.
 
 Arguments:
 - *index*: The numeric index of the clicked tab.
@@ -5413,7 +5413,7 @@ Arguments:
 Emitted when the user clicks a buffer tab's close button.
 
 The default behavior is to close the tab's buffer. If you need to do something before
-Textadept closes the buffer, connect to this event with an index of `1`.
+Li Moon closes the buffer, connect to this event with an index of `1`.
 
 This event is only emitted in the Qt version.
 
@@ -5434,9 +5434,9 @@ Arguments:
 <a id="events.UNFOCUS"></a>
 ### `events.UNFOCUS`
 
-Emitted when Textadept loses focus.
+Emitted when Li Moon loses focus.
 
-This event is never emitted when Textadept is running in the terminal.
+This event is never emitted when Li Moon is running in the terminal.
 
 <a id="events.UPDATE_UI"></a>
 ### `events.UPDATE_UI`
@@ -5548,7 +5548,7 @@ Returns: the first non-`nil` value returned by a handler, if any
 <a id="io"></a>
 ## The `io` module
 
-Extends Lua's [`io`](#io) library with Textadept functions for working with files.
+Extends Lua's [`io`](#io) library with Li Moon functions for working with files.
 
 <a id="io.close_all_buffers"></a>
 ### `io.close_all_buffers`()
@@ -5612,7 +5612,7 @@ The default value is `false` on Windows, and `true` on macOS, Linux, and BSD.
 
 Returns a project's root directory.
 
-Textadept only recognizes projects under one of the following version control systems: Git,
+Li Moon only recognizes projects under one of the following version control systems: Git,
 Mercurial, SVN, Bazaar, and Fossil.
 
 Parameters:
@@ -5711,7 +5711,7 @@ The default value is `false`.
 <a id="keys"></a>
 ## The `keys` module
 
-Manages key bindings in Textadept.
+Manages key bindings in Li Moon.
 
 
 ### Key Bindings Overview
@@ -5723,11 +5723,11 @@ Define key bindings in the global [`keys`](#keys) table in key-value pairs. Each
 - A string key mode and its table of key sequences and commands. This is called a key mode.
 - A key sequence and its table of more key sequences and commands. This is called a key chain.
 
-When searching for a command to run based on a key sequence, Textadept considers key bindings
+When searching for a command to run based on a key sequence, Li Moon considers key bindings
 in the current key mode to have priority. If no key mode is active, language-specific key
 bindings have priority, followed by the ones in the global table. This means if there are
-two commands with the same key sequence, Textadept runs the language-specific one. However,
-if the command returns the boolean value `false`, Textadept also runs the lower-priority
+two commands with the same key sequence, Li Moon runs the language-specific one. However,
+if the command returns the boolean value `false`, Li Moon also runs the lower-priority
 command. (This is useful for overriding commands like autocompletion with language-specific
 completion, but fall back to word autocompletion if the first command fails.)
 
@@ -5745,20 +5745,20 @@ Alt | `'alt'` | `'alt'` | `'meta'`
 Command | N/A | `'cmd'` | N/A
 Shift | `'shift'` | `'shift'` | `'shift'`
 
-The string representation of key values less than 255 is the character that Textadept would
+The string representation of key values less than 255 is the character that Li Moon would
 normally insert if the "Control", "Alt", and "Command" modifiers were not held down. Therefore,
 a combination of `Ctrl+Alt+Shift+A` has the key sequence `ctrl+alt+A` on Windows and Linux/BSD,
 but a combination of `Ctrl+Shift+Tab` has the key sequence `ctrl+shift+\t`. On a United States
 English keyboard, since the combination of `Ctrl+Shift+,` has the key sequence `ctrl+<`
-(`Shift+,` inserts a `<`), Textadept recognizes the key binding as `Ctrl+<`. This allows
-key bindings to be language and layout agnostic. For key values greater than 255, Textadept
+(`Shift+,` inserts a `<`), Li Moon recognizes the key binding as `Ctrl+<`. This allows
+key bindings to be language and layout agnostic. For key values greater than 255, Li Moon
 uses the [`keys.KEYSYMS`](#keys.KEYSYMS) lookup table. Therefore, `Ctrl+Right Arrow` has the key sequence
 `ctrl+right`.
 
 Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
 sequences in the statusbar, along with their assigned commands, if any. For sequences with
 a trailing "0x*XXXX*", that number can be aliased to a string representation in [`keys.KEYSYMS`](#keys.KEYSYMS).
-For your convenience, Textadept copies key sequences to the clipboard.
+For your convenience, Li Moon copies key sequences to the clipboard.
 
 ### Commands
 
@@ -5775,12 +5775,12 @@ end
 keys['0x1234'] = function() ... end -- key code not in keys.KEYSYMS
 ```
 
-Textadept handles [`buffer`](#buffer) and [`view`](#view) references properly in this context; it will use the
+Li Moon handles [`buffer`](#buffer) and [`view`](#view) references properly in this context; it will use the
 correct buffer and view when running the key command.
 
 ### Modes
 
-Modes are groups of key bindings such that when a key [mode](#keys.mode) is active, Textadept
+Modes are groups of key bindings such that when a key [mode](#keys.mode) is active, Li Moon
 ignores all key bindings defined outside the mode until the mode is unset. Here is a simple
 vi mode example:
 
@@ -5804,7 +5804,7 @@ keys.mode = 'command_mode' -- default mode
 ```
 
 **Warning**: When creating a mode, be sure to define a way to exit the mode, otherwise you
-will probably have to restart Textadept.
+will probably have to restart Li Moon.
 
 ### Key Chains
 
@@ -5915,7 +5915,7 @@ Lexes Scintilla documents and source code with Lua and LPeg.
 ### Writing Lua Lexers
 
 Lexers recognize and tag elements of source code for syntax highlighting. Scintilla (the
-editing component behind [Textadept][] and [SciTE][]) traditionally uses static, compiled C++
+editing component behind [Li Moon][] and [SciTE][]) traditionally uses static, compiled C++
 lexers which are difficult to create and/or extend. On the other hand, Lua makes it easy to
 to rapidly create new lexers, extend existing ones, and embed lexers within one another. Lua
 lexers tend to be more readable than C++ lexers too.
@@ -5944,11 +5944,11 @@ The first part of this document deals with rapidly constructing a simple lexer. 
 deals with more advanced techniques, such as embedding lexers within one another. Following
 that is a discussion about code folding, or being able to tell Scintilla which code blocks
 are "foldable" (temporarily hideable from view). After that are instructions on how to use
-Lua lexers with the aforementioned Textadept and SciTE editors. Finally there are comments
+Lua lexers with the aforementioned Li Moon and SciTE editors. Finally there are comments
 on lexer performance and limitations.
 
 [LPeg library]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Textadept]: https://orbitalquark.github.io/textadept
+[Li Moon]: https://orbitalquark.github.io/limoon
 [SciTE]: https://scintilla.org/SciTE.html
 
 ### Lexer Basics
@@ -6364,7 +6364,7 @@ Writing stateful lexers is beyond the scope of this document.
 ### Code Folding
 
 When reading source code, it is occasionally helpful to temporarily hide blocks of code like
-functions, classes, comments, etc. This is the concept of "folding". In the Textadept and
+functions, classes, comments, etc. This is the concept of "folding". In the Li Moon and
 SciTE editors for example, little markers in the editor margins appear next to code that
 can be folded at places called "fold points". When the user clicks on one of those markers,
 the editor hides the code associated with the marker until the user clicks on the marker
@@ -6441,10 +6441,10 @@ Lexers with complex folding needs can implement their own folders by defining th
 
 ### Using Lexers
 
-**Textadept**
+**Li Moon**
 
-Place your lexer in your *~/.textadept/lexers/* directory so you do not overwrite it when
-upgrading Textadept. Also, lexers in this directory override default lexers. Thus, Textadept
+Place your lexer in your *~/.limoon/lexers/* directory so you do not overwrite it when
+upgrading Li Moon. Also, lexers in this directory override default lexers. Thus, Li Moon
 loads a user *lua* lexer instead of the default *lua* lexer. This is convenient for tweaking
 a default lexer to your liking. Then add a [file extension](#lexer.detect_extensions) for
 your lexer if necessary.
@@ -7282,7 +7282,7 @@ The returned path is not guaranteed to exist.
 Parameters:
 - *filename*:  String path to a file.
 - *prefix*:  String prefix path prepended to a relative filename. The default
-	value is Textadept's current working directory.
+	value is Li Moon's current working directory.
 
 <a id="lfs.default_filter"></a>
 ### `lfs.default_filter`
@@ -7344,7 +7344,7 @@ message if an error occurred.
 This may block until stdout is available for reading.
 
 If the process has a stdout callback function, you must manually read all stdout available
-before Textadept can call that callback again.
+before Li Moon can call that callback again.
 
 Parameters:
 - *arg*:  Argument similar to those in Lua's `io.read()`. In summary:
@@ -7390,18 +7390,18 @@ Parameters:
 	pass to it. `$PATH` or `%PATH%` is searched for program names. On Windows, this entire
 	string is passed to *cmd.exe*: `%COMSPEC% /c [cmd]`.
 - *cwd*:  String current working directory (cwd) for the child process. When omitted,
-	Textadept's cwd is used.
+	Li Moon's cwd is used.
 - *env*:  Table of environment variables for the child process. It can be a table of
 	key-value string pairs, a table of "*key*=*value*" strings, or a combination of the
-	two. When omitted, Textadept's environment is used. In order to create a new environment
-	that inherits from Textadept's, you can: spawn `env` on macOS and Linux/BSD, or `set`
+	two. When omitted, Li Moon's environment is used. In order to create a new environment
+	that inherits from Li Moon's, you can: spawn `env` on macOS and Linux/BSD, or `set`
 	on Windows; iterate over output matches of "key=value" pairs (one per line); assign
 	them to the new environment table; add your own entries; and finally use that table here.
 - *stdout_cb*:  Function that accepts a string parameter for a chunk of standard output
-	read from the child. Textadept reads stdout in 1KB or 0.5KB chunks (depending on the
+	read from the child. Li Moon reads stdout in 1KB or 0.5KB chunks (depending on the
 	platform), or however much data is available at the time.
 - *stderr_cb*:  Function that accepts a string parameter for a chunk of standard
-	error read from the child. Textadept reads stderr in 1KB or 0.5kB chunks (depending on
+	error read from the child. Li Moon reads stderr in 1KB or 0.5kB chunks (depending on
 	the platform), or however much data is available at the time.
 - *exit_cb*:  Function to call when the child process finishes. The child's exit
 	status is passed as an argument.
@@ -7483,32 +7483,32 @@ Parameters:
 
 
 
-<a id="textadept"></a>
-## The `textadept` module
+<a id="limoon"></a>
+## The `limoon` module
 
-The textadept module.
+The limoon module.
 
-It provides utilities for editing text in Textadept.
+It provides utilities for editing text in Li Moon.
 
 
 
-<a id="textadept.bookmarks"></a>
-## The `textadept.bookmarks` module
+<a id="limoon.bookmarks"></a>
+## The `limoon.bookmarks` module
 
-Bookmarks for Textadept.
+Bookmarks for Li Moon.
 
-<a id="textadept.bookmarks.MARK_BOOKMARK"></a>
-### `textadept.bookmarks.MARK_BOOKMARK`
+<a id="limoon.bookmarks.MARK_BOOKMARK"></a>
+### `limoon.bookmarks.MARK_BOOKMARK`
 
 The bookmark mark number.
 
-<a id="textadept.bookmarks.clear"></a>
-### `textadept.bookmarks.clear`()
+<a id="limoon.bookmarks.clear"></a>
+### `limoon.bookmarks.clear`()
 
 Clears all bookmarks in the current buffer.
 
-<a id="textadept.bookmarks.goto_mark"></a>
-### `textadept.bookmarks.goto_mark`([*next*])
+<a id="limoon.bookmarks.goto_mark"></a>
+### `limoon.bookmarks.goto_mark`([*next*])
 
 Jumps to a the beginning of a bookmarked line.
 
@@ -7520,26 +7520,26 @@ Parameters:
 Usage:
 
 ```lua
-textadept.bookmarks.goto_mark(true) -- jump to the next bookmark
-textadept.bookmarks.goto_mark(false) -- jump to the previous bookmark
+limoon.bookmarks.goto_mark(true) -- jump to the next bookmark
+limoon.bookmarks.goto_mark(false) -- jump to the previous bookmark
 ```
 
-<a id="textadept.bookmarks.toggle"></a>
-### `textadept.bookmarks.toggle`()
+<a id="limoon.bookmarks.toggle"></a>
+### `limoon.bookmarks.toggle`()
 
 Toggles a bookmark on the current line.
 
 
 
-<a id="textadept.clipboard"></a>
-## The `textadept.clipboard` module
+<a id="limoon.clipboard"></a>
+## The `limoon.clipboard` module
 
 Allows the terminal version's buffer clipboard functions to operate on the system clipboard.
 
 This module is only enabled in the terminal version.
 
-<a id="textadept.clipboard.copy_command"></a>
-### `textadept.clipboard.copy_command`
+<a id="limoon.clipboard.copy_command"></a>
+### `limoon.clipboard.copy_command`
 
 The command to modify the system clipboard's contents.
 
@@ -7551,8 +7551,8 @@ The default values are:
 	packages, respectively, supply these commands.
 	Note: this command should not fork.
 
-<a id="textadept.clipboard.paste_command"></a>
-### `textadept.clipboard.paste_command`
+<a id="limoon.clipboard.paste_command"></a>
+### `limoon.clipboard.paste_command`
 
 The command to retrieve the system clipboard's contents.
 
@@ -7565,36 +7565,36 @@ The default values are:
 
 
 
-<a id="textadept.editing"></a>
-## The `textadept.editing` module
+<a id="limoon.editing"></a>
+## The `limoon.editing` module
 
-Editing features for Textadept.
+Editing features for Li Moon.
 
-<a id="textadept.editing.INDIC_HIGHLIGHT"></a>
-### `textadept.editing.INDIC_HIGHLIGHT`
+<a id="limoon.editing.INDIC_HIGHLIGHT"></a>
+### `limoon.editing.INDIC_HIGHLIGHT`
 
 The word highlight indicator number.
 
-<a id="textadept.editing.auto_enclose"></a>
-### `textadept.editing.auto_enclose`
+<a id="limoon.editing.auto_enclose"></a>
+### `limoon.editing.auto_enclose`
 
 Auto-enclose selected text when typing a punctuation character, taking
-[`textadept.editing.auto_pairs`](#textadept.editing.auto_pairs) into account.
+[`limoon.editing.auto_pairs`](#limoon.editing.auto_pairs) into account.
 
 While a snippet is active, only auto-paired punctuation characters can auto-enclose
 placeholders.
 
 The default value is `false`.
 
-<a id="textadept.editing.auto_indent"></a>
-### `textadept.editing.auto_indent`
+<a id="limoon.editing.auto_indent"></a>
+### `limoon.editing.auto_indent`
 
 Match the previous line's indentation level after inserting a new line.
 
 The default value is `true`.
 
-<a id="textadept.editing.auto_pairs"></a>
-### `textadept.editing.auto_pairs`
+<a id="limoon.editing.auto_pairs"></a>
+### `limoon.editing.auto_pairs`
 
 Map of auto-paired characters like parentheses, brackets, braces, and quotes.
 
@@ -7604,23 +7604,23 @@ and "``". For certain XML-like lexers, "<>" is also auto-paired.
 Usage:
 
 ```lua
-textadept.editing.auto_pairs['*'] = '*'
-textadept.editing.auto_pairs = nil -- disable completely
+limoon.editing.auto_pairs['*'] = '*'
+limoon.editing.auto_pairs = nil -- disable completely
 ```
 
-<a id="textadept.editing.autocomplete"></a>
-### `textadept.editing.autocomplete`(*name*)
+<a id="limoon.editing.autocomplete"></a>
+### `limoon.editing.autocomplete`(*name*)
 
 Displays an autocompletion list.
 
 Parameters:
-- *name*:  The name of an autocompleter function in the [`textadept.editing.autocompleters`](#textadept.editing.autocompleters)
+- *name*:  The name of an autocompleter function in the [`limoon.editing.autocompleters`](#limoon.editing.autocompleters)
 	table to use for providing autocompletions.
 
 Returns: `true` if autocompletions were found; `nil` otherwise
 
-<a id="textadept.editing.autocomplete_all_words"></a>
-### `textadept.editing.autocomplete_all_words`
+<a id="limoon.editing.autocomplete_all_words"></a>
+### `limoon.editing.autocomplete_all_words`
 
 Autocomplete the current word using words from all open buffers.
 
@@ -7628,8 +7628,8 @@ If `true`, performance may be slow when many buffers are open.
 
 The default value is `false`.
 
-<a id="textadept.editing.autocompleters"></a>
-### `textadept.editing.autocompleters`
+<a id="limoon.editing.autocompleters"></a>
+### `limoon.editing.autocompleters`
 
 Map of autocompleter names to autocompletion functions.
 
@@ -7649,13 +7649,13 @@ but the function may change [`buffer.auto_c_order`](#buffer.auto_c_order) if it 
 
 Fields:
 - `word`: Autocompletion function for words from the current buffer, or all open buffers if
- [`textadept.editing.autocomplete_all_words`](#textadept.editing.autocomplete_all_words) is `true`.
+ [`limoon.editing.autocomplete_all_words`](#limoon.editing.autocomplete_all_words) is `true`.
  [`buffer.word_chars`](#buffer.word_chars) contains the set of characters that constitute words.
  If [`buffer.auto_c_ignore_case`](#buffer.auto_c_ignore_case) is `true`, completions are not case-sensitive.
 - `snippet`: Autocompletion function for snippet trigger words.
 
-<a id="textadept.editing.comment_string"></a>
-### `textadept.editing.comment_string`
+<a id="limoon.editing.comment_string"></a>
+### `limoon.editing.comment_string`
 
 Map of lexer names to line comment strings for programming languages.
 
@@ -7666,19 +7666,19 @@ used, if available.
 Usage:
 
 ```lua
-textadept.editing.comment_string.c = '/*|*/' -- instead of the default '//'
+limoon.editing.comment_string.c = '/*|*/' -- instead of the default '//'
 ```
 
-<a id="textadept.editing.convert_indentation"></a>
-### `textadept.editing.convert_indentation`()
+<a id="limoon.editing.convert_indentation"></a>
+### `limoon.editing.convert_indentation`()
 
 Converts the buffer's indentation between tabs and spaces according to [`buffer.use_tabs`](#buffer.use_tabs).
 
 If [`buffer.use_tabs`](#buffer.use_tabs) is `true`, this will convert [`buffer.tab_width`](#buffer.tab_width) number of indenting spaces
 to tabs. Otherwise, this will convert all indenting tabs to [`buffer.tab_width`](#buffer.tab_width) number of spaces.
 
-<a id="textadept.editing.enclose"></a>
-### `textadept.editing.enclose`(*left*, *right*[, *select*=false])
+<a id="limoon.editing.enclose"></a>
+### `limoon.editing.enclose`(*left*, *right*[, *select*=false])
 
 Encloses the selected text within delimiters, or encloses the current word if no text is
 selected.
@@ -7690,8 +7690,8 @@ Parameters:
 - *right*:  String right delimiter to enclose with.
 - *select*:  Keep enclosed text selected.
 
-<a id="textadept.editing.filter_through"></a>
-### `textadept.editing.filter_through`(*command*)
+<a id="limoon.editing.filter_through"></a>
+### `limoon.editing.filter_through`(*command*)
 
 Filters text through a shell command, replacing it (stdin) with that command's output (stdout).
 
@@ -7703,7 +7703,7 @@ The standard input sent is as follows:
 	if the end of the selection is at the beginning of a line, that line is omitted.
 
 Note: commands that emit stdout while reading stdin (as opposed to emitting stdout only after
-stdin is closed) may hang the GTK and terminal versions of Textadept if input generates more
+stdin is closed) may hang the GTK and terminal versions of Li Moon if input generates more
 output than stdout can buffer. On Linux, this may be 64K. See [`proc:write()`](#proc.write).
 
 Parameters:
@@ -7712,48 +7712,48 @@ Parameters:
 Usage:
 
 ```lua
-textadept.editing.filter_through('sort | uniq') -- sort lines and remove duplicates
+limoon.editing.filter_through('sort | uniq') -- sort lines and remove duplicates
 ```
 
-<a id="textadept.editing.goto_line"></a>
-### `textadept.editing.goto_line`([*line*])
+<a id="limoon.editing.goto_line"></a>
+### `limoon.editing.goto_line`([*line*])
 
 Moves the caret to the beginning of a line, ensuring that line is visible.
 
 Parameters:
 - *line*:  Line number to go to. If `nil`, the user is prompted for one.
 
-<a id="textadept.editing.highlight_words"></a>
-### `textadept.editing.highlight_words`
+<a id="limoon.editing.highlight_words"></a>
+### `limoon.editing.highlight_words`
 
 Automatically highlight words.
 
-- `textadept.editing.HIGHLIGHT_CURRENT`: Automatically highlight all instances of the
+- `limoon.editing.HIGHLIGHT_CURRENT`: Automatically highlight all instances of the
 	current word.
-- `textadept.editing.HIGHLIGHT_SELECTED`: Automatically highlight all instances of the
+- `limoon.editing.HIGHLIGHT_SELECTED`: Automatically highlight all instances of the
 	selected word.
-- `textadept.editing.HIGHLIGHT_NONE`: Do not automatically highlight words.
+- `limoon.editing.HIGHLIGHT_NONE`: Do not automatically highlight words.
 
-The default value is `textadept.editing.HIGHLIGHT_NONE`.
+The default value is `limoon.editing.HIGHLIGHT_NONE`.
 
 See also: [`buffer.word_chars`](#buffer.word_chars)
 
-<a id="textadept.editing.join_lines"></a>
-### `textadept.editing.join_lines`()
+<a id="limoon.editing.join_lines"></a>
+### `limoon.editing.join_lines`()
 
 Joins the currently selected lines, or joins the current line with the line below it if no
 lines are selected.
 
 As long as any part of a line is selected, the entire line is eligible for joining.
 
-<a id="textadept.editing.paste_reindent"></a>
-### `textadept.editing.paste_reindent`()
+<a id="limoon.editing.paste_reindent"></a>
+### `limoon.editing.paste_reindent`()
 
 Pastes the text from the clipboard, taking into account the buffer's indentation settings
 and the indentation of the current and preceding lines.
 
-<a id="textadept.editing.select_enclosed"></a>
-### `textadept.editing.select_enclosed`([*left*[, *right*]])
+<a id="limoon.editing.select_enclosed"></a>
+### `limoon.editing.select_enclosed`([*left*[, *right*]])
 
 Selects the range of text between delimiters surrounding the caret.
 
@@ -7761,26 +7761,26 @@ If that range is already selected, this will toggle between selecting those deli
 
 Parameters:
 - *left*:  String left delimiter. If `nil`, it is assumed to be one of the pairs in
-	[`textadept.editing.auto_pairs`](#textadept.editing.auto_pairs) and inferred from the current position or selection.
+	[`limoon.editing.auto_pairs`](#limoon.editing.auto_pairs) and inferred from the current position or selection.
 - *right*:  String right delimiter. If `nil`, it is inferred like *left* is.
 
-<a id="textadept.editing.select_line"></a>
-### `textadept.editing.select_line`()
+<a id="limoon.editing.select_line"></a>
+### `limoon.editing.select_line`()
 
 Selects the current line.
 
 If text is selected  and spans multiple lines, that selection will be expanded to include
 whole lines.
 
-<a id="textadept.editing.select_paragraph"></a>
-### `textadept.editing.select_paragraph`()
+<a id="limoon.editing.select_paragraph"></a>
+### `limoon.editing.select_paragraph`()
 
 Selects the current paragraph.
 
 Paragraphs are surrounded by one or more blank lines.
 
-<a id="textadept.editing.select_word"></a>
-### `textadept.editing.select_word`([*all*=false])
+<a id="limoon.editing.select_word"></a>
+### `limoon.editing.select_word`([*all*=false])
 
 Selects the current word.
 
@@ -7791,34 +7791,34 @@ Parameters:
 
 See also: [`buffer.word_chars`](#buffer.word_chars)
 
-<a id="textadept.editing.strip_trailing_spaces"></a>
-### `textadept.editing.strip_trailing_spaces`
+<a id="limoon.editing.strip_trailing_spaces"></a>
+### `limoon.editing.strip_trailing_spaces`
 
 Strip trailing whitespace before saving non-binary files.
 
 The default value is `false`.
 
-<a id="textadept.editing.toggle_comment"></a>
-### `textadept.editing.toggle_comment`()
+<a id="limoon.editing.toggle_comment"></a>
+### `limoon.editing.toggle_comment`()
 
-Comments or uncomments source lines based on [`textadept.editing.comment_string`](#textadept.editing.comment_string).
+Comments or uncomments source lines based on [`limoon.editing.comment_string`](#limoon.editing.comment_string).
 
 If no lines are selected, the current line is toggled. Otherwise, the selected lines are
 toggled. As long as any part of a line is selected, that entire line is eligible for toggling.
 
-<a id="textadept.editing.typeover_auto_paired"></a>
-### `textadept.editing.typeover_auto_paired`
+<a id="limoon.editing.typeover_auto_paired"></a>
+### `limoon.editing.typeover_auto_paired`
 
-Type over an auto-paired complement character from [`textadept.editing.auto_pairs`](#textadept.editing.auto_pairs).
+Type over an auto-paired complement character from [`limoon.editing.auto_pairs`](#limoon.editing.auto_pairs).
 
 The default value is `true`.
 
 
 
-<a id="textadept.history"></a>
-## The `textadept.history` module
+<a id="limoon.history"></a>
+## The `limoon.history` module
 
-Records buffer positions within Textadept views over time and allows for navigating through
+Records buffer positions within Li Moon views over time and allows for navigating through
 that history.
 
 
@@ -7827,37 +7827,37 @@ or deletion occurs, its location is recorded in the current view's location hist
 edit is close enough to the previous record, the previous record is amended. Each time a
 buffer switch occurs, the before and after locations are also recorded.
 
-<a id="textadept.history.back"></a>
-### `textadept.history.back`()
+<a id="limoon.history.back"></a>
+### `limoon.history.back`()
 
 Navigates backwards through the current view's history.
 
-<a id="textadept.history.clear"></a>
-### `textadept.history.clear`()
+<a id="limoon.history.clear"></a>
+### `limoon.history.clear`()
 
 Clears all view history.
 
-<a id="textadept.history.forward"></a>
-### `textadept.history.forward`()
+<a id="limoon.history.forward"></a>
+### `limoon.history.forward`()
 
 Navigates forwards through the current view's history.
 
-<a id="textadept.history.maximum_history_size"></a>
-### `textadept.history.maximum_history_size`
+<a id="limoon.history.maximum_history_size"></a>
+### `limoon.history.maximum_history_size`
 
 The maximum number of history records to keep per view.
 
 The default value is `100`.
 
-<a id="textadept.history.minimum_line_distance"></a>
-### `textadept.history.minimum_line_distance`
+<a id="limoon.history.minimum_line_distance"></a>
+### `limoon.history.minimum_line_distance`
 
 The minimum number of lines between distinct history records.
 
 The default value is `3`.
 
-<a id="textadept.history.record"></a>
-### `textadept.history.record`([*filename*=buffer.filename[, *line*[, *column*[, *soft*=false]]]])
+<a id="limoon.history.record"></a>
+### `limoon.history.record`([*filename*=buffer.filename[, *line*[, *column*[, *soft*=false]]]])
 
 Records a buffer location in the current view's history.
 
@@ -7871,10 +7871,10 @@ Parameters:
 
 
 
-<a id="textadept.keys"></a>
-## The `textadept.keys` module
+<a id="limoon.keys"></a>
+## The `limoon.keys` module
 
-Defines key bindings for Textadept.
+Defines key bindings for Li Moon.
 
 This set of key bindings is pretty standard among other text editors, at least for basic
 editing commands and movements.
@@ -7900,9 +7900,9 @@ In general, bindings for the terminal version are the same as for Windows/Linux/
 	the 'J' and 'M' keys often involve the Enter key.
 
 **Windows Note:** on international keyboard layouts, the "AltGr" key is equivalent to pressing
-"Ctrl" and "Alt", so "AltGr+*key*" combinations may unexpectedly trigger one of Textadept's
+"Ctrl" and "Alt", so "AltGr+*key*" combinations may unexpectedly trigger one of Li Moon's
 "Ctrl+Alt+*key*" bindings. In order to avoid this, you will likely have to disable the
-"Ctrl+Alt+*key*" binding in your *~/.textadept/init.lua* by setting it to `nil`.
+"Ctrl+Alt+*key*" binding in your *~/.limoon/init.lua* by setting it to `nil`.
 
 ### Key Bindings
 
@@ -8143,53 +8143,53 @@ non-Windows terminal version, since ^S and ^Q are flow control sequences.<br/>
 
 
 
-<a id="textadept.macros"></a>
-## The `textadept.macros` module
+<a id="limoon.macros"></a>
+## The `limoon.macros` module
 
 A module for recording, playing, saving, and loading keyboard macros.
 
 Menu commands are also recorded.
 At this time, typing into multiple cursors during macro playback is not supported.
 
-<a id="textadept.macros.load"></a>
-### `textadept.macros.load`([*filename*])
+<a id="limoon.macros.load"></a>
+### `limoon.macros.load`([*filename*])
 
 Loads a macro.
 
 Parameters:
 - *filename*:  String macro file to load. If `nil`, the user is prompted for one. If
-	the filename is a relative path, it will be relative to *~/.textadept/macros/*.
+	the filename is a relative path, it will be relative to *~/.limoon/macros/*.
 
-<a id="textadept.macros.play"></a>
-### `textadept.macros.play`([*filename*])
+<a id="limoon.macros.play"></a>
+### `limoon.macros.play`([*filename*])
 
 Plays a recorded or previously loaded macro.
 
 Parameters:
 - *filename*:  String filename of a macro to load and play. If the filename is a
-	relative path, it will be relative to *~/.textadept/macros/*.
+	relative path, it will be relative to *~/.limoon/macros/*.
 
-<a id="textadept.macros.record"></a>
-### `textadept.macros.record`()
+<a id="limoon.macros.record"></a>
+### `limoon.macros.record`()
 
 Toggles between starting and stopping macro recording.
 
-<a id="textadept.macros.save"></a>
-### `textadept.macros.save`([*filename*])
+<a id="limoon.macros.save"></a>
+### `limoon.macros.save`([*filename*])
 
 Saves a recorded macro.
 
 Parameters:
 - *filename*:  String filename to save the recorded macro to. If `nil`, the user
 	is prompted for one. If the filename is a relative path, it will be relative to
-	*~/.textadept/macros/*.
+	*~/.limoon/macros/*.
 
 
 
-<a id="textadept.menu"></a>
-## The `textadept.menu` module
+<a id="limoon.menu"></a>
+## The `limoon.menu` module
 
-Defines the menus used by Textadept.
+Defines the menus used by Li Moon.
 
 Menus are simply tables of menu items and submenus. A menu item itself is a two-element table: a
 menu label and a menu command to run. Submenus have `title` keys assigned to string label text.
@@ -8201,84 +8201,84 @@ or their localized equivalent.
 
 ```lua
 -- Append to the right-click context menu.
-table.insert(textadept.menu.context_menu, {'Label', function() ... end})
+table.insert(limoon.menu.context_menu, {'Label', function() ... end})
 -- Append an encoding in the "Buffer > Encoding" menu.
-table.insert(textadept.menu.menubar['Buffer/Encoding'],
+table.insert(limoon.menu.menubar['Buffer/Encoding'],
 	{'UTF-32', function() buffer:set_encoding('UTF-32') end})
 -- Change the "Search > Find" command.
-textadept.menu.menubar['Search/Find'][2] = function() ... end
+limoon.menu.menubar['Search/Find'][2] = function() ... end
 ```
 
-<a id="textadept.menu.context_menu"></a>
-### `textadept.menu.context_menu`
+<a id="limoon.menu.context_menu"></a>
+### `limoon.menu.context_menu`
 
 The default right-click context menu.
 
 Usage:
 
 ```lua
-table.insert(textadept.menu.context_menu, {'Label', function() ... end})
+table.insert(limoon.menu.context_menu, {'Label', function() ... end})
 ```
 
-<a id="textadept.menu.menubar"></a>
-### `textadept.menu.menubar`
+<a id="limoon.menu.menubar"></a>
+### `limoon.menu.menubar`
 
 The default main menubar.
 
 Usage:
 
 ```lua
-table.insert(textadept.menu.menubar['Tools'], {...}) -- Append to the Tools menu
-textadept.menu.menubar['File/New'] --> table for "File > New"
-textadept.menu.menubar['File/New'][2] = function() ... end -- change "File > New" command
+table.insert(limoon.menu.menubar['Tools'], {...}) -- Append to the Tools menu
+limoon.menu.menubar['File/New'] --> table for "File > New"
+limoon.menu.menubar['File/New'][2] = function() ... end -- change "File > New" command
 ```
 
-<a id="textadept.menu.select_command"></a>
-### `textadept.menu.select_command`()
+<a id="limoon.menu.select_command"></a>
+### `limoon.menu.select_command`()
 
 Prompts the user to select a menu command to run.
 
-<a id="textadept.menu.tab_context_menu"></a>
-### `textadept.menu.tab_context_menu`
+<a id="limoon.menu.tab_context_menu"></a>
+### `limoon.menu.tab_context_menu`
 
 The default tabbar context menu.
 
 
 
-<a id="textadept.run"></a>
-## The `textadept.run` module
+<a id="limoon.run"></a>
+## The `limoon.run` module
 
-Execute compile, run, build, test, and project shell commands with Textadept.
+Execute compile, run, build, test, and project shell commands with Li Moon.
 
 The editor prompts you with/for shell commands to run, prints output in real-time, and marks
 any warning and error messages it recognizes.
-Textadept remembers commands on a per-filename and per-directory basis where applicable.
+Li Moon remembers commands on a per-filename and per-directory basis where applicable.
 
-<a id="textadept.run.INDIC_ERROR"></a>
-### `textadept.run.INDIC_ERROR`
+<a id="limoon.run.INDIC_ERROR"></a>
+### `limoon.run.INDIC_ERROR`
 
 The run or compile error indicator number.
 
-<a id="textadept.run.INDIC_WARNING"></a>
-### `textadept.run.INDIC_WARNING`
+<a id="limoon.run.INDIC_WARNING"></a>
+### `limoon.run.INDIC_WARNING`
 
 The run or compile warning indicator number.
 
-<a id="textadept.run.MARK_ERROR"></a>
-### `textadept.run.MARK_ERROR`
+<a id="limoon.run.MARK_ERROR"></a>
+### `limoon.run.MARK_ERROR`
 
 The run or compile error marker number.
 
-<a id="textadept.run.MARK_WARNING"></a>
-### `textadept.run.MARK_WARNING`
+<a id="limoon.run.MARK_WARNING"></a>
+### `limoon.run.MARK_WARNING`
 
 The run or compile warning marker number.
 
-<a id="textadept.run.build"></a>
-### `textadept.run.build`([*dir*])
+<a id="limoon.run.build"></a>
+### `limoon.run.build`([*dir*])
 
 Prompts the user with the command entry to build a project using its shell command from the
-[`textadept.run.build_commands`](#textadept.run.build_commands) table.
+[`limoon.run.build_commands`](#limoon.run.build_commands) table.
 
 Parameters:
 - *dir*:  String path to the project to build. The default value is the current project,
@@ -8286,28 +8286,28 @@ Parameters:
 
 See also: [`events.BUILD_OUTPUT`](#events.BUILD_OUTPUT)
 
-<a id="textadept.run.build_commands"></a>
-### `textadept.run.build_commands`
+<a id="limoon.run.build_commands"></a>
+### `limoon.run.build_commands`
 
 Map of project root paths and "makefiles" to their associated "build" shell command line
 strings or functions that return such strings.
 
 Functions may also return a working directory and process environment table to operate
 in. By default, the working directory is the project's root directory and the environment
-is Textadept's environment.
+is Li Moon's environment.
 
 Usage:
 
 ```lua
-textadept.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
-textadept.run.build_commands['/path/to/project'] = 'make -C src'
+limoon.run.build_commands['CMakeLists.txt'] = 'cmake --build build'
+limoon.run.build_commands['/path/to/project'] = 'make -C src'
 ```
 
-<a id="textadept.run.compile"></a>
-### `textadept.run.compile`([*filename*=buffer.filename])
+<a id="limoon.run.compile"></a>
+### `limoon.run.compile`([*filename*=buffer.filename])
 
 Prompts the user with the command entry to compile a file using an appropriate shell command
-from the [`textadept.run.compile_commands`](#textadept.run.compile_commands) table.
+from the [`limoon.run.compile_commands`](#limoon.run.compile_commands) table.
 
 The shell command is determined from the file's filename, extension, or language, in that order.
 
@@ -8316,8 +8316,8 @@ Parameters:
 
 See also: [`events.COMPILE_OUTPUT`](#events.COMPILE_OUTPUT)
 
-<a id="textadept.run.compile_commands"></a>
-### `textadept.run.compile_commands`
+<a id="limoon.run.compile_commands"></a>
+### `limoon.run.compile_commands`
 
 Map of filenames, file extensions, and lexer names to their associated "compile" shell
 command line strings or functions that return such strings.
@@ -8330,16 +8330,16 @@ Command line strings may have the following macros:
 
 Functions may also return a working directory and process environment table to operate in. By
 default, the working directory is the current file's parent directory and the environment
-is Textadept's environment.
+is Li Moon's environment.
 
 Usage:
 
 ```lua
-textadept.run.compile_commands.c = 'clang -o "%e" "%f"'
+limoon.run.compile_commands.c = 'clang -o "%e" "%f"'
 ```
 
-<a id="textadept.run.goto_error"></a>
-### `textadept.run.goto_error`(*location*)
+<a id="limoon.run.goto_error"></a>
+### `limoon.run.goto_error`(*location*)
 
 Jumps to the source of a recognized compile/run/build/test warning or error in the output
 buffer, displaying an annotation with the warning or error message if possible.
@@ -8348,11 +8348,11 @@ Parameters:
 - *location*:  When `true`, jumps to the next recognized warning/error. When `false`,
 	jumps to the previous one. When a line number, jumps to it's source.
 
-<a id="textadept.run.run"></a>
-### `textadept.run.run`([*filename*=buffer.filename])
+<a id="limoon.run.run"></a>
+### `limoon.run.run`([*filename*=buffer.filename])
 
 Prompts the user with the command entry to run a file using an appropriate shell command
-from the [`textadept.run.run_commands`](#textadept.run.run_commands) table.
+from the [`limoon.run.run_commands`](#limoon.run.run_commands) table.
 
 The shell command is determined from the file's filename, extension, or language, in that order.
 
@@ -8361,8 +8361,8 @@ Parameters:
 
 See also: [`events.RUN_OUTPUT`](#events.RUN_OUTPUT)
 
-<a id="textadept.run.run_commands"></a>
-### `textadept.run.run_commands`
+<a id="limoon.run.run_commands"></a>
+### `limoon.run.run_commands`
 
 Map of filenames, file extensions, and lexer names to their associated "run" shell command
 line strings or functions that return strings.
@@ -8375,23 +8375,23 @@ Command line strings may have the following macros:
 
 Functions may also return a working directory and process environment table to operate in. By
 default, the working directory is the current file's parent directory and the environment
-is Textadept's environment.
+is Li Moon's environment.
 
 Usage:
 
 ```lua
-textadept.run.run_commands.lua = 'lua5.1 "%f"'
+limoon.run.run_commands.lua = 'lua5.1 "%f"'
 ```
 
-<a id="textadept.run.run_in_background"></a>
-### `textadept.run.run_in_background`
+<a id="limoon.run.run_in_background"></a>
+### `limoon.run.run_in_background`
 
 Run shell commands silently in the background.
 
 The default value is `false`.
 
-<a id="textadept.run.run_project"></a>
-### `textadept.run.run_project`([*dir*[, *cmd*]])
+<a id="limoon.run.run_project"></a>
+### `limoon.run.run_project`([*dir*[, *cmd*]])
 
 Prompts the user with the command entry to run a shell command for a project.
 
@@ -8400,50 +8400,50 @@ Parameters:
 	current project, which is determined by either the buffer's filename or the current
 	working directory.
 - *cmd*:  String command to run. If given, the command entry initially shows this
-	command. The default value comes from [`textadept.run.run_project_commands`](#textadept.run.run_project_commands) and *dir*.
+	command. The default value comes from [`limoon.run.run_project_commands`](#limoon.run.run_project_commands) and *dir*.
 
 See also: [`events.RUN_OUTPUT`](#events.RUN_OUTPUT)
 
-<a id="textadept.run.run_project_commands"></a>
-### `textadept.run.run_project_commands`
+<a id="limoon.run.run_project_commands"></a>
+### `limoon.run.run_project_commands`
 
 Map of project root paths to their associated "run" shell command line strings or functions
 that return such strings.
 
 Functions may also return a working directory and process environment table to operate
 in. By default, the working directory is the project's root directory and the environment
-is Textadept's environment.
+is Li Moon's environment.
 
 Usage:
 
 ```lua
-textadept.run.run_project_commands[_HOME] = function()
-	local env = {TEXTADEPT_HOME = _HOME}
+limoon.run.run_project_commands[_HOME] = function()
+	local env = {LIMOON_HOME = _HOME}
 	for setting in os.spawn('env'):read('a'):gmatch('[^\n]+') do env[#env + 1] = setting end
-	return _HOME .. '/build/textadept -f -n', '/tmp', env -- run test instance of Textadept
+	return _HOME .. '/build/limoon -f -n', '/tmp', env -- run test instance of Li Moon
 end
 ```
 
-<a id="textadept.run.run_without_prompt"></a>
-### `textadept.run.run_without_prompt`
+<a id="limoon.run.run_without_prompt"></a>
+### `limoon.run.run_without_prompt`
 
 Run shell commands without prompting.
 
 The default value is `false`.
 
-<a id="textadept.run.stop"></a>
-### `textadept.run.stop`()
+<a id="limoon.run.stop"></a>
+### `limoon.run.stop`()
 
 Stops the currently running process, if any.
 
 If there is more than one running process, the user is prompted to select the process to stop.
 Processes in the list are sorted from longest lived at the top to shortest lived on the bottom.
 
-<a id="textadept.run.test"></a>
-### `textadept.run.test`([*dir*])
+<a id="limoon.run.test"></a>
+### `limoon.run.test`([*dir*])
 
 Prompts the user with the command entry to run tests for a project using its shell command
-from the [`textadept.run.test_commands`](#textadept.run.test_commands) table.
+from the [`limoon.run.test_commands`](#limoon.run.test_commands) table.
 
 Parameters:
 - *dir*:  String path to the project to run tests for. The default value is the
@@ -8452,35 +8452,35 @@ Parameters:
 
 See also: [`events.TEST_OUTPUT`](#events.TEST_OUTPUT)
 
-<a id="textadept.run.test_commands"></a>
-### `textadept.run.test_commands`
+<a id="limoon.run.test_commands"></a>
+### `limoon.run.test_commands`
 
 Map of project root paths to their associated "test" shell command line strings or functions
 that return such strings.
 
 Functions may also return a working directory and process environment table to operate
 in. By default, the working directory is the project's root directory and the environment
-is Textadept's environment.
+is Li Moon's environment.
 
 Usage:
 
 ```lua
-textadept.run.test_commands['/path/to/project'] = 'pytest'
+limoon.run.test_commands['/path/to/project'] = 'pytest'
 ```
 
 
 
-<a id="textadept.session"></a>
-## The `textadept.session` module
+<a id="limoon.session"></a>
+## The `limoon.session` module
 
-Session support for Textadept.
+Session support for Li Moon.
 
-<a id="textadept.session.load"></a>
-### `textadept.session.load`([*filename*])
+<a id="limoon.session.load"></a>
+### `limoon.session.load`([*filename*])
 
 Loads a session file.
 
-Textadept restores split views, opened buffers, cursor information, recent files, and bookmarks.
+Li Moon restores split views, opened buffers, cursor information, recent files, and bookmarks.
 
 Parameters:
 - *filename*:  String absolute path to the session file to load. If `nil`, the user
@@ -8488,15 +8488,15 @@ Parameters:
 
 See also: [`events.SESSION_LOAD`](#events.SESSION_LOAD)
 
-<a id="textadept.session.save"></a>
-### `textadept.session.save`(*filename*)
+<a id="limoon.session.save"></a>
+### `limoon.session.save`(*filename*)
 
 Saves the session to a file.
 
-Textadept saves split views, opened buffers, cursor information, recent files, and bookmarks.
+Li Moon saves split views, opened buffers, cursor information, recent files, and bookmarks.
 
 The editor will save the current session to that file again before quitting unless
-[`textadept.session.save_on_quit`](#textadept.session.save_on_quit) is `false`.
+[`limoon.session.save_on_quit`](#limoon.session.save_on_quit) is `false`.
 
 Parameters:
 - *filename*: Optional absolute path to the session file to save. If `nil`, the user
@@ -8504,20 +8504,20 @@ Parameters:
 
 See also: [`events.SESSION_SAVE`](#events.SESSION_SAVE)
 
-<a id="textadept.session.save_on_quit"></a>
-### `textadept.session.save_on_quit`
+<a id="limoon.session.save_on_quit"></a>
+### `limoon.session.save_on_quit`
 
 Save the session when quitting.
 
 The default value is `true` unless the user passed the command line switch `-n` or `--nosession`
-to Textadept.
+to Li Moon.
 
 
 
-<a id="textadept.snippets"></a>
-## The `textadept.snippets` module
+<a id="limoon.snippets"></a>
+## The `limoon.snippets` module
 
-Snippets for Textadept.
+Snippets for Li Moon.
 
 
 ### Snippets Overview
@@ -8527,9 +8527,9 @@ either:
 - A string trigger word and its snippet text.
 - A string lexer name with a table of trigger words and snippet texts.
 
-When searching for a snippet to insert based on a trigger word, Textadept considers snippets
+When searching for a snippet to insert based on a trigger word, Li Moon considers snippets
 in the current lexer to have priority, followed by the ones in the global table. This means
-if there are two snippets with the same trigger word, Textadept inserts the one specific to
+if there are two snippets with the same trigger word, Li Moon inserts the one specific to
 the current lexer, not the global one.
 
 ### Snippet Syntax
@@ -8545,7 +8545,7 @@ literally, prefix them with '\\' (e.g. "\\$" inserts a literal '$').
 
 #### Variables
 
-Variables are defined in the [`textadept.snippets.variables`](#textadept.snippets.variables) table. Textadept expands
+Variables are defined in the [`limoon.snippets.variables`](#limoon.snippets.variables) table. Li Moon expands
 them in place using the '$' prefix (e.g. `$TM_SELECTED_TEXT` references the currently
 selected text). You can provide default values for empty or undefined variables using the
 "${*variable*:*default*}" syntax (e.g. `${TM_SELECTED_TEXT:no text selected}`). The values of
@@ -8556,7 +8556,7 @@ placeholder transforms below describes this syntax in more detail.
 #### Interpolated Shell Code
 
 Snippets can execute shell code enclosed within '\`' characters, and insert any standard output
-(stdout) emitted by that code. Textadept omits a trailing newline if it exists. For example,
+(stdout) emitted by that code. Li Moon omits a trailing newline if it exists. For example,
 the following snippet evaluates (on macOS and Linux) the currently selected arithmetic
 expression and replaces it with the result:
 
@@ -8574,7 +8574,7 @@ and time:
 snippets.date = '```os.date()```'
 ```
 
-Lua code is executed within Textadept's Lua environment, with the addition of snippet
+Lua code is executed within Li Moon's Lua environment, with the addition of snippet
 variables available as global variables (e.g. `TM_SELECTED_TEXT` exists as a global).
 
 #### Placeholders
@@ -8608,7 +8608,7 @@ for ${1:i} = ${2:1}, $3 do
 end]]
 ```
 
-Multiline snippets should be indented with tabs. Textadept will apply the buffer's current
+Multiline snippets should be indented with tabs. Li Moon will apply the buffer's current
 indentation settings to the snippet upon insertion.
 
 Placeholders may be nested inside one another. For example, the following snippet inserts
@@ -8627,7 +8627,7 @@ reserved to indicate the end of the placeholder. Use "\\}" to represent a litera
 
 ##### Mirrors
 
-Multiple placeholders can share the same numeric index. When this happens, Textadept visits
+Multiple placeholders can share the same numeric index. When this happens, Li Moon visits
 the one with a default value if it exists. Otherwise, the editor visits the first one it
 finds. As you type text into a placeholder, any other placeholders with the same index mirror
 the typed text. For example, the following snippet inserts beginning and ending HTML/XML
@@ -8656,7 +8656,7 @@ may contain any of the following:
 - "${*m*:/upcase}", "${*m*:/downcase}", and "${*m*:/capitalize}" sequences, which
 	represent the uppercase, lowercase, and capitalized forms, respectively, of the
 	content of the *m*th capture. You can define your own transformation function in
-	[`textadept.snippets.transform_methods`](#textadept.snippets.transform_methods).
+	[`limoon.snippets.transform_methods`](#limoon.snippets.transform_methods).
 - A "${*m*:?*if*:*else*}" sequence, which inserts *if* if the content of capture *m* is
 	non-empty. Otherwise, *else* is used.
 - A "${*m*:+*if*}" sequence, which inserts *if* if the content of capture *m* is
@@ -8709,31 +8709,31 @@ You can migrate your snippets using the following steps:
 	regex and replacement should work for non-nested placeholders: `%(\d+)\(([^)]+)\)` and
 	`${\1:\2}`.
 3. Replace *n*-based Lua and Shell transforms with [placeholder transforms](#transforms). You
-	can add your own transform function to [`textadept.snippets.transform_methods`](#textadept.snippets.transform_methods) if you
+	can add your own transform function to [`limoon.snippets.transform_methods`](#limoon.snippets.transform_methods) if you
 	need to.
 4. Replace bare Lua and Shell transforms with interpolated Lua and shell code.
 5. Substitute "%*n*{*items*}" choice placeholders with "${*n*\|*items*\|}".
 
 
-<a id="textadept.snippets.INDIC_PLACEHOLDER"></a>
-### `textadept.snippets.INDIC_PLACEHOLDER`
+<a id="limoon.snippets.INDIC_PLACEHOLDER"></a>
+### `limoon.snippets.INDIC_PLACEHOLDER`
 
 The snippet placeholder indicator number.
 
-<a id="textadept.snippets.active"></a>
-### `textadept.snippets.active`
+<a id="limoon.snippets.active"></a>
+### `limoon.snippets.active`
 
 Whether or not a snippet is active.
 
-<a id="textadept.snippets.cancel"></a>
-### `textadept.snippets.cancel`()
+<a id="limoon.snippets.cancel"></a>
+### `limoon.snippets.cancel`()
 
 Cancels the active snippet, removing all inserted text.
 
 Returns: `false` if no snippet is active; `nil` otherwise.
 
-<a id="textadept.snippets.insert"></a>
-### `textadept.snippets.insert`([*text*])
+<a id="limoon.snippets.insert"></a>
+### `limoon.snippets.insert`([*text*])
 
 Inserts a snippet or, if a snippet is already active, goes to that snippet's next placeholder.
 
@@ -8745,8 +8745,8 @@ Returns: `false` if no action was taken; `nil` otherwise.
 
 See also: [`buffer.word_chars`](#buffer.word_chars)
 
-<a id="textadept.snippets.paths"></a>
-### `textadept.snippets.paths`
+<a id="limoon.snippets.paths"></a>
+### `limoon.snippets.paths`
 
 Table of directory paths to look for snippet files in.
 
@@ -8758,21 +8758,21 @@ file is inserted as a snippet.
 Note: If a directory has multiple snippets with the same trigger, the snippet chosen for
 insertion is not defined and may not be constant.
 
-<a id="textadept.snippets.previous"></a>
-### `textadept.snippets.previous`()
+<a id="limoon.snippets.previous"></a>
+### `limoon.snippets.previous`()
 
 Jumps back to the previous snippet placeholder, reverting any changes from the current one.
 
 Returns: `false` if no snippet is active; `nil` otherwise.
 
-<a id="textadept.snippets.select"></a>
-### `textadept.snippets.select`()
+<a id="limoon.snippets.select"></a>
+### `limoon.snippets.select`()
 
 Prompts the user to select a snippet to insert from a list of global and language-specific
 snippets.
 
-<a id="textadept.snippets.transform_methods"></a>
-### `textadept.snippets.transform_methods`
+<a id="limoon.snippets.transform_methods"></a>
+### `limoon.snippets.transform_methods`
 
 Map of format method names to their functions for text captured in placeholder transforms.
 
@@ -8781,8 +8781,8 @@ Fields:
 - `downcase`:  Lowercases the captured text.
 - `capitalize`:  Capitalizes the captured text.
 
-<a id="textadept.snippets.variables"></a>
-### `textadept.snippets.variables`
+<a id="limoon.snippets.variables"></a>
+### `limoon.snippets.variables`
 
 Map of snippet variable names to string values or functions that return string values.
 
@@ -8804,7 +8804,7 @@ Fields:
 <a id="ui"></a>
 ## The `ui` module
 
-Utilities for interacting with Textadept's user interface.
+Utilities for interacting with Li Moon's user interface.
 
 <a id="ui.SHOW_ALL_TABS"></a>
 ### `ui.SHOW_ALL_TABS`
@@ -8830,14 +8830,14 @@ The text displayed in the buffer statusbar.
 The buffer's context menu, a [`ui.menu()`](#ui.menu).
 
 This is a low-level field. You probably want to use the higher-level
-[`textadept.menu.context_menu`](#textadept.menu.context_menu).
+[`limoon.menu.context_menu`](#limoon.menu.context_menu).
 
 <a id="ui.get_clipboard_text"></a>
 ### `ui.get_clipboard_text`([*internal*=false])
 
 Returns the text on the clipboard.
 
-The terminal version relies on [`textadept.clipboard.paste_command`](#textadept.clipboard.paste_command) to retrieve the contents
+The terminal version relies on [`limoon.clipboard.paste_command`](#limoon.clipboard.paste_command) to retrieve the contents
 of the system clipboard, falling back on its own internal clipboard if necessary.
 
 Parameters:
@@ -8848,7 +8848,7 @@ See also: [`buffer.copy_text`](#buffer.copy_text)
 <a id="ui.get_split_table"></a>
 ### `ui.get_split_table`()
 
-Returns a split table that contains Textadept's current split view structure.
+Returns a split table that contains Li Moon's current split view structure.
 
 This is primarily used in session saving.
 
@@ -8892,7 +8892,7 @@ See also: [`events.VIEW_BEFORE_SWITCH`](#events.VIEW_BEFORE_SWITCH), [`events.VI
 <a id="ui.maximized"></a>
 ### `ui.maximized`
 
-Whether or not Textadept's window is maximized.
+Whether or not Li Moon's window is maximized.
 
 This field is always `false` in the terminal version.
 
@@ -8901,8 +8901,8 @@ This field is always `false` in the terminal version.
 
 Low-level function for creating a menu.
 
-You probably want to use the higher-level [`textadept.menu.menubar`](#textadept.menu.menubar),
-[`textadept.menu.context_menu`](#textadept.menu.context_menu), or [`textadept.menu.tab_context_menu`](#textadept.menu.tab_context_menu) tables.
+You probably want to use the higher-level [`limoon.menu.menubar`](#limoon.menu.menubar),
+[`limoon.menu.context_menu`](#limoon.menu.context_menu), or [`limoon.menu.tab_context_menu`](#limoon.menu.tab_context_menu) tables.
 
 Parameters:
 - *menu_table*:  Ordered list of tables with a string menu item, integer menu ID, and
@@ -8925,7 +8925,7 @@ ui.menu{ {'_New', 1, string.byte('n'), view.MOD_CTRL} } -- 'Ctrl+N'
 
 A table of menus defining a menubar.
 (Write-only).
-This is a low-level field. You probably want to use the higher-level [`textadept.menu.menubar`](#textadept.menu.menubar).
+This is a low-level field. You probably want to use the higher-level [`limoon.menu.menubar`](#limoon.menu.menubar).
 
 <a id="ui.output"></a>
 ### `ui.output`(...)
@@ -9017,7 +9017,7 @@ ui.print_to('[Typed Buffer]', message)
 <a id="ui.size"></a>
 ### `ui.size`
 
-A table that contains the width and height pixel values of Textadept's window.
+A table that contains the width and height pixel values of Li Moon's window.
 
 Usage:
 
@@ -9040,9 +9040,9 @@ The text displayed in the statusbar.
 <a id="ui.suspend"></a>
 ### `ui.suspend`()
 
-Suspends Textadept.
+Suspends Li Moon.
 
-This only works in the terminal version. By default, Textadept ignores ^Z suspend signals from
+This only works in the terminal version. By default, Li Moon ignores ^Z suspend signals from
 the terminal.
 
 Usage:
@@ -9069,7 +9069,7 @@ Buffers in the same project as the current buffer are shown with relative paths.
 The context menu for the buffer's tab, a [`ui.menu()`](#ui.menu).
 
 This is a low-level field. You probably want to use the higher-level
-[`textadept.menu.tab_context_menu`](#textadept.menu.tab_context_menu).
+[`limoon.menu.tab_context_menu`](#limoon.menu.tab_context_menu).
 
 <a id="ui.tabs"></a>
 ### `ui.tabs`
@@ -9083,7 +9083,7 @@ buffer is open.
 <a id="ui.title"></a>
 ### `ui.title`
 
-The title text of Textadept's window.
+The title text of Li Moon's window.
 (Write-only)
 
 <a id="ui.update"></a>
@@ -9091,14 +9091,14 @@ The title text of Textadept's window.
 
 Processes pending UI events, including reading from spawned processes.
 
-This function is primarily used in Textadept's own unit tests.
+This function is primarily used in Li Moon's own unit tests.
 
 
 
 <a id="ui.command_entry"></a>
 ## The `ui.command_entry` module
 
-Textadept's Command Entry.
+Li Moon's Command Entry.
 
 It supports multiple modes that each have their own functionality (such as running Lua code
 and filtering text through shell commands) and history.
@@ -9150,7 +9150,7 @@ Parameters:
 - *keys*:  Table of key bindings to respond to. This is in addition to the basic
 	editing and movement keys defined in [`ui.command_entry.editing_keys`](#ui.command_entry.editing_keys). `Esc` and `Enter`
 	are automatically defined to cancel and finish the command entry, respectively. The
-	command entry does not respond to Textadept's default key bindings.
+	command entry does not respond to Li Moon's default key bindings.
 - *lang*:  String lexer name to use for syntax highlighting command entry text.
 - *initial_text*:  String text to initially show. The default value comes from
 	the command history for *f*.
@@ -9327,7 +9327,7 @@ Returns: string filename, or `nil` if the user canceled the dialog
 <a id="ui.find"></a>
 ## The `ui.find` module
 
-Textadept's Find & Replace pane.
+Li Moon's Find & Replace pane.
 
 <a id="ui.find.INDIC_FIND"></a>
 ### `ui.find.INDIC_FIND`

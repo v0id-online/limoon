@@ -149,7 +149,7 @@ function tmpfile:__close() self:delete() end
 -- @param[opt=''] ext String file extension to use for the temporary file. The default is no file
 --	extension.
 -- @param[opt=''] contents String contents of the temporary file.
--- @param[opt=false] open Open the temporary file in Textadept.
+-- @param[opt=false] open Open the temporary file in Li Moon.
 -- @return to-be-closed temporary file that will be deleted
 -- @usage local f<close> = tmpfile('.lua')
 function M.tmpfile(ext, contents, open)

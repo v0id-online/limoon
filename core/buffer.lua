@@ -1,8 +1,8 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- A Textadept buffer or view object.
+--- A Li Moon buffer or view object.
 --
--- Any buffer and view fields set on startup (e.g. in *~/.textadept/init.lua*) will be the
+-- Any buffer and view fields set on startup (e.g. in *~/.limoon/init.lua*) will be the
 -- default, initial values for all buffers and views.
 --
 -- ### Contents
@@ -43,7 +43,7 @@ events.connect(events.MODIFIED, function(_, mod, _, length)
 end)
 
 --- Buffer and View Introduction.
--- Internally, Textadept uses the [Scintilla][] editing component for editing text. It breaks
+-- Internally, Li Moon uses the [Scintilla][] editing component for editing text. It breaks
 -- up Scintilla's monolithic API into two parts: buffers and views. Buffers are responsible for
 -- text editing, selections, and navigation. Views are responsible for visual things like text
 -- and selection display, margins, markers, and highlights. This is a best-effort attempt to
@@ -55,7 +55,7 @@ end)
 -- and vice-versa.
 --
 -- Only one buffer and one view at a time is considered "current" (i.e. has focus). While
--- Textadept allows you to work with non-current buffers, you should only work with `buffer`
+-- Li Moon allows you to work with non-current buffers, you should only work with `buffer`
 -- unless you know what you are doing.  For example, `buffer:select_all()` will visually
 -- select all text in the current buffer, but `buf:select_all()` where `buf ~= buffer` will
 -- not make a visible selection, even if `buf` is visible in another view. Despite this,
@@ -112,7 +112,7 @@ end)
 --- Saves the buffer to its file.
 -- If the buffer does not have a file, the user is prompted for one.
 -- @return `true` if the file was saved; `nil` otherwise.
--- @see textadept.editing.strip_trailing_spaces
+-- @see limoon.editing.strip_trailing_spaces
 -- @see io.ensure_final_newline
 -- @see io.save_all_files
 -- @see events.FILE_BEFORE_SAVE
@@ -230,7 +230,7 @@ end)
 --- Moves the caret to the beginning of a line and scrolls it into view, even if that line
 -- is hidden.
 -- @param line Line number to go to.
--- @see textadept.editing.goto_line
+-- @see limoon.editing.goto_line
 -- @function goto_line
 
 --- Moves the caret up one line.
@@ -503,7 +503,7 @@ end)
 -- boundaries.
 -- @see set_target_range
 -- @see target_from_selection
--- @see textadept.editing.join_lines
+-- @see limoon.editing.join_lines
 -- @function lines_join
 
 --- Undo and Redo.
@@ -549,7 +549,7 @@ end)
 -- @field undo_collection
 
 --- Employ the Clipboard.
--- The terminal version relies on the commands defined in `textadept.clipboard` in order to
+-- The terminal version relies on the commands defined in `limoon.clipboard` in order to
 -- interact with the system clipboard, or else it uses its own internal clipboard.
 -- @section
 
@@ -594,7 +594,7 @@ end)
 
 --- Pastes the clipboard's contents into the buffer, replacing any selected text according to
 -- `buffer.multi_paste`.
--- @see textadept.editing.paste_reindent
+-- @see limoon.editing.paste_reindent
 -- @see ui.get_clipboard_text
 -- @function paste
 
@@ -811,14 +811,14 @@ end)
 --- Adds to the set of selections the next occurrence of the main selection within the target
 -- range, makes that occurrence the new main selection, and scrolls it into view.
 -- If there is no selected text, the current word is used.
--- @see textadept.editing.select_word
+-- @see limoon.editing.select_word
 -- @see buffer.set_target_range
 -- @see buffer.target_whole_document
 -- @function multiple_select_add_next
 
 --- Adds to the set of selections each occurrence of the main selection within the target range.
 -- If there is no selected text, the current word is used.
--- @see textadept.editing.select_word
+-- @see limoon.editing.select_word
 -- @see buffer.set_target_range
 -- @see buffer.target_whole_document
 -- @function multiple_select_add_each
@@ -1967,7 +1967,7 @@ end)
 -- @table view.indic_under
 
 --- Map of indicator numbers to their hover indicator styles.
--- Textadept draws an indicator's hover style when the mouse cursor is hovering over that
+-- Li Moon draws an indicator's hover style when the mouse cursor is hovering over that
 -- indicator, or when the caret is within the indicator.
 -- The default values are their respective indicator styles; there is no visible hover effect.
 -- @see view.styles
@@ -2031,8 +2031,8 @@ end)
 -- @param items String list of completions to show, separated by `buffer.auto_c_separator`
 --	characters. The sort order of this list (`buffer.auto_c_order`) must have already
 --	been specified.
--- @see textadept.editing.autocompleters
--- @see textadept.editing.autocomplete
+-- @see limoon.editing.autocompleters
+-- @see limoon.editing.autocomplete
 -- @function auto_c_show
 
 --- Returns a unique user list identifier number for use with `buffer:user_list_show()`.
@@ -2436,7 +2436,7 @@ end)
 
 --- Use tabs instead of spaces in indentation.
 -- Changing this does not convert any of the buffer's existing indentation. Use
--- `textadept.editing.convert_indentation()` to do so.
+-- `limoon.editing.convert_indentation()` to do so.
 -- The default value is `true`.
 -- @field use_tabs
 
@@ -2450,7 +2450,7 @@ end)
 
 --- Indent text when tabbing within indentation.
 -- The default value is `true`.
--- @see textadept.editing.auto_indent
+-- @see limoon.editing.auto_indent
 -- @field tab_indents
 
 --- Un-indent text when backspacing within indentation.
@@ -2641,7 +2641,7 @@ end)
 -- @section
 
 --- Sets the view's color theme.
--- User themes in *~/.textadept/themes/* override Textadept's default themes when they have
+-- User themes in *~/.limoon/themes/* override Li Moon's default themes when they have
 -- the same name.
 -- @param[opt] name String theme name. If it contains slashes, it is assumed to be an absolute
 --	path to a theme. The default value is either 'light' or 'dark', depending on whether
@@ -2927,7 +2927,7 @@ end)
 -- @field view.caret_line_highlight_subline
 
 --- Always show the caret line, even when the view is not in focus.
--- The default value is `true`, but only for the current view, and only while Textadept has focus.
+-- The default value is `true`, but only for the current view, and only while Li Moon has focus.
 -- @field view.caret_line_visible_always
 
 --- How the caret line is drawn.
@@ -3464,7 +3464,7 @@ end)
 -- @section
 
 --- Sets the buffer's lexer.
--- @param[opt] name String lexer name to set. If `nil`, Textadept tries to auto-detect the
+-- @param[opt] name String lexer name to set. If `nil`, Li Moon tries to auto-detect the
 --	buffer's lexer.
 -- @see lexer.detect_extensions
 -- @see lexer.detect_patterns
@@ -3535,7 +3535,7 @@ end)
 -- @section
 
 --- The buffer's tab label in the tab bar. (Write-only)
--- Textadept sets this automatically based on the buffer's filename or type, and its save status.
+-- Li Moon sets this automatically based on the buffer's filename or type, and its save status.
 -- @field tab_label
 
 --- Whether or not the buffer is read-only.

@@ -9,18 +9,18 @@
 --	pass to it. `$PATH` or `%PATH%` is searched for program names. On Windows, this entire
 --	string is passed to *cmd.exe*: `%COMSPEC% /c [cmd]`.
 -- @param[opt] cwd String current working directory (cwd) for the child process. When omitted,
---	Textadept's cwd is used.
+--	Li Moon's cwd is used.
 -- @param[opt] env Table of environment variables for the child process. It can be a table of
 --	key-value string pairs, a table of "*key*=*value*" strings, or a combination of the
---	two. When omitted, Textadept's environment is used. In order to create a new environment
---	that inherits from Textadept's, you can: spawn `env` on macOS and Linux/BSD, or `set`
+--	two. When omitted, Li Moon's environment is used. In order to create a new environment
+--	that inherits from Li Moon's, you can: spawn `env` on macOS and Linux/BSD, or `set`
 --	on Windows; iterate over output matches of "key=value" pairs (one per line); assign
 --	them to the new environment table; add your own entries; and finally use that table here.
 -- @param[opt] stdout_cb Function that accepts a string parameter for a chunk of standard output
---	read from the child. Textadept reads stdout in 1KB or 0.5KB chunks (depending on the
+--	read from the child. Li Moon reads stdout in 1KB or 0.5KB chunks (depending on the
 --	platform), or however much data is available at the time.
 -- @param[optchain] stderr_cb Function that accepts a string parameter for a chunk of standard
---	error read from the child. Textadept reads stderr in 1KB or 0.5kB chunks (depending on
+--	error read from the child. Li Moon reads stderr in 1KB or 0.5kB chunks (depending on
 --	the platform), or however much data is available at the time.
 -- @param[optchain] exit_cb Function to call when the child process finishes. The child's exit
 --	status is passed as an argument.
@@ -46,7 +46,7 @@ function proc:wait() end
 -- This may block until stdout is available for reading.
 --
 -- If the process has a stdout callback function, you must manually read all stdout available
--- before Textadept can call that callback again.
+-- before Li Moon can call that callback again.
 -- @param[opt='l'] arg Argument similar to those in Lua's `io.read()`. In summary:
 --	- *n*: Read *n* number of bytes, or `nil` at end-of-file (EOF).
 --	- "a": Read all output, or an empty string at EOF.

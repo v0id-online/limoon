@@ -1,4 +1,4 @@
--- Rosé Pine theme for Textadept (rose-pine)
+-- Rosé Pine theme for Li Moon (rose-pine)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x241719 -- #191724

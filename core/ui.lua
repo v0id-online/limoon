@@ -1,12 +1,12 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Utilities for interacting with Textadept's user interface.
+--- Utilities for interacting with Li Moon's user interface.
 -- @module ui
 local ui = ui
 
 --- Option for `ui.tabs` that always shows the tab bar, even if only one buffer is open.
 ui.SHOW_ALL_TABS = 2 -- ui.tabs options must be greater than 1
--- ui.tabs is now supported via Notcurses tabbar (n_textadept.c)
+-- ui.tabs is now supported via Notcurses tabbar (n_limoon.c)
 
 --- List buffers by their z-order (most recently viewed to least recently viewed) in the switcher
 -- dialog, instead of listing buffers in their left-to-right tab order.
@@ -226,11 +226,11 @@ events.connect(events.TAB_CLOSE_CLICKED, function(index)
 	buffer:close()
 end)
 
---- Sets the title of the Textadept window to the active buffer's filename and indicates whether
+--- Sets the title of the Li Moon window to the active buffer's filename and indicates whether
 -- the buffer is "clean" or "dirty".
 local function set_title()
 	local filename, basename = get_display_names(buffer)
-	ui.title = string.format('%s %s Textadept (%s)', basename, buffer.modify and '*' or '-', filename)
+	ui.title = string.format('%s %s Li Moon (%s)', basename, buffer.modify and '*' or '-', filename)
 end
 events.connect(events.SAVE_POINT_REACHED, set_title)
 events.connect(events.SAVE_POINT_LEFT, set_title)
@@ -393,17 +393,17 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 
 -- The fields below were defined in C.
 
---- The title text of Textadept's window. (Write-only)
+--- The title text of Li Moon's window. (Write-only)
 -- @field title
 
 --- The buffer's context menu, a `ui.menu()`.
 -- This is a low-level field. You probably want to use the higher-level
--- `textadept.menu.context_menu`.
+-- `limoon.menu.context_menu`.
 -- @field context_menu
 
 --- The context menu for the buffer's tab, a `ui.menu()`.
 -- This is a low-level field. You probably want to use the higher-level
--- `textadept.menu.tab_context_menu`.
+-- `limoon.menu.tab_context_menu`.
 -- @field tab_context_menu
 
 --- Whether or not the statusbar is visible.
@@ -416,7 +416,7 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 --- The text displayed in the buffer statusbar.
 -- @field buffer_statusbar_text
 
---- Whether or not Textadept's window is maximized.
+--- Whether or not Li Moon's window is maximized.
 -- This field is always `false` in the terminal version.
 -- @field maximized
 
@@ -429,23 +429,23 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- The tables below were defined in C.
 
 --- A table of menus defining a menubar. (Write-only).
--- This is a low-level field. You probably want to use the higher-level `textadept.menu.menubar`.
+-- This is a low-level field. You probably want to use the higher-level `limoon.menu.menubar`.
 -- @table menubar
 
---- A table that contains the width and height pixel values of Textadept's window.
+--- A table that contains the width and height pixel values of Li Moon's window.
 -- @usage ui.size = {1000, 625} -- resize window
 -- @table size
 
 -- The functions below are Lua C functions.
 
 --- Returns the text on the clipboard.
--- The terminal version relies on `textadept.clipboard.paste_command` to retrieve the contents
+-- The terminal version relies on `limoon.clipboard.paste_command` to retrieve the contents
 -- of the system clipboard, falling back on its own internal clipboard if necessary.
 -- @param[opt=false] internal Get the terminal version's internal clipboard text.
 -- @see buffer.copy_text
 -- @function get_clipboard_text
 
---- Returns a split table that contains Textadept's current split view structure.
+--- Returns a split table that contains Li Moon's current split view structure.
 -- This is primarily used in session saving.
 -- @return table of split views. Each split view entry is a table with 4 fields: `1`, `2`,
 --	`vertical`, and `size`. `1` and `2` have values of either nested split view entries or
@@ -462,8 +462,8 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- @function goto_view
 
 --- Low-level function for creating a menu.
--- You probably want to use the higher-level `textadept.menu.menubar`,
--- `textadept.menu.context_menu`, or `textadept.menu.tab_context_menu` tables.
+-- You probably want to use the higher-level `limoon.menu.menubar`,
+-- `limoon.menu.context_menu`, or `limoon.menu.tab_context_menu` tables.
 -- @param menu_table Ordered list of tables with a string menu item, integer menu ID, and
 --	optional keycode and modifier mask. The latter two are used to display key shortcuts in
 --	the menu. '&' characters are treated as a menu mnemonics in Qt ('_' is the equivalent
@@ -482,11 +482,11 @@ events.connect(events.INITIALIZED, function() events.disconnect(events.ERROR, te
 -- @function popup_menu
 
 --- Processes pending UI events, including reading from spawned processes.
--- This function is primarily used in Textadept's own unit tests.
+-- This function is primarily used in Li Moon's own unit tests.
 -- @function update
 
---- Suspends Textadept.
--- This only works in the terminal version. By default, Textadept ignores ^Z suspend signals from
+--- Suspends Li Moon.
+-- This only works in the terminal version. By default, Li Moon ignores ^Z suspend signals from
 -- the terminal.
 -- @usage keys['ctrl+z'] = ui.suspend
 -- @see events.SUSPEND

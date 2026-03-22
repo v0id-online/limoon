@@ -51,7 +51,7 @@ local function load_props()
 	return buffer_props, view_props
 end
 
---- Returns Textadept file *filename* relative to _HOME, with slashes.
+--- Returns Li Moon file *filename* relative to _HOME, with slashes.
 local function file(filename) return ((_HOME .. '/' .. filename):gsub('\\', '/')) end
 
 -- Valid usages to ignore.
@@ -64,17 +64,17 @@ local exceptions = {
 	}, [file('core/lfs_ext.lua')] = {'filter_object.new'}, --
 	[file('core/ui.lua')] = {'view:document_end'}, --
 	[file('core/view.lua')] = {'env.view'},
-	[file('modules/textadept/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
-	[file('modules/textadept/editing.lua')] = {'proc:close'}, --
-	[file('modules/textadept/find.lua')] = {
+	[file('modules/limoon/clipboard.lua')] = {'proc:close', 'orig.copy_text'}, --
+	[file('modules/limoon/editing.lua')] = {'proc:close'}, --
+	[file('modules/limoon/find.lua')] = {
 		'ff_buffer.line_end_position', 'ff_buffer.line_count', 'ff_buffer.indicator_current',
 		'ff_buffer:indicator_fill_range'
 	}, --
-	[file('modules/textadept/history.lua')] = {'record.filename', 'record.column'},
-	[file('modules/textadept/session.lua')] = {
+	[file('modules/limoon/history.lua')] = {'record.filename', 'record.column'},
+	[file('modules/limoon/session.lua')] = {
 		'buf.filename', 'buf.anchor', 'buf.current_pos', 'split.buffer'
 	}, --
-	[file('modules/textadept/snippets.lua')] = {'snippet.new', 'placeholder.length', 'ph.length'}
+	[file('modules/limoon/snippets.lua')] = {'snippet.new', 'placeholder.length', 'ph.length'}
 }
 
 --- Looks for use of buffer and view properties, and returns a list of invalid usages.
@@ -132,7 +132,7 @@ end
 local buffer_props, view_props = load_props()
 
 local stock_files = {}
-local filter = {'*.lua', 'core/*.lua', 'modules/textadept/*.lua', '!**/*_test.lua'}
+local filter = {'*.lua', 'core/*.lua', 'modules/limoon/*.lua', '!**/*_test.lua'}
 for filename in lfs.walk(_HOME, filter) do stock_files[#stock_files + 1] = filename:gsub('\\', '/') end
 table.sort(stock_files)
 

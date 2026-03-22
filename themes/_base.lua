@@ -103,9 +103,9 @@ return function(view, colors, styles)
   end
 
   -- Markers
-  view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.func
-  view.marker_back[textadept.run.MARK_WARNING]        = colors.num
-  view.marker_back[textadept.run.MARK_ERROR]          = colors.err
+  view.marker_back[limoon.bookmarks.MARK_BOOKMARK] = colors.func
+  view.marker_back[limoon.run.MARK_WARNING]        = colors.num
+  view.marker_back[limoon.run.MARK_ERROR]          = colors.err
   view.marker_fore[view.MARKNUM_HISTORY_MODIFIED]     = colors.num
   view.marker_back[view.MARKNUM_HISTORY_MODIFIED]     = colors.num
   view.marker_fore[view.MARKNUM_HISTORY_SAVED]        = colors.str
@@ -120,11 +120,11 @@ return function(view, colors, styles)
   view.indic_fore[ui.find.INDIC_FIND]          = colors.find
   view.indic_alpha[ui.find.INDIC_FIND]         = 100
   view.indic_outline_alpha[ui.find.INDIC_FIND] = 200
-  view.indic_fore[textadept.editing.INDIC_HIGHLIGHT]    = colors.func
-  view.indic_alpha[textadept.editing.INDIC_HIGHLIGHT]   = 0x80
-  view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.fg
-  view.indic_fore[textadept.run.INDIC_WARNING]          = colors.num
-  view.indic_fore[textadept.run.INDIC_ERROR]            = colors.err
+  view.indic_fore[limoon.editing.INDIC_HIGHLIGHT]    = colors.func
+  view.indic_alpha[limoon.editing.INDIC_HIGHLIGHT]   = 0x80
+  view.indic_fore[limoon.snippets.INDIC_PLACEHOLDER] = colors.fg
+  view.indic_fore[limoon.run.INDIC_WARNING]          = colors.num
+  view.indic_fore[limoon.run.INDIC_ERROR]            = colors.err
 
   -- Call tips & long lines
   view.call_tip_fore_hlt = colors.func

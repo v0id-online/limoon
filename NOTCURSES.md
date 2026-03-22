@@ -1,7 +1,7 @@
-# Textadept — Notcurses Frontend
+# Li Moon — Notcurses Frontend
 
 This document explains the architecture, dependencies, build process, and internal
-workings of the Textadept fork that uses **Notcurses** as its terminal backend,
+workings of the Li Moon fork that uses **Notcurses** as its terminal backend,
 replacing the original ncurses/CDK backend.
 
 ---
@@ -24,7 +24,7 @@ replacing the original ncurses/CDK backend.
 
 ## 1. Overview
 
-The original Textadept supports two frontends: **GTK** (GUI) and **curses** (terminal
+The original Li Moon supports two frontends: **GTK** (GUI) and **curses** (terminal
 via ncurses). This fork replaces the curses backend with **Notcurses**, a modern
 terminal library that provides:
 
@@ -39,11 +39,11 @@ editor. The bridge between Scintilla and Notcurses is provided by the
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│               textadept-notcurses                   │
+│               limoon-notcurses                   │
 ├─────────────────┬───────────────────────────────────┤
-│  Core Lua/C     │  Frontend: src/n_textadept.c       │
+│  Core Lua/C     │  Frontend: src/n_limoon.c       │
 │  (original      │  • Notcurses event loop            │
-│   textadept)    │  • UI rendering (find bar,         │
+│   limoon)    │  • UI rendering (find bar,         │
 │                 │    statusbar, dialogs)              │
 │                 │  • keyboard/mouse dispatch          │
 ├─────────────────┴───────────────────────────────────┤
@@ -88,7 +88,7 @@ sudo pacman -S notcurses cmake gcc pkg-config
 
 ### Bundled dependencies (fetched by CMake)
 
-The Textadept core build uses CMake `FetchContent` to automatically download
+The Li Moon core build uses CMake `FetchContent` to automatically download
 and compile:
 
 | Library | Location after build |
@@ -99,7 +99,7 @@ and compile:
 | Regex (TRE) | `build/_deps/regex-src/` |
 
 These should already be compiled under `build/*.a` if the project was cloned
-with full history. If not, run the original Textadept build once
+with full history. If not, run the original Li Moon build once
 (`cmake -S . -B build && cmake --build build`) before using this fork's Makefile.
 
 ### Submodule: scinterm-notcurses
@@ -151,7 +151,7 @@ make clean-all  # remove everything including scinterm-notcurses/build
 ### Run
 
 ```bash
-./textadept-notcurses [file]
+./limoon-notcurses [file]
 ```
 
 ---
@@ -159,16 +159,16 @@ make clean-all  # remove everything including scinterm-notcurses/build
 ## 4. File Structure
 
 ```
-textadept/
+limoon/
 │
 ├── src/
-│   ├── n_textadept.c        ★ Main frontend (Notcurses)
-│   ├── textadept.h          ★ Modified core declarations
-│   ├── textadept_platform.h ★ Platform interface (functions the
+│   ├── n_limoon.c        ★ Main frontend (Notcurses)
+│   ├── limoon.h          ★ Modified core declarations
+│   ├── limoon_platform.h ★ Platform interface (functions the
 │   │                           frontend must implement)
-│   └── textadept_curses.c   ← original ncurses frontend (unused)
+│   └── limoon_curses.c   ← original ncurses frontend (unused)
 │
-├── core/                    ← Textadept Lua core (unmodified except)
+├── core/                    ← Li Moon Lua core (unmodified except)
 │   ├── ui.lua               ★ statusbar, find bar, command entry
 │   └── file_io.lua          ★ quit dialog ("Quit" button)
 │
@@ -202,10 +202,10 @@ Files marked with ★ were created or modified in this fork.
 
 ## 5. Internal Architecture
 
-### 5.1 n_textadept.c — the frontend
+### 5.1 n_limoon.c — the frontend
 
-This file implements all functions declared in `textadept_platform.h`.
-It is the Notcurses equivalent of `textadept_curses.c`.
+This file implements all functions declared in `limoon_platform.h`.
+It is the Notcurses equivalent of `limoon_curses.c`.
 
 #### Main structures
 
@@ -228,7 +228,7 @@ static struct ncplane      *tabbar_plane;
 #### Event loop
 
 ```c
-// Simplified — see main() in n_textadept.c
+// Simplified — see main() in n_limoon.c
 while (!should_quit) {
     update_ui();                      // refresh statusbar, render
     notcurses_render(nc);             // compose and flush to terminal
@@ -325,7 +325,7 @@ theme "monokai"    -- apply immediately and save preference
 themes()           -- open interactive picker
 ```
 
-The preference is saved to `~/.textadept/theme` and restored on next launch.
+The preference is saved to `~/.limoon/theme` and restored on next launch.
 
 ### Theme structure
 
@@ -382,7 +382,7 @@ For light themes, a more saturated orange (e.g. `#FF8600` → `0x0086FF`).
 `modules/plugin_manager.lua` automatically loads all `.lua` files from two
 directories (in order):
 
-1. `~/.textadept/plugins/` — user plugins (override built-in ones)
+1. `~/.limoon/plugins/` — user plugins (override built-in ones)
 2. `_HOME/plugins/` — built-in editor plugins
 
 ### Plugin structure
@@ -439,7 +439,7 @@ W.write(buf, text, clear)       -- write into the buffer
 |---|---|---|
 | `word_count.lua` | Ctrl+Shift+W | Word/line/char count dialog |
 | `git_status.lua` | Ctrl+Shift+G | Git branch in statusbar + status panel |
-| `scratch_pad.lua` | Ctrl+Shift+N | Persistent notes buffer (`~/.textadept/scratch.txt`) |
+| `scratch_pad.lua` | Ctrl+Shift+N | Persistent notes buffer (`~/.limoon/scratch.txt`) |
 | `help.lua` | Ctrl+H | Read-only quick reference (toggle) |
 
 ---
@@ -451,22 +451,22 @@ The command entry (`Ctrl+;`) accepts any Lua expression. The module
 
 | Alias | Full equivalent |
 |---|---|
-| `theme "name"` | `textadept.themes.set("name")` |
-| `themes()` | `textadept.themes.select()` |
+| `theme "name"` | `limoon.themes.set("name")` |
+| `themes()` | `limoon.themes.select()` |
 | `e "path"` | `io.open_file("path")` |
 | `save()` | `buffer:save()` |
 | `saveas "path"` | `buffer:save_as("path")` |
 | `bclose()` | `buffer:close()` |
 | `reload()` | `buffer:reload()` |
 | `bnext()` / `bprev()` | `view:goto_buffer(1/−1)` |
-| `ln(n)` | `textadept.editing.goto_line(n)` |
+| `ln(n)` | `limoon.editing.goto_line(n)` |
 | `lex "name"` | `buffer:set_lexer("name")` |
 | `wrap()` | toggle `view.wrap_mode` |
 | `tabs(n)` | `buffer.use_tabs=true; buffer.tab_width=n` |
 | `spaces(n)` | `buffer.use_tabs=false; buffer.tab_width=n` |
 | `zoom(n)` | `buffer:zoom_in/out()` or reset |
-| `run()` | `textadept.run.run()` |
-| `plugins()` | `textadept.plugins.show()` |
+| `run()` | `limoon.run.run()` |
+| `plugins()` | `limoon.plugins.show()` |
 | `aliases()` | list all aliases in an output buffer |
 
 ---
@@ -524,14 +524,14 @@ The command entry (`Ctrl+;`) accepts any Lua expression. The module
 
 ### Adding a new platform function
 
-All functions that the Textadept core calls to interact with the UI are
-declared in `src/textadept_platform.h`. The implementation must be in
-`src/n_textadept.c`.
+All functions that the Li Moon core calls to interact with the UI are
+declared in `src/limoon_platform.h`. The implementation must be in
+`src/n_limoon.c`.
 
 Example — adding a mode indicator to the statusbar:
 
 ```c
-// In n_textadept.c, inside draw_statusbar():
+// In n_limoon.c, inside draw_statusbar():
 ncplane_printf_yx(statusbar_plane, 0, col, " [%s]", insert_mode ? "INS" : "OVR");
 ```
 
@@ -580,7 +580,7 @@ ncplane_set_styles(plane, NCSTYLE_NONE);
 
 ### Color format in Lua themes
 
-Textadept and Scintilla use `0xBBGGRR` format internally (unlike the usual
+Li Moon and Scintilla use `0xBBGGRR` format internally (unlike the usual
 `0xRRGGBB`):
 
 ```lua

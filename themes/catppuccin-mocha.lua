@@ -1,4 +1,4 @@
--- Catppuccin Mocha theme for Textadept (catppuccin)
+-- Catppuccin Mocha theme for Li Moon (catppuccin)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x2E1E1E -- #1E1E2E

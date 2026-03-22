@@ -1,4 +1,4 @@
--- Phosphor theme for Textadept.
+-- Phosphor theme for Li Moon.
 -- Selection with phosphor green background for retro terminal feel.
 
 local view, colors, styles = view, view.colors, view.styles
@@ -116,9 +116,9 @@ view:set_fold_margin_color(true, colors.black)
 view:set_fold_margin_hi_color(true, colors.black)
 
 -- Markers.
-view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
-view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
-view.marker_back[textadept.run.MARK_ERROR] = colors.red
+view.marker_back[limoon.bookmarks.MARK_BOOKMARK] = colors.blue
+view.marker_back[limoon.run.MARK_WARNING] = colors.yellow
+view.marker_back[limoon.run.MARK_ERROR] = colors.red
 view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_back[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.phosphor_bright
@@ -136,11 +136,11 @@ end
 -- Indicators.
 view.indic_fore[ui.find.INDIC_FIND] = colors.yellow
 view.indic_alpha[ui.find.INDIC_FIND] = 0x80
-view.indic_fore[textadept.editing.INDIC_HIGHLIGHT] = colors.orange
-view.indic_alpha[textadept.editing.INDIC_HIGHLIGHT] = 0x80
-view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.light_grey
-view.indic_fore[textadept.run.INDIC_WARNING] = colors.yellow
-view.indic_fore[textadept.run.INDIC_ERROR] = colors.red
+view.indic_fore[limoon.editing.INDIC_HIGHLIGHT] = colors.orange
+view.indic_alpha[limoon.editing.INDIC_HIGHLIGHT] = 0x80
+view.indic_fore[limoon.snippets.INDIC_PLACEHOLDER] = colors.light_grey
+view.indic_fore[limoon.run.INDIC_WARNING] = colors.yellow
+view.indic_fore[limoon.run.INDIC_ERROR] = colors.red
 view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = colors.green
 view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_DELETION] = colors.red
 view.indic_fore[view.INDICATOR_HISTORY_SAVED_INSERTION] = colors.green

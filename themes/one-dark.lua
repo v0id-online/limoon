@@ -1,4 +1,4 @@
--- One Dark theme for Textadept (Atom)
+-- One Dark theme for Li Moon (Atom)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x342C28 -- #282C34

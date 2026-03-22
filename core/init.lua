@@ -1,15 +1,15 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Extends Lua's _G table to provide extra functions and fields for Textadept.
+--- Extends Lua's _G table to provide extra functions and fields for Li Moon.
 -- @module _G
 
 for _, arg in ipairs(arg) do if arg == '-T' or arg == '--cov' then require('luacov') end end
 
---- The Textadept release version string.
-_RELEASE = 'Textadept 13.0 alpha 2'
---- Textadept's copyright information.
+--- The Li Moon release version string.
+_RELEASE = 'Li Moon 13.0 alpha 2'
+--- Li Moon's copyright information.
 _COPYRIGHT = 'Copyright © 2007-2026 Mitchell. See LICENSE.\n' ..
-	'https://orbitalquark.github.io/textadept'
+	'https://orbitalquark.github.io/limoon'
 
 package.path = string.format('%s/core/?.lua;%s', _HOME, package.path)
 
@@ -24,7 +24,7 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 
 -- The fields below were defined in C.
 
---- The path to Textadept's home, or installation, directory.
+--- The path to Li Moon's home, or installation, directory.
 -- @field _HOME
 
 --- The filesystem's character encoding.
@@ -35,28 +35,28 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 -- @see string.iconv
 -- @field _CHARSET
 
---- Whether or not Textadept is running on Windows.
+--- Whether or not Li Moon is running on Windows.
 -- @field WIN32
 
---- Whether or not Textadept is running on macOS.
+--- Whether or not Li Moon is running on macOS.
 -- @field OSX
 
---- Whether or not Textadept is running on Linux.
+--- Whether or not Li Moon is running on Linux.
 -- @field LINUX
 
---- Whether or not Textadept is running on BSD.
+--- Whether or not Li Moon is running on BSD.
 -- @field BSD
 
---- Whether or not Textadept is running as a GTK GUI application.
+--- Whether or not Li Moon is running as a GTK GUI application.
 -- @field GTK
 
---- Whether or not Textadept is running as a Qt GUI application.
+--- Whether or not Li Moon is running as a Qt GUI application.
 -- @field QT
 
---- Whether or not Textadept is running in a terminal.
+--- Whether or not Li Moon is running in a terminal.
 -- @field CURSES
 
---- Textadept's current UI mode, either "light" or "dark".
+--- Li Moon's current UI mode, either "light" or "dark".
 -- Manually changing this field has no effect. It is used internally to set a theme on startup
 -- based on the current OS theme.
 -- @see view.set_theme
@@ -65,18 +65,18 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 
 -- The tables below were defined in C.
 
---- Table of command line parameters passed to Textadept, just like in Lua.
+--- Table of command line parameters passed to Li Moon, just like in Lua.
 -- @see args
 -- @table arg
 
---- Table of all open buffers in Textadept.
+--- Table of all open buffers in Li Moon.
 -- Numeric keys have buffer values and buffer keys have their associated numeric keys as values.
 -- @usage local buffer = _BUFFERS[n] -- buffer at index n
 -- @usage local i = _BUFFERS[buffer] -- index of buffer in _BUFFERS
 -- @see buffer
 -- @table _BUFFERS
 
---- Table of all views in Textadept.
+--- Table of all views in Li Moon.
 -- Numeric keys have view values and view keys have their associated numeric keys as values.
 -- @usage local view = _VIEWS[n] -- view at index n
 -- @usage local i = _VIEWS[view] -- index of view in _VIEWS
@@ -97,15 +97,15 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 -- @param to Index to move the buffer to.
 -- @function move_buffer
 
---- Attempts to quit Textadept.
--- @param[opt=0] status Status code for Textadept to exit with.
+--- Attempts to quit Li Moon.
+-- @param[opt=0] status Status code for Li Moon to exit with.
 -- @param[optchain=true] events Emit `events.QUIT`, which could prevent quitting. Passing
 --	`false` could result in data loss.
 -- @function quit
 
---- Resets Textadept's Lua State by reloading all initialization scripts.
--- This allows for testing theme and user script modifications (e.g. *~/.textadept/init.lua*)
--- without having to restart Textadept.
+--- Resets Li Moon's Lua State by reloading all initialization scripts.
+-- This allows for testing theme and user script modifications (e.g. *~/.limoon/init.lua*)
+-- without having to restart Li Moon.
 --
 -- `arg` is `nil` during re-initialization. Scripts that need to differentiate between startup
 -- and reset can test `arg`.
@@ -122,5 +122,5 @@ for _, mod in ipairs{'buffer', 'file_io', 'lfs_ext', 'table_ext', 'ui', 'view'} 
 -- @param[opt] ... Additional arguments to pass to *f*.
 -- @function timeout
 
---- Returns whether or not Textadept is currently running on a HiDPI/Retina display.
+--- Returns whether or not Li Moon is currently running on a HiDPI/Retina display.
 -- @function is_hidpi

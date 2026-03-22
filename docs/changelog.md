@@ -1,16 +1,16 @@
 # Changelog
 
-[Atom Feed](https://github.com/orbitalquark/textadept/releases.atom)
+[Atom Feed](https://github.com/orbitalquark/limoon/releases.atom)
 
 ## 13.0 alpha 2 (01 Feb 2026)
 
-Please see the [migration guide][] for migrating from Textadept 12 to 13.
+Please see the [migration guide][] for migrating from Li Moon 12 to 13.
 
-- [Textadept 13.0 alpha 2 -- Windows][]
-- [Textadept 13.0 alpha 2 -- macOS 13+][]
-- [Textadept 13.0 alpha 2 -- Linux][]
-- [Textadept 13.0 alpha 2 -- Linux ARM][]
-- [Textadept 13.0 alpha 2 -- Modules][]
+- [Li Moon 13.0 alpha 2 -- Windows][]
+- [Li Moon 13.0 alpha 2 -- macOS 13+][]
+- [Li Moon 13.0 alpha 2 -- Linux][]
+- [Li Moon 13.0 alpha 2 -- Linux ARM][]
+- [Li Moon 13.0 alpha 2 -- Modules][]
 
 Bugfixes:
 
@@ -33,23 +33,23 @@ Changes:
 - The terminal version can draw underline indicators using `INDIC_SQUIGGLE` or  `INDIC_SQUIGGLELOW`.
 - Updated to [Lua][] 5.5.0.
 
-[migration guide]: manual.html#migrating-from-textadept-12-to-13
-[Textadept 13.0 alpha 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha_2/textadept_13.0_alpha_2.win.zip
-[Textadept 13.0 alpha 2 -- macOS 13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha_2/textadept_13.0_alpha_2.macOS.zip
-[Textadept 13.0 alpha 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha_2/textadept_13.0_alpha_2.linux.tgz
-[Textadept 13.0 alpha 2 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha_2/textadept_13.0_alpha_2.linux.arm.tgz
-[Textadept 13.0 alpha 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha_2/textadept_13.0_alpha_2.modules.zip
+[migration guide]: manual.html#migrating-from-limoon-12-to-13
+[Li Moon 13.0 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.win.zip
+[Li Moon 13.0 alpha 2 -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.macOS.zip
+[Li Moon 13.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.tgz
+[Li Moon 13.0 alpha 2 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.arm.tgz
+[Li Moon 13.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.modules.zip
 [Lua]: https://lua.org
 [`view.split_pos`]: api.html#view.split_pos
 [`view.parent_split_pos`]: api.html#view.parent_split_pos
 
 ## 13.0 alpha (01 Dec 2025)
 
-- [Textadept 13.0 alpha -- Windows][]
-- [Textadept 13.0 alpha -- macOS 13+][]
-- [Textadept 13.0 alpha -- Linux][]
-- [Textadept 13.0 alpha -- Linux ARM][]
-- [Textadept 13.0 alpha -- Modules][]
+- [Li Moon 13.0 alpha -- Windows][]
+- [Li Moon 13.0 alpha -- macOS 13+][]
+- [Li Moon 13.0 alpha -- Linux][]
+- [Li Moon 13.0 alpha -- Linux ARM][]
+- [Li Moon 13.0 alpha -- Modules][]
 
 Bugfixes:
 
@@ -74,11 +74,11 @@ Changes:
 - Updated to [Lua][] 5.5.0 (rc1).
 - Updated to [Scintilla][] 5.5.8.
 
-[Textadept 13.0 alpha -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha/textadept_13.0_alpha.win.zip
-[Textadept 13.0 alpha -- macOS 13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha/textadept_13.0_alpha.macOS.zip
-[Textadept 13.0 alpha -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha/textadept_13.0_alpha.linux.tgz
-[Textadept 13.0 alpha -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha/textadept_13.0_alpha.linux.arm.tgz
-[Textadept 13.0 alpha -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_13.0_alpha/textadept_13.0_alpha.modules.zip
+[Li Moon 13.0 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.win.zip
+[Li Moon 13.0 alpha -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.macOS.zip
+[Li Moon 13.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.tgz
+[Li Moon 13.0 alpha -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.arm.tgz
+[Li Moon 13.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -86,11 +86,11 @@ Changes:
 
 Download:
 
-- [Textadept 12.9 -- Windows][]
-- [Textadept 12.9 -- macOS 13+][]
-- [Textadept 12.9 -- Linux][]
-- [Textadept 12.9 -- Linux ARM][]
-- [Textadept 12.9 -- Modules][]
+- [Li Moon 12.9 -- Windows][]
+- [Li Moon 12.9 -- macOS 13+][]
+- [Li Moon 12.9 -- Linux][]
+- [Li Moon 12.9 -- Linux ARM][]
+- [Li Moon 12.9 -- Modules][]
 
 Bugfixes:
 
@@ -109,22 +109,22 @@ Changes:
 - Updated ini, Dart, and org lexers.
 - Autoupdate: renamed module from "autoupdate" to "update_notifier" to better reflect functionality.
 
-[Textadept 12.9 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.win.zip
-[Textadept 12.9 -- macOS 13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.macOS.zip
-[Textadept 12.9 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.linux.tgz
-[Textadept 12.9 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.linux.arm.tgz
-[Textadept 12.9 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.9/textadept_12.9.modules.zip
+[Li Moon 12.9 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.win.zip
+[Li Moon 12.9 -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.macOS.zip
+[Li Moon 12.9 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.linux.tgz
+[Li Moon 12.9 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.linux.arm.tgz
+[Li Moon 12.9 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.modules.zip
 
 
 ## 12.8 (01 Aug 2025)
 
 Download:
 
-- [Textadept 12.8 -- Windows][]
-- [Textadept 12.8 -- macOS 11+][]
-- [Textadept 12.8 -- Linux][]
-- [Textadept 12.8 -- Linux ARM][]
-- [Textadept 12.8 -- Modules][]
+- [Li Moon 12.8 -- Windows][]
+- [Li Moon 12.8 -- macOS 11+][]
+- [Li Moon 12.8 -- Linux][]
+- [Li Moon 12.8 -- Linux ARM][]
+- [Li Moon 12.8 -- Modules][]
 
 Bugfixes:
 
@@ -150,11 +150,11 @@ Changes:
 - Updated to [Lua][] 5.4.8.
 - Updated to [Scintilla][] 5.5.7.
 
-[Textadept 12.8 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.win.zip
-[Textadept 12.8 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.macOS.zip
-[Textadept 12.8 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.linux.tgz
-[Textadept 12.8 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.linux.arm.tgz
-[Textadept 12.8 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.8/textadept_12.8.modules.zip
+[Li Moon 12.8 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.win.zip
+[Li Moon 12.8 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.macOS.zip
+[Li Moon 12.8 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.linux.tgz
+[Li Moon 12.8 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.linux.arm.tgz
+[Li Moon 12.8 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -163,11 +163,11 @@ Changes:
 
 Download:
 
-- [Textadept 12.7 -- Windows][]
-- [Textadept 12.7 -- macOS 11+][]
-- [Textadept 12.7 -- Linux][]
-- [Textadept 12.7 -- Linux ARM][]
-- [Textadept 12.7 -- Modules][]
+- [Li Moon 12.7 -- Windows][]
+- [Li Moon 12.7 -- macOS 11+][]
+- [Li Moon 12.7 -- Linux][]
+- [Li Moon 12.7 -- Linux ARM][]
+- [Li Moon 12.7 -- Modules][]
 
 Bugfixes:
 
@@ -185,12 +185,12 @@ Changes:
 
 - Added [`lexer.line_start`][], [`lexer.line_end`][], and [`lexer.text_range()`][].
 - Added `view.parent_size` for manipulating parent split sizes.
-- Removed `textadept.editing.XPM_IMAGES`.
+- Removed `limoon.editing.XPM_IMAGES`.
 - Added `is_hidpi()` for detecting HiDPI/Retina displays.
 - Autocompletion lists on HiDPI displays now use 2x image sizes.
 - Updated Markdown lexer to allow tab-indented continuation lines.
 - Support arbitrary RGB colors in the terminal version.
-- Linux package maintainers can define `_HOME` in CMake via the `TEXTADEPT_HOME` variable.
+- Linux package maintainers can define `_HOME` in CMake via the `LIMOON_HOME` variable.
 - Use different indicators for change history deletions.
 - Implement indent guide highlighting in the terminal version.
 - Implement fold marker highlighting in the terminal version.
@@ -201,25 +201,25 @@ Changes:
 - LSP: support diagnostic tags.
 - LSP: allow preselected items in completion lists.
 
-[Textadept 12.7 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.win.zip
-[Textadept 12.7 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.macOS.zip
-[Textadept 12.7 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.linux.tgz
-[Textadept 12.7 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.linux.arm.tgz
-[Textadept 12.7 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7/textadept_12.7.modules.zip
+[Li Moon 12.7 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.win.zip
+[Li Moon 12.7 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.macOS.zip
+[Li Moon 12.7 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.linux.tgz
+[Li Moon 12.7 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.linux.arm.tgz
+[Li Moon 12.7 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.modules.zip
 [`lexer.line_start`]: api.html#lexer.line_start
 [`lexer.line_end`]: api.html#lexer.line_end
 [`lexer.text_range()`]: api.html#lexer.text_range
-[autocompletion list icons]: https://github.com/orbitalquark/textadept-lsp#icon-reference
+[autocompletion list icons]: https://github.com/orbitalquark/limoon-lsp#icon-reference
 
 ## 12.7 beta 2 (01 May 2025)
 
 Download:
 
-- [Textadept 12.7 beta 2 -- Windows][]
-- [Textadept 12.7 beta 2 -- macOS 11+][]
-- [Textadept 12.7 beta 2 -- Linux][]
-- [Textadept 12.7 beta 2 -- Linux ARM][]
-- [Textadept 12.7 beta 2 -- Modules][]
+- [Li Moon 12.7 beta 2 -- Windows][]
+- [Li Moon 12.7 beta 2 -- macOS 11+][]
+- [Li Moon 12.7 beta 2 -- Linux][]
+- [Li Moon 12.7 beta 2 -- Linux ARM][]
+- [Li Moon 12.7 beta 2 -- Modules][]
 
 Bugfixes:
 
@@ -248,10 +248,10 @@ Changes:
 - Added [`io.track_changes`][] for showing change history.
 - Enabled undo selection history via `buffer.undo_selection_history`.
 - Greatly improve startup time when restoring a large session, particularly on macOS.
-- Added [`textadept.clipboard`][] module for interacting with the system clipboard from the
+- Added [`limoon.clipboard`][] module for interacting with the system clipboard from the
 	terminal version.
 - Replaced `ui.clipboard_text` with [`ui.get_clipboard_text()`][].
-- `textadept.editing.join_lines()` should strip leading indentation and move to the end of
+- `limoon.editing.join_lines()` should strip leading indentation and move to the end of
 	joined lines.
 - Added `events.FIND_PANE_SHOW` and `events.FIND_PANE_HIDE` for the find & replace pane.
 - Added "Tools > Show Keys..." for querying typed key shortcuts and copying them to the clipboard.
@@ -280,13 +280,13 @@ Changes:
 - Lua REPL: added tab-completion.
 - Updated to [Scintilla][] 5.5.6.
 
-[Textadept 12.7 beta 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.win.zip
-[Textadept 12.7 beta 2 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.macOS.zip
-[Textadept 12.7 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.linux.tgz
-[Textadept 12.7 beta 2 -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.linux.arm.tgz
-[Textadept 12.7 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta_2/textadept_12.7_beta_2.modules.zip
+[Li Moon 12.7 beta 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.win.zip
+[Li Moon 12.7 beta 2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.macOS.zip
+[Li Moon 12.7 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.tgz
+[Li Moon 12.7 beta 2 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.arm.tgz
+[Li Moon 12.7 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.modules.zip
 [`io.track_changes`]: api.html#io.track_changes
-[`textadept.clipboard`]: api.html#textadept.clipboard
+[`limoon.clipboard`]: api.html#limoon.clipboard
 [`ui.get_clipboard_text()`]: api.html#ui.get_clipboard_text
 [`keys.assign_platform_bindings()`]: api.html#keys.assign_platform_bindings
 [filter]: api.html#filters
@@ -297,11 +297,11 @@ Changes:
 
 Download:
 
-- [Textadept 12.7 beta -- Windows][]
-- [Textadept 12.7 beta -- macOS 11+][]
-- [Textadept 12.7 beta -- Linux][]
-- [Textadept 12.7 beta -- Linux ARM][]
-- [Textadept 12.7 beta -- Modules][]
+- [Li Moon 12.7 beta -- Windows][]
+- [Li Moon 12.7 beta -- macOS 11+][]
+- [Li Moon 12.7 beta -- Linux][]
+- [Li Moon 12.7 beta -- Linux ARM][]
+- [Li Moon 12.7 beta -- Modules][]
 
 Bugfixes:
 
@@ -322,25 +322,25 @@ Changes:
 - Revamped website, manual, and API documentation (including screenshots).
 - Only auto-enclose snippet placeholders with auto-paired characters, not just any punctuation.
 - Find in Files appends to the list without scrolling.
-- `textadept.session.load()` does not need to return `true` anymore.
+- `limoon.session.load()` does not need to return `true` anymore.
 - Require function argument to `ui.command_entry.run()` unless no args are given.
 - LSP: Lua server hides Markdown escapes in call tip text.
 - Export: use default browser on Linux instead of hardcoding one.
 
-[Textadept 12.7 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.win.zip
-[Textadept 12.7 beta -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.macOS.zip
-[Textadept 12.7 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.linux.tgz
-[Textadept 12.7 beta -- Linux ARM]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.linux.arm.tgz
-[Textadept 12.7 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.7_beta/textadept_12.7_beta.modules.zip
+[Li Moon 12.7 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.win.zip
+[Li Moon 12.7 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.macOS.zip
+[Li Moon 12.7 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.tgz
+[Li Moon 12.7 beta -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.arm.tgz
+[Li Moon 12.7 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.modules.zip
 
 ## 12.6 (01 Feb 2025)
 
 Download:
 
-- [Textadept 12.6 -- Windows][]
-- [Textadept 12.6 -- macOS 11+][]
-- [Textadept 12.6 -- Linux][]
-- [Textadept 12.6 -- Modules][]
+- [Li Moon 12.6 -- Windows][]
+- [Li Moon 12.6 -- macOS 11+][]
+- [Li Moon 12.6 -- Linux][]
+- [Li Moon 12.6 -- Modules][]
 
 Bugfixes:
 
@@ -359,20 +359,20 @@ Changes:
 - Scintilla: improve performance of brace matching.
 - Updated to [Scintilla][] 5.5.4.
 
-[Textadept 12.6 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.win.zip
-[Textadept 12.6 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.macOS.zip
-[Textadept 12.6 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.linux.tgz
-[Textadept 12.6 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.6/textadept_12.6.modules.zip
+[Li Moon 12.6 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.win.zip
+[Li Moon 12.6 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.macOS.zip
+[Li Moon 12.6 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.linux.tgz
+[Li Moon 12.6 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.5 (01 Dec 2024)
 
 Download:
 
-- [Textadept 12.5 -- Windows][]
-- [Textadept 12.5 -- macOS 11+][]
-- [Textadept 12.5 -- Linux][]
-- [Textadept 12.5 -- Modules][]
+- [Li Moon 12.5 -- Windows][]
+- [Li Moon 12.5 -- macOS 11+][]
+- [Li Moon 12.5 -- Linux][]
+- [Li Moon 12.5 -- Modules][]
 
 Bugfixes:
 
@@ -388,20 +388,20 @@ Changes:
 - LSP: added support for code actions and workspace edits.
 - Updated to [Scinterm][] 5.2.
 
-[Textadept 12.5 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5/textadept_12.5.win.zip
-[Textadept 12.5 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5/textadept_12.5.macOS.zip
-[Textadept 12.5 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5/textadept_12.5.linux.tgz
-[Textadept 12.5 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5/textadept_12.5.modules.zip
+[Li Moon 12.5 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.win.zip
+[Li Moon 12.5 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.macOS.zip
+[Li Moon 12.5 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.linux.tgz
+[Li Moon 12.5 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.modules.zip
 [Scinterm]: https://github.com/orbitalquark/scinterm
 
 ## 12.5 beta 3 (01 Oct 2024)
 
 Download:
 
-- [Textadept 12.5 beta 3 -- Windows][]
-- [Textadept 12.5 beta 3 -- macOS 11+][]
-- [Textadept 12.5 beta 3 -- Linux][]
-- [Textadept 12.5 beta 3 -- Modules][]
+- [Li Moon 12.5 beta 3 -- Windows][]
+- [Li Moon 12.5 beta 3 -- macOS 11+][]
+- [Li Moon 12.5 beta 3 -- Linux][]
+- [Li Moon 12.5 beta 3 -- Modules][]
 
 Bugfixes:
 
@@ -421,9 +421,9 @@ Bugfixes:
 - Format: added [`format.prefix_map`][] for formatting paragraphs.
 - LSP: fixed autocompletion lists when items have spaces in them.
 - LSP: Lua language server recognizes conventional `M` identifier as the current module.
-- LSP: lazy-load Textadept API documentation for the Lua command entry.
-- LSP: do not scan Textadept's `_HOME` more than once.
-- LSP: fixed Lua language server's Textadept `_HOME` detection on macOS.
+- LSP: lazy-load Li Moon API documentation for the Lua command entry.
+- LSP: do not scan Li Moon's `_HOME` more than once.
+- LSP: fixed Lua language server's Li Moon `_HOME` detection on macOS.
 
 Changes:
 
@@ -434,7 +434,7 @@ Changes:
 - Renamed 'ansi_c', 'dmd', and 'rstats' lexers to 'c', 'd', and 'r', respectively.
 	- Language-specific keys have changed (e.g. use `keys.c` and `snippets.c` now).
 - Emit `events.VIEW_BEFORE_SWITCH` on `view:split()`.
-- Enable `view.caret_line_visible_always`, but only on the current view when Textadept has focus.
+- Enable `view.caret_line_visible_always`, but only on the current view when Li Moon has focus.
 - Added `select` option to `ui.dialogs.list()`.
 - Use a proper label widget for the command entry label instead of a Scintilla margin.
 - Increased terminal version Find & Replace history to 100 items.
@@ -443,21 +443,21 @@ Changes:
 - Format: use Homebrew's `gfmt` for formatting paragraphs on macOS.
 - Updated to [CDK][] 5.0-20240619.
 
-[Textadept 12.5 beta 3 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_3/textadept_12.5_beta_3.win.zip
-[Textadept 12.5 beta 3 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_3/textadept_12.5_beta_3.macOS.zip
-[Textadept 12.5 beta 3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_3/textadept_12.5_beta_3.linux.tgz
-[Textadept 12.5 beta 3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_3/textadept_12.5_beta_3.modules.zip
-[`format.prefix_map`]: https://github.com/orbitalquark/textadept-format/?tab=readme-ov-file#formatprefix_map-table
+[Li Moon 12.5 beta 3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.win.zip
+[Li Moon 12.5 beta 3 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.macOS.zip
+[Li Moon 12.5 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.linux.tgz
+[Li Moon 12.5 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.modules.zip
+[`format.prefix_map`]: https://github.com/orbitalquark/limoon-format/?tab=readme-ov-file#formatprefix_map-table
 [CDK]: https://invisible-island.net/cdk/
 
 ## 12.5 beta 2 (01 Sep 2024)
 
 Download:
 
-- [Textadept 12.5 beta 2 -- Windows][]
-- [Textadept 12.5 beta 2 -- macOS 11+][]
-- [Textadept 12.5 beta 2 -- Linux][]
-- [Textadept 12.5 beta 2 -- Modules][]
+- [Li Moon 12.5 beta 2 -- Windows][]
+- [Li Moon 12.5 beta 2 -- macOS 11+][]
+- [Li Moon 12.5 beta 2 -- Linux][]
+- [Li Moon 12.5 beta 2 -- Modules][]
 
 Bugfixes:
 
@@ -466,7 +466,7 @@ Bugfixes:
 - Fixed `os.spawn()` in the GTK and terminal versions with a large env table.
 - Document `-L` and `--lua` in help output.
 - Do not advance the incremental search anchor when Find Next is clicked and nothing was found.
-- Fixed error when `textadept.run.run_without_prompt` is enabled, but no command exists.
+- Fixed error when `limoon.run.run_without_prompt` is enabled, but no command exists.
 - Do not accidentally scroll the view if no text was found.
 - Edits in typed buffers like Files Found Buffer should not be recorded in history.
 - Fixed Find in Files error when searching an empty directory.
@@ -489,11 +489,11 @@ Changes:
 - Removed Message Buffer.
 - Changed `ui.print_to()` and `ui.print_silent_to()` to only accept a single string message.
 - Changed `ui.output()` and `ui.output_silent()` to only accept strings or numbers.
-- `textadept.editing.auto_pairs` and `textadept.editing.select_enclosed` support UTF-8 characters.
+- `limoon.editing.auto_pairs` and `limoon.editing.select_enclosed` support UTF-8 characters.
 - Scroll up/down by pages using `Alt+PgUp` and `Alt+PgDn`, respectively, on Windows and Linux,
 	and `^⇞` and `^⇟` on macOS. (N/A in the terminal version.)
 - Removed `ui.find.find_in_files()`; `ui.find.find_next()` with `ui.find.in_files` invokes it.
-- `textadept.editing.select_line()` expands a multi-line selection to include whole lines.
+- `limoon.editing.select_line()` expands a multi-line selection to include whole lines.
 - Scintilla: increase maximum zoom to +60 points.
 - Scintilla: added [`buffer.copy_separator`][].
 - Scintilla: added [`buffer:line_indent()`][] and [`buffer:line_dedent()`][] for
@@ -502,10 +502,10 @@ Changes:
 - Updated to [Scintilla][] 5.5.2.
 - Updated to [Scinterm][] 5.1.
 
-[Textadept 12.5 beta 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_2/textadept_12.5_beta_2.win.zip
-[Textadept 12.5 beta 2 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_2/textadept_12.5_beta_2.macOS.zip
-[Textadept 12.5 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_2/textadept_12.5_beta_2.linux.tgz
-[Textadept 12.5 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta_2/textadept_12.5_beta_2.modules.zip
+[Li Moon 12.5 beta 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.win.zip
+[Li Moon 12.5 beta 2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.macOS.zip
+[Li Moon 12.5 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.linux.tgz
+[Li Moon 12.5 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.modules.zip
 [`timeout()`]: api.html#timeout
 [reproc]: https://github.com/DaanDeMeyer/reproc
 [`buffer.copy_separator`]: api.html#buffer.copy_separator
@@ -518,10 +518,10 @@ Changes:
 
 Download:
 
-- [Textadept 12.5 beta -- Windows][]
-- [Textadept 12.5 beta -- macOS 11+][]
-- [Textadept 12.5 beta -- Linux][]
-- [Textadept 12.5 beta -- Modules][]
+- [Li Moon 12.5 beta -- Windows][]
+- [Li Moon 12.5 beta -- macOS 11+][]
+- [Li Moon 12.5 beta -- Linux][]
+- [Li Moon 12.5 beta -- Modules][]
 
 Bugfixes:
 
@@ -540,10 +540,10 @@ Changes:
 - Added basic auto-detection of file indentation, conrtrolled with [`io.detect_indentation`][].
 - Updated to [Lua][] 5.4.7.
 
-[Textadept 12.5 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta/textadept_12.5_beta.win.zip
-[Textadept 12.5 beta -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta/textadept_12.5_beta.macOS.zip
-[Textadept 12.5 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta/textadept_12.5_beta.linux.tgz
-[Textadept 12.5 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.5_beta/textadept_12.5_beta.modules.zip
+[Li Moon 12.5 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.win.zip
+[Li Moon 12.5 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.macOS.zip
+[Li Moon 12.5 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.linux.tgz
+[Li Moon 12.5 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.modules.zip
 [`io.detect_indentation`]: api.html#io.detect_indentation
 [Lua]: https://lua.org
 
@@ -551,10 +551,10 @@ Changes:
 
 Download:
 
-- [Textadept 12.4 -- Windows][]
-- [Textadept 12.4 -- macOS 11+][]
-- [Textadept 12.4 -- Linux][]
-- [Textadept 12.4 -- Modules][]
+- [Li Moon 12.4 -- Windows][]
+- [Li Moon 12.4 -- macOS 11+][]
+- [Li Moon 12.4 -- Linux][]
+- [Li Moon 12.4 -- Modules][]
 
 Bugfixes:
 
@@ -570,20 +570,20 @@ Changes:
 - Scintilla: scale reverse arrow margin cursor to match user's cursor size.
 - Updated to [Scintilla][] 5.5.0.
 
-[Textadept 12.4 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.4/textadept_12.4.win.zip
-[Textadept 12.4 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.4/textadept_12.4.macOS.zip
-[Textadept 12.4 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.4/textadept_12.4.linux.tgz
-[Textadept 12.4 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.4/textadept_12.4.modules.zip
+[Li Moon 12.4 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.win.zip
+[Li Moon 12.4 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.macOS.zip
+[Li Moon 12.4 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.linux.tgz
+[Li Moon 12.4 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.3 (01 Mar 2024)
 
 Download:
 
-- [Textadept 12.3 -- Windows][]
-- [Textadept 12.3 -- macOS 11+][]
-- [Textadept 12.3 -- Linux][]
-- [Textadept 12.3 -- Modules][]
+- [Li Moon 12.3 -- Windows][]
+- [Li Moon 12.3 -- macOS 11+][]
+- [Li Moon 12.3 -- Linux][]
+- [Li Moon 12.3 -- Modules][]
 
 Bugfixes:
 
@@ -597,19 +597,19 @@ Changes:
 
 - None.
 
-[Textadept 12.3 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3/textadept_12.3.win.zip
-[Textadept 12.3 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3/textadept_12.3.macOS.zip
-[Textadept 12.3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3/textadept_12.3.linux.tgz
-[Textadept 12.3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3/textadept_12.3.modules.zip
+[Li Moon 12.3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.win.zip
+[Li Moon 12.3 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.macOS.zip
+[Li Moon 12.3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.linux.tgz
+[Li Moon 12.3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.modules.zip
 
 ## 12.3 beta (01 Jan 2024)
 
 Download:
 
-- [Textadept 12.3 beta -- Windows][]
-- [Textadept 12.3 beta -- macOS 11+][]
-- [Textadept 12.3 beta -- Linux][]
-- [Textadept 12.3 beta -- Modules][]
+- [Li Moon 12.3 beta -- Windows][]
+- [Li Moon 12.3 beta -- macOS 11+][]
+- [Li Moon 12.3 beta -- Linux][]
+- [Li Moon 12.3 beta -- Modules][]
 
 Bugfixes:
 
@@ -625,7 +625,7 @@ Bugfixes:
 
 Changes:
 
-- Added [`textadept.snippets.active`][].
+- Added [`limoon.snippets.active`][].
 - Scratch: New module for treating untitled buffers as persistent scratch buffers.
 - Scintilla: Ctrl+Click on a selection deselects it in multiple selection mode.
 - Scintilla: added [`buffer:change_selection_mode()`][].
@@ -635,11 +635,11 @@ Changes:
 	work for regular selections.
 - Updated to [Scintilla][] 5.4.1.
 
-[Textadept 12.3 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3_beta/textadept_12.3_beta.win.zip
-[Textadept 12.3 beta -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3_beta/textadept_12.3_beta.macOS.zip
-[Textadept 12.3 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3_beta/textadept_12.3_beta.linux.tgz
-[Textadept 12.3 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.3_beta/textadept_12.3_beta.modules.zip
-[`textadept.snippets.active`]: api.html#textadept.snippets.active
+[Li Moon 12.3 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.win.zip
+[Li Moon 12.3 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.macOS.zip
+[Li Moon 12.3 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.linux.tgz
+[Li Moon 12.3 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.modules.zip
+[`limoon.snippets.active`]: api.html#limoon.snippets.active
 [`buffer:change_selection_mode()`]: api.html#buffer.change_selection_mode
 [Scintilla]: https://scintilla.org
 
@@ -647,10 +647,10 @@ Changes:
 
 Download:
 
-- [Textadept 12.2 -- Windows][]
-- [Textadept 12.2 -- macOS 11+][]
-- [Textadept 12.2 -- Linux][]
-- [Textadept 12.2 -- Modules][]
+- [Li Moon 12.2 -- Windows][]
+- [Li Moon 12.2 -- macOS 11+][]
+- [Li Moon 12.2 -- Linux][]
+- [Li Moon 12.2 -- Modules][]
 
 Bugfixes:
 
@@ -664,23 +664,23 @@ Changes:
 
 - Updated Brazilian Portuguese and Spanish localizations.
 
-[Textadept 12.2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2/textadept_12.2.win.zip
-[Textadept 12.2 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2/textadept_12.2.macOS.zip
-[Textadept 12.2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2/textadept_12.2.linux.tgz
-[Textadept 12.2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2/textadept_12.2.modules.zip
+[Li Moon 12.2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.win.zip
+[Li Moon 12.2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.macOS.zip
+[Li Moon 12.2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.linux.tgz
+[Li Moon 12.2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.modules.zip
 
 ## 12.2 beta (01 Oct 2023)
 
 Download:
 
-- [Textadept 12.2 beta -- Windows][]
-- [Textadept 12.2 beta -- macOS 11+][]
-- [Textadept 12.2 beta -- Linux][]
-- [Textadept 12.2 beta -- Modules][]
+- [Li Moon 12.2 beta -- Windows][]
+- [Li Moon 12.2 beta -- macOS 11+][]
+- [Li Moon 12.2 beta -- Linux][]
+- [Li Moon 12.2 beta -- Modules][]
 
 Bugfixes:
 
-- Fixed crash during logout/restart on Windows while Textadept is still running.
+- Fixed crash during logout/restart on Windows while Li Moon is still running.
 - Prevent key bindings in the macOS menu from overriding user-specified bindings.
 - Fixed interpretation of '-' command line argument as reading from stdin.
 - Prevent duplicate key events from Scintilla.
@@ -698,20 +698,20 @@ Changes:
 - Updated Bash lexer to disable conditional and arithmetic operator highlighting due to performance.
 - Updated to [Scintilla][] 5.3.7.
 
-[Textadept 12.2 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2_beta/textadept_12.2_beta.win.zip
-[Textadept 12.2 beta -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2_beta/textadept_12.2_beta.macOS.zip
-[Textadept 12.2 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2_beta/textadept_12.2_beta.linux.tgz
-[Textadept 12.2 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.2_beta/textadept_12.2_beta.modules.zip
+[Li Moon 12.2 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.win.zip
+[Li Moon 12.2 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.macOS.zip
+[Li Moon 12.2 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.linux.tgz
+[Li Moon 12.2 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.1 (01 Sep 2023)
 
 Download:
 
-- [Textadept 12.1 -- Windows][]
-- [Textadept 12.1 -- macOS 11+][]
-- [Textadept 12.1 -- Linux][]
-- [Textadept 12.1 -- Modules][]
+- [Li Moon 12.1 -- Windows][]
+- [Li Moon 12.1 -- macOS 11+][]
+- [Li Moon 12.1 -- Linux][]
+- [Li Moon 12.1 -- Modules][]
 
 Bugfixes:
 
@@ -726,25 +726,25 @@ Bugfixes:
 
 Changes:
 
-- Added [`textadept.run.run_without_prompt`][] for running commands immediately
+- Added [`limoon.run.run_without_prompt`][] for running commands immediately
 - Updated Hare lexer.
 
-[Textadept 12.1 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.1/textadept_12.1.win.zip
-[Textadept 12.1 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.1/textadept_12.1.macOS.zip
-[Textadept 12.1 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.1/textadept_12.1.linux.tgz
-[Textadept 12.1 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.1/textadept_12.1.modules.zip
-[`textadept.run.run_without_prompt`]: api.html#textadept.run.run_without_prompt
+[Li Moon 12.1 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.win.zip
+[Li Moon 12.1 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.macOS.zip
+[Li Moon 12.1 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.linux.tgz
+[Li Moon 12.1 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.modules.zip
+[`limoon.run.run_without_prompt`]: api.html#limoon.run.run_without_prompt
 
 ## 12.0 (01 Aug 2023)
 
-Please see the [11 to 12 migration guide][] for migrating from Textadept 11 to 12.
+Please see the [11 to 12 migration guide][] for migrating from Li Moon 11 to 12.
 
 Download:
 
-- [Textadept 12.0 -- Windows][]
-- [Textadept 12.0 -- macOS 11+][]
-- [Textadept 12.0 -- Linux][]
-- [Textadept 12.0 -- Modules][]
+- [Li Moon 12.0 -- Windows][]
+- [Li Moon 12.0 -- macOS 11+][]
+- [Li Moon 12.0 -- Linux][]
+- [Li Moon 12.0 -- Modules][]
 
 Bugfixes:
 
@@ -768,11 +768,11 @@ Changes:
 - Updated to [LPeg][] 1.1.0.
 - Updated to [Scintilla][] 5.3.6.
 
-[11 to 12 migration guide]: manual.html#migrating-from-textadept-11-to-12
-[Textadept 12.0 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0/textadept_12.0.win.zip
-[Textadept 12.0 -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0/textadept_12.0.macOS.zip
-[Textadept 12.0 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0/textadept_12.0.linux.tgz
-[Textadept 12.0 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0/textadept_12.0.modules.zip
+[11 to 12 migration guide]: manual.html#migrating-from-limoon-11-to-12
+[Li Moon 12.0 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.win.zip
+[Li Moon 12.0 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.macOS.zip
+[Li Moon 12.0 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.linux.tgz
+[Li Moon 12.0 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.modules.zip
 [Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
 [Scintilla]: https://scintilla.org
@@ -781,10 +781,10 @@ Changes:
 
 Download:
 
-- [Textadept 12.0 beta -- Windows][]
-- [Textadept 12.0 beta -- macOS 11+][]
-- [Textadept 12.0 beta -- Linux][]
-- [Textadept 12.0 beta -- Modules][]
+- [Li Moon 12.0 beta -- Windows][]
+- [Li Moon 12.0 beta -- macOS 11+][]
+- [Li Moon 12.0 beta -- Linux][]
+- [Li Moon 12.0 beta -- Modules][]
 
 Bugfixes:
 
@@ -816,10 +816,10 @@ Changes:
 - LSP: added support for snippet completions.
 - LSP: support per-project language servers.
 
-[Textadept 12.0 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_beta/textadept_12.0_beta.win.zip
-[Textadept 12.0 beta -- macOS 11+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_beta/textadept_12.0_beta.macOS.zip
-[Textadept 12.0 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_beta/textadept_12.0_beta.linux.tgz
-[Textadept 12.0 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_beta/textadept_12.0_beta.modules.zip
+[Li Moon 12.0 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.win.zip
+[Li Moon 12.0 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.macOS.zip
+[Li Moon 12.0 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.linux.tgz
+[Li Moon 12.0 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.modules.zip
 [macro registers]: manual.html#macros
 [lua-std-regex]: https://github.com/orbitalquark/lua-std-regex
 
@@ -827,10 +827,10 @@ Changes:
 
 Download:
 
-- [Textadept 12.0 alpha 3 -- Windows][]
-- [Textadept 12.0 alpha 3 -- macOS 10.13+][]
-- [Textadept 12.0 alpha 3 -- Linux][]
-- [Textadept 12.0 alpha 3 -- Modules][]
+- [Li Moon 12.0 alpha 3 -- Windows][]
+- [Li Moon 12.0 alpha 3 -- macOS 10.13+][]
+- [Li Moon 12.0 alpha 3 -- Linux][]
+- [Li Moon 12.0 alpha 3 -- Modules][]
 
 Bugfixes:
 
@@ -858,12 +858,12 @@ Changes:
 - Revamped API documentation, mainly for buffer and view API to be more readable.
 - Allow multiple selections in the recent file dialog.
 - Added a dialog button to clear the recent files list.
-- Hide the Windows popup console window when running Textadept as a Lua interpreter.
+- Hide the Windows popup console window when running Li Moon as a Lua interpreter.
 - `ui.print_silent()` and `ui.output_silent()` always print silently and return their print
 	buffers.
-- Restored `ui.command_entry.height` and `textadept.snippets.paths`.
+- Restored `ui.command_entry.height` and `limoon.snippets.paths`.
 - Increase `io.quick_open_max`.
-- Allow short-hand access notation for menu items in [`textadept.menu.menubar`][].
+- Allow short-hand access notation for menu items in [`limoon.menu.menubar`][].
 - `events.MOUSE` emits a bit-mask of modifier keys instead of multiple booleans.
 - Format: only ignore header lines that have no content.
 - LSP: Lua language server supports local tables and functions.
@@ -884,11 +884,11 @@ Changes:
 - Updated to [Scintilla][] 5.3.4.
 - Updated to [Scinterm][] 5.0.
 
-[Textadept 12.0 alpha 3 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_3/textadept_12.0_alpha_3.win.zip
-[Textadept 12.0 alpha 3 -- macOS 10.13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_3/textadept_12.0_alpha_3.macOS.zip
-[Textadept 12.0 alpha 3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_3/textadept_12.0_alpha_3.linux.tgz
-[Textadept 12.0 alpha 3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_3/textadept_12.0_alpha_3.modules.zip
-[`textadept.menu.menubar`]: api.html#textadept.menu.menubar
+[Li Moon 12.0 alpha 3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.win.zip
+[Li Moon 12.0 alpha 3 -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.macOS.zip
+[Li Moon 12.0 alpha 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.linux.tgz
+[Li Moon 12.0 alpha 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.modules.zip
+[`limoon.menu.menubar`]: api.html#limoon.menu.menubar
 [Scintilla]: https://scintilla.org
 [Scinterm]: https://github.com/orbitalquark/scinterm
 
@@ -896,16 +896,16 @@ Changes:
 
 Download:
 
-- [Textadept 12.0 alpha 2 -- Windows][]
-- [Textadept 12.0 alpha 2 -- macOS 10.13+][]
-- [Textadept 12.0 alpha 2 -- Linux][]
-- [Textadept 12.0 alpha 2 -- Modules][]
+- [Li Moon 12.0 alpha 2 -- Windows][]
+- [Li Moon 12.0 alpha 2 -- macOS 10.13+][]
+- [Li Moon 12.0 alpha 2 -- Linux][]
+- [Li Moon 12.0 alpha 2 -- Modules][]
 
 Bugfixes:
 
 - Fixed auto-pair removal bug when backspacing over an auto-paired character.
 - Fixed directory filters that contain directories to include.
-- `textadept.editing.autocomplete()` should return `false` if no completions are displayed.
+- `limoon.editing.autocomplete()` should return `false` if no completions are displayed.
 - Fixed clearing of a previous buffer's state when switching between buffers after closing one.
 - Qt version: ensure the given directory is selected in Linux's directory selection dialog.
 - Terminal version: fixed spawning processes on Linux and macOS.
@@ -927,23 +927,23 @@ Changes:
 - Language modules are no longer auto-loaded when their files are opened.
 - All language autocompletion and documentation has been delegated to the external LSP module.
 	- Deprecated C, CSS, Go, HTML, Lua, Python, and Ruby language modules.
-	- Textadept no longer generates or uses Lua tags and api documentation files.
+	- Li Moon no longer generates or uses Lua tags and api documentation files.
 	- Deprecated the ctags module.
 	- Removed "Tools > Complete Symbol" and "Tools > Show Documentation" menu items.
-	- Removed `textadept.editing.api_files` and `textadept.editing.show_documentation()`.
+	- Removed `limoon.editing.api_files` and `limoon.editing.show_documentation()`.
 - Hide the Find & Replace pane after an "In Files" search.
 - Allow lexers to dictate what constitutes a word character.
 - Added [`lexer.names()`][].
-- Removed `textadept.editing.transpose_chars()`.
-- Replaced `textadept.editing.typeover_chars` with [`typeover_auto_paired`][].
-- Renamed `textadept.snippets.cancel_current()` to `cancel()`.
-- Removed `textadept.snippets.path`.
+- Removed `limoon.editing.transpose_chars()`.
+- Replaced `limoon.editing.typeover_chars` with [`typeover_auto_paired`][].
+- Renamed `limoon.snippets.cancel_current()` to `cancel()`.
+- Removed `limoon.snippets.path`.
 - Added buffer representation argment to `events.BUFFER_DELETED`.
 - Switched documentation format to [LDoc][] from LuaDoc.
-- Added `-L` and `--lua` command line option for running Textadept as a standalone Lua interpreter.
+- Added `-L` and `--lua` command line option for running Li Moon as a standalone Lua interpreter.
 - Scroll all views showing print/output buffers when printed to.
 - Renamed `_SCINTILLA.next_*` to `_SCINTILLA.new_*`.
-- `textadept.run.run_in_background` applies even if the output buffer is not open.
+- `limoon.run.run_in_background` applies even if the output buffer is not open.
 - Notify of compile/run/build/test/project command success or failure in statusbar.
 - Autoscroll to the bottom of compile/run/build/test/project output buffer if possible.
 - Removed `ui.command_entry.append_history()` and `ui.command_entry.height`.
@@ -959,22 +959,22 @@ Changes:
 - LSP: stop logging to a buffer and added "Show Log" menu option instead.
 - LSP: allow for launching servers outside a project.
 
-[Textadept 12.0 alpha 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_2/textadept_12.0_alpha_2.win.zip
-[Textadept 12.0 alpha 2 -- macOS 10.13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_2/textadept_12.0_alpha_2.macOS.zip
-[Textadept 12.0 alpha 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_2/textadept_12.0_alpha_2.linux.tgz
-[Textadept 12.0 alpha 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha_2/textadept_12.0_alpha_2.modules.zip
+[Li Moon 12.0 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.win.zip
+[Li Moon 12.0 alpha 2 -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.macOS.zip
+[Li Moon 12.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.linux.tgz
+[Li Moon 12.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.modules.zip
 [`lexer.names()`]: api.html#lexer.names
-[`typeover_auto_paired`]: api.html#textadept.editing.typeover_auto_paired
+[`typeover_auto_paired`]: api.html#limoon.editing.typeover_auto_paired
 [LDoc]: https://stevedonovan.github.io/ldoc/
 
 ## 12.0 alpha (01 Jan 2023)
 
 Download:
 
-- [Textadept 12.0 alpha -- Windows][]
-- [Textadept 12.0 alpha -- macOS 10.13+][]
-- [Textadept 12.0 alpha -- Linux][]
-- [Textadept 12.0 alpha -- Modules][]
+- [Li Moon 12.0 alpha -- Windows][]
+- [Li Moon 12.0 alpha -- macOS 10.13+][]
+- [Li Moon 12.0 alpha -- Linux][]
+- [Li Moon 12.0 alpha -- Modules][]
 
 Bugfixes:
 
@@ -993,14 +993,14 @@ Bugfixes:
 Changes:
 
 - Added Qt version and made it the default for all platforms.
-- The Qt version of Textadept is not a single-instance application, only the GTK version is.
+- The Qt version of Li Moon is not a single-instance application, only the GTK version is.
 - The minimum required version of macOS is 10.13 (High Sierra).
 - Switched to [CMake-based build][] for building natively on Windows, macOS, and Linux.
 - Redesigned key bindings to be more consistent and deterministic across OSes and platforms.
 - Added 'Save' buttons to close and quit dialogs when there are unsaved buffers.
 - Removed GTK support for Windows and macOS (Linux is still supported).
-- Utilize "TEXTADEPT_HOME" environment variable, if it exists, in place of autodetected `_HOME`
-	based on Textadept executable location.
+- Utilize "LIMOON_HOME" environment variable, if it exists, in place of autodetected `_HOME`
+	based on Li Moon executable location.
 - Added `_G.QT`.
 - Include Go language module in separate set of modules.
 - Quick open list shows relative paths if possible.
@@ -1014,37 +1014,37 @@ Changes:
 - Added [`ui.buffer_list_zorder`][] option and removed *zorder* parameter from `ui.switch_buffer()`.
 	The buffer list order is most recently used first by default.
 - Added [`ui.suspend()`][] for the terminal version, allowing any key binding to suspend the editor.
-- `textadept.editing.auto_pairs` and `textadept.editing.typeover_chars` auto-include '<>'
-	characters for XML-like languages and removed `textadept.editing.brace_matches`.
+- `limoon.editing.auto_pairs` and `limoon.editing.typeover_chars` auto-include '<>'
+	characters for XML-like languages and removed `limoon.editing.brace_matches`.
 - Added menu option and key binding to undo last selected word.
 - `ui.find.show_filenames_in_progressbar` is `false` by default now.
 - Filters for `lfs.walk()`, `io.quick_open()`, and `ui.find_in_files()` now use glob patterns
 	instead of Lua patterns.
 - Changed `events.KEYPRESS` to only emit string key representations.
 - Changed `events.TAB_CLICKED` to use key modifier mask like other events.
-- Changed `textadept.editing.auto_pairs` and `textadept.editing.typeover_chars` to use string
+- Changed `limoon.editing.auto_pairs` and `limoon.editing.typeover_chars` to use string
 	character keys instead of bytes.
-- Added [`textadept.run.INDIC_WARNING`][] and [`textadept.run.INDIC_ERROR`][] for underlining
+- Added [`limoon.run.INDIC_WARNING`][] and [`limoon.run.INDIC_ERROR`][] for underlining
 	compile, run, build, and test warning and error messages.
 
-[Textadept 12.0 alpha -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha/textadept_12.0_alpha.win.zip
-[Textadept 12.0 alpha -- macOS 10.13+]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha/textadept_12.0_alpha.macOS.zip
-[Textadept 12.0 alpha -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha/textadept_12.0_alpha.linux.tgz
-[Textadept 12.0 alpha -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_12.0_alpha/textadept_12.0_alpha.modules.zip
+[Li Moon 12.0 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.win.zip
+[Li Moon 12.0 alpha -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.macOS.zip
+[Li Moon 12.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.linux.tgz
+[Li Moon 12.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.modules.zip
 [CMake-based build]: manual.html#compiling
 [`ui.buffer_list_zorder`]: api.html#ui.buffer_list_zorder
 [`ui.suspend()`]: api.html#ui.suspend
-[`textadept.run.INDIC_WARNING`]: api.html#textadept.run.INDIC_WARNING
-[`textadept.run.INDIC_ERROR`]: api.html#textadept.run.INDIC_ERROR
+[`limoon.run.INDIC_WARNING`]: api.html#limoon.run.INDIC_WARNING
+[`limoon.run.INDIC_ERROR`]: api.html#limoon.run.INDIC_ERROR
 
 ## 11.5 alpha 2 (01 Nov 2022)
 
 Download:
 
-- [Textadept 11.5 alpha 2 -- Windows][]
-- [Textadept 11.5 alpha 2 -- Mac OSX 10.10+][]
-- [Textadept 11.5 alpha 2 -- Linux][]
-- [Textadept 11.5 alpha 2 -- Modules][]
+- [Li Moon 11.5 alpha 2 -- Windows][]
+- [Li Moon 11.5 alpha 2 -- Mac OSX 10.10+][]
+- [Li Moon 11.5 alpha 2 -- Linux][]
+- [Li Moon 11.5 alpha 2 -- Modules][]
 
 Bugfixes:
 
@@ -1054,7 +1054,7 @@ Bugfixes:
 - Fixed display of compile/run commands in output.
 - Fixed inability to use single-quoted command line arguments to `os.spawn()` in the terminal
 	version.
-- Open file mode: Fixed bug loading module during Textadept initialization.
+- Open file mode: Fixed bug loading module during Li Moon initialization.
 
 Changes:
 
@@ -1080,13 +1080,13 @@ Changes:
 - Find in Files' file scanning is shown with a progress dialog and can be stopped.
 - Deprecated `ui._print` in favor of [`ui.print_to()`][].
 - `_L` no longer prefixes non-localized messages with "No Localization:".
-- `textadept.run.stop()` presents a list dialog if there is more than one process running.
+- `limoon.run.stop()` presents a list dialog if there is more than one process running.
 - Moved process spawning into platform C code.
 
-[Textadept 11.5 alpha 2 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha_2/textadept_11.5_alpha_2.win.zip
-[Textadept 11.5 alpha 2 -- Mac OSX 10.10+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha_2/textadept_11.5_alpha_2.macOS.zip
-[Textadept 11.5 alpha 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha_2/textadept_11.5_alpha_2.linux.tgz
-[Textadept 11.5 alpha 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha_2/textadept_11.5_alpha_2.modules.zip
+[Li Moon 11.5 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.win.zip
+[Li Moon 11.5 alpha 2 -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.macOS.zip
+[Li Moon 11.5 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.linux.tgz
+[Li Moon 11.5 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.modules.zip
 [`ui.dialogs.message()`]: api.html#ui.dialogs.message
 [`ui.dialogs.input()`]: api.html#ui.dialogs.input
 [`ui.dialogs.open()`]: api.html#ui.dialogs.open
@@ -1099,10 +1099,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.5 alpha -- Windows][]
-- [Textadept 11.5 alpha -- Mac OSX 10.10+][]
-- [Textadept 11.5 alpha -- Linux][]
-- [Textadept 11.5 alpha -- Modules][]
+- [Li Moon 11.5 alpha -- Windows][]
+- [Li Moon 11.5 alpha -- Mac OSX 10.10+][]
+- [Li Moon 11.5 alpha -- Linux][]
+- [Li Moon 11.5 alpha -- Modules][]
 
 Bugfixes:
 
@@ -1114,27 +1114,27 @@ Bugfixes:
 
 Changes:
 
-- Lexers no longer share the same Lua state with Textadept or each other.
+- Lexers no longer share the same Lua state with Li Moon or each other.
 - Deprecated `lexer.colors` and `lexer.styles` in favor of [`view.colors`][] and [`view.styles`][],
 	and deprecated `lexer.fold*` in favor of `view.fold*`.
 - Implemented `buffer.lexer_language`.
 - Added [`view:set_styles()`][] for manually applying styles to views.
 - Added [`ui.output()`][] for compile/run/build/test output and removed
-	`textadept.run.error_patterns`.
+	`limoon.run.error_patterns`.
 - Refreshed themes.
-- Deprecated `textadept.editing.INDIC_BRACEMATCH` in favor of styles.
+- Deprecated `limoon.editing.INDIC_BRACEMATCH` in favor of styles.
 - Removed `ui.silent_print` in favor of [`ui.print_silent()`][] and [`ui.output_silent()`][].
 - Changed [`ui.command_entry.run()`][] to add label, remove height, add initial text, and add
 	args to pass to function.
 - Compile/run/build/test commands now utilize command entry and have their own command histories.
-- Removed `textadept.run.set_arguments()`.
-- Added [`textadept.run.run_project()`][] and [`textadept.run.run_project_commands`][] for running
+- Removed `limoon.run.set_arguments()`.
+- Added [`limoon.run.run_project()`][] and [`limoon.run.run_project_commands`][] for running
 	project commands.
-- Deprecated `textadept.file_types.extensions` and `textadept.file_types.patterns` in favor of
+- Deprecated `limoon.file_types.extensions` and `limoon.file_types.patterns` in favor of
 	[`lexer.detect_extensions`][] and [`lexer.detect_patterns`][], and moved
-	`textadept.file_types.select_lexer` into the menu.
+	`limoon.file_types.select_lexer` into the menu.
 - Added [`io.ensure_final_newline`][] and decoupled this from
-	`textadept.editing.strip_trailing_spaces`.
+	`limoon.editing.strip_trailing_spaces`.
 - Replaced "token" concept with "[tags][]" when writing lexers, and deprecated `lexer.token()`
 	in favor of [`lex:tag()`][].
 - Removed `lexer.property_expanded`.
@@ -1155,10 +1155,10 @@ Changes:
 - Scintilla: allow large fonts to be used in `view.STYLE_CALLTIP` without affecting text display.
 - Updated to [Scintilla][] 5.3.0.
 
-[Textadept 11.5 alpha -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha/textadept_11.5_alpha.win.zip
-[Textadept 11.5 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha/textadept_11.5_alpha.macOS.zip
-[Textadept 11.5 alpha -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha/textadept_11.5_alpha.linux.tgz
-[Textadept 11.5 alpha -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.5_alpha/textadept_11.5_alpha.modules.zip
+[Li Moon 11.5 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.win.zip
+[Li Moon 11.5 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.macOS.zip
+[Li Moon 11.5 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.linux.tgz
+[Li Moon 11.5 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.modules.zip
 [`view.colors`]: api.html#view.colors
 [`view.styles`]: api.html#view.styles
 [`view:set_styles()`]: api.html#view.set_styles
@@ -1166,8 +1166,8 @@ Changes:
 [`ui.print_silent()`]: api.html#ui.print_silent
 [`ui.output_silent()`]: api.html#ui.output_silent
 [`ui.command_entry.run()`]: api.html#ui.command_entry.run
-[`textadept.run.run_project()`]: api.html#textadept.run.run_project
-[`textadept.run.run_project_commands`]: api.html#textadept.run.run_project_commands
+[`limoon.run.run_project()`]: api.html#limoon.run.run_project
+[`limoon.run.run_project_commands`]: api.html#limoon.run.run_project_commands
 [`lexer.detect_extensions`]: api.html#lexer.detect_extensions
 [`lexer.detect_patterns`]: api.html#lexer.detect_patterns
 [`io.ensure_final_newline`]: api.html#io.ensure_final_newline
@@ -1181,10 +1181,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.4 -- Windows][]
-- [Textadept 11.4 -- Mac OSX 10.7+][]
-- [Textadept 11.4 -- Linux][]
-- [Textadept 11.4 -- Modules][]
+- [Li Moon 11.4 -- Windows][]
+- [Li Moon 11.4 -- Mac OSX 10.7+][]
+- [Li Moon 11.4 -- Linux][]
+- [Li Moon 11.4 -- Modules][]
 
 Bugfixes:
 
@@ -1209,10 +1209,10 @@ Changes:
 - Updated R, Fortran, and Go lexers.
 - Updated to [Scintilla][] 5.2.4.
 
-[Textadept 11.4 -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4/textadept_11.4.win.zip
-[Textadept 11.4 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4/textadept_11.4.macOS.zip
-[Textadept 11.4 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4/textadept_11.4.linux.tgz
-[Textadept 11.4 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4/textadept_11.4.modules.zip
+[Li Moon 11.4 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.win.zip
+[Li Moon 11.4 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.macOS.zip
+[Li Moon 11.4 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.linux.tgz
+[Li Moon 11.4 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.modules.zip
 [`ui.popup_menu()`]: api.html#ui.popup_menu
 [Scintilla]: https://scintilla.org
 
@@ -1220,10 +1220,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.4 beta -- Windows][]
-- [Textadept 11.4 beta -- Mac OSX 10.10+][]
-- [Textadept 11.4 beta -- Linux][]
-- [Textadept 11.4 beta -- Modules][]
+- [Li Moon 11.4 beta -- Windows][]
+- [Li Moon 11.4 beta -- Mac OSX 10.10+][]
+- [Li Moon 11.4 beta -- Linux][]
+- [Li Moon 11.4 beta -- Modules][]
 
 Bugfixes:
 
@@ -1239,20 +1239,20 @@ Changes:
 - Scintilla: Improved performance of `view:fold_all(view.FOLDACTION_EXPAND)`.
 - Updated to [Scintilla][] 5.2.3.
 
-[Textadept 11.4 beta -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_beta/textadept_11.4_beta.win.zip
-[Textadept 11.4 beta -- Mac OSX 10.10+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_beta/textadept_11.4_beta.macOS.zip
-[Textadept 11.4 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_beta/textadept_11.4_beta.linux.tgz
-[Textadept 11.4 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_beta/textadept_11.4_beta.modules.zip
+[Li Moon 11.4 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.win.zip
+[Li Moon 11.4 beta -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.macOS.zip
+[Li Moon 11.4 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.linux.tgz
+[Li Moon 11.4 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 11.4 alpha (01 Apr 2022)
 
 Download:
 
-- [Textadept 11.4 alpha -- Windows][]
-- [Textadept 11.4 alpha -- Mac OSX 10.10+][]
-- [Textadept 11.4 alpha -- Linux][]
-- [Textadept 11.4 alpha -- Modules][]
+- [Li Moon 11.4 alpha -- Windows][]
+- [Li Moon 11.4 alpha -- Mac OSX 10.10+][]
+- [Li Moon 11.4 alpha -- Linux][]
+- [Li Moon 11.4 alpha -- Modules][]
 
 Bugfixes:
 
@@ -1294,10 +1294,10 @@ Files searches.
 - Updated to [Lua][] 5.4.4.
 - Updated to libtermkey 0.22.
 
-[Textadept 11.4 alpha -- Windows]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_alpha/textadept_11.4_alpha.win.zip
-[Textadept 11.4 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_alpha/textadept_11.4_alpha.macOS.zip
-[Textadept 11.4 alpha -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_alpha/textadept_11.4_alpha.linux.tgz
-[Textadept 11.4 alpha -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.4_alpha/textadept_11.4_alpha.modules.zip
+[Li Moon 11.4 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.win.zip
+[Li Moon 11.4 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.macOS.zip
+[Li Moon 11.4 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.linux.tgz
+[Li Moon 11.4 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.modules.zip
 [GTK]: https://gtk.org
 [Docker image]: manual.html#compiling-using-docker
 [`ui.find.show_filenames_in_progressbar`]: api.html#ui.find.show_filenames_in_progressbar
@@ -1309,10 +1309,10 @@ Files searches.
 
 Download:
 
-- [Textadept 11.3 -- Win32][]
-- [Textadept 11.3 -- Mac OSX 10.7+][]
-- [Textadept 11.3 -- Linux][]
-- [Textadept 11.3 -- Modules][]
+- [Li Moon 11.3 -- Win32][]
+- [Li Moon 11.3 -- Mac OSX 10.7+][]
+- [Li Moon 11.3 -- Linux][]
+- [Li Moon 11.3 -- Modules][]
 
 Bugfixes:
 
@@ -1323,22 +1323,22 @@ Bugfixes:
 
 Changes:
 
-- Improve repeated building of Textadept.app on macOS.
+- Improve repeated building of Li Moon.app on macOS.
 - Updated Perl lexer to recognize more numbers.
 
-[Textadept 11.3 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3/textadept_11.3.win32.zip
-[Textadept 11.3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3/textadept_11.3.macOS.zip
-[Textadept 11.3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3/textadept_11.3.linux.tgz
-[Textadept 11.3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3/textadept_11.3.modules.zip
+[Li Moon 11.3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.win32.zip
+[Li Moon 11.3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.macOS.zip
+[Li Moon 11.3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.linux.tgz
+[Li Moon 11.3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.modules.zip
 
 ## 11.3 beta 3 (01 Dec 2021)
 
 Download:
 
-- [Textadept 11.3 beta 3 -- Win32][]
-- [Textadept 11.3 beta 3 -- Mac OSX 10.7+][]
-- [Textadept 11.3 beta 3 -- Linux][]
-- [Textadept 11.3 beta 3 -- Modules][]
+- [Li Moon 11.3 beta 3 -- Win32][]
+- [Li Moon 11.3 beta 3 -- Mac OSX 10.7+][]
+- [Li Moon 11.3 beta 3 -- Linux][]
+- [Li Moon 11.3 beta 3 -- Modules][]
 
 Bugfixes:
 
@@ -1348,24 +1348,24 @@ Bugfixes:
 Changes:
 
 - Added '\`' as an autopair and typeover character.
-- `textadept.editing.auto_enclose` keeps text selected.
+- `limoon.editing.auto_enclose` keeps text selected.
 - Scintilla: DEL (0x7F) is considered a space character.
 - Updated to [Scintilla][] 5.1.4.
 
-[Textadept 11.3 beta 3 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_3/textadept_11.3_beta_3.win32.zip
-[Textadept 11.3 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_3/textadept_11.3_beta_3.macOS.zip
-[Textadept 11.3 beta 3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_3/textadept_11.3_beta_3.linux.tgz
-[Textadept 11.3 beta 3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_3/textadept_11.3_beta_3.modules.zip
+[Li Moon 11.3 beta 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.win32.zip
+[Li Moon 11.3 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.macOS.zip
+[Li Moon 11.3 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.linux.tgz
+[Li Moon 11.3 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 11.3 beta 2 (01 Nov 2021)
 
 Download:
 
-- [Textadept 11.3 beta 2 -- Win32][]
-- [Textadept 11.3 beta 2 -- Mac OSX 10.7+][]
-- [Textadept 11.3 beta 2 -- Linux][]
-- [Textadept 11.3 beta 2 -- Modules][]
+- [Li Moon 11.3 beta 2 -- Win32][]
+- [Li Moon 11.3 beta 2 -- Mac OSX 10.7+][]
+- [Li Moon 11.3 beta 2 -- Linux][]
+- [Li Moon 11.3 beta 2 -- Modules][]
 
 Bugfixes:
 
@@ -1383,19 +1383,19 @@ Changes:
 - Debugger: Implement setting stack frames in Lua and pretty-print variable values.
 - Debugger: Prefer status buffers for variables and call stacks.
 
-[Textadept 11.3 beta 2 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_2/textadept_11.3_beta_2.win32.zip
-[Textadept 11.3 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_2/textadept_11.3_beta_2.macOS.zip
-[Textadept 11.3 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_2/textadept_11.3_beta_2.linux.tgz
-[Textadept 11.3 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta_2/textadept_11.3_beta_2.modules.zip
+[Li Moon 11.3 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.win32.zip
+[Li Moon 11.3 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.macOS.zip
+[Li Moon 11.3 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.linux.tgz
+[Li Moon 11.3 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.modules.zip
 
 ## 11.3 beta (01 Oct 2021)
 
 Download:
 
-- [Textadept 11.3 beta -- Win32][]
-- [Textadept 11.3 beta -- Mac OSX 10.7+][]
-- [Textadept 11.3 beta -- Linux][]
-- [Textadept 11.3 beta -- Modules][]
+- [Li Moon 11.3 beta -- Win32][]
+- [Li Moon 11.3 beta -- Mac OSX 10.7+][]
+- [Li Moon 11.3 beta -- Linux][]
+- [Li Moon 11.3 beta -- Modules][]
 
 Bugfixes:
 
@@ -1420,10 +1420,10 @@ Changes:
 - Scintilla: Deprecated `view.property_expanded` in favor of `lexer.property_expanded`.
 - Updated to [Scintilla][] 5.1.3.
 
-[Textadept 11.3 beta -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta/textadept_11.3_beta.win32.zip
-[Textadept 11.3 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta/textadept_11.3_beta.macOS.zip
-[Textadept 11.3 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta/textadept_11.3_beta.linux.tgz
-[Textadept 11.3 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.3_beta/textadept_11.3_beta.modules.zip
+[Li Moon 11.3 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.win32.zip
+[Li Moon 11.3 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.macOS.zip
+[Li Moon 11.3 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.linux.tgz
+[Li Moon 11.3 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.modules.zip
 [`view.caret_line_highlight_subline`]: api.html#view.caret_line_highlight_subline
 [Scintilla]: https://scintilla.org
 
@@ -1431,10 +1431,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.2 -- Win32][]
-- [Textadept 11.2 -- Mac OSX 10.7+][]
-- [Textadept 11.2 -- Linux][]
-- [Textadept 11.2 -- Modules][]
+- [Li Moon 11.2 -- Win32][]
+- [Li Moon 11.2 -- Mac OSX 10.7+][]
+- [Li Moon 11.2 -- Linux][]
+- [Li Moon 11.2 -- Modules][]
 
 Bugfixes:
 
@@ -1449,10 +1449,10 @@ Changes:
 - Scintilla: Optimize search in documents that contain mainly ASCII text.
 - Updated to [Scintilla][] 5.1.1.
 
-[Textadept 11.2 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2/textadept_11.2.win32.zip
-[Textadept 11.2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2/textadept_11.2.macOS.zip
-[Textadept 11.2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2/textadept_11.2.linux.tgz
-[Textadept 11.2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2/textadept_11.2.modules.zip
+[Li Moon 11.2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.win32.zip
+[Li Moon 11.2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.macOS.zip
+[Li Moon 11.2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.linux.tgz
+[Li Moon 11.2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.modules.zip
 [representations]: api.html#view.representation
 [`buffer:replace_rectangular()`]: api.html#buffer.replace_rectangular
 [Scintilla]: https://scintilla.org
@@ -1461,10 +1461,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.2 beta 3 -- Win32][]
-- [Textadept 11.2 beta 3 -- Mac OSX 10.7+][]
-- [Textadept 11.2 beta 3 -- Linux][]
-- [Textadept 11.2 beta 3 -- Modules][]
+- [Li Moon 11.2 beta 3 -- Win32][]
+- [Li Moon 11.2 beta 3 -- Mac OSX 10.7+][]
+- [Li Moon 11.2 beta 3 -- Linux][]
+- [Li Moon 11.2 beta 3 -- Modules][]
 
 Bugfixes:
 
@@ -1475,27 +1475,27 @@ Bugfixes:
 Changes:
 
 - Allow syntax highlighting to be preserved in selected text for default themes.
-- `textadept.editing.filter_through()` respects multiple and rectangular selections.
+- `limoon.editing.filter_through()` respects multiple and rectangular selections.
 - Support "Replace All" in multiple and rectangular selection.
 
-[Textadept 11.2 beta 3 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_3/textadept_11.2_beta_3.win32.zip
-[Textadept 11.2 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_3/textadept_11.2_beta_3.macOS.zip
-[Textadept 11.2 beta 3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_3/textadept_11.2_beta_3.linux.tgz
-[Textadept 11.2 beta 3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_3/textadept_11.2_beta_3.modules.zip
+[Li Moon 11.2 beta 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.win32.zip
+[Li Moon 11.2 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.macOS.zip
+[Li Moon 11.2 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.linux.tgz
+[Li Moon 11.2 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.modules.zip
 
 ## 11.2 beta 2 (01 Jun 2021)
 
 Download:
 
-- [Textadept 11.2 beta 2 -- Win32][]
-- [Textadept 11.2 beta 2 -- Mac OSX 10.7+][]
-- [Textadept 11.2 beta 2 -- Linux][]
-- [Textadept 11.2 beta 2 -- Modules][]
+- [Li Moon 11.2 beta 2 -- Win32][]
+- [Li Moon 11.2 beta 2 -- Mac OSX 10.7+][]
+- [Li Moon 11.2 beta 2 -- Linux][]
+- [Li Moon 11.2 beta 2 -- Modules][]
 
 Bugfixes:
 
 - Fixed some file extension conflicts.
-- Restore view scroll state after `textadept.editing.filter_through()`.
+- Restore view scroll state after `limoon.editing.filter_through()`.
 - Do not clobber user's terminal on initialization error.
 - Modules: Refresh debugger breakpoints when buffer content is replaced and persist breakpoints
 	and watchpoints on reset.
@@ -1524,10 +1524,10 @@ Changes:
 - Scintilla: Update to Unicode 13.
 - Updated to [Scintilla][] 5.0.3.
 
-[Textadept 11.2 beta 2 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_2/textadept_11.2_beta_2.win32.zip
-[Textadept 11.2 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_2/textadept_11.2_beta_2.macOS.zip
-[Textadept 11.2 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_2/textadept_11.2_beta_2.linux.tgz
-[Textadept 11.2 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta_2/textadept_11.2_beta_2.modules.zip
+[Li Moon 11.2 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.win32.zip
+[Li Moon 11.2 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.macOS.zip
+[Li Moon 11.2 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.linux.tgz
+[Li Moon 11.2 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.modules.zip
 [`ui.find.entry_font`]: api.html#ui.find.entry_font
 [`events.BUFFER_BEFORE_REPLACE_TEXT`]: api.html#events.BUFFER_BEFORE_REPLACE_TEXT
 [`events.BUFFER_AFTER_REPLACE_TEXT`]: api.html#events.BUFFER_AFTER_REPLACE_TEXT
@@ -1549,10 +1549,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.2 beta -- Win32][]
-- [Textadept 11.2 beta -- Mac OSX 10.7+][]
-- [Textadept 11.2 beta -- Linux][]
-- [Textadept 11.2 beta -- Modules][]
+- [Li Moon 11.2 beta -- Win32][]
+- [Li Moon 11.2 beta -- Mac OSX 10.7+][]
+- [Li Moon 11.2 beta -- Linux][]
+- [Li Moon 11.2 beta -- Modules][]
 
 Bugfixes:
 
@@ -1576,10 +1576,10 @@ Changes:
 - Updated to [Lua][] 5.4.2.
 - Updated to [Scintilla][] 5.0.0.
 
-[Textadept 11.2 beta -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta/textadept_11.2_beta.win32.zip
-[Textadept 11.2 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta/textadept_11.2_beta.macOS.zip
-[Textadept 11.2 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta/textadept_11.2_beta.linux.tgz
-[Textadept 11.2 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.2_beta/textadept_11.2_beta.modules.zip
+[Li Moon 11.2 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.win32.zip
+[Li Moon 11.2 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.macOS.zip
+[Li Moon 11.2 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.linux.tgz
+[Li Moon 11.2 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -1587,10 +1587,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.1 -- Win32][]
-- [Textadept 11.1 -- Mac OSX 10.7+][]
-- [Textadept 11.1 -- Linux][]
-- [Textadept 11.1 -- Modules][]
+- [Li Moon 11.1 -- Win32][]
+- [Li Moon 11.1 -- Mac OSX 10.7+][]
+- [Li Moon 11.1 -- Linux][]
+- [Li Moon 11.1 -- Modules][]
 
 Bugfixes:
 
@@ -1612,26 +1612,26 @@ Changes:
 - Added support for Clojure, Elm, Fantom, fstab, Julia, Meson, Pony, Reason, RouterOS, Spin,
 	systemd, systemd-networkd, Xs, and Zig.
 - Compile, run, and build command functions can also return environment tables.
-- Added [`textadept.run.test()`][] and [`textadept.run.test_commands`][].
+- Added [`limoon.run.test()`][] and [`limoon.run.test_commands`][].
 - `io.get_project_root()` accepts an optional flag for returning a submodule root.
 
-[Textadept 11.1 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.1/textadept_11.1.win32.zip
-[Textadept 11.1 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.1/textadept_11.1.macOS.zip
-[Textadept 11.1 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.1/textadept_11.1.linux.tgz
-[Textadept 11.1 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.1/textadept_11.1.modules.zip
-[`textadept.run.test()`]: api.html#textadept.run.test
-[`textadept.run.test_commands`]: api.html#textadept.run.test_commands
+[Li Moon 11.1 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.win32.zip
+[Li Moon 11.1 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.macOS.zip
+[Li Moon 11.1 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.linux.tgz
+[Li Moon 11.1 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.modules.zip
+[`limoon.run.test()`]: api.html#limoon.run.test
+[`limoon.run.test_commands`]: api.html#limoon.run.test_commands
 
 ## 11.0 (01 Dec 2020)
 
-Please see the [10 to 11 migration guide][] for upgrading from Textadept 10 to Textadept 11.
+Please see the [10 to 11 migration guide][] for upgrading from Li Moon 10 to Li Moon 11.
 
 Download:
 
-- [Textadept 11.0 -- Win32][]
-- [Textadept 11.0 -- Mac OSX 10.7+][]
-- [Textadept 11.0 -- Linux][]
-- [Textadept 11.0 -- Modules][]
+- [Li Moon 11.0 -- Win32][]
+- [Li Moon 11.0 -- Mac OSX 10.7+][]
+- [Li Moon 11.0 -- Linux][]
+- [Li Moon 11.0 -- Modules][]
 
 Bugfixes:
 
@@ -1645,11 +1645,11 @@ Changes:
 - Added [`events.FIND_RESULT_FOUND`][].
 - Added [`events.UNFOCUS`][].
 
-[10 to 11 migration guide]: manual.html#migrating-from-textadept-10-to-11
-[Textadept 11.0 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0/textadept_11.0.win32.zip
-[Textadept 11.0 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0/textadept_11.0.macOS.zip
-[Textadept 11.0 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0/textadept_11.0.linux.tgz
-[Textadept 11.0 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0/textadept_11.0.modules.zip
+[10 to 11 migration guide]: manual.html#migrating-from-limoon-10-to-11
+[Li Moon 11.0 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.win32.zip
+[Li Moon 11.0 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.macOS.zip
+[Li Moon 11.0 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.linux.tgz
+[Li Moon 11.0 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.modules.zip
 [`events.FIND_RESULT_FOUND`]: api.html#events.FIND_RESULT_FOUND
 [`events.UNFOCUS`]: api.html#events.UNFOCUS
 
@@ -1657,10 +1657,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.0 beta 2 -- Win32][]
-- [Textadept 11.0 beta 2 -- Mac OSX 10.7+][]
-- [Textadept 11.0 beta 2 -- Linux][]
-- [Textadept 11.0 beta 2 -- Modules][]
+- [Li Moon 11.0 beta 2 -- Win32][]
+- [Li Moon 11.0 beta 2 -- Mac OSX 10.7+][]
+- [Li Moon 11.0 beta 2 -- Linux][]
+- [Li Moon 11.0 beta 2 -- Modules][]
 
 Bugfixes:
 
@@ -1670,7 +1670,7 @@ Bugfixes:
 - Fixed lack of statusbar updating when setting options like buffer EOL mode, indentation,
 	and encoding from the menu.
 - Do not clear highlighting when searching inside the "Find in Files" buffer.
-- `textadept.editing.strip_trailing_spaces` should not apply to binary files.
+- `limoon.editing.strip_trailing_spaces` should not apply to binary files.
 - Handle recursive symlinks in `lfs.walk()`.
 - Modules: Fixed Lua debugger crash when inspecting variables with very large string
 	representations.
@@ -1680,12 +1680,12 @@ Bugfixes:
 
 Changes:
 
-- New [`textadept.history`][] module.
+- New [`limoon.history`][] module.
 - Updated German and Russian translations.
 - Added `ui.command_entry.append_history()` for special command entry modes that need to
 	manually append history.
 - Implement `\U`, `\L`, `\u`, and `\l` case transformations in regex replacements.
-- Added [`textadept.run.set_arguments()`][].
+- Added [`limoon.run.set_arguments()`][].
 - Modules: Each module in the separate modules download has its own repository now, but all
 	are still bundled into a single archive for release.
 - Modules: Greatly improved the speed of file comparison.
@@ -1693,12 +1693,12 @@ Changes:
 - Updated to [CDK][] 5.0-20200923.
 - Updated to [LuaFileSystem][] 1.8.0.
 
-[Textadept 11.0 beta 2 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta_2/textadept_11.0_beta_2.win32.zip
-[Textadept 11.0 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta_2/textadept_11.0_beta_2.macOS.zip
-[Textadept 11.0 beta 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta_2/textadept_11.0_beta_2.linux.tgz
-[Textadept 11.0 beta 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta_2/textadept_11.0_beta_2.modules.zip
-[`textadept.history`]: api.html#textadept.history
-[`textadept.run.set_arguments()`]: api.html#textadept.run.set_arguments
+[Li Moon 11.0 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.win32.zip
+[Li Moon 11.0 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.macOS.zip
+[Li Moon 11.0 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.linux.tgz
+[Li Moon 11.0 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.modules.zip
+[`limoon.history`]: api.html#limoon.history
+[`limoon.run.set_arguments()`]: api.html#limoon.run.set_arguments
 [CDK]: https://invisible-island.net/cdk/
 [LuaFileSystem]: https://github.com/keplerproject/luafilesystem
 
@@ -1706,10 +1706,10 @@ Changes:
 
 Download:
 
-- [Textadept 11.0 beta -- Win32][]
-- [Textadept 11.0 beta -- Mac OSX 10.7+][]
-- [Textadept 11.0 beta -- Linux][]
-- [Textadept 11.0 beta -- Modules][]
+- [Li Moon 11.0 beta -- Win32][]
+- [Li Moon 11.0 beta -- Mac OSX 10.7+][]
+- [Li Moon 11.0 beta -- Linux][]
+- [Li Moon 11.0 beta -- Modules][]
 
 Bugfixes:
 
@@ -1745,11 +1745,11 @@ Changes:
 - Save the current working directory to session files.
 - "View > Toggle Fold" toggles folding for the current block, regardless of line.
 - Recognize Fossil projects.
-- Added [`textadept.editing.auto_enclose()`][] for auto-enclosing selected text.
+- Added [`limoon.editing.auto_enclose()`][] for auto-enclosing selected text.
 - Show "Match X/Y" in statusbar when searching for text.
 - Added [`ui.command_entry.active`][].
 - Improved handling of print buffers and splits.
-- Added "Edit > Preferences" menu item and key binding for opening *~/.textadept/init.lua*.
+- Added "Edit > Preferences" menu item and key binding for opening *~/.limoon/init.lua*.
 - Disable `ui.find.highlight_all_matches` by default.
 - GCC 7.1+ is now required for building, added support for [building with Docker][], and dropped
 	automated Linux i386 builds.
@@ -1768,11 +1768,11 @@ Changes:
 - Updated to [Scintilla][] 4.4.5.
 - Switched back to utilizing [Scintillua][] and [Scinterm][].
 
-[Textadept 11.0 beta -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta/textadept_11.0_beta.win32.zip
-[Textadept 11.0 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta/textadept_11.0_beta.macOS.zip
-[Textadept 11.0 beta -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta/textadept_11.0_beta.linux.tgz
-[Textadept 11.0 beta -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_beta/textadept_11.0_beta.modules.zip
-[`textadept.editing.auto_enclose()`]: api.html#textadept.editing.auto_enclose
+[Li Moon 11.0 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.win32.zip
+[Li Moon 11.0 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.macOS.zip
+[Li Moon 11.0 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.linux.tgz
+[Li Moon 11.0 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.modules.zip
+[`limoon.editing.auto_enclose()`]: api.html#limoon.editing.auto_enclose
 [`ui.command_entry.active`]: api.html#ui.command_entry.active
 [building with Docker]: manual.html#compiling-using-docker
 [`events.FIND_RESULT_FOUND`]: api.html#events.FIND_RESULT_FOUND
@@ -1787,11 +1787,11 @@ Changes:
 
 Download:
 
-- [Textadept 11.0 alpha 3 -- Win32][]
-- [Textadept 11.0 alpha 3 -- Mac OSX 10.6+][]
-- [Textadept 11.0 alpha 3 -- Linux][]
-- [Textadept 11.0 alpha 3 -- Linux x86_64][]
-- [Textadept 11.0 alpha 3 -- Modules][]
+- [Li Moon 11.0 alpha 3 -- Win32][]
+- [Li Moon 11.0 alpha 3 -- Mac OSX 10.6+][]
+- [Li Moon 11.0 alpha 3 -- Linux][]
+- [Li Moon 11.0 alpha 3 -- Linux x86_64][]
+- [Li Moon 11.0 alpha 3 -- Modules][]
 
 Bugfixes:
 
@@ -1824,11 +1824,11 @@ Changes:
 - Added [`buffer:style_of_name()`][] as an analogue to `buffer:name_of_style()`.
 - When requiring modules, read from `LUA_PATH` and `LUA_CPATH` environment variables instead of
 	`TA_LUA_PATH` and `TA_LUA_CPATH`.
-- `ui.goto_file_found()` and `textadept.run.goto_error()` arguments are now optional.
+- `ui.goto_file_found()` and `limoon.run.goto_error()` arguments are now optional.
 - Moved Find Incremental into the Find & Replace pane (via [`ui.find.incremental`][]),
 	eliminated `ui.find.find_incremental()` and `ui.find.find_incremental_keys`, and added
 	[`events.FIND_TEXT_CHANGED`][].
-- Replaced `textadept.editing.highlight_word()` with [`textadept.editing.highlight_words`][]
+- Replaced `limoon.editing.highlight_word()` with [`limoon.editing.highlight_words`][]
 	auto-highlighting option.
 - Find & Replace Pane now allows file filters to be specified for Find in Files.
 - Use monospaced font in Find & Replace Pane text entries.
@@ -1848,17 +1848,17 @@ Changes:
 - Scintilla: Fixed GTK on Linux bug when pasting from closed application.
 - Updated to [Scintilla][] 3.21.0.
 
-[Textadept 11.0 alpha 3 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_3/textadept_11.0_alpha_3.win32.zip
-[Textadept 11.0 alpha 3 -- Mac OSX 10.6+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_3/textadept_11.0_alpha_3.osx.zip
-[Textadept 11.0 alpha 3 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_3/textadept_11.0_alpha_3.i386.tgz
-[Textadept 11.0 alpha 3 -- Linux x86_64]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_3/textadept_11.0_alpha_3.x86_64.tgz
-[Textadept 11.0 alpha 3 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_3/textadept_11.0_alpha_3.modules.zip
+[Li Moon 11.0 alpha 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.win32.zip
+[Li Moon 11.0 alpha 3 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.osx.zip
+[Li Moon 11.0 alpha 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.i386.tgz
+[Li Moon 11.0 alpha 3 -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.x86_64.tgz
+[Li Moon 11.0 alpha 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.modules.zip
 [`view:set_theme()`]: api.html#view.set_theme
 [`lfs.walk()`]: api.html#lfs.walk
 [`buffer:style_of_name()`]: api.html#buffer.style_of_name
 [`ui.find.incremental`]: api.html#ui.find.incremental
 [`events.FIND_TEXT_CHANGED`]: api.html#events.FIND_TEXT_CHANGED
-[`textadept.editing.highlight_words`]: api.html#textadept.editing.highlight_words
+[`limoon.editing.highlight_words`]: api.html#limoon.editing.highlight_words
 [`lexer.colors`]: api.html#lexer.colors
 [`lexer.styles`]: api.html#lexer.styles
 [define and reference styles]: api.html#styles-and-styling
@@ -1870,11 +1870,11 @@ Changes:
 
 Download:
 
-- [Textadept 11.0 alpha 2 -- Win32][]
-- [Textadept 11.0 alpha 2 -- Mac OSX 10.6+][]
-- [Textadept 11.0 alpha 2 -- Linux][]
-- [Textadept 11.0 alpha 2 -- Linux x86_64][]
-- [Textadept 11.0 alpha 2 -- Modules][]
+- [Li Moon 11.0 alpha 2 -- Win32][]
+- [Li Moon 11.0 alpha 2 -- Mac OSX 10.6+][]
+- [Li Moon 11.0 alpha 2 -- Linux][]
+- [Li Moon 11.0 alpha 2 -- Linux x86_64][]
+- [Li Moon 11.0 alpha 2 -- Modules][]
 
 Bugfixes:
 
@@ -1897,11 +1897,11 @@ Changes:
 - Scintilla: Improved behavior of IME.
 - Updated to [Scintilla][] 3.20.0.
 
-[Textadept 11.0 alpha 2 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_2/textadept_11.0_alpha_2.win32.zip
-[Textadept 11.0 alpha 2 -- Mac OSX 10.6+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_2/textadept_11.0_alpha_2.osx.zip
-[Textadept 11.0 alpha 2 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_2/textadept_11.0_alpha_2.i386.tgz
-[Textadept 11.0 alpha 2 -- Linux x86_64]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_2/textadept_11.0_alpha_2.x86_64.tgz
-[Textadept 11.0 alpha 2 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha_2/textadept_11.0_alpha_2.modules.zip
+[Li Moon 11.0 alpha 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.win32.zip
+[Li Moon 11.0 alpha 2 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.osx.zip
+[Li Moon 11.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.i386.tgz
+[Li Moon 11.0 alpha 2 -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.x86_64.tgz
+[Li Moon 11.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.modules.zip
 [API suggestions]: manual.html#view-api-additions-and-buffer-api-changes
 [`buffer:marker_handle_from_line()`]: api.html#buffer.marker_handle_from_line
 [`buffer:marker_number_from_line()`]: api.html#buffer.marker_number_from_line
@@ -1914,18 +1914,18 @@ Changes:
 
 Download:
 
-- [Textadept 11.0 alpha -- Win32][]
-- [Textadept 11.0 alpha -- Mac OSX 10.6+][]
-- [Textadept 11.0 alpha -- Linux][]
-- [Textadept 11.0 alpha -- Linux x86_64][]
-- [Textadept 11.0 alpha -- Modules][]
+- [Li Moon 11.0 alpha -- Win32][]
+- [Li Moon 11.0 alpha -- Mac OSX 10.6+][]
+- [Li Moon 11.0 alpha -- Linux][]
+- [Li Moon 11.0 alpha -- Linux x86_64][]
+- [Li Moon 11.0 alpha -- Modules][]
 
 Bugfixes:
 
 - Fixed `--help` command line option.
-- Fixed Textadept API autocompletion and documentation on Windows.
+- Fixed Li Moon API autocompletion and documentation on Windows.
 - Fixed bug that regards lexer-specific snippet files as global.
-- Fixed hangs on Windows terminal version with `textadept.editing.filter_through()`.
+- Fixed hangs on Windows terminal version with `limoon.editing.filter_through()`.
 - Fixed issues with buffer z-order when switching between views.
 - Fixed accidental clipping of first character in a snippet under certain circumstances.
 - Fixed C autocompletion error with typerefs.
@@ -1933,7 +1933,7 @@ Bugfixes:
 	disconnected.
 - Fixed bugs in the return values of `ui.dialogs.standard_dropdown` and `msgbox` dialogs.
 - Fixed `events.FILE_CHANGED` not emitting a filename.
-- Fixed bug with pipes in `textadept.editing.filter_through()`.
+- Fixed bug with pipes in `limoon.editing.filter_through()`.
 - Fixed tab label display on Windows.
 - Fixed bug in syntax highlighting with PHP, Django, and other lexers that embed themselves.
 
@@ -1941,28 +1941,28 @@ Changes:
 
 - All buffer positions, lines, and countable entities start from 1 instead of 0.
 - Support more Alt and Shift+Alt keys in the Windows terminal version.
-- `textadept.editing.api_files` acts as if it already has lexer tables defined.
-- `textadept.run.goto_error()` wraps searches now.
-- Added snippet trigger autocompletion via `textadept.editing.autocomplete('snippet')`.
+- `limoon.editing.api_files` acts as if it already has lexer tables defined.
+- `limoon.run.goto_error()` wraps searches now.
+- Added snippet trigger autocompletion via `limoon.editing.autocomplete('snippet')`.
 - Improved Lua API documentation generator.
 - Localization keys in `_L` no longer contain GUI mnemonics ('\_').
-- `textadept.snippets` functions no longer have a '\_' prefix.
+- `limoon.snippets` functions no longer have a '\_' prefix.
 - `--help` command line options are alphabetized.
 - The Lua command entry can now run any `view` functions by name (e.g. split).
 - Auto-pair, type-over, and auto-deletion of matching braces now works with multiple selections.
-- Removed `textadept.file_types.lexers` table in favor of asking the LPeg lexer for known
+- Removed `limoon.file_types.lexers` table in favor of asking the LPeg lexer for known
 	lexer names.
 - Updated German translation.
-- Changed `textadept.bookmarks.toggle()` to only toggle bookmarks on the current line.
+- Changed `limoon.bookmarks.toggle()` to only toggle bookmarks on the current line.
 - Removed '=' prefix in command entry that would print results; printing results has been the
 	default behavior for quite some time.
 - Replaced `buffer.style_name[]` with [`buffer:name_of_style()`][].
 - Session files are now Lua data files; old formats will no longer work.
 - Added [`events.SESSION_SAVE`][] and [`events.SESSION_LOAD`][] events for saving and loading
 	custom user data to sessions.
-- Removed *~/.textadept/?.lua* and *~/.textadept/?.{so,dll}* from `package.path` and
+- Removed *~/.limoon/?.lua* and *~/.limoon/?.{so,dll}* from `package.path` and
 	`package.cpath`, respectively.
-- Lua errors in Textadept can now be jumped to via double-click or Enter.
+- Lua errors in Li Moon can now be jumped to via double-click or Enter.
 - `ui.dialogs.filteredlist()` dialogs have a reasonable default width.
 - Renamed `keys.MODE` to [`keys.mode`][].
 - Moved individual buffer functions in `io` into `buffer`.
@@ -1980,11 +1980,11 @@ Changes:
 - Experimental set of "standard" modules is provided in the modules archive instead of just
 	language modules.
 
-[Textadept 11.0 alpha -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha/textadept_11.0_alpha.win32.zip
-[Textadept 11.0 alpha -- Mac OSX 10.6+]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha/textadept_11.0_alpha.osx.zip
-[Textadept 11.0 alpha -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha/textadept_11.0_alpha.i386.tgz
-[Textadept 11.0 alpha -- Linux x86_64]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha/textadept_11.0_alpha.x86_64.tgz
-[Textadept 11.0 alpha -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_11.0_alpha/textadept_11.0_alpha.modules.zip
+[Li Moon 11.0 alpha -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.win32.zip
+[Li Moon 11.0 alpha -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.osx.zip
+[Li Moon 11.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.i386.tgz
+[Li Moon 11.0 alpha -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.x86_64.tgz
+[Li Moon 11.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.modules.zip
 [`buffer:name_of_style()`]: api.html#buffer.name_of_style
 [`events.SESSION_SAVE`]: api.html#events.SESSION_SAVE
 [`events.SESSION_LOAD`]: api.html#events.SESSION_LOAD
@@ -1996,10 +1996,10 @@ Changes:
 
 Download:
 
-- [Textadept 10.8 -- Win32][]
-- [Textadept 10.8 -- Mac OSX 10.6+][]
-- [Textadept 10.8 -- Linux][]
-- [Textadept 10.8 -- Modules][]
+- [Li Moon 10.8 -- Win32][]
+- [Li Moon 10.8 -- Mac OSX 10.6+][]
+- [Li Moon 10.8 -- Linux][]
+- [Li Moon 10.8 -- Modules][]
 
 Bugfixes:
 
@@ -2010,18 +2010,18 @@ Bugfixes:
 Changes:
 
 - Changed [`events.TAB_CLICKED`][] to emit button clicked as well as modifier keys.
-- Autocompletion and documentation for Textadept's Lua API only happens in Textadept files now
+- Autocompletion and documentation for Li Moon's Lua API only happens in Li Moon files now
 	(i.e. files in `_HOME` and `_USERHOME`).
-- `textadept.editing.api_files` and `_M.lua.tags` can contain functions that return file paths.
+- `limoon.editing.api_files` and `_M.lua.tags` can contain functions that return file paths.
 - Added support for txt2tags.
 - Scintilla: Added access to virtual space at the start and end of multiple selections.
 - Scintilla: The target can have virtual space.
 - Updated to [Scintilla][] 3.11.2.
 
-[Textadept 10.8 -- Win32]: https://github.com/orbitalquark/textadept/releases/download/textadept_10.8/textadept_10.8.win32.zip
-[Textadept 10.8 -- Mac OSX 10.6+]: https://github.com/orbitalquark/textadept/releases/download/textadept_10.8/textadept_10.8.macOS.zip
-[Textadept 10.8 -- Linux]: https://github.com/orbitalquark/textadept/releases/download/textadept_10.8/textadept_10.8.linux.tgz
-[Textadept 10.8 -- Modules]: https://github.com/orbitalquark/textadept/releases/download/textadept_10.8/textadept_10.8.modules.zip
+[Li Moon 10.8 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.win32.zip
+[Li Moon 10.8 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.macOS.zip
+[Li Moon 10.8 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.linux.tgz
+[Li Moon 10.8 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.modules.zip
 [`events.TAB_CLICKED`]: api.html#events.TAB_CLICKED
 [Scintilla]: https://scintilla.org
 
@@ -2042,23 +2042,23 @@ Bugfixes:
 Changes:
 
 - Refactored "Replace All" to be more performant.
-- Added back [`textadept.editing.paste_reindent()`][] as a separate menu/key/command from
+- Added back [`limoon.editing.paste_reindent()`][] as a separate menu/key/command from
 	`buffer.paste()`.
 - Enabled all theme colors by default, and changed line number color in the terminal version.
 - Replaced `ui.command_entry.enter_mode()` and `ui.command_entry.finish_mode()` with simplified
 	[`ui.command_entry.run()`][].
 - Added `ui.find.find_incremental_keys` table of key bindings during "Find Incremental" searches.
-- Replaced `textadept.macros.start_recording()` and `textadept.macros.stop_recording()` with
-	[`textadept.macros.record()`][].
+- Replaced `limoon.macros.start_recording()` and `limoon.macros.stop_recording()` with
+	[`limoon.macros.record()`][].
 - Updated C, Rust, Prolog, and Logtalk lexers.
 - Added MediaWiki lexer.
 - Scintilla: Updated case conversion and character categories to Unicode 12.1.
 - Updated to [Scintilla][] 3.11.1.
 
 [Scintilla]: https://scintilla.org
-[`textadept.editing.paste_reindent()`]: api.html#textadept.editing.paste_reindent
+[`limoon.editing.paste_reindent()`]: api.html#limoon.editing.paste_reindent
 [`ui.command_entry.run()`]: api.html#ui.command_entry.run
-[`textadept.macros.record()`]: api.html#textadept.macros.record
+[`limoon.macros.record()`]: api.html#limoon.macros.record
 
 ## 10.6 (01 Sep 2019)
 
@@ -2087,7 +2087,7 @@ Bugfixes:
 
 Changes:
 
-- Added case-insensitive option to `textadept.editing.show_documentation()`.
+- Added case-insensitive option to `limoon.editing.show_documentation()`.
 - Updated the default window size and some default dialog sizes.
 - Updated Markdown lexer.
 - Improved C++ lexer to support single quotes in C++14 integer literals.
@@ -2148,8 +2148,8 @@ Bugfixes:
 
 Changes:
 
-- Added optional position argument to `textadept.editing.show_documentation()`.
-- `textadept.editing.highlight_word()` does not select the word by default anymore.
+- Added optional position argument to `limoon.editing.show_documentation()`.
+- `limoon.editing.highlight_word()` does not select the word by default anymore.
 - Changed [file filter][] format to be more flat and intuitive.
 - Added `-l` and `--line` command line options to go to a buffer line.
 - Updated to [PDCurses][] 3.6 for the Windows terminal version.
@@ -2173,11 +2173,11 @@ Changes:
 - Renamed `spawn()` to [`os.spawn()`][].
 - `os.spawn()` now allows omission of `cwd` and `env` parameters.
 - `spawn_proc:wait()` returns the process' exit code.
-- `textadept.editing.filter_through()` halts on non-zero status instead of clobbering the buffer
+- `limoon.editing.filter_through()` halts on non-zero status instead of clobbering the buffer
 	or selected text.
-- Removed `textadept.editing.paste()` and `textadept.editing.paste_reindents` option; Textadept
+- Removed `limoon.editing.paste()` and `limoon.editing.paste_reindents` option; Li Moon
 	no longer reindents pasted text by default.
-- Experimentally added [`textadept.macros`][] module for recording, playing, saving, and loading
+- Experimentally added [`limoon.macros`][] module for recording, playing, saving, and loading
 	keyboard macros.
 - Scintilla: Improve efficiency of idle wrapping.
 - Scintilla: Updated case conversion and character categories to Unicode 11.
@@ -2185,7 +2185,7 @@ Changes:
 - Updated to [Scintilla][] 3.10.1.
 
 [`os.spawn()`]: api.html#os.spawn
-[`textadept.macros`]: api.html#textadept.macros
+[`limoon.macros`]: api.html#limoon.macros
 [Scintilla]: https://scintilla.org
 
 ## 10.1 (01 Oct 2018)
@@ -2211,7 +2211,7 @@ Changes:
 
 ## 10.0 (01 Aug 2018)
 
-Please see the [9 to 10 migration guide][] for upgrading from Textadept 9 to Textadept 10.
+Please see the [9 to 10 migration guide][] for upgrading from Li Moon 9 to Li Moon 10.
 
 Bugfixes:
 
@@ -2230,7 +2230,7 @@ Changes:
 - Updated to [Scintilla][] 3.10.0.
 - Updated to [Lua][] 5.3.5.
 
-[9 to 10 migration guide]: manual.html#textadept-9-to-10
+[9 to 10 migration guide]: manual.html#limoon-9-to-10
 [Scintilla]: https://scintilla.org
 [Lua]: https://lua.org
 
@@ -2261,9 +2261,9 @@ Bugfixes:
 Changes:
 
 - Change SQL comments to use `--` instead of `#`.
-- Updated Textadept icon.
+- Updated Li Moon icon.
 - Minimum required Mac OSX version is now 10.6 (Snow Leopard) or higher.
-- Removed LuaJIT version of Textadept.
+- Removed LuaJIT version of Li Moon.
 
 ## 10.0 alpha 3 (01 Apr 2018)
 
@@ -2275,7 +2275,7 @@ Bugfixes:
 
 Changes:
 
-- Textadept requires GCC 4.9 (circa early-2014) or later to _compile_ (not run).
+- Li Moon requires GCC 4.9 (circa early-2014) or later to _compile_ (not run).
 - C++11 regex replaces old TRE library.
 - Scintillua and Scinterm were merged into Scintilla and are no longer dependencies.
 - Emacs-style `^K` for OSX and the terminal version joins lines at EOL.
@@ -2293,8 +2293,8 @@ Changes:
 Bugfixes:
 
 - Fixed clang build warnings/errors regarding LuaJIT.
-- Fixed busy wait in second instance of Textadept on Windows.
-- Fixed bug in remote-controlled Textadept when no arguments were initially given.
+- Fixed busy wait in second instance of Li Moon on Windows.
+- Fixed bug in remote-controlled Li Moon when no arguments were initially given.
 - Fixed session loading when only it is provided as a command line argument.
 - Fixed copy-paste between views in the terminal version.
 - Fixed crash when attempting to show a badly-encoded filename in the titlebar.
@@ -2306,10 +2306,10 @@ Changes:
 - Added `fold.compact` buffer property.
 - Added [`buffer.move_extends_selection`][] for enhanced modal keyboard movement.
 - Auto-detect UTF-16-encoded files automatically.
-- Save to the loaded session on quit and removed the `textadept.session.default_session` option.
+- Save to the loaded session on quit and removed the `limoon.session.default_session` option.
 - Various Makefile improvements.
 - The terminal version can immediately focus on a clicked split view.
-- Textadept only minimally supports GTK3 now -- it still compiles, but deprecated function
+- Li Moon only minimally supports GTK3 now -- it still compiles, but deprecated function
 	calls have not been, and will not be migrated.
 - The terminal key sequence for `Ctrl+Space` is now `'c '` instead of `'c@'`.
 - The terminal version can now remap `^H` (which was previously locked to
@@ -2328,13 +2328,13 @@ Bugfixes:
 
 Changes:
 
-- Textadept requires GTK 2.24 (circa early-2011) or greater.
-- Pasted text is reindented by default via `textadept.editing.paste()`, and is configured with
-	`textadept.editing.paste_reindents`.
-- Replaced `textadept.editing.match_brace()` with a menu function, enhanced
-	`textadept.editing.select_enclosed()` behavior, and removed redundant "Select in ..." menu items.
-- Removed the need for *~/.textadept/properties.lua*. All `buffer` settings set in
-	*~/.textadept/init.lua* will apply to the first and subsequent buffers.
+- Li Moon requires GTK 2.24 (circa early-2011) or greater.
+- Pasted text is reindented by default via `limoon.editing.paste()`, and is configured with
+	`limoon.editing.paste_reindents`.
+- Replaced `limoon.editing.match_brace()` with a menu function, enhanced
+	`limoon.editing.select_enclosed()` behavior, and removed redundant "Select in ..." menu items.
+- Removed the need for *~/.limoon/properties.lua*. All `buffer` settings set in
+	*~/.limoon/init.lua* will apply to the first and subsequent buffers.
 - Renamed `ui.set_theme()` to `buffer.set_theme()`.
 - Enforce extra argument to [`buffer:brace_match()`][] added back in Scintilla 3.7.0.
 - Added [`events.ZOOM`][].
@@ -2354,7 +2354,7 @@ Bugfixes:
 Changes:
 
 - Scintilla: Block caret appears after selection end instead of on it. (Reverts change from
-	Textadept 9.3)
+	Li Moon 9.3)
 
 ## 9.5 (01 Sep 2017)
 
@@ -2514,7 +2514,7 @@ Changes:
 
 ## 9.0 (01 Oct 2016)
 
-Please see the [8 to 9 migration guide][] for upgrading from Textadept 8 to Textadept 9.
+Please see the [8 to 9 migration guide][] for upgrading from Li Moon 8 to Li Moon 9.
 
 Bugfixes:
 
@@ -2531,7 +2531,7 @@ Changes:
 - Scintilla: Added `buffer.VS_NOWRAPLINESTART` option to `buffer.virtual_space_options`.
 - Updated to [Scintilla][] 3.6.7.
 
-[8 to 9 migration guide]: manual.html#textadept-8-to-9
+[8 to 9 migration guide]: manual.html#limoon-8-to-9
 [Scintilla]: https://scintilla.org
 
 ## 9.0 beta (01 Sep 2016)
@@ -2543,7 +2543,7 @@ Bugfixes:
 - Fixed passing of quoted arguments to OSX `ta` script.
 - Fixed CapsLock key handling.
 - Fixed button order in the terminal version's dialogs.
-- Fixed potential crash on Windows with `textadept.editing.filter_through()` and some locales.
+- Fixed potential crash on Windows with `limoon.editing.filter_through()` and some locales.
 - Fixed infinite loop in "Replace All" with zero-length regex matches.
 
 Changes:
@@ -2571,9 +2571,9 @@ Changes:
 
 Bugfixes:
 
-- Fixed stack overflow when accessing `nil` keys in `textadept.menu`.
+- Fixed stack overflow when accessing `nil` keys in `limoon.menu`.
 - Fixed inability to re-encode files incorrectly detected as binary.
-- Scintilla: Fixed crash when idle styling is active upon closing Textadept.
+- Scintilla: Fixed crash when idle styling is active upon closing Li Moon.
 - Scintilla: Fixed various bugs on GTK 3.20.
 - Lua: Fixed potential crash with four or more expressions in a `for` loop.
 
@@ -2589,20 +2589,20 @@ Changes:
 - Renamed `lfs.FILTER` to [`lfs.default_filter`][] and tweaked arguments to `lfs.dir_foreach()`.
 - Locale files can optionally use `#` for comments instead of `%`.
 - Renamed `ui.SILENT_PRINT` to `ui.silent_print`.
-- Renamed all [`textadept.editing`][]`.[A-Z]+` options to their lower-case equivalents and
-	renamed `textadept.editing.braces` to `textadept.editing.brace_matches`.
+- Renamed all [`limoon.editing`][]`.[A-Z]+` options to their lower-case equivalents and
+	renamed `limoon.editing.braces` to `limoon.editing.brace_matches`.
 - *post_init.lua* files for language modules are [no longer auto-loaded][]; use
 	[`events.LEXER_LOADED`][] to load additional bits instead.
 - Renamed `ui.find.FILTER` to [`ui.find.find_in_files_filter`][] and added an optional argument
 	to `ui.find.find_in_files()`.
-- Renamed all [`textadept.session`][]`.[A-Z]+` options to their lower-case equivalents.
-- Removed syntax checking support, renamed `textadept.run.RUN_IN_BACKGROUND` to
-	[`textadept.run.run_in_background`][], removed `textadept.run.cwd` and `textadept.run.proc`,
-	added optional arguments to [`textadept.run.compile()`][], [`textadept.run.run()`][], and
-	[`textadept.run.build()`][], and changed the format of `textadept.run.error_patterns`.
+- Renamed all [`limoon.session`][]`.[A-Z]+` options to their lower-case equivalents.
+- Removed syntax checking support, renamed `limoon.run.RUN_IN_BACKGROUND` to
+	[`limoon.run.run_in_background`][], removed `limoon.run.cwd` and `limoon.run.proc`,
+	added optional arguments to [`limoon.run.compile()`][], [`limoon.run.run()`][], and
+	[`limoon.run.build()`][], and changed the format of `limoon.run.error_patterns`.
 - Rewrote sections 7-9 in the [manual][] and added a new part to section 11. Understanding how
-	to configure and script Textadept should be easier now.
-- `textadept.editing.goto_line()` takes a 0-based line number like all Scintilla functions.
+	to configure and script Li Moon should be easier now.
+- `limoon.editing.goto_line()` takes a 0-based line number like all Scintilla functions.
 - `ui.goto_view()` and `view:goto_buffer()` now take actual `view` and `buffer` arguments,
 	respectively, or a relative number.
 - Added [file-based snippet][] capabilities.
@@ -2614,15 +2614,15 @@ Changes:
 [`io.quick_open_filters`]: api.html#io.quick_open_filters
 [must be Lua functions]: manual.html#key-and-menu-command-changes
 [`lfs.default_filter`]: api.html#lfs.default_filter
-[`textadept.editing`]: api.html#textadept.editing
+[`limoon.editing`]: api.html#limoon.editing
 [no longer auto-loaded]: manual.html#language-module-handling-changes
 [`events.LEXER_LOADED`]: api.html#events.LEXER_LOADED
 [`ui.find.find_in_files_filter`]: api.html#ui.find.find_in_files_filter
-[`textadept.session`]: api.html#textadept.session
-[`textadept.run.run_in_background`]: api.html#textadept.run.run_in_background
-[`textadept.run.compile()`]: api.html#textadept.run.compile
-[`textadept.run.run()`]: api.html#textadept.run.run
-[`textadept.run.build()`]: api.html#textadept.run.build
+[`limoon.session`]: api.html#limoon.session
+[`limoon.run.run_in_background`]: api.html#limoon.run.run_in_background
+[`limoon.run.compile()`]: api.html#limoon.run.compile
+[`limoon.run.run()`]: api.html#limoon.run.run
+[`limoon.run.build()`]: api.html#limoon.run.build
 [manual]: manual.html
 [file-based snippet]: manual.html#snippet-preferences
 [Scintilla]: https://scintilla.org
@@ -2637,7 +2637,7 @@ Bugfixes:
 - Fix building for some BSDs.
 - Added some block comment strings for languages lacking them.
 - Fixed a number of small encoding issues in various corner cases.
-- Fixed bug in `textadept.editing.convert_indentation()` with mixed indentation.
+- Fixed bug in `limoon.editing.convert_indentation()` with mixed indentation.
 - Fixed an obscure side-effect that reset buffer properties when working with non-focused buffers.
 - Fixed incremental find with UTF-8 characters.
 - Fixed bug in session restoration of scroll and caret positions in multiple views.
@@ -2655,7 +2655,7 @@ Changes:
 - Support UTF-8 pattern matching in "Lua Pattern" searches by incorporating bits of [luautf8][].
 - Improved efficiency of autocompleting words from all open buffers.
 - "Find in Files" defaults to the current project's root directory.
-- Submenus and menu items can be accessed by name. (See [`textadept.menu.menubar`][] for an
+- Submenus and menu items can be accessed by name. (See [`limoon.menu.menubar`][] for an
 	example.)
 - Only show snippet trigger and text when selecting from a dialog.
 - More efficient screen refreshes in the terminal version.
@@ -2666,17 +2666,17 @@ Changes:
 	information.
 - Allow file-specific [compile commands][] and [run commands][].
 - Added new dialog for specifying compile/run command arguments to "Tools" menu.
-- `textadept.editing.enclose()` works with multiple selections.
-- Disabled `textadept.run.CHECK_SYNTAX` by default.
+- `limoon.editing.enclose()` works with multiple selections.
+- Disabled `limoon.run.CHECK_SYNTAX` by default.
 - Updated to lspawn 1.5.
 - Updated to [Scintilla][] 3.6.5.
 - Updated to Scinterm 1.8.
 
 [luautf8]: https://github.com/starwing/luautf8
-[`textadept.menu.menubar`]: api.html#textadept.menu.menubar
+[`limoon.menu.menubar`]: api.html#limoon.menu.menubar
 [this mailing list post]: https://foicica.com/lists/code/201604/3171.html
-[compile commands]: api.html#textadept.run.compile_commands
-[run commands]: api.html#textadept.run.run_commands
+[compile commands]: api.html#limoon.run.compile_commands
+[run commands]: api.html#limoon.run.run_commands
 [Scintilla]: https://scintilla.org
 
 ## 8.6 (01 Mar 2016)
@@ -2692,7 +2692,7 @@ Bugfixes:
 - Fixed building the terminal version in debug mode.
 - Fixed potential crash with malformed style properties.
 - Fixed unlikely buffer overflow in messages coming from Scintilla.
-- Fixed potential memory access error when closing Textadept while a spawned process is still
+- Fixed potential memory access error when closing Li Moon while a spawned process is still
 	alive.
 - Fixed bug in setting view properties when restoring sessions with nested splits.
 
@@ -2735,7 +2735,7 @@ Changes:
 - Added support for AutoIt.
 - Updated to [Lua][] 5.3.2.
 
-[compile, run, and build commands]: api.html#textadept.run.build_commands
+[compile, run, and build commands]: api.html#limoon.run.build_commands
 [Lua]: https://www.lua.org
 
 ## 8.4 (11 Nov 2015)
@@ -2802,7 +2802,7 @@ Changes:
 - Highlight found text in "Find in Files" searches.
 - Added Italian translation and updated French translation.
 - Added automatic syntax checking as source files are saved, along with
-	`textadept.run.CHECK_SYNTAX` and `textadept.run.GOTO_SYNTAX_ERRORS` configuration fields.
+	`limoon.run.CHECK_SYNTAX` and `limoon.run.GOTO_SYNTAX_ERRORS` configuration fields.
 - Scintilla: multiple selection works over more key commands like caret movement, selections,
 	and word and line deletions.
 - Scintilla: new [`events.AUTO_C_COMPLETED`][] event for when autocompleted text has been inserted.
@@ -2826,7 +2826,7 @@ Bugfixes:
 Changes:
 
 - Added support for Elixir and Windows Script Files (WSF).
-- Added parameter to [`textadept.editing.select_word()`][] for selecting all occurrences.
+- Added parameter to [`limoon.editing.select_word()`][] for selecting all occurrences.
 - Scintilla: added [`buffer:multiple_select_add_next()`][] and
 	[`buffer:multiple_select_add_each()`][] for creating multiple selections from selected text.
 - Scintilla: added [`buffer:is_range_word()`][] and [`buffer:target_whole_document()`][] helper
@@ -2834,7 +2834,7 @@ Changes:
 - Updated to [Scintilla][] 3.5.7.
 - Updated to [Lua][] 5.3.1.
 
-[`textadept.editing.select_word()`]: api.html#textadept.editing.select_word
+[`limoon.editing.select_word()`]: api.html#limoon.editing.select_word
 [`buffer:multiple_select_add_next()`]: api.html#buffer.multiple_select_add_next
 [`buffer:multiple_select_add_each()`]: api.html#buffer.multiple_select_add_each
 [`buffer:is_range_word()`]: api.html#buffer.is_range_word
@@ -2844,7 +2844,7 @@ Changes:
 
 ## 8.0 (01 May 2015)
 
-Please see the [7 to 8 migration guide][] for upgrading from Textadept 7 to Textadept 8.
+Please see the [7 to 8 migration guide][] for upgrading from Li Moon 7 to Li Moon 8.
 
 Bugfixes:
 
@@ -2852,10 +2852,10 @@ Bugfixes:
 
 Changes:
 
-- Added [`textadept.run.RUN_IN_BACKGROUND`][] for shell commands.
+- Added [`limoon.run.RUN_IN_BACKGROUND`][] for shell commands.
 
-[7 to 8 migration guide]: manual.html#textadept-7-to-8
-[`textadept.run.RUN_IN_BACKGROUND`]: api.html#textadept.run.run_in_background
+[7 to 8 migration guide]: manual.html#limoon-7-to-8
+[`limoon.run.RUN_IN_BACKGROUND`]: api.html#limoon.run.run_in_background
 
 ## 8.0 beta (21 Apr 2015)
 
@@ -2882,22 +2882,22 @@ Changes:
 Bugfixes:
 
 - Ensure `events.BUFFER_AFTER_SWITCH` is fired before `events.BUFFER_DELETED`.
-- Prevent command line help options from exiting an open instance of Textadept.
+- Prevent command line help options from exiting an open instance of Li Moon.
 
 Changes:
 
 - Upgraded to Lua 5.3, LPeg 0.12.2, lfs 1.6.3, and lspawn 1.2.
 - Removed `keys.LANGUAGE_MODULE_PREFIX`, but left that prefix unused on all platforms.
-- `textadept.editing.filter_through()` now uses `os.spawn()`.
+- `limoon.editing.filter_through()` now uses `os.spawn()`.
 - Removed long-hand [compile and run macros][] in favor of shorter ones.
-- [`textadept.bookmarks.toggle()`][] accepts an optional line to bookmark.
+- [`limoon.bookmarks.toggle()`][] accepts an optional line to bookmark.
 - Added support for Rust and TOML.
 - "Go To Bookmark" now lists bookmarks in all open buffers.
 - [`proc:kill()`][] can send signals to processes.
 - New [`lexer._FOLDBYINDENTATION`][] field for lexers that fold based on indentation.
 
-[compile and run macros]: api.html#textadept.run.compile\_commands
-[`textadept.bookmarks.toggle()`]: api.html#textadept.bookmarks.toggle
+[compile and run macros]: api.html#limoon.run.compile\_commands
+[`limoon.bookmarks.toggle()`]: api.html#limoon.bookmarks.toggle
 [`proc:kill()`]: api.html#proc.kill
 [`lexer._FOLDBYINDENTATION`]: api.html#fold-by-indentation
 
@@ -2919,7 +2919,7 @@ Changes:
 - Officially supported language modules moved to a [new repository][].
 - Added Fish lexer and updated PHP and Python lexers.
 - Merged `events.FILE_SAVED_AS` into [`events.FILE_AFTER_SAVE`][] as a new parameter.
-- Merged `textadept.file_types.shebangs` into `textadept.file_types.patterns`.
+- Merged `limoon.file_types.shebangs` into `limoon.file_types.patterns`.
 - Removed `io.boms`.
 - Scintilla: added [`buffer.indic_hover_fore`][] and [`buffer.indic_hover_style`][] for styling
 	indicators differently when the mouse is over them.
@@ -2927,7 +2927,7 @@ Changes:
 	indicators.
 - Updated to [Scintilla][] 3.5.4.
 
-[new repository]: https://github.com/orbitalquark/textadept-modules
+[new repository]: https://github.com/orbitalquark/limoon-modules
 [`events.FILE_AFTER_SAVE`]: api.html#events.FILE_AFTER_SAVE
 [`buffer.indic_hover_fore`]: api.html#buffer.indic_hover_fore
 [`buffer.indic_hover_style`]: api.html#buffer.indic_hover_style
@@ -2941,7 +2941,7 @@ Bugfixes:
 
 Changes:
 
-- Removed language-specific context menus; manipulate `textadept.menu.context_menu` directly
+- Removed language-specific context menus; manipulate `limoon.menu.context_menu` directly
 	from language modules.
 
 ## 7.8 beta 3 (21 Jan 2015)
@@ -2950,7 +2950,7 @@ Bugfixes:
 
 - Fixed opening files with network paths on Windows.
 - Fixed minor GTK 3 issues.
-- Fixed bug in hiding caret when Textadept loses focus.
+- Fixed bug in hiding caret when Li Moon loses focus.
 - Fixed bug in overwriting fold levels set by custom fold functions.
 - Scintilla: fixed placement of large call tips.
 - Scintilla: fixed background color of annotation lines with text margins.
@@ -3077,7 +3077,7 @@ Bugfixes:
 
 Changes:
 
-- New [`events.FOCUS`][] event for when Textadept's window receives focus.
+- New [`events.FOCUS`][] event for when Li Moon's window receives focus.
 - Condensed manual and API documentation into single files.
 - Added Polish translation.
 - Scintilla: added [`buffer.auto_c_multi`][] for autocompleting into multiple selections.
@@ -3117,29 +3117,29 @@ Changes:
 - Use `os.spawn()` for launching help.
 - Renamed `io.set_buffer_encoding()` to [`buffer:set_encoding()`][].
 - Removed Adeptsense in favor of [autocompleter functions][], but kept existing api file format.
-- Renamed `textadept.editing.autocomplete_word()` to
-	[`textadept.editing.autocomplete`][]`('word')`.
-- New [`textadept.editing.AUTOCOMPLETE_ALL`][] field for autocompleting words from all open
+- Renamed `limoon.editing.autocomplete_word()` to
+	[`limoon.editing.autocomplete`][]`('word')`.
+- New [`limoon.editing.AUTOCOMPLETE_ALL`][] field for autocompleting words from all open
 	buffers.
 - Dropped support for official java, php, rails, and rhtml modules; they are on the wiki now.
-- Removed `textadept.editing.HIGHLIGHT_BRACES` option, as indicator style can be changed to
+- Removed `limoon.editing.HIGHLIGHT_BRACES` option, as indicator style can be changed to
 	hide highlighting.
-- Removed `textadept.editing.select_indented_block()`.
-- In-place menu editing via [`textadept.menu.menubar`][], [`textadept.menu.context_menu`][],
-	and [`textadept.menu.tab_context_menu`][] tables.
-- Removed `textadept.command_entry.complete_lua()` and `textadept.command_entry.execute_lua()`
+- Removed `limoon.editing.select_indented_block()`.
+- In-place menu editing via [`limoon.menu.menubar`][], [`limoon.menu.context_menu`][],
+	and [`limoon.menu.tab_context_menu`][] tables.
+- Removed `limoon.command_entry.complete_lua()` and `limoon.command_entry.execute_lua()`
 	and moved their key bindings into their module.
 - Updated D lexer.
 - Scintilla: added `buffer.FOLDFLAG_LINESTATE` for lexer debugging aid.
 - Updated to [Scintilla][] 3.4.2.
 
 [`buffer:set_encoding()`]: api.html#buffer.set_encoding
-[autocompleter functions]: api.html#textadept.editing.autocompleters
-[`textadept.editing.autocomplete`]: api.html#textadept.editing.autocomplete
-[`textadept.editing.AUTOCOMPLETE_ALL`]: api.html#textadept.editing.autocomplete_all_words
-[`textadept.menu.menubar`]: api.html#textadept.menu.menubar
-[`textadept.menu.context_menu`]: api.html#textadept.menu.context_menu
-[`textadept.menu.tab_context_menu`]: api.html#textadept.menu.tab_context_menu
+[autocompleter functions]: api.html#limoon.editing.autocompleters
+[`limoon.editing.autocomplete`]: api.html#limoon.editing.autocomplete
+[`limoon.editing.AUTOCOMPLETE_ALL`]: api.html#limoon.editing.autocomplete_all_words
+[`limoon.menu.menubar`]: api.html#limoon.menu.menubar
+[`limoon.menu.context_menu`]: api.html#limoon.menu.context_menu
+[`limoon.menu.tab_context_menu`]: api.html#limoon.menu.tab_context_menu
 [Scintilla]: https://scintilla.org
 
 ## 7.2 (01 May 2014)
@@ -3191,7 +3191,7 @@ Changes:
 
 [spawn processes]: api.html#os.spawn
 [Snapopen]: manual.html#quick-open
-[building projects]: api.html#textadept.run.build
+[building projects]: api.html#limoon.run.build
 [LuaJIT]: https://luajit.org
 [Scintilla]: https://scintilla.org
 
@@ -3246,15 +3246,15 @@ Changes:
 
 - Added Dart lexer.
 - Do not split the view when printing messages if tabs are enabled.
-- Look for *~/.textadept/osx_env.sh* for [OSX environment variables][] due to changes in Mac
+- Look for *~/.limoon/osx_env.sh* for [OSX environment variables][] due to changes in Mac
 	OSX 10.9.
 - [Experimental] Replaced Lua's `io.popen()` and `os.execute()` with versions that do not flash
 	the "black box" on Windows.
 - Added read-only access to the current key chain via `keys.keychain`.
 - Renamed "hypertext" lexer and its corresponding module to "html".
-- Added configurable tab context menus via `textadept.menu.set_contextmenus()`.
+- Added configurable tab context menus via `limoon.menu.set_contextmenus()`.
 - New GUI theme for Mac OSX.
-- [Experimental] Merged separate lexer states into Textadept's Lua state.
+- [Experimental] Merged separate lexer states into Li Moon's Lua state.
 - Updated HTML lexer.
 - Scintilla: the `Ctrl` modifier in Mac OSX mouse clicks is recognized as `buffer.MOD_META`.
 - Scintilla: added [`buffer.representation`][] for changing the representation of characters.
@@ -3286,7 +3286,7 @@ Changes:
 - Tabs for multiple buffers along with [`ui.tabs`][] API.
 - Split C/C++ lexer into separate lexers and replaced default "cpp" module with "ansi\_c".
 - Find and replace text may utilize "%0" capture containing the entire match.
-- Disable `textadept.editing.STRIP_TRAILING_SPACES` by default.
+- Disable `limoon.editing.STRIP_TRAILING_SPACES` by default.
 - `ui.clipboard_text` is no longer read-only.
 - Added [`events.FILE_CHANGED`][] event.
 
@@ -3295,7 +3295,7 @@ Changes:
 
 ## 7.0 (01 Nov 2013)
 
-Please see the [6 to 7 migration guide][] for upgrading from Textadept 6 to Textadept 7.
+Please see the [6 to 7 migration guide][] for upgrading from Li Moon 6 to Li Moon 7.
 
 Bugfixes:
 
@@ -3307,10 +3307,10 @@ Bugfixes:
 Changes:
 
 - Added Assembly (NASM) lexer with compile and run commands.
-- `textadept.adeptsense.goto_ctag()` can show all known tags now.
-- `textadept.editing.enclose()` encloses the whole current word.
+- `limoon.adeptsense.goto_ctag()` can show all known tags now.
+- `limoon.editing.enclose()` encloses the whole current word.
 
-[6 to 7 migration guide]: manual.html#textadept-6-to-7
+[6 to 7 migration guide]: manual.html#limoon-6-to-7
 
 ## 7.0 beta 5 (21 Oct 2013)
 
@@ -3326,7 +3326,7 @@ Changes:
 
 - Changed `ui.set_theme()` API to accept a table of property assignments.
 - Added Nimrod lexer and compile and run commands.
-- Use `textadept.editing.INDIC_BRACEMATCH` indicator for brace highlighting instead of styles.
+- Use `limoon.editing.INDIC_BRACEMATCH` indicator for brace highlighting instead of styles.
 - The `buffer` API applies to all buffers now, not just the global one.
 - Added "Save All" to the menu.
 - Updated D lexer.
@@ -3355,12 +3355,12 @@ Changes:
 	[`_CHARSET`][].
 - Removed many unused Scintilla constants and stripped many constants of `SC` and `SC_` prefixes.
 - Changed marker margin symbols via *properties.lua*.
-- Calling `textadept.editing.select_word()` repeatedly makes multiple selections.
+- Calling `limoon.editing.select_word()` repeatedly makes multiple selections.
 - Renamed `buffer:convert_eo_ls()` to [`convert_eols()`][].
-- Added [`textadept.run.MARK_WARNING`][] marker.
-- Renamed `textadept.run.compile_command` and `textadept.run.run_command` to [`compile_commands`][]
+- Added [`limoon.run.MARK_WARNING`][] marker.
+- Renamed `limoon.run.compile_command` and `limoon.run.run_command` to [`compile_commands`][]
 	and [`run_commands`][], respectively.
-- Renamed `textadept.run.error_detail` to `error_patterns` and changed its internal structure.
+- Renamed `limoon.run.error_detail` to `error_patterns` and changed its internal structure.
 - Compile and run commands for languages that support them are now built-in along with their
 	respective warning and error messages. The supplemental ones on the wiki are no longer needed.
 - New [`ui.dialogs`][] module for more user-friendly dialog support. Removed `ui.filteredlist()`
@@ -3377,9 +3377,9 @@ Changes:
 [`events.disconnect()`]: api.html#events.disconnect
 [`_CHARSET`]: api.html#_CHARSET
 [`convert_eols()`]: api.html#buffer.convert_eols
-[`textadept.run.MARK_WARNING`]: api.html#textadept.run.MARK_WARNING
-[`compile_commands`]: api.html#textadept.run.compile_commands
-[`run_commands`]: api.html#textadept.run.run_commands
+[`limoon.run.MARK_WARNING`]: api.html#limoon.run.MARK_WARNING
+[`compile_commands`]: api.html#limoon.run.compile_commands
+[`run_commands`]: api.html#limoon.run.run_commands
 [`ui.dialogs`]: api.html#ui.dialogs
 [`io.open_file()`]: api.html#io.open_file
 [`io.snapopen()`]: api.html#io.quick_open
@@ -3404,19 +3404,19 @@ Changes:
 - Copied constants from `_SCINTILLA.constants` into `buffer`.
 - Renamed `events.LANGUAGE_MODULE_LOADED` to [`events.LEXER_LOADED`][].
 - Renamed `gui` to [`ui`][].
-- Renamed `_M.textadept` to [`textadept`][].
+- Renamed `_M.limoon` to [`limoon`][].
 - New [`events.INITIALIZED`][] event.
 - Renamed `buffer:get_style_name()` to `buffer.style_name`.
 - Renamed `ui.docstatusbar_text` to `ui.bufstatusbar_text`.
-- Removed `textadept.bookmarks.BOOKMARK_COLOR`, `textadept.editing.HIGHLIGHT_COLOR`, and
-	`textadept.run.ERROR_COLOR` while exposing their respective marker and indicator numbers
+- Removed `limoon.bookmarks.BOOKMARK_COLOR`, `limoon.editing.HIGHLIGHT_COLOR`, and
+	`limoon.run.ERROR_COLOR` while exposing their respective marker and indicator numbers
 	for customization.
 - Moved buffer IO functions into [`io` module][].
 - Updated to [CDK][] 5.0-20130901.
 
 [`events.LEXER_LOADED`]: api.html#events.LEXER_LOADED
 [`ui`]: api.html#ui
-[`textadept`]: api.html#textadept
+[`limoon`]: api.html#limoon
 [`events.INITIALIZED`]: api.html#events.INITIALIZED
 [`io` module]: api.html#io
 [CDK]: https://invisible-island.net/cdk/cdk.html
@@ -3433,7 +3433,7 @@ Bugfixes:
 
 Changes:
 
-- New [`gui.maximized`][] field so Textadept can remember its maximized state.
+- New [`gui.maximized`][] field so Li Moon can remember its maximized state.
 - Changed `lexer._tokenstyles` to be a map instead of a list.
 - Scintilla: improved UTF-8 case-insensitive searching.
 - Updated to [Scintilla][] 3.3.4.
@@ -3451,7 +3451,7 @@ Bugfixes:
 
 Changes:
 
-- Renamed `_M.textadept.mime_types` to `_M.textadept.file_types`.
+- Renamed `_M.limoon.mime_types` to `_M.limoon.file_types`.
 - Eliminated *mime_types.conf* files. Add or modify file type tables [directly][].
 - Changed scrollbar look and feel on Mac OSX.
 
@@ -3472,20 +3472,20 @@ Changes:
 	longer necessary.
 - Removed `_G._LEXERPATH` and `_L._EXISTS()`.
 - Renamed Adeptsense image fields.
-- Renamed `_M.textadept.editing.STRIP_WHITESPACE_ON_SAVE` to `STRIP_TRAILING_SPACES`.
-- `_M.textadept.editing.block_comment()` supports block comment delimiters.
+- Renamed `_M.limoon.editing.STRIP_WHITESPACE_ON_SAVE` to `STRIP_TRAILING_SPACES`.
+- `_M.limoon.editing.block_comment()` supports block comment delimiters.
 - Block comments for languages is now built-in. The supplemental ones on the wiki are no
 	longer needed.
 - `gui.set_theme()` accepts key-value argument pairs for overriding theme properties.
 - Removed `gui.select_theme()` since selected themes do not persist.
 - Removed `_G.RESETTING` flag.
-- Consolidated `_M.textadept.bookmarks.goto_*()` functionality into
-	[`_M.textadept.bookmarks.goto_mark()`][].
+- Consolidated `_M.limoon.bookmarks.goto_*()` functionality into
+	[`_M.limoon.bookmarks.goto_mark()`][].
 - Updated to [LuaJIT][] 2.0.2.
 - New [nightly builds][].
 
 [compiling]: manual.html#compiling
-[`_M.textadept.bookmarks.goto_mark()`]: api.html#textadept.bookmarks.goto_mark
+[`_M.limoon.bookmarks.goto_mark()`]: api.html#limoon.bookmarks.goto_mark
 [LuaJIT]: https://luajit.org
 [nightly builds]: index.html
 
@@ -3542,7 +3542,7 @@ Bugfixes:
 
 Changes:
 
-- Textadept supports multiple curses platforms, not just ncurses. Make targets now use "curses"
+- Li Moon supports multiple curses platforms, not just ncurses. Make targets now use "curses"
 	instead of "ncurses".
 - Better 16-color terminal support in lexer theme.
 - Reduced the delay when pressing `Esc` in the terminal version.
@@ -3553,17 +3553,17 @@ Changes:
 - Updated to [Scintilla][] 3.3.1.
 - Renamed `_G.buffer_new()` to [`buffer.new()`][].
 - Changed the display of highlighted words, including removing
-	`_M.textadept.editing.INDIC_HIGHLIGHT_ALPHA`.
-- Changed `_M.textadept.editing.autocomplete_word()` API.
-- Removed `_M.textadept.menu.menubar`, `_M.textadept.menu.contextmenu`, and `events.handlers`
+	`_M.limoon.editing.INDIC_HIGHLIGHT_ALPHA`.
+- Changed `_M.limoon.editing.autocomplete_word()` API.
+- Removed `_M.limoon.menu.menubar`, `_M.limoon.menu.contextmenu`, and `events.handlers`
 	tables from the API.
-- Moved `_M.textadept.filter_through` module functionality into
-	[`_M.textadept.editing.filter_through()`][].
-- Mark errors in compile/run commands and added [`_M.textadept.run.goto_error()`][] menu options
+- Moved `_M.limoon.filter_through` module functionality into
+	[`_M.limoon.editing.filter_through()`][].
+- Mark errors in compile/run commands and added [`_M.limoon.run.goto_error()`][] menu options
 	and key shortcuts.
 - Renamed `gui.find.goto_file_in_list()` to [`gui.find.goto_file_found()`][].
-- Consolidated `_M.textadept.editing.grow_selection()` functionality into
-	[`_M.textadept.editing.select_enclosed()`][].
+- Consolidated `_M.limoon.editing.grow_selection()` functionality into
+	[`_M.limoon.editing.select_enclosed()`][].
 - Renamed `io.try_encodings` to [`io.encodings`][].
 - No need for '!' in front of font faces anymore.
 
@@ -3571,10 +3571,10 @@ Changes:
 [`buffer.auto_c_order`]: api.html#buffer.auto_c_order
 [Scintilla]: https://scintilla.org
 [`buffer.new()`]: api.html#buffer.new
-[`_M.textadept.editing.filter_through()`]: api.html#textadept.editing.filter_through
-[`_M.textadept.run.goto_error()`]: api.html#textadept.run.goto_error
+[`_M.limoon.editing.filter_through()`]: api.html#limoon.editing.filter_through
+[`_M.limoon.run.goto_error()`]: api.html#limoon.run.goto_error
 [`gui.find.goto_file_found()`]: api.html#ui.find.goto_file_found
-[`_M.textadept.editing.select_enclosed()`]: api.html#textadept.editing.select_enclosed
+[`_M.limoon.editing.select_enclosed()`]: api.html#limoon.editing.select_enclosed
 [`io.encodings`]: api.html#io.encodings
 
 ## 6.5 (01 Apr 2013)
@@ -3584,7 +3584,7 @@ Bugfixes:
 - Only consider visible directories in *_USERHOME/themes/* as themes.
 - Indicator for highlighted words works in ncurses.
 - Improved message double-clicking behavior for compile and run commands by adding
-	`_M.textadept.run.cwd`.
+	`_M.limoon.run.cwd`.
 - Fixed disorienting scrolling when wrapping only one search result.
 - Fixed crash when attempting to load a non-existant lexer.
 - Fixed CSS preprocessor styling.
@@ -3600,7 +3600,7 @@ Changes:
 - Reset Lua state after selecting a new theme.
 - Added `lfs.dir_foreach()`.
 - Added file and directory [filtering][] for Find in Files.
-- Moved `_M.textadept.snapopen` into `io`.
+- Moved `_M.limoon.snapopen` into `io`.
 - Renamed some [`lexer` constants][].
 - Added Less, Literal Coffeescript, and Sass lexers.
 - Scintilla: added [`buffer:scroll_range()`][] for scrolling ranges into view.
@@ -3617,7 +3617,7 @@ Changes:
 
 Bugfixes:
 
-- Dialogs belong to the Textadept window.
+- Dialogs belong to the Li Moon window.
 - Double-clicking a filteredlist item selects it.
 - Fixed bug in documentation link generator.
 - Fixed bug with indexable buffer properties that return strings.
@@ -3656,7 +3656,7 @@ Changes:
 
 [`buffer.caret_line_visible_always`]: api.html#buffer.caret_line_visible_always
 [Scintilla]: https://scintilla.org
-[typeover characters]: api.html#textadept.editing.typeover_auto_paired
+[typeover characters]: api.html#limoon.editing.typeover_auto_paired
 
 ## 6.2 (01 Jan 2013)
 
@@ -3668,9 +3668,9 @@ Changes:
 
 - Greatly improved speed when loading large files.
 - `make install` and `make ncurses install` install separate binaries on Linux.
-- Changed API for [`_M.textadept.snapopen.open()`][] and removed `PATHS`.
+- Changed API for [`_M.limoon.snapopen.open()`][] and removed `PATHS`.
 
-[`_M.textadept.snapopen.open()`]: api.html#io.quick_open
+[`_M.limoon.snapopen.open()`]: api.html#io.quick_open
 
 ## 6.1 (11 Dec 2012)
 
@@ -3698,7 +3698,7 @@ Changes:
 
 ## 6.0 (01 Nov 2012)
 
-Please see the [5 to 6 migration guide][] for upgrading from Textadept 5 to Textadept 6.
+Please see the [5 to 6 migration guide][] for upgrading from Li Moon 5 to Li Moon 6.
 
 Bugfixes:
 
@@ -3719,7 +3719,7 @@ Changes:
 - Added key binding for toggling fold points.
 - Added ncurses key bindings for bookmarks.
 - Added [`event.FIND_WRAPPED`][] event.
-- Removed `_M.textadept.run.execute()`.
+- Removed `_M.limoon.run.execute()`.
 - Updated documentation and documentation formatting.
 - Added Python module.
 - Rewrote Makefile lexer.
@@ -3727,7 +3727,7 @@ Changes:
 - Updated to [Scintilla][] 3.2.3.
 - Updated to [LuaJIT][] 2.0.0-beta11.
 
-[5 to 6 migration guide]: manual.html#textadept-5-to-6
+[5 to 6 migration guide]: manual.html#limoon-5-to-6
 [`event.FIND_WRAPPED`]: api.html#events.FIND_WRAPPED
 [Scintilla]: https://scintilla.org
 [LuaJIT]: https://luajit.org
@@ -3749,15 +3749,15 @@ Bugfixes:
 Changes:
 
 - Attempt to autodetect locale using `LANG` environment variable.
-- Removed `_M.textadept.menu.rebuild_command_tables()`.
+- Removed `_M.limoon.menu.rebuild_command_tables()`.
 - Manual and Lua API documentation largely re-written.
-- Key Bindings reference moved from Appendix to [`_M.textadept.keys`][] LuaDoc.
+- Key Bindings reference moved from Appendix to [`_M.limoon.keys`][] LuaDoc.
 - Plain text lexer name changed from `container` to `text`.
 - New application icon.
 - Removed `./?.lua` and `./?.so` from `package.path` and `package.cpath`, respectively.
 - Added marks for making selections in ncurses.
 
-[`_M.textadept.keys`]: api.html#textadept.keys
+[`_M.limoon.keys`]: api.html#limoon.keys
 
 ## 6.0 beta 2 (01 Sep 2012)
 
@@ -3767,7 +3767,7 @@ Bugfixes:
 - ncurses replace entry can now be focused.
 - Fixed ncurses memory leaks.
 - Fixed multiple selection in Mac OSX.
-- Show key shortcuts in ncurses `_M.textadept.menu.select_command()`.
+- Show key shortcuts in ncurses `_M.limoon.menu.select_command()`.
 - Scintilla: fixed rectangular selection range after backspacing.
 - Scintilla: fixed bug with negative ranges in call tip highlighting.
 
@@ -3775,10 +3775,10 @@ Changes:
 
 - Added `make install` and `make uninstall` rules for optional installation.
 - Updated manual with ncurses key bindings.
-- Consolidated `_M.textadept.bookmarks.add()` and `_M.textadept.bookmarks.remove()` into
-	[`_M.textadept.bookmarks.toggle()`][].
+- Consolidated `_M.limoon.bookmarks.add()` and `_M.limoon.bookmarks.remove()` into
+	[`_M.limoon.bookmarks.toggle()`][].
 - Updated manual images.
-- `_M.textadept.snapopen.DEFAULT_DEPTH` is now `99` since `MAX` is the limiting factor.
+- `_M.limoon.snapopen.DEFAULT_DEPTH` is now `99` since `MAX` is the limiting factor.
 - Use constant names in theme options instead of nondescript integers.
 - Added new lexer.last_char_includes() function for better regex detection.
 - Updated AWK lexer.
@@ -3787,7 +3787,7 @@ Changes:
 	for navigating wrapped lines.
 - Updated to [Scintilla][] 3.2.2.
 
-[`_M.textadept.bookmarks.toggle()`]: api.html#textadept.bookmarks.toggle
+[`_M.limoon.bookmarks.toggle()`]: api.html#limoon.bookmarks.toggle
 [`buffer.selection_empty`]: api.html#buffer.selection_empty
 [`buffer:vc_home_display()`]: api.html#buffer.vc_home_display
 [`buffer:vc_home_display_extend()`]: api.html#buffer.vc_home_display_extend
@@ -3812,21 +3812,21 @@ Bugfixes:
 Changes:
 
 - Removed Lua, Ruby, and PHP modules' `goto_required()` functions.
-- Moved `_M.textadept.editing.prepare_for_save()` directly into event handler.
-- Moved `_M.textadept.session.prompt_load()` and `prompt_save()` functionality into
-	[`_M.textadept.session.load()`][] and [`_M.textadept.session.save()`][].
+- Moved `_M.limoon.editing.prepare_for_save()` directly into event handler.
+- Moved `_M.limoon.session.prompt_load()` and `prompt_save()` functionality into
+	[`_M.limoon.session.load()`][] and [`_M.limoon.session.save()`][].
 - Removed `_G.user_dofile()`.
 - Converted some `buffer` "get" and "set" functions into properties.
-- Moved `_M.textadept.adeptsense.complete_symbol()` and `show_documentation()` functionality into
-	`_M.textadept.adeptsense.complete()` and `show_apidoc()`.
+- Moved `_M.limoon.adeptsense.complete_symbol()` and `show_documentation()` functionality into
+	`_M.limoon.adeptsense.complete()` and `show_apidoc()`.
 - New 64-bit Windows version (note: without LuaJIT).
 - Updated Perl lexer.
 - Scintilla: added [`buffer.punctuation_chars`][], [`buffer.word_chars`][], and
 	[`buffer.whitespace_chars`][] for manipulating character sets.
 - Updated to [Scintilla][] 3.2.1.
 
-[`_M.textadept.session.load()`]: api.html#textadept.session.load
-[`_M.textadept.session.save()`]: api.html#textadept.session.save
+[`_M.limoon.session.load()`]: api.html#limoon.session.load
+[`_M.limoon.session.save()`]: api.html#limoon.session.save
 [`buffer.punctuation_chars`]: api.html#buffer.punctuation_chars
 [`buffer.word_chars`]: api.html#buffer.word_chars
 [`buffer.whitespace_chars`]: api.html#buffer.whitespace_chars
@@ -3846,7 +3846,7 @@ Changes:
 - Changed `gui.statusbar_text` to be write-only.
 - Changed 'Quit' key command to 'Ctrl+Q' on Windows and Linux.
 - Show text that could not be localized.
-- Changed `make` commands for [compiling][] Textadept.
+- Changed `make` commands for [compiling][] Li Moon.
 - x86\_64 binary provides `libpng12` executables by default.
 - Can cross compile to Mac OSX from Linux.
 - Updated AWK lexer.
@@ -3900,9 +3900,9 @@ Bugfixes:
 Changes:
 
 - Annotations are used for showing run/compile command output.
-- Textadept is [single-instance][] by default on Linux and Mac OSX.
-- Textadept requires [GTK][] 2.18 or higher now instead of 2.16.
-- The provided Textadept binaries [require][] [GLib][] 2.28 or higher.
+- Li Moon is [single-instance][] by default on Linux and Mac OSX.
+- Li Moon requires [GTK][] 2.18 or higher now instead of 2.16.
+- The provided Li Moon binaries [require][] [GLib][] 2.28 or higher.
 - Scintilla: added `buffer.auto_c_case_insensitive_behaviour` for controlling case sensitivity
 	in autocompletion lists.
 - Scintilla: `\0` in regex replacements represents the full found text.
@@ -3938,7 +3938,7 @@ Changes:
 - `_G.timeout()` accepts fractional seconds.
 - Replaced `scripts/update_doc` with `src/Makefile` targets.
 - New Manual and LuaDoc HTML page formatting.
-- `_M.textadept.editing.autocomplete_word()` accepts default words.
+- `_M.limoon.editing.autocomplete_word()` accepts default words.
 - Added documentation on generating LuaDoc and Lua Adeptsense.
 - Moved `Markdown:` comments into LuaDoc.
 - Added Spanish and German translations.
@@ -3969,8 +3969,8 @@ Changes:
 
 ## 5.0 (01 Feb 2012)
 
-Please see the [4 to 5 migration guide][] for upgrading from Textadept 4 to
-Textadept 5.
+Please see the [4 to 5 migration guide][] for upgrading from Li Moon 4 to
+Li Moon 5.
 
 Bugfixes:
 
@@ -3980,13 +3980,13 @@ Bugfixes:
 
 Changes:
 
-- Added default extension and folder filters in `modules/textadept/snapopen.lua`.
+- Added default extension and folder filters in `modules/limoon/snapopen.lua`.
 - Added ChucK lexer.
 - Updated Lua lexer.
 - Updated to [Scintilla][] 3.0.3.
 - Also include [LuaJIT][] executables in releases.
 
-[4 to 5 migration guide]: manual.html#textadept-4-to-5
+[4 to 5 migration guide]: manual.html#limoon-4-to-5
 [Scintilla]: https://scintilla.org
 [LuaJIT]: https://luajit.org
 
@@ -4007,7 +4007,7 @@ Changes:
 
 [`_L`]: api.html#_L
 [manual]: manual.html
-[`select_word()`]: api.html#textadept.editing.select_word
+[`select_word()`]: api.html#limoon.editing.select_word
 
 ## 5.0 alpha (21 Dec 2011)
 
@@ -4021,7 +4021,7 @@ Changes:
 
 - Updated to [Lua 5.2][].
 - Updated sections in the [manual][] to reflect Lua 5.2 changes.
-- Textadept can be compiled with [LuaJIT][].
+- Li Moon can be compiled with [LuaJIT][].
 
 [Lua 5.2]: https://www.lua.org/manual/5.2/
 [manual]: manual.html
@@ -4041,7 +4041,7 @@ Changes:
 
 - Added on-the-fly theme switching.
 - All new `light` and `dark` themes.
-- Removed `_m.textadept.editing.select_style()`.
+- Removed `_m.limoon.editing.select_style()`.
 - Simplify theming via [gtkrc][] by naming `GtkWindow` only.
 - Added [`lexer.REGEX`][] and [`lexer.LABEL`][] tokens.
 - Updated to [Scintilla][] 3.0.1.
@@ -4106,7 +4106,7 @@ Changes:
 
 ## 4.0 (01 Sep 2011)
 
-Please see the [3 to 4 migration guide][] for upgrading from Textadept 3 to Textadept 4.
+Please see the [3 to 4 migration guide][] for upgrading from Li Moon 3 to Li Moon 4.
 
 Bugfixes:
 
@@ -4123,7 +4123,7 @@ Changes:
 - Changed some key bindings from 4.0 beta 2.
 - Do not hide the statusbar when the command entry has focus.
 
-[3 to 4 migration guide]: manual.html#textadept-3-to-4
+[3 to 4 migration guide]: manual.html#limoon-3-to-4
 
 ## 4.0 beta 2 (11 Aug 2011)
 
@@ -4165,9 +4165,9 @@ Changes:
 - [`buffer`][] functions may omit the first `buffer` argument (e.g. `buffer.line_down()`
 	is allowed).
 - Complete overhaul of menus and added accelerators to [menu][] items.
-- Renamed `_m.textadept.editing.SAVE_STRIPS_WS` to
-	[`_m.textadept.editing.STRIP_WHITESPACE_ON_SAVE`][].
-- Renamed `_m.textadept.editing.select_scope()` to `_m.textadept.editing.select_style()`.
+- Renamed `_m.limoon.editing.SAVE_STRIPS_WS` to
+	[`_m.limoon.editing.STRIP_WHITESPACE_ON_SAVE`][].
+- Renamed `_m.limoon.editing.select_scope()` to `_m.limoon.editing.select_style()`.
 - *Completely new set of key bindings.*
 - Scintilla: translucent RGBA images can be used in margins and autocompletion and user lists.
 - Scintilla: added new `buffer.INDIC_DOTBOX` indicator.
@@ -4177,7 +4177,7 @@ Changes:
 
 [`io.open_recent_file()`]: api.html#io.open_recent_file
 [`buffer`]: api.html#buffer
-[`_m.textadept.editing.STRIP_WHITESPACE_ON_SAVE`]: api.html#textadept.editing.STRIP_WHITESPACE_ON_SAVE
+[`_m.limoon.editing.STRIP_WHITESPACE_ON_SAVE`]: api.html#limoon.editing.STRIP_WHITESPACE_ON_SAVE
 [menu]: api.html#ui.menu
 [Scintilla]: https://scintilla.org
 
@@ -4255,7 +4255,7 @@ Changes:
 
 [events]: api.html#events
 [documentation]: manual.html#getting-modules
-[official modules]: https://github.com/orbitalquark/textadept-modules
+[official modules]: https://github.com/orbitalquark/limoon-modules
 [`buffer:move_selected_lines_up()`]: api.html#buffer.move_selected_lines_up
 [`buffer:move_selected_lines_down()`]: api.html#buffer.move_selected_lines_down
 [Scintilla]: https://scintilla.org
@@ -4293,7 +4293,7 @@ Changes:
 - Added C standard library and Lua C API to C/C++ Adeptsense.
 - Lua module fields are now in Lua Adeptsense.
 - Updated to [Scintilla][] 2.25.
-- Rewrote [`_m.textadept.snippets`][] with syntax changes.
+- Rewrote [`_m.limoon.snippets`][] with syntax changes.
 - `Alt+I` (`Ctrl+I` on Mac OSX) is now "Select Snippet" instead of "Show Style". "Show Style"
 	is now `Ctrl+Alt+Shift+I` (`Ctrl+Apple+Shift+I`).
 - Adeptsense can exclude types matched by `sense.syntax.type_declarations` patterns.
@@ -4307,8 +4307,8 @@ Changes:
 - Added cancel button to standard dialogs.
 
 [Scintilla]: https://scintilla.org
-[`_m.textadept.snippets`]: api.html#textadept.snippets
-[repository]: https://github.com/orbitalquark/textadept-modules
+[`_m.limoon.snippets`]: api.html#limoon.snippets
+[repository]: https://github.com/orbitalquark/limoon-modules
 
 ## 3.7 beta 2 (01 Mar 2011)
 
@@ -4320,7 +4320,7 @@ Bugfixes:
 - Fixed bug with Adeptsense C/C++ type declarations.
 - Adeptsense can now recognize more than 1 level of inheritence.
 - Keychain is cleared on key command error.
-- Fixed infinite loop bug in `_m.textadept.editing.select_scope()`.
+- Fixed infinite loop bug in `_m.limoon.editing.select_scope()`.
 - Fixed bug with nested embedded lexers.
 - Scintilla: fixed memory leak.
 - Scintilla: fixed double-click behavior around word boundaries.
@@ -4340,7 +4340,7 @@ Changes:
 - Added class context completion to Adeptsense.
 - Added class type-inference through variable assignment to Adeptsense.
 - Added Adeptsense tutorial.
-- Added `_m.textadept.adeptsense.always_show_globals` setting for showing globals in completion
+- Added `_m.limoon.adeptsense.always_show_globals` setting for showing globals in completion
 	lists.
 - `Ctrl+H` (highlight word) is now `Ctrl+Shift+H`.
 - `Ctrl+H` now shows Adeptsense documentation.
@@ -4373,7 +4373,7 @@ Changes:
 - `command_entry_keypress` event accepts modifier keys.
 - Updated BibTeX and Lua lexers.
 
-[`char_matches`]: api.html#textadept.editing.auto_pairs
+[`char_matches`]: api.html#limoon.editing.auto_pairs
 
 ## 3.6 (01 Jan 2011)
 
@@ -4389,11 +4389,11 @@ Changes:
 - `buffer.rectangular_selection_modifier` on Linux is the Super/Windows key.
 - Improved HTML lexer.
 - Added Markdown, BibTeX, CMake, CUDA, Desktop Entry, F#, GLSL, and Nemerle lexers.
-- Added [`_m.textadept.filter_through`][] module for [shell commands][].
+- Added [`_m.limoon.filter_through`][] module for [shell commands][].
 - Moved GUI events from `core/events.lua` to `core/gui.lua`.
 - Separated key command manager from key command definitions.
 
-[`_m.textadept.filter_through`]: api.html#textadept.editing.filter_through
+[`_m.limoon.filter_through`]: api.html#limoon.editing.filter_through
 [shell commands]: manual.html#shell-commands-and-filtering-text
 
 ## 3.5 (01 Dec 2010)
@@ -4407,12 +4407,12 @@ Changes:
 
 - Lua files are syntax-checked for errors on save.
 - [Menus][] are easier to create.
-- Changed `_m.textadept.editing.enclose()` behavior.
+- Changed `_m.limoon.editing.enclose()` behavior.
 - Windows and Mac OSX packages are all-in-one bundles; GTK is no longer an external dependency.
 - New [manual][].
 - Added [`file_after_save`][] event.
 
-[Menus]: api.html#textadept.menu
+[Menus]: api.html#limoon.menu
 [manual]: manual.html
 [`file_after_save`]: api.html#events.FILE_AFTER_SAVE
 
@@ -4438,16 +4438,16 @@ Changes:
 	resulting in a huge speed improvement.
 - An `update_ui` event is triggered after a Lua command is entered.
 - `gui.dialog()` can take tables of strings as arguments now.
-- [`_m.textadept.snapopen.open()`][] takes a recursion depth as a parameter and falls back on a
+- [`_m.limoon.snapopen.open()`][] takes a recursion depth as a parameter and falls back on a
 	`DEFAULT_DEPTH` if necessary.
-- Removed `_m.textadept.editing.smart_cutcopy()` and `_m.textadept.editing.squeeze()` functions.
-- Added `_m.textadept.editing.SAVE_STRIPS_WS` option to disable strip whitespace on save.
+- Removed `_m.limoon.editing.smart_cutcopy()` and `_m.limoon.editing.squeeze()` functions.
+- Added `_m.limoon.editing.SAVE_STRIPS_WS` option to disable strip whitespace on save.
 - Changed locale implementation. Locale files are much easier to create now.
 - `gui.statusbar_text` is now readable instead of being write-only.
 - Can [highlight][] all occurances of a word.
 - Added jsp lexer.
 - More consistant handling of `\` directory separator for Windows.
-- Consolidated `textadept.h` and `lua_interface.c` into single `textadept.c` file.
+- Consolidated `limoon.h` and `lua_interface.c` into single `limoon.c` file.
 - Added [`_G.timeout()`][] function for calling functions and/or events after a period of time.
 - Find in files is accessible through [find API][].
 - Updated XML lexer.
@@ -4458,7 +4458,7 @@ Changes:
 - Renamed `_G.MAC` to [`_G.OSX`][].
 
 [Switch Buffers]: manual.html#buffers
-[`_m.textadept.snapopen.open()`]: api.html#io.quick_open
+[`_m.limoon.snapopen.open()`]: api.html#io.quick_open
 [highlight]: manual.html#word-highlight
 [`_G.timeout()`]: api.html#timeout
 [find API]: api.html#ui.find.find_in_files
@@ -4475,11 +4475,11 @@ Bugfixes:
 
 Changes:
 
-- Added [`_m.textadept.snapopen`][] module with menu options for rapidly opening files.
+- Added [`_m.limoon.snapopen`][] module with menu options for rapidly opening files.
 - Added coffeescript lexer.
 - Updated D and Java lexers.
 
-[`_m.textadept.snapopen`]: api.html#io.quick_open
+[`_m.limoon.snapopen`]: api.html#io.quick_open
 
 ## 3.2 (01 Sep 2010)
 
@@ -4523,7 +4523,7 @@ Changes:
 
 ## 3.0 (01 Jul 2010)
 
-Please see the [2 to 3 migration guide][] for upgrading from Textadept 2 to Textadept 3.
+Please see the [2 to 3 migration guide][] for upgrading from Li Moon 2 to Li Moon 3.
 
 Bugfixes:
 
@@ -4533,7 +4533,7 @@ Changes:
 
 - More accurate CSS and Diff lexers.
 
-[2 to 3 migration guide]: manual.html#textadept-2-to-3
+[2 to 3 migration guide]: manual.html#limoon-2-to-3
 
 ## 3.0 beta (21 Jun 2010)
 
@@ -4559,10 +4559,10 @@ Bugfixes:
 Changes:
 
 - Remove initial "Untitled" buffer when necessary.
-- Moved core extension modules into [`textadept`][] module.
+- Moved core extension modules into [`limoon`][] module.
 - New [API][].
-- `~/.textadept/init.lua` is created for you if one does not exist.
-- No more autoload of `~/.textadept/key_commands.lua` and `~/.textadept/snippets.lua`
+- `~/.limoon/init.lua` is created for you if one does not exist.
+- No more autoload of `~/.limoon/key_commands.lua` and `~/.limoon/snippets.lua`
 - Updated Java and D lexers.
 - Scintilla: added [`buffer.multi_paste`][] for pasting into multiple selections.
 - Updated to [Scintilla][] 2.12.
@@ -4571,7 +4571,7 @@ Changes:
 - Added statusbar notification on `reset()`.
 - Added Gtkrc, Prolog, and Go lexers.
 
-[`textadept`]: api.html#textadept
+[`limoon`]: api.html#limoon
 [API]: api.html
 [`buffer.multi_paste`]: api.html#buffer.multi_paste
 [Scintilla]: https://scintilla.org
@@ -4583,12 +4583,12 @@ Changes:
 Bugfixes:
 
 - Save buffer before compiling or running.
-- Fixed error in the manual for `~/.textadept/init.lua` example.
+- Fixed error in the manual for `~/.limoon/init.lua` example.
 - Ignore `file://` prefix for filenames.
 
 Changes:
 
-- `_USERHOME` comes before `_HOME` in `package.path` so `require` searches `~/.textadept/` first.
+- `_USERHOME` comes before `_HOME` in `package.path` so `require` searches `~/.limoon/` first.
 
 ## 2.2 beta 2 (01 May 2010)
 
@@ -4612,11 +4612,11 @@ Changes:
 - Moved "Search" menu into "Tools" menu to prevent `Alt+S` key conflict.
 - Rewrote lexers implementation.
 - Added Inform, Lilypond, and NSIS lexers.
-- `_m.textadept.editing.enclosure` is now an accessible table.
+- `_m.limoon.editing.enclosure` is now an accessible table.
 - Updated D, Java, and LaTeX lexers.
 
-[Compile and run]: api.html#textadept.run
-[Block comment]: api.html#textadept.editing.comment_string
+[Compile and run]: api.html#limoon.run
+[Block comment]: api.html#limoon.editing.comment_string
 
 ## 2.2 beta (01 Apr 2010)
 
@@ -4629,7 +4629,7 @@ Bugfixes:
 
 Changes:
 
-- Removed `_m.textadept.mlines` module since Scintilla's multiple selections supercedes it.
+- Removed `_m.limoon.mlines` module since Scintilla's multiple selections supercedes it.
 - Removed side pane.
 - New `gui.dialog('filteredlist', ...)` from gtdialog.
 - Can select buffer from filteredlist dialog (replacing side pane buffer list).
@@ -4668,9 +4668,9 @@ Changes:
 - Search `_USERHOME` in addition to `_HOME` for themes.
 - Added command line option for not loading/saving session.
 - Modified key bindings to be more key-layout agnostic.
-- Added `reset_before` and `reset_after` events while `textadept.reset()` is being run.
-- Reload current lexer module after `textadept.reset()`.
-- Added `~/.textadept/modules/` to `package.path`.
+- Added `reset_before` and `reset_after` events while `limoon.reset()` is being run.
+- Reload current lexer module after `limoon.reset()`.
+- Added `~/.limoon/modules/` to `package.path`.
 - Scintilla: added support for multiple selections and virtual space.
 - Scintilla: `buffer.first_visible_line` is no longer read-only.
 - Scintilla: added [`buffer.whitespace_size`][] for changing the size of visible whitespace.
@@ -4689,17 +4689,17 @@ Bugfixes:
 
 - Fixed bug with reloading PM width from session file.
 - Only show a non-nil PM context menu.
-- Fixed bug in `modules/textadept/lsnippets.lua`.
-- Fixed bug in `core/ext/mime_types.lua` caused during `textadept.reset()`.
+- Fixed bug in `modules/limoon/lsnippets.lua`.
+- Fixed bug in `core/ext/mime_types.lua` caused during `limoon.reset()`.
 - Close all buffers before loading a session.
 - Identify `shellscript` files correctly.
 - D lexer no longer has key-command conflicts.
 
 Changes:
 
-- Refactored `modules/textadept/lsnippets.lua`.
+- Refactored `modules/limoon/lsnippets.lua`.
 - Updated key bindings.
-- Allow PM modules in the `~/.textadept` user directory.
+- Allow PM modules in the `~/.limoon` user directory.
 - Added [`style_whitespace`][] to [lexers][] for custom styles.
 - Added standard `F3` key command for "Find Next" for Windows/Linux.
 
@@ -4719,17 +4719,17 @@ Bugfixes:
 
 Changes:
 
-- Removed `_m.textadept.macros` module and respective PM browser (use Lua instead).
+- Removed `_m.limoon.macros` module and respective PM browser (use Lua instead).
 - Linux version can be installed and run from anywhere; no need to recompile anymore.
 - Added many more [events][] to hook into lots of core functionality.
 - Updated to [Scintilla][] 1.79.
 - Run module allows more flexible [compile commands][] and [run commands][].
 - Save project manager cursor over sessions.
 - Allow mime-types and compile and run commands to be user-redefinable in user scripts.
-- Use `~/.textadept/` for holding user lexers, themes, sessions, etc.
+- Use `~/.limoon/` for holding user lexers, themes, sessions, etc.
 - Added "Help" menu linking to Manual and LuaDoc.
-- Textadept compiles as C99 code. (Drops Microsoft Visual Studio support.)
-- Sessions functionality moved to `modules/textadept/session.lua` from `core/file_io.lua`.
+- Li Moon compiles as C99 code. (Drops Microsoft Visual Studio support.)
+- Sessions functionality moved to `modules/limoon/session.lua` from `core/file_io.lua`.
 - The `char_added` event now passes an int, not a string, to handler functions.
 - Replaced cocoaDialog and lua_dialog with my C-based gtdialog.
 - [Incremental find][] via the Lua command entry.
@@ -4744,8 +4744,8 @@ Changes:
 [list of encodings]: api.html#io.encodings
 [events]: api.html#events
 [Scintilla]: https://scintilla.org
-[compile commands]: api.html#textadept.run.compile_commands
-[run commands]: api.html#textadept.run.run_commands
+[compile commands]: api.html#limoon.run.compile_commands
+[run commands]: api.html#limoon.run.run_commands
 [Incremental find]: manual.html#incremental-find
 [GTK]: https://gtk.org
 
@@ -4770,12 +4770,12 @@ Updates:
 Bugfixes:
 
 - Fixed bookmarks bugs.
-- PM browsers are not re-added to the list again on `textadept.reset()`.
+- PM browsers are not re-added to the list again on `limoon.reset()`.
 - Fixed ctags PM browser bug with filenames.
 - Marker colors are set for all views now.
 - Fixed never-ending "reload modified file?" dialog bug.
 - Fixed key command for `m_snippets.list`.
-- Fixed issues with `_m.textadept.run` module.
+- Fixed issues with `_m.limoon.run` module.
 - Fixed document modification status bug for unfocused split views.
 - Fixed filename encoding issues for Windows.
 
@@ -4803,11 +4803,11 @@ Updates:
 - Removed support for Textmate-style snippets in favor of Lua-style snippets.
 - Load drag-and-dropped directories into file browser.
 - Can toggle showing "dot" files in file browser.
-- Prompt for file reload when files are modified outside Textadept.
-- Added `textadept.context_menu` field for right-click inside Scintilla.
+- Prompt for file reload when files are modified outside Li Moon.
+- Added `limoon.context_menu` field for right-click inside Scintilla.
 - Project Manager cursors are saved and restored.
 - Only use escape sequences in Lua pattern searches.
-- Rewrote *modules/textadept/run.lua* to be easier to use and configure.
+- Rewrote *modules/limoon/run.lua* to be easier to use and configure.
 - Find in Files marks the selected line for easier reference.
 - Save special buffers in session file (e.g. error buffer, message buffer, etc.)
 - Moved mime-types into *core/ext/mime_types.conf* configuration file.
@@ -4829,7 +4829,7 @@ Updates:
 - Improved Lua State integrity for critical data.
 - Keep only 10 items in Find/Replace history.
 - Special buffers are not "Untitled" anymore.
-- Moved `textadept.locale` table to `_G`.
+- Moved `limoon.locale` table to `_G`.
 
 ## 1.3 (30 Jan 2009)
 
@@ -4847,7 +4847,7 @@ Bugfixes:
 
 Updates:
 
-- Look for `~/.ta_theme` for setting Textadept `_THEME`.
+- Look for `~/.ta_theme` for setting Li Moon `_THEME`.
 - `_THEME` can now be a directory path.
 - Themes now contain their own *lexer.lua* for defining lexer colors.
 - Added "Find in Files" support.
@@ -4867,11 +4867,11 @@ Bugfixes:
 
 Updates:
 
-- Windows command line support ("Open With Textadept" works too).
-- New [`_m.textadept.run`][] module for compiling and running programs. Output is displayed in
+- Windows command line support ("Open With Li Moon" works too).
+- New [`_m.limoon.run`][] module for compiling and running programs. Output is displayed in
 	a message buffer and you can double-click errors and warnings to go to them in the source file.
 
-[`_m.textadept.run`]: api.html#textadept.run
+[`_m.limoon.run`]: api.html#limoon.run
 
 ## 1.1 (11 Jan 2009)
 
@@ -4889,7 +4889,7 @@ Updates:
 - Manually parse *~/.gtkrc-2.0* on Mac since GTK-OSX does not do it.
 
 [localization]: api.html#_L
-[bookmarks]: api.html#textadept.bookmarks
+[bookmarks]: api.html#limoon.bookmarks
 
 ## 1.0 (01 Jan 2009)
 
@@ -4906,10 +4906,10 @@ Updates:
 - Added actions for all menu items.
 - Added Lua interface functions and fields for the [find][] box.
 - Nearly full Mac OSX support with [GTK-OSX][].
-- Compile [LPeg][] and [LuaFileSystem][] libraries into Textadept by default.
+- Compile [LPeg][] and [LuaFileSystem][] libraries into Li Moon by default.
 - Use UTF-8 encoding by default.
 - Added `light` color theme used by default.
-- New Textadept icons.
+- New Li Moon icons.
 - Added a true project manager.
 
 [find]: api.html#ui.find
@@ -4927,9 +4927,9 @@ Updates:
 
 - Windows support! (finally)
 - [Theming][] support (SciTE theme used by default).
-- Added `textadept.size` field and save it in session files.
+- Added `limoon.size` field and save it in session files.
 - Some C++ API-simplifying changes.
-- Drag-and-drop files into Textadept works as expected.
+- Drag-and-drop files into Li Moon works as expected.
 - Revised [manual][].
 - Buffer and View properties are no longer set in C++, but in Lua through "buffer_new" and
 	"view_new" event handlers respectively.
@@ -4949,7 +4949,7 @@ Updates:
 
 - Added user-friendly key bindings and menus.
 - Added 43 more lexers.
-- Moved block-comment commands from language modules to `textadept.editing` module.
+- Moved block-comment commands from language modules to `limoon.editing` module.
 - Updated some Luadoc.
 
 ## 0.4 (25 Jun 2008)
@@ -4962,17 +4962,17 @@ Bugfixes:
 
 Updates:
 
-- Added [bookmark][] support through *modules/textadept/bookmarks.lua* (not loaded by default).
-- Added icons to Textadept.
+- Added [bookmark][] support through *modules/limoon/bookmarks.lua* (not loaded by default).
+- Added icons to Li Moon.
 - Added a modules browser for adding, deleting, and editing modules easily.
-- Consolidated source files into *textadept.c*, *textadept.h*, and *lua_interface.c*.
+- Consolidated source files into *limoon.c*, *limoon.h*, and *lua_interface.c*.
 - Always load project manager settings from session file if available.
-- Include *liblua5.1.a* for compiling Lua into Textadept.
+- Include *liblua5.1.a* for compiling Lua into Li Moon.
 - Added true [tab-completion][] to Lua command entry.
 - Added Doxygen documentation for C source files.
-- Updated Luadoc, and added Textadept manual.
+- Updated Luadoc, and added Li Moon manual.
 
-[bookmark]: api.html#textadept.bookmarks
+[bookmark]: api.html#limoon.bookmarks
 [tab-completion]: manual.html#command-entry-tab-completion
 
 ## 0.3 (04 Mar 2008)
@@ -4980,16 +4980,16 @@ Updates:
 Bugfixes:
 
 - Fixed bug in editing module's `select_indented_block()`.
-- Fixed empty `buffer.filename` bug in `textadept.io.save_as()`.
+- Fixed empty `buffer.filename` bug in `limoon.io.save_as()`.
 - Fixed setting of Ruby lexer after detecting filetype.
 
 Updates:
 
-- Makefile builds Textadept to optimize for small size.
-- Lua is no longer an external dependency and built into Textadept.
+- Makefile builds Li Moon to optimize for small size.
+- Lua is no longer an external dependency and built into Li Moon.
 - Zenity is no longer a dependency on Linux. lua_dialog is used instead.
 - Resources from `io.popen()` are handled more appropriately.
-- Added `textadept.reset()` function for for reloading Lua scripts.
+- Added `limoon.reset()` function for for reloading Lua scripts.
 - Added new find in files project manager browser.
 - Fixed some code redundancy and typos in documentation.
 

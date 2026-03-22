@@ -3,11 +3,11 @@
 
 -- Outputs an actionable code coverage list from LuaCov and Gcovr reports.
 -- Requires gcovr to be installed.
--- Usage: gen_cov.lua [format] [textadept_home]
+-- Usage: gen_cov.lua [format] [limoon_home]
 -- format is optional and may be one of:
 --   - github: outputs markdown tables showing coverage with GitHub links to uncovered lines.
 --   - otherwise outputs recognizable warnings to uncovered lines.
--- textadept_home is the path to Textadept's home directory, which should contain luacov.report.out
+-- limoon_home is the path to Li Moon's home directory, which should contain luacov.report.out
 --	and *.gcno files.
 
 if not arg[2] then arg[1], arg[2] = '', arg[1] end
@@ -57,7 +57,7 @@ local function ranges(uncovered_lines)
 end
 
 local print_summaries = {
-	-- Prints a set of warning lines that Textadept can jump to.
+	-- Prints a set of warning lines that Li Moon can jump to.
 	[''] = function(filename, hits, missed, percent, uncovered_lines)
 		local relative_filename = filename:sub(#dir + 2)
 		if relative_filename == '' then return end -- total
@@ -72,7 +72,7 @@ local print_summaries = {
 	-- Prints a GitHub Markdown table row with links to uncovered lines.
 	github = function(filename, hits, missed, percent, uncovered_lines)
 		if not link_list then link_list = {} end -- global
-		local url = 'https://github.com/orbitalquark/textadept/blob/default'
+		local url = 'https://github.com/orbitalquark/limoon/blob/default'
 		if filename:find('^/') then filename = filename:sub(#dir + 2) end
 		--- Creates a new link to this file and returns its reference number.
 		-- @param[opt] anchor Optional link anchor (e.g. line number).

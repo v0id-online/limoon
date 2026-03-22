@@ -1,6 +1,6 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Extends Lua's `io` library with Textadept functions for working with files.
+--- Extends Lua's `io` library with Li Moon functions for working with files.
 -- @module io
 
 -- Events.
@@ -27,7 +27,7 @@ for _, v in ipairs(file_io_events) do events[v:upper()] = v end
 -- @see buffer.save_as
 -- @field _G.events.FILE_AFTER_SAVE
 
---- Emitted when Textadept detects that an open file was modified externally.
+--- Emitted when Li Moon detects that an open file was modified externally.
 -- The default behavior is to prompt the user to reload the file. In order to override this,
 -- connect to this event with an index of `1` and return `true`.
 --
@@ -365,7 +365,7 @@ local vcs = {
 }
 
 --- Returns a project's root directory.
--- Textadept only recognizes projects under one of the following version control systems: Git,
+-- Li Moon only recognizes projects under one of the following version control systems: Git,
 -- Mercurial, SVN, Bazaar, and Fossil.
 -- @param[opt] path String path to a project, or the path to a file that belongs to a project. The
 --	default value is either the buffer's filename (if available) or the current working directory.

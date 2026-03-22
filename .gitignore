@@ -1,19 +1,44 @@
-# Build and documentation.
+# Build directories and CMake artifacts.
 build/
 scinterm-notcurses/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+_deps/
 
-# Compiled objects and binary.
-src/*.o
-textadept-notcurses
+# Compiled objects, libraries, and binaries.
+*.o
+*.a
+*.so
+*.so.*
+*.out
+li
+limoon
+
+# Editor / IDE.
+.cache/
+.clangd/
+*.swp
+*.swo
+*.skill
+~
+
+# Documentation build output.
 docs/_site
 docs/Gemfile.lock
 *.css
 *.html
 
-# Lexers.
+# OS artifacts.
+.DS_Store
+Thumbs.db
+
+# Lexers (fetched at build time).
 lexers
 
-# Modules.
+# Optional/external modules (not bundled).
 modules/debugger
 modules/export
 modules/file_diff

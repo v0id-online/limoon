@@ -1,4 +1,4 @@
--- Monokai theme for Textadept (Wimer Hazenberg)
+-- Monokai theme for Li Moon (Wimer Hazenberg)
 local view, colors, styles = view, view.colors, view.styles
 
 -- Colors (0xBBGGRR)

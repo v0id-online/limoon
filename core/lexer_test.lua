@@ -171,7 +171,7 @@ test('buffer.style_of_name should link style names with style numbers', function
 end)
 
 test('buffer.style_of_name should handle underscore and dot notation in style names', function()
-	-- Scintillua uses dot notation (e.g. function.builtin) while Textadept uses underscore
+	-- Scintillua uses dot notation (e.g. function.builtin) while Li Moon uses underscore
 	-- notation (e.g. function_builtin).
 	local style_num_from_dot_notation = buffer:style_of_name(lexer.FUNCTION_BUILTIN)
 	local style_num_from_underscore_notation = buffer:style_of_name('function_builtin')

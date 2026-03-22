@@ -24,7 +24,7 @@ end
 local CONTENT = table.concat({
 
   '╭' .. string.rep('─', 70) .. '╮\n',
-  '│  TEXTADEPT  ·  Quick Reference' .. string.rep(' ', 22) .. 'Ctrl+H to close  │\n',
+  '│  LI MOON    ·  Quick Reference' .. string.rep(' ', 22) .. 'Ctrl+H to close  │\n',
   '╰' .. string.rep('─', 70) .. '╯\n',
 
   section('FILES & BUFFERS'),
@@ -88,7 +88,7 @@ local CONTENT = table.concat({
   '  tabs(n)            Hard tabs width n     spaces(n)      Spaces width n\n',
   '  plugins()          Plugin list           aliases()      All aliases\n',
   '\n',
-  '  ── Direct Lua (buffer/view/ui/textadept shortcuts) ──\n',
+  '  ── Direct Lua (buffer/view/ui/limoon shortcuts) ──\n',
   '  buffer:save()      Save current buffer\n',
   '  buffer:close()     Close current buffer\n',
   '  view:split()       Split view horizontally\n',

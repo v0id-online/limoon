@@ -1,4 +1,4 @@
--- GitHub Light theme for Textadept
+-- GitHub Light theme for Li Moon
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0xFFFFFF -- #FFFFFF

@@ -1,6 +1,6 @@
 ## Thanks
 
-Thank you everyone for your contributions and feedback. They have helped make Textadept the
+Thank you everyone for your contributions and feedback. They have helped make Li Moon the
 amazing editor that it is today.
 
 ### Code and Documentation Contributors

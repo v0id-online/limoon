@@ -1,5 +1,5 @@
 -- Plugin: Scratch Pad
--- A persistent notes buffer that auto-saves to ~/.textadept/scratch.txt
+-- A persistent notes buffer that auto-saves to ~/.limoon/scratch.txt
 -- Ctrl+Shift+N  → open / focus / toggle
 -- Ctrl+S inside → save (handled by standard file save once _type cleared)
 

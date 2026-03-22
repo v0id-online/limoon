@@ -1,11 +1,11 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Textadept's core event structure and handlers.
+--- Li Moon's core event structure and handlers.
 --
--- Textadept emits events when you do things like create a new buffer, press a key, click on
+-- Li Moon emits events when you do things like create a new buffer, press a key, click on
 -- a menu, etc. You can even emit events yourself using Lua. Each event has a set of event
 -- handlers, which are simply Lua functions called in the order they were connected to an
--- event. For example, if you created a module that needs to do something each time Textadept
+-- event. For example, if you created a module that needs to do something each time Li Moon
 -- creates a new buffer, connect a Lua function to the `events.BUFFER_NEW` event:
 --
 -- ```lua
@@ -15,10 +15,10 @@
 -- ```
 --
 -- Events themselves are nothing special. You do not have to declare one before using it. Events
--- are simply strings containing arbitrary event names. When either you or Textadept emits an
--- event, Textadept runs all event handlers connected to the event, passing any given arguments
+-- are simply strings containing arbitrary event names. When either you or Li Moon emits an
+-- event, Li Moon runs all event handlers connected to the event, passing any given arguments
 -- to the event's handler functions. If an event handler explicitly returns a value that is not
--- `nil`, Textadept will not call subsequent handlers. This is useful if you want to stop the
+-- `nil`, Li Moon will not call subsequent handlers. This is useful if you want to stop the
 -- propagation of an event like a keypress if your event handler handled it, or if you want to
 -- use the event framework to pass values.
 -- @module events
@@ -100,13 +100,13 @@ end)
 -- Set event constants (events are numeric ID keys).
 for k, v in pairs(_SCINTILLA) do if type(k) == 'number' then M[v[1]:upper()] = v[1] end end
 -- LuaFormatter off
-local textadept_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
+local limoon_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
 -- LuaFormatter on
-for _, v in pairs(textadept_events) do M[v:upper()] = v end
+for _, v in pairs(limoon_events) do M[v:upper()] = v end
 
 return M
 
---- Emitted when macOS tells Textadept to open a file.
+--- Emitted when macOS tells Li Moon to open a file.
 -- Arguments:
 -- - *uri*: The UTF-8-encoded URI to open.
 -- @field APPLEEVENT_ODOC
@@ -233,10 +233,10 @@ return M
 -- - *text*: The error message text.
 -- @field ERROR
 
---- Emitted when Textadept shows the find & replace pane.
+--- Emitted when Li Moon shows the find & replace pane.
 -- @field FIND_PANE_SHOW
 
---- Emitted when Textadept hides the find & replace pane.
+--- Emitted when Li Moon hides the find & replace pane.
 -- @field FIND_PANE_HIDE
 
 --- Emitted to find text.
@@ -253,8 +253,8 @@ return M
 -- `ui.find.find_entry_text` contains the current text.
 -- @field FIND_TEXT_CHANGED
 
---- Emitted when Textadept receives focus.
--- This event is never emitted when Textadept is running in the terminal.
+--- Emitted when Li Moon receives focus.
+-- This event is never emitted when Li Moon is running in the terminal.
 -- @field FOCUS
 
 --- Emitted when clicking the mouse on text within an [indicator range](#mark-text-with-indicators).
@@ -278,7 +278,7 @@ return M
 --	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field INDICATOR_RELEASE
 
---- Emitted after Textadept finishes initializing.
+--- Emitted after Li Moon finishes initializing.
 -- @field INITIALIZED
 
 --- Emitted when clicking the mouse inside a sensitive margin.
@@ -314,7 +314,7 @@ return M
 -- @field MODE_CHANGED
 
 --- Emitted by the terminal version for an unhandled mouse event.
--- A handler should return `true` if it handled the event. Otherwise Textadept will try again.
+-- A handler should return `true` if it handled the event. Otherwise Li Moon will try again.
 -- (This side effect for `nil` return is useful for sending the original mouse event to a
 -- different view that a handler has switched to.)
 --
@@ -327,11 +327,11 @@ return M
 -- - *x*: The x-coordinate of the mouse event, starting from 1.
 -- @field MOUSE
 
---- Emitted when quitting Textadept.
+--- Emitted when quitting Li Moon.
 -- The default behavior is to close all buffers and, if that was successful, quit the application.
--- In order to do something before Textadept closes all open buffers, connect to this event with
--- an index of `1`. If a handler returns `true`, Textadept does not quit. It is not recommended
--- to return `false` from a quit handler, as that may interfere with Textadept's normal shutdown
+-- In order to do something before Li Moon closes all open buffers, connect to this event with
+-- an index of `1`. If a handler returns `true`, Li Moon does not quit. It is not recommended
+-- to return `false` from a quit handler, as that may interfere with Li Moon's normal shutdown
 -- procedure.
 -- @see quit
 -- @field QUIT
@@ -353,21 +353,21 @@ return M
 -- @see ui.find.replace_all
 -- @field REPLACE_ALL
 
---- Emitted after resetting Textadept's Lua state.
+--- Emitted after resetting Li Moon's Lua state.
 -- Arguments:
 -- - *persist*: Table of data persisted by `events.RESET_BEFORE`. All handlers will have access
 --	to this same table.
 -- @see reset
 -- @field RESET_AFTER
 
---- Emitted before resetting Textadept's Lua state.
+--- Emitted before resetting Li Moon's Lua state.
 -- Arguments:
 -- - *persist*: Table to store persistent data in for use by `events.RESET_AFTER`. All handlers
 --	will have access to this same table.
 -- @see reset
 -- @field RESET_BEFORE
 
---- Emitted when resuming Textadept from a suspended state.
+--- Emitted when resuming Li Moon from a suspended state.
 -- This event is only emitted by the terminal version.
 -- @field RESUME
 
@@ -377,7 +377,7 @@ return M
 --- Emitted after reaching a save point.
 -- @field SAVE_POINT_REACHED
 
---- Emitted prior to suspending Textadept.
+--- Emitted prior to suspending Li Moon.
 -- This event is only emitted by the terminal version.
 -- @field SUSPEND
 
@@ -385,7 +385,7 @@ return M
 -- The default behavior is to switch to the clicked tab's buffer. In order to do something
 -- before the switch, connect to this event with an index of `1`.
 --
--- Note that Textadept always displays a context menu for a right-click.
+-- Note that Li Moon always displays a context menu for a right-click.
 --
 -- Arguments:
 -- - *index*: The numeric index of the clicked tab.
@@ -400,7 +400,7 @@ return M
 
 --- Emitted when the user clicks a buffer tab's close button.
 -- The default behavior is to close the tab's buffer. If you need to do something before
--- Textadept closes the buffer, connect to this event with an index of `1`.
+-- Li Moon closes the buffer, connect to this event with an index of `1`.
 --
 -- This event is only emitted in the Qt version.
 --
@@ -408,8 +408,8 @@ return M
 -- - *index*: The numeric index of the clicked tab.
 -- @field TAB_CLOSE_CLICKED
 
---- Emitted when Textadept loses focus.
--- This event is never emitted when Textadept is running in the terminal.
+--- Emitted when Li Moon loses focus.
+-- This event is never emitted when Li Moon is running in the terminal.
 -- @field UNFOCUS
 
 --- Emitted after the view is visually updated.
@@ -460,7 +460,7 @@ return M
 -- @field ZOOM
 
 -- Undocumented events.
--- src/textadept.c does not pass all of the listed event parameters.
+-- src/limoon.c does not pass all of the listed event parameters.
 -- - STYLE_NEEDED (position)
 -- - MODIFY_ATTEMPT_RO
 -- - KEY (ch, modifiers)

@@ -5,10 +5,10 @@ local M = dofile(_HOME .. '/lexers/lexer.lua')
 local lexer = M
 
 --- A ';'-separated list of directory paths that contain lexers for syntax highlighting.
--- The default value contains *~/.textadept/lexers/* and Textadept's *lexers/* directory.
+-- The default value contains *~/.limoon/lexers/* and Li Moon's *lexers/* directory.
 _G._LEXERPATH = string.format('%s/lexers;%s/lexers', _USERHOME, _HOME)
 
--- Textadept uses Scintillua as a stand-alone Lua library but avoids Scintillua's
+-- Li Moon uses Scintillua as a stand-alone Lua library but avoids Scintillua's
 -- auto-initialization routines by predefining `lexer.property`. However, some constants are
 -- left undefined, so define them here.
 lexer.property = {['scintillua.lexers'] = _LEXERPATH}

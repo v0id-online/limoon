@@ -88,7 +88,7 @@ for _, tag in ipairs(arg) do
 	end
 end
 
---- Returns a string snapshot of the current Textadept state suitable for error reporting,
+--- Returns a string snapshot of the current Li Moon state suitable for error reporting,
 -- unless it contains a single, empty buffer. In that case, returns an empty string.
 local function snapshot()
 	local lines = {''} -- leading newline
@@ -231,5 +231,5 @@ if package.loaded['luacov'] then
 	end
 end
 
--- Quit Textadept with exit status depending on whether any tests failed.
+-- Quit Li Moon with exit status depending on whether any tests failed.
 timeout(0.01, function() quit(tests_failed) end)

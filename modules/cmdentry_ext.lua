@@ -19,7 +19,7 @@ local _env = setmetatable({}, {
       return function(...) return view[k](view, ...) end
     end
     return _G[k] or (ok and v) or ui[k] or
-           (textadept and textadept[k])
+           (limoon and limoon[k])
   end
 })
 
@@ -42,7 +42,7 @@ local function build_completions(symbol, op, part)
   end
 
   if symbol == '' or symbol == 'buffer' or symbol == 'view' then
-    for _, t in ipairs { buffer, view, ui, textadept } do
+    for _, t in ipairs { buffer, view, ui, limoon } do
       for k in safe_iter(t) do add(k) end
     end
     -- add matching globals (avoid iterating _G which is huge)

@@ -1,4 +1,4 @@
--- Solarized Dark theme for Textadept (Ethan Schoonover)
+-- Solarized Dark theme for Li Moon (Ethan Schoonover)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x362B00 -- #002B36

@@ -50,19 +50,19 @@ jobs:
         run: |
           new_commits=false
           repos='
-            textadept
+            limoon
             scintillua
             scinterm
-            textadept-debugger
-            textadept-export
-            textadept-file-diff
-            textadept-format
-            textadept-lsp
-            textadept-lua-repl
-            textadept-open-file-mode
-            textadept-scratch
-            textadept-spellcheck
-            textadept-update-notifier
+            limoon-debugger
+            limoon-export
+            limoon-file-diff
+            limoon-format
+            limoon-lsp
+            limoon-lua-repl
+            limoon-open-file-mode
+            limoon-scratch
+            limoon-spellcheck
+            limoon-update-notifier
           '
           for repo in $(echo $repos); do
             git clone --depth 1 https://github.com/orbitalquark/$repo
@@ -123,12 +123,12 @@ jobs:
         if: matrix.if
         uses: actions/checkout@v4
 
-      - name: Checkout textadept-build dependencies
+      - name: Checkout limoon-build dependencies
         if: matrix.if
         uses: actions/checkout@v4
         with:
-          repository: orbitalquark/textadept-build
-          path: textadept-build
+          repository: orbitalquark/limoon-build
+          path: limoon-build
 
       - name: Install Qt (Windows, macOS)
         if: matrix.if && (runner.os == 'Windows' || runner.os == 'macOS')
@@ -148,7 +148,7 @@ jobs:
         shell: bash
         run: |
           # Move cached dependencies into build/_deps.
-          mkdir -p build/_deps && mv textadept-build/* build/_deps && rm -r textadept-build
+          mkdir -p build/_deps && mv limoon-build/* build/_deps && rm -r limoon-build
 
           # Build.
           type="Release"
@@ -180,16 +180,16 @@ jobs:
     steps:
       - name: Package modules
         run: |
-          mkdir textadept-modules
+          mkdir limoon-modules
           modules="debugger export file_diff format lsp lua_repl open_file_mode scratch spellcheck
             update_notifier"
           for module in $(echo $modules); do
             gh_name="$(echo -n $module | sed -e 's/_/-/g;')"
-            gh_prefix="https://github.com/orbitalquark/textadept-$gh_name"
+            gh_prefix="https://github.com/orbitalquark/limoon-$gh_name"
             wget $gh_prefix/releases/download/latest/$module.zip
-            unzip -d textadept-modules $module.zip
+            unzip -d limoon-modules $module.zip
           done
-          zip -r textadept_${{ needs.get-version.outputs.version }}.modules.zip textadept-modules
+          zip -r limoon_${{ needs.get-version.outputs.version }}.modules.zip limoon-modules
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -205,11 +205,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout textadept-build dependencies
+      - name: Checkout limoon-build dependencies
         uses: actions/checkout@v4
         with:
-          repository: orbitalquark/textadept-build
-          path: textadept-build
+          repository: orbitalquark/limoon-build
+          path: limoon-build
 
       - name: Install Lua
         run: |
@@ -229,7 +229,7 @@ jobs:
           # Note: this job tests the html CMake target, so CMake configure needs to succeed.
 
           # Move cached dependencies into build/_deps.
-          mkdir -p build/_deps && mv textadept-build/* build/_deps && rm -r textadept-build
+          mkdir -p build/_deps && mv limoon-build/* build/_deps && rm -r limoon-build
 
           # Build.
           if [[ ${{ github.event_name }} != schedule ]]; then
@@ -268,38 +268,38 @@ jobs:
           version=${{ needs.get-version.outputs.version }}
 
           # Insert it into Linux archives.
-          for tgz in $(ls textadept_$version.linux*.tgz); do
-            tar xzf $tgz && cp -r docs textadept && tar czf $tgz textadept && rm -r textadept
+          for tgz in $(ls limoon_$version.linux*.tgz); do
+            tar xzf $tgz && cp -r docs limoon && tar czf $tgz limoon && rm -r limoon
           done
 
           # Insert it into Windows archive.
-          if [[ -f textadept_$version.win.zip ]]; then
-            mkdir textadept && cp -r docs textadept
-            zip -r textadept_$version.win.zip textadept/docs
-            rm -r textadept
+          if [[ -f limoon_$version.win.zip ]]; then
+            mkdir limoon && cp -r docs limoon
+            zip -r limoon_$version.win.zip limoon/docs
+            rm -r limoon
           fi
 
           # Install it into macOS archive.
-          if [[ -f textadept_$version.macOS.zip ]]; then
-            bundle_res="Textadept.app/Contents/Resources"
+          if [[ -f limoon_$version.macOS.zip ]]; then
+            bundle_res="Li Moon.app/Contents/Resources"
             mkdir -p $bundle_res
             cp -r docs $bundle_res
-            zip -r textadept_$version.macOS.zip $bundle_res
+            zip -r limoon_$version.macOS.zip $bundle_res
           fi
 
       - name: Tag
         if: github.ref_name == github.event.repository.default_branch
         run: |
-          git tag textadept_${{ needs.get-version.outputs.version }}
-          git push -f origin textadept_${{ needs.get-version.outputs.version }}
+          git tag limoon_${{ needs.get-version.outputs.version }}
+          git push -f origin limoon_${{ needs.get-version.outputs.version }}
 
       - name: Create release log
         run: |
-          echo -n "Textadept " > log.md
+          echo -n "Li Moon " > log.md
           echo -n "${{ needs.get-version.outputs.version }} " | tr '_' ' ' >> log.md
           echo \($(date +"%d %b %Y")\) >> log.md
           if [[ ${{ needs.get-version.outputs.version }} = nightly ]]; then exit 0; fi
-          prefix="https://orbitalquark.github.io/textadept"
+          prefix="https://orbitalquark.github.io/limoon"
           echoing=0
           while read line; do
             if [[ $line = \#\#* ]]; then
@@ -324,14 +324,14 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           name: ${{ needs.get-version.outputs.version }}
-          tag: textadept_${{ needs.get-version.outputs.version }}
+          tag: limoon_${{ needs.get-version.outputs.version }}
           prerelease: |
             ${{ needs.get-version.outputs.version == 'nightly' ||
               contains(needs.get-version.outputs.version, 'alpha') ||
               contains(needs.get-version.outputs.version, 'beta') }}
           allowUpdates: true
           bodyFile: log.md
-          artifacts: textadept_*
+          artifacts: limoon_*
           token: ${{ secrets.GITHUB_TOKEN }}
 
   test:
@@ -340,15 +340,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest]
-        exe: [textadept/textadept, textadept/textadept-gtk, textadept/textadept-curses]
+        exe: [limoon/limoon, limoon/limoon-gtk, limoon/limoon-curses]
         exclude:
           - os: windows-latest
-            exe: textadept/textadept-gtk
+            exe: limoon/limoon-gtk
         include:
           - os: macOS-latest
-            exe: Textadept.app/Contents/MacOS/textadept_osx
+            exe: Li Moon.app/Contents/MacOS/limoon_osx
           #- os: macOS-latest
-          #  exe: Textadept.app/Contents/MacOS/textadept-curses
+          #  exe: Li Moon.app/Contents/MacOS/limoon-curses
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -364,39 +364,39 @@ jobs:
         with:
           merge-multiple: true
 
-      - name: Unpack Textadept (Windows)
+      - name: Unpack Li Moon (Windows)
         if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'schedule')
         shell: bash
-        run: unzip textadept_*.win.zip
+        run: unzip limoon_*.win.zip
 
-      - name: Unpack Textadept (macOS)
+      - name: Unpack Li Moon (macOS)
         if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'schedule')
-        run: unzip textadept_*.macOS.zip
+        run: unzip limoon_*.macOS.zip
 
-      - name: Unpack Textadept (Linux)
+      - name: Unpack Li Moon (Linux)
         if: runner.os == 'Linux' && !contains(matrix.os, 'arm') &&
           (inputs.linux || github.event_name == 'schedule')
-        run: tar xzf textadept_*.linux.tgz
+        run: tar xzf limoon_*.linux.tgz
 
-      - name: Unpack Textadept (Linux ARM)
+      - name: Unpack Li Moon (Linux ARM)
         if: runner.os == 'Linux' && contains(matrix.os, 'arm') &&
           (inputs.linux || github.event_name == 'schedule')
-        run: tar xzf textadept_*.linux.arm.tgz
+        run: tar xzf limoon_*.linux.arm.tgz
 
       - name: Unpack modules (Windows, Linux)
         if: runner.os != 'macOS' &&
           (inputs.windows || inputs.linux || github.event_name == 'schedule')
         shell: bash
         run: |
-          unzip textadept_*.modules.zip
-          if [[ ! -d textadept ]]; then exit 0; fi
-          mv textadept-modules/* textadept/modules
+          unzip limoon_*.modules.zip
+          if [[ ! -d limoon ]]; then exit 0; fi
+          mv limoon-modules/* limoon/modules
 
       - name: Unpack modules (macOS)
         if: runner.os == 'macOS' && (inputs.macOS || github.event_name == 'schedule')
         run: |
-          unzip textadept_*modules.zip
-          mv textadept-modules/* Textadept.app/Contents/Resources/modules
+          unzip limoon_*modules.zip
+          mv limoon-modules/* Li Moon.app/Contents/Resources/modules
 
       - name: Run unit tests (Windows)
         if: runner.os == 'Windows' && (inputs.windows || github.event_name == 'schedule')
@@ -437,11 +437,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout textadept-build dependencies
+      - name: Checkout limoon-build dependencies
         uses: actions/checkout@v4
         with:
-          repository: orbitalquark/textadept-build
-          path: textadept-build
+          repository: orbitalquark/limoon-build
+          path: limoon-build
 
       - name: Install build and test dependencies
         run: |
@@ -451,7 +451,7 @@ jobs:
       - name: Build
         run: |
             # Move cached dependencies into build/_deps.
-            mkdir -p build/_deps && mv textadept-build/* build/_deps && rm -r textadept-build
+            mkdir -p build/_deps && mv limoon-build/* build/_deps && rm -r limoon-build
 
             # Build.
             cmake -S . -B build -D NIGHTLY=1
@@ -461,7 +461,7 @@ jobs:
             cp -r build/_deps/scintillua-src/lexers .
 
       - name: Test
-        run: xvfb-run -a build/textadept-gtk -t
+        run: xvfb-run -a build/limoon-gtk -t
         env:
           TEXTADEPT_HOME: ${{ github.workspace }}
         timeout-minutes: 1
@@ -483,11 +483,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout textadept-build dependencies
+      - name: Checkout limoon-build dependencies
         uses: actions/checkout@v4
         with:
-          repository: orbitalquark/textadept-build
-          path: textadept-build
+          repository: orbitalquark/limoon-build
+          path: limoon-build
 
       - name: Install dependencies
         uses: cross-platform-actions/action@v0.25.0
@@ -511,7 +511,7 @@ jobs:
           shutdown_vm: false
           run: |
             # Move cached dependencies into build/_deps.
-            mkdir -p build/_deps && mv textadept-build/* build/_deps && rm -r textadept-build
+            mkdir -p build/_deps && mv limoon-build/* build/_deps && rm -r limoon-build
 
             # Build.
             cmake -S . -B build -D NIGHTLY=1 -G Ninja
@@ -529,7 +529,7 @@ jobs:
           environment_variables: TEXTADEPT_HOME
           sync_files: false
           shutdown_vm: false
-          run: build/textadept-curses -t
+          run: build/limoon-curses -t
         timeout-minutes: 1
 
       - name: Read test output
@@ -553,11 +553,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout textadept-build dependencies
+      - name: Checkout limoon-build dependencies
         uses: actions/checkout@v4
         with:
-          repository: orbitalquark/textadept-build
-          path: textadept-build
+          repository: orbitalquark/limoon-build
+          path: limoon-build
 
       - name: Checkout LuaCov
         uses: actions/checkout@v4
@@ -572,7 +572,7 @@ jobs:
             xsel gdb lua-socket clang-format clangd hunspell-en-us --no-install-recommends -y
 
           patch -d luacov -p1 < src/luacov.patch
-          sudo mkdir -p /usr/share/lua/5.5 # for Textadept's `require('luacov')`
+          sudo mkdir -p /usr/share/lua/5.5 # for Li Moon's `require('luacov')`
           sudo mkdir -p /usr/share/lua/5.4 # for `os.execute('luacov')`
           sudo cp -r luacov/src/luacov* /usr/share/lua/5.4
           sudo cp -r luacov/src/luacov* /usr/share/lua/5.5
@@ -582,7 +582,7 @@ jobs:
       - name: Build for coverage
         run: |
           # Move cached dependencies into build/_deps.
-          mkdir -p build/_deps && mv textadept-build/* build/_deps && rm -r textadept-build
+          mkdir -p build/_deps && mv limoon-build/* build/_deps && rm -r limoon-build
 
           # Build.
           cmake -S . -B build -D NIGHTLY=1 -D PROFILE=1
@@ -598,14 +598,14 @@ jobs:
 
       - name: Unpack modules
         run: |
-          unzip textadept_*.modules.zip
-          mv textadept-modules/* modules
+          unzip limoon_*.modules.zip
+          mv limoon-modules/* modules
 
       - name: Run tests
         run: |
-          xvfb-run -a build/textadept -t -T || true
-          xvfb-run -a build/textadept-gtk -f -t -T || true
-          xvfb-run -a xterm -e build/textadept-curses -t -T
+          xvfb-run -a build/limoon -t -T || true
+          xvfb-run -a build/limoon-gtk -f -t -T || true
+          xvfb-run -a xterm -e build/limoon-curses -t -T
         env:
           TEXTADEPT_HOME: ${{ github.workspace }}
           LANG: en_US.UTF-8
@@ -642,7 +642,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           name: nightly
-          tag: textadept_nightly
+          tag: limoon_nightly
           prerelease: true
           allowUpdates: true
           bodyFile: log.md
@@ -669,7 +669,7 @@ jobs:
             update-notifier"
           for module in $(echo $modules); do
             name="$(echo -n $module | sed -e 's/-/_/g;')"
-            git clone --depth 1 https://github.com/orbitalquark/textadept-$module $name
+            git clone --depth 1 https://github.com/orbitalquark/limoon-$module $name
           done
 
       - name: Install luacheck

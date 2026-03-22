@@ -1,4 +1,4 @@
--- Material Dark theme for Textadept (Mattia Astorino)
+-- Material Dark theme for Li Moon (Mattia Astorino)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x212121 -- #212121

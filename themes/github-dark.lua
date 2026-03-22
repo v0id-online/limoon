@@ -1,4 +1,4 @@
--- GitHub Dark theme for Textadept
+-- GitHub Dark theme for Li Moon
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x17110D -- #0D1117

@@ -1,6 +1,6 @@
-# textadept-notcurses
+# limoon-notcurses
 
-> A drop-in third binary for [Textadept](https://orbitalquark.github.io/textadept/)
+> A drop-in third binary for [Li Moon](https://orbitalquark.github.io/limoon/)
 > that replaces the curses backend with [notcurses](https://github.com/dankamongmen/notcurses) —
 > bringing true 24-bit color, smooth rendering, and a modern terminal UI to one of the
 > most elegant editors ever written.
@@ -9,7 +9,7 @@
 
 ## Why
 
-Textadept is fast, minimal, and scriptable to the bone. Its terminal binary (`textadept-curses`)
+Li Moon is fast, minimal, and scriptable to the bone. Its terminal binary (`limoon-curses`)
 is solid — but curses is a 1980s library carrying 1980s constraints. No true color. No compositing.
 No double-buffered rendering. Flickery redraws on large files.
 
@@ -48,7 +48,7 @@ This project is that swap.
 
 ## Install
 ```sh
-sh <(curl -sSf https://raw.githubusercontent.com/yuriharrison1/textadept/default/install.sh)
+sh <(curl -sSf https://raw.githubusercontent.com/yuriharrison1/limoon/default/install.sh)
 ```
 
 Or build from source — see [BUILDING.md](./BUILDING.md).
@@ -57,7 +57,7 @@ Or build from source — see [BUILDING.md](./BUILDING.md).
 
 ## Compatibility
 
-Existing Textadept plugins and themes **continue to work unchanged**. The Lua API surface
+Existing Li Moon plugins and themes **continue to work unchanged**. The Lua API surface
 is identical to the standard terminal binary. Plugins that want to use notcurses-specific
 features (gradients, blitters, pixel graphics) can opt in through a small extension API
 documented in [docs/notcurses-api.md](./docs/notcurses-api.md).
@@ -86,13 +86,13 @@ The notcurses library is widely packaged:
 
 ---
 
-## Relationship to upstream Textadept
+## Relationship to upstream Li Moon
 
-This is **not a fork** intended to live in parallel with Textadept. The goal is to bring
-this backend upstream as an official third binary — alongside `textadept` (GUI) and
-`textadept-curses` (terminal).
+This is **not a fork** intended to live in parallel with Li Moon. The goal is to bring
+this backend upstream as an official third binary — alongside `limoon` (GUI) and
+`limoon-curses` (terminal).
 
-A formal proposal has been submitted to the Textadept maintainer. In the meantime, this
+A formal proposal has been submitted to the Li Moon maintainer. In the meantime, this
 repository is the working implementation.
 
 ---
@@ -102,7 +102,7 @@ repository is the working implementation.
 
 ## License
 
-MIT — same as Textadept.
+MIT — same as Li Moon.
 
 ---
 

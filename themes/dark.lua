@@ -1,5 +1,5 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
--- Dark theme for Textadept.
+-- Dark theme for Li Moon.
 
 local view, colors, styles = view, view.colors, view.styles
 
@@ -146,12 +146,12 @@ for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
 end
 
 -- Markers.
--- view.marker_fore[textadept.bookmarks.MARK_BOOKMARK] = colors.black
-view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
--- view.marker_fore[textadept.run.MARK_WARNING] = colors.black
-view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
--- view.marker_fore[textadept.run.MARK_ERROR] = colors.black
-view.marker_back[textadept.run.MARK_ERROR] = colors.red
+-- view.marker_fore[limoon.bookmarks.MARK_BOOKMARK] = colors.black
+view.marker_back[limoon.bookmarks.MARK_BOOKMARK] = colors.blue
+-- view.marker_fore[limoon.run.MARK_WARNING] = colors.black
+view.marker_back[limoon.run.MARK_WARNING] = colors.yellow
+-- view.marker_fore[limoon.run.MARK_ERROR] = colors.black
+view.marker_back[limoon.run.MARK_ERROR] = colors.red
 view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_back[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.green
@@ -164,11 +164,11 @@ view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
 -- Indicators.
 view.indic_fore[ui.find.INDIC_FIND] = colors.yellow
 view.indic_alpha[ui.find.INDIC_FIND] = 0x80
-view.indic_fore[textadept.editing.INDIC_HIGHLIGHT] = colors.orange
-view.indic_alpha[textadept.editing.INDIC_HIGHLIGHT] = 0x80
-view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.light_grey
-view.indic_fore[textadept.run.INDIC_WARNING] = colors.yellow
-view.indic_fore[textadept.run.INDIC_ERROR] = colors.red
+view.indic_fore[limoon.editing.INDIC_HIGHLIGHT] = colors.orange
+view.indic_alpha[limoon.editing.INDIC_HIGHLIGHT] = 0x80
+view.indic_fore[limoon.snippets.INDIC_PLACEHOLDER] = colors.light_grey
+view.indic_fore[limoon.run.INDIC_WARNING] = colors.yellow
+view.indic_fore[limoon.run.INDIC_ERROR] = colors.red
 view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = colors.green
 view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_DELETION] = colors.red
 view.indic_fore[view.INDICATOR_HISTORY_SAVED_INSERTION] = colors.green

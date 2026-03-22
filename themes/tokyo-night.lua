@@ -1,4 +1,4 @@
--- Tokyo Night theme for Textadept (enkia)
+-- Tokyo Night theme for Li Moon (enkia)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x261B1A -- #1A1B26

@@ -1,4 +1,4 @@
--- Catppuccin Latte theme for Textadept (catppuccin - light variant)
+-- Catppuccin Latte theme for Li Moon (catppuccin - light variant)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0xF5F1EF -- #EFF1F5

@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.22..3.31)
 
-project(textadept LANGUAGES C CXX)
+project(limoon LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
@@ -15,17 +15,17 @@ endif()
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets)
 if(Qt${QT_VERSION_MAJOR}_FOUND)
-	option(QT "Build Textadept using Qt" ON)
+	option(QT "Build Li Moon using Qt" ON)
 endif()
 find_package(PkgConfig)
 if(PKG_CONFIG_FOUND)
 	pkg_check_modules(GTK3 gtk+-3.0)
 	if(GTK3_FOUND)
-		option(GTK3 "Build Textadept using Gtk 3" ON)
+		option(GTK3 "Build Li Moon using Gtk 3" ON)
 	endif()
 	pkg_check_modules(GTK2 gtk+-2.0)
 	if(GTK2_FOUND)
-		option(GTK2 "Build Textadept using Gtk 2" ON)
+		option(GTK2 "Build Li Moon using Gtk 2" ON)
 	endif()
 endif()
 if(NOT WIN32)
@@ -38,7 +38,7 @@ if(NOT WIN32)
 	find_package(Curses)
 endif()
 if(CURSES_FOUND OR WIN32)
-	option(CURSES "Build Textadept using Curses" ON)
+	option(CURSES "Build Li Moon using Curses" ON)
 endif()
 if(NOT (QT OR GTK3 OR GTK2 OR CURSES))
 	message(FATAL_ERROR "No suitable platform found.")
@@ -252,62 +252,62 @@ endif()
 
 set(CMAKE_ENABLE_EXPORTS ON) # allow external Lua modules to link to exe
 
-# Textadept core.
-set(ta_src src/textadept.c $<$<BOOL:${WIN32}>:src/textadept.rc>)
-set(ta_compile_opts
+# Li Moon core.
+set(li_src src/limoon.c $<$<BOOL:${WIN32}>:src/limoon.rc>)
+set(li_compile_opts
 	$<IF:$<NOT:$<BOOL:${WIN32}>>,-pedantic -Wall -Wextra -Wno-unused-parameter
 		-Wno-missing-field-initializers,/W4>
 	$<$<BOOL:${PROFILE}>:-pg --coverage>
-	$<$<BOOL:${TEXTADEPT_HOME}>:-DTEXTADEPT_HOME="${TEXTADEPT_HOME}">)
-set(ta_link_opts $<$<BOOL:${PROFILE}>:--coverage>)
-set(ta_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${APPLE}>>:iconv>)
+	$<$<BOOL:${LIMOON_HOME}>:-DLIMOON_HOME="${LIMOON_HOME}">)
+set(li_link_opts $<$<BOOL:${PROFILE}>:--coverage>)
+set(li_link_libs scintilla lua lpeg lfs regex $<$<OR:$<BOOL:${WIN32}>,$<BOOL:${APPLE}>>:iconv>)
 
-# Textadept Qt.
+# Li Moon Qt.
 if(QT)
-	add_library(textadept_qt OBJECT
-		src/textadept_qt.cpp src/textadept_qt.ui $<$<BOOL:${APPLE}>:src/textadept_qt_mac.mm>)
-	target_compile_definitions(textadept_qt PRIVATE QT_NO_KEYWORDS)
-	target_compile_options(textadept_qt PRIVATE ${ta_compile_opts})
-	target_link_libraries(textadept_qt PRIVATE scintilla_qt lua ${qt_libraries}
+	add_library(limoon_qt OBJECT
+		src/limoon_qt.cpp src/limoon_qt.ui $<$<BOOL:${APPLE}>:src/limoon_qt_mac.mm>)
+	target_compile_definitions(limoon_qt PRIVATE QT_NO_KEYWORDS)
+	target_compile_options(limoon_qt PRIVATE ${li_compile_opts})
+	target_link_libraries(limoon_qt PRIVATE scintilla_qt lua ${qt_libraries}
 		SingleApplication::SingleApplication)
 
-	add_executable(textadept ${ta_src})
-	target_include_directories(textadept PRIVATE $<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
-	set_target_properties(textadept PROPERTIES WIN32_EXECUTABLE $<$<BOOL:${WIN32}>:ON>)
-	target_compile_options(textadept PRIVATE ${ta_compile_opts})
-	target_link_options(textadept PRIVATE ${ta_link_opts})
-	target_link_libraries(textadept PRIVATE ${ta_link_libs} textadept_qt)
+	add_executable(li ${li_src})
+	target_include_directories(li PRIVATE $<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
+	set_target_properties(li PROPERTIES WIN32_EXECUTABLE $<$<BOOL:${WIN32}>:ON>)
+	target_compile_options(li PRIVATE ${li_compile_opts})
+	target_link_options(li PRIVATE ${li_link_opts})
+	target_link_libraries(li PRIVATE ${li_link_libs} limoon_qt)
 endif()
 
-# Textadept GTK.
+# Li Moon GTK.
 if(GTK3 OR GTK2)
-	add_library(textadept_gtk OBJECT src/textadept_gtk.c)
-	target_include_directories(textadept_gtk PRIVATE ${GTK_INCLUDE_DIRS})
-	target_compile_options(textadept_gtk PRIVATE ${ta_compile_opts})
-	target_link_directories(textadept_gtk PRIVATE ${GTK_LIBRARY_DIRS})
-	target_link_libraries(textadept_gtk PRIVATE scintilla_gtk lua ${GTK_LIBRARIES})
+	add_library(limoon_gtk OBJECT src/limoon_gtk.c)
+	target_include_directories(limoon_gtk PRIVATE ${GTK_INCLUDE_DIRS})
+	target_compile_options(limoon_gtk PRIVATE ${li_compile_opts})
+	target_link_directories(limoon_gtk PRIVATE ${GTK_LIBRARY_DIRS})
+	target_link_libraries(limoon_gtk PRIVATE scintilla_gtk lua ${GTK_LIBRARIES})
 
-	add_executable(textadept-gtk ${ta_src})
-	target_compile_options(textadept-gtk PRIVATE ${ta_compile_opts})
-	target_link_options(textadept-gtk PRIVATE ${ta_link_opts})
-	target_link_libraries(textadept-gtk PRIVATE ${ta_link_libs} textadept_gtk)
+	add_executable(limoon-gtk ${li_src})
+	target_compile_options(limoon-gtk PRIVATE ${li_compile_opts})
+	target_link_options(limoon-gtk PRIVATE ${li_link_opts})
+	target_link_libraries(limoon-gtk PRIVATE ${li_link_libs} limoon_gtk)
 endif()
 
-# Textadept Curses.
+# Li Moon Curses.
 if(CURSES)
-	add_library(textadept_curses OBJECT src/textadept_curses.c)
-	target_include_directories(textadept_curses PRIVATE ${CURSES_INCLUDE_DIRS})
-	target_compile_options(textadept_curses PRIVATE ${ta_compile_opts})
-	target_link_directories(textadept_curses PRIVATE ${CURSES_LIBRARY_DIRS})
-	target_link_libraries(textadept_curses PRIVATE scintilla_curses lua termkey cdk reproc
+	add_library(limoon_curses OBJECT src/limoon_curses.c)
+	target_include_directories(limoon_curses PRIVATE ${CURSES_INCLUDE_DIRS})
+	target_compile_options(limoon_curses PRIVATE ${li_compile_opts})
+	target_link_directories(limoon_curses PRIVATE ${CURSES_LIBRARY_DIRS})
+	target_link_libraries(limoon_curses PRIVATE scintilla_curses lua termkey cdk reproc
 		${CURSES_LIBRARIES})
 
-	add_executable(textadept-curses ${ta_src})
-	target_include_directories(textadept-curses PRIVATE
+	add_executable(limoon-curses ${li_src})
+	target_include_directories(limoon-curses PRIVATE
 		$<$<BOOL:${WIN32}>:${iconv_SOURCE_DIR}/include>)
-	target_compile_options(textadept-curses PRIVATE ${ta_compile_opts})
-	target_link_options(textadept-curses PRIVATE ${ta_link_opts})
-	target_link_libraries(textadept-curses PRIVATE ${ta_link_libs} textadept_curses)
+	target_compile_options(limoon-curses PRIVATE ${li_compile_opts})
+	target_link_options(limoon-curses PRIVATE ${li_link_opts})
+	target_link_libraries(limoon-curses PRIVATE ${li_link_libs} limoon_curses)
 endif()
 
 # Version information.
@@ -334,84 +334,84 @@ function(install_data dir)
 endfunction()
 if(NOT (WIN32 OR APPLE))
 	include(GNUInstallDirs)
-	set(ta_bin_dir ${CMAKE_INSTALL_FULL_BINDIR})
-	install(CODE "file(MAKE_DIRECTORY ${ta_bin_dir})")
-	set(ta_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/textadept)
-	file(RELATIVE_PATH ta_bin_to_data_dir ${CMAKE_INSTALL_FULL_BINDIR} ${ta_data_dir})
+	set(li_bin_dir ${CMAKE_INSTALL_FULL_BINDIR})
+	install(CODE "file(MAKE_DIRECTORY ${li_bin_dir})")
+	set(li_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/limoon)
+	file(RELATIVE_PATH li_bin_to_data_dir ${CMAKE_INSTALL_FULL_BINDIR} ${li_data_dir})
 	install(CODE "file(MAKE_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR}/applications)")
-	file(RELATIVE_PATH ta_app_to_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/applications ${ta_data_dir})
+	file(RELATIVE_PATH li_app_to_data_dir ${CMAKE_INSTALL_FULL_DATADIR}/applications ${li_data_dir})
 	function(install_links target)
-		if(DEFINED TEXTADEPT_HOME)
-			install(TARGETS ${target} DESTINATION ${ta_bin_dir})
+		if(DEFINED LIMOON_HOME)
+			install(TARGETS ${target} DESTINATION ${li_bin_dir})
 		else()
-			install(TARGETS ${target} DESTINATION ${ta_data_dir})
-			install(CODE "file(CREATE_LINK ${ta_bin_to_data_dir}/${target}
-				${ta_bin_dir}/${target} SYMBOLIC)")
+			install(TARGETS ${target} DESTINATION ${li_data_dir})
+			install(CODE "file(CREATE_LINK ${li_bin_to_data_dir}/${target}
+				${li_bin_dir}/${target} SYMBOLIC)")
 		endif()
-		install(FILES src/${target}.desktop DESTINATION ${ta_data_dir})
-		install(CODE "file(CREATE_LINK ${ta_app_to_data_dir}/${target}.desktop
+		install(FILES src/${target}.desktop DESTINATION ${li_data_dir})
+		install(CODE "file(CREATE_LINK ${li_app_to_data_dir}/${target}.desktop
 			${CMAKE_INSTALL_FULL_DATADIR}/applications/${target}.desktop SYMBOLIC)")
 	endfunction()
 	if(QT)
-		install_links(textadept)
+		install_links(li)
 	endif()
 	if(GTK3 OR GTK2)
-		install_links(textadept-gtk)
+		install_links(limoon-gtk)
 	endif()
 	if(CURSES)
-		install_links(textadept-curses)
+		install_links(limoon-curses)
 	endif()
-	install_data(${ta_data_dir})
-	install(FILES core/images/textadept.svg
+	install_data(${li_data_dir})
+	install(FILES core/images/limoon.svg
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
-	set(textadept_tgz textadept_${version}.tgz)
+	set(limoon_tgz limoon_${version}.tgz)
 	if(CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch")
-		set(textadept_tgz textadept_${version}.arm.tgz)
+		set(limoon_tgz limoon_${version}.arm.tgz)
 	endif()
 	# Note: can use file(ARCHIVE_CREATE ... WORKING_DIRECTORY) in CMake 3.31.
 	add_custom_target(archive
-		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${textadept_tgz} textadept
+		COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${limoon_tgz} limoon
 		WORKING_DIRECTORY ${CMAKE_INSTALL_FULL_DATADIR})
 elseif(WIN32)
-	set(ta_dir ${CMAKE_INSTALL_PREFIX}/textadept)
+	set(li_dir ${CMAKE_INSTALL_PREFIX}/limoon)
 	if(QT)
-		install(TARGETS textadept DESTINATION ${ta_dir})
+		install(TARGETS li DESTINATION ${li_dir})
 	endif()
 	if(CURSES)
-		install(TARGETS textadept-curses DESTINATION ${ta_dir})
+		install(TARGETS limoon-curses DESTINATION ${li_dir})
 	endif()
-	install_data(${ta_dir})
-	install(TARGETS iconv DESTINATION ${ta_dir})
-	if(NOT (EXISTS ${ta_dir}/${qt_major}Core.dll OR EXISTS ${ta_dir}/${qt_major}Cored.dll))
+	install_data(${li_dir})
+	install(TARGETS iconv DESTINATION ${li_dir})
+	if(NOT (EXISTS ${li_dir}/${qt_major}Core.dll OR EXISTS ${li_dir}/${qt_major}Cored.dll))
 		install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --no-compiler-runtime
-			${ta_dir}/textadept.exe)")
-		install(CODE "file(REMOVE ${ta_dir}/d3dcompiler_47.dll ${ta_dir}/opengl32sw.dll)")
-		set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${ta_dir}) # put system libs here, not in bin/
+			${li_dir}/li.exe)")
+		install(CODE "file(REMOVE ${li_dir}/d3dcompiler_47.dll ${li_dir}/opengl32sw.dll)")
+		set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${li_dir}) # put system libs here, not in bin/
 		include(InstallRequiredSystemLibraries)
 	endif()
 	add_custom_target(archive
-		COMMAND 7z a ${CMAKE_BINARY_DIR}/textadept_${version}.zip textadept
+		COMMAND 7z a ${CMAKE_BINARY_DIR}/limoon_${version}.zip limoon
 		WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 elseif(APPLE)
-	set(ta_bin_dir ${CMAKE_INSTALL_PREFIX}/Textadept.app/Contents/MacOS)
-	set(ta_data_dir ${CMAKE_INSTALL_PREFIX}/Textadept.app/Contents/Resources)
+	set(li_bin_dir ${CMAKE_INSTALL_PREFIX}/LiMoon.app/Contents/MacOS)
+	set(li_data_dir ${CMAKE_INSTALL_PREFIX}/LiMoon.app/Contents/Resources)
 	if(QT)
-		install(TARGETS textadept DESTINATION ${ta_bin_dir})
+		install(TARGETS li DESTINATION ${li_bin_dir})
 	endif()
 	if(CURSES)
-		install(TARGETS textadept-curses DESTINATION ${ta_bin_dir})
+		install(TARGETS limoon-curses DESTINATION ${li_bin_dir})
 	endif()
-	install(PROGRAMS scripts/osx/textadept_osx DESTINATION ${ta_bin_dir})
-	install_data(${ta_data_dir})
-	install(CODE "file(RENAME ${ta_data_dir}/core/images/textadept.icns
-		${ta_data_dir}/textadept.icns)")
+	install(PROGRAMS scripts/osx/limoon_osx DESTINATION ${li_bin_dir})
+	install_data(${li_data_dir})
+	install(CODE "file(RENAME ${li_data_dir}/core/images/limoon.icns
+		${li_data_dir}/limoon.icns)")
 	if(POLICY CMP0177) # CMake 3.31 auto-normalizes .. in install() paths.
 		cmake_policy(SET CMP0177 NEW)
 	endif()
-	install(FILES src/Info.plist DESTINATION ${ta_data_dir}/../)
-	if(NOT EXISTS ${ta_data_dir}/qt.conf)
+	install(FILES src/Info.plist DESTINATION ${li_data_dir}/../)
+	if(NOT EXISTS ${li_data_dir}/qt.conf)
 		install(CODE "execute_process(COMMAND ${MACDEPLOYQT_EXECUTABLE}
-			${CMAKE_INSTALL_PREFIX}/Textadept.app -executable=${ta_bin_dir}/textadept)")
+			${CMAKE_INSTALL_PREFIX}/LiMoon.app -executable=${li_bin_dir}/li)")
 		# Homebrew Qt's macdeployqt cannot resolve rpaths to Homebrew's lib prefix.
 		# Work around this issue by adding Homebrew's lib to the executable's rpaths.
 		find_program(BREW brew)
@@ -420,16 +420,15 @@ elseif(APPLE)
 				OUTPUT_STRIP_TRAILING_WHITESPACE)
 			if(QT_DIR MATCHES "^${BREW_PREFIX}")
 				install(CODE "execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL} -add_rpath ${BREW_PREFIX}/lib
-					${ta_bin_dir}/textadept)")
+					${li_bin_dir}/li)")
 				install(CODE "execute_process(COMMAND codesign --sign - --force --deep
-					${CMAKE_INSTALL_PREFIX}/Textadept.app)")
+					${CMAKE_INSTALL_PREFIX}/LiMoon.app)")
 			endif()
 		endif()
 	endif()
-	install(PROGRAMS scripts/osx/ta DESTINATION ${CMAKE_INSTALL_PREFIX})
 	add_custom_target(archive
-		COMMAND ${CMAKE_COMMAND} -E tar cf ${CMAKE_BINARY_DIR}/textadept_${version}.zip --format=zip
-			Textadept.app ta
+		COMMAND ${CMAKE_COMMAND} -E tar cf ${CMAKE_BINARY_DIR}/limoon_${version}.zip --format=zip
+			LiMoon.app li
 		WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX})
 endif()
 

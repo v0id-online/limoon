@@ -1,4 +1,4 @@
--- Everforest Dark theme for Textadept (sainnhe)
+-- Everforest Dark theme for Li Moon (sainnhe)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x3B352D -- #2D353B

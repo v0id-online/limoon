@@ -2,7 +2,7 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
 -- Generates Lua to C interface for Scintilla by parsing Scintilla.iface and turning it into
--- a set of data tables. Whenever Textadept is to communicate with Scintilla using a given
+-- a set of data tables. Whenever Li Moon is to communicate with Scintilla using a given
 -- string identifier, this interface contains that identifier's message ID, argument types,
 -- and return types. Whenever Scintilla emits a notification, this interface contains that
 -- notification's type and parameters.

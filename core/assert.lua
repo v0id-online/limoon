@@ -1,6 +1,6 @@
 -- Copyright 2020-2026 Mitchell. See LICENSE.
 
---- Extends Lua's _G table to provide extra functions and fields for Textadept.
+--- Extends Lua's _G table to provide extra functions and fields for Li Moon.
 -- @module _G
 
 --- Asserts a value is truthy or raises an error.

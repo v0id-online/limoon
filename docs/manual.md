@@ -1,4 +1,4 @@
-# Textadept 13.0 alpha 2 Manual
+# Li Moon 13.0 alpha 2 Manual
 
 **Contents**
 
@@ -18,10 +18,10 @@
 
 ### Overview
 
-<a href="assets/images/linux.png"><img src="assets/images/linux.png" alt="textadept" width="400"/></a>
+<a href="assets/images/linux.png"><img src="assets/images/linux.png" alt="limoon" width="400"/></a>
 <a href="assets/images/terminal.png"><img src="assets/images/terminal.png" alt="terminal" width="375"/></a>
 
-Textadept is a fast, minimalist, and remarkably extensible cross-platform text editor for
+Li Moon is a fast, minimalist, and remarkably extensible cross-platform text editor for
 programmers. It is a traditional desktop application and has both a graphical user interface
 (GUI), and a terminal user interface (TUI). Written in a combination of C, C++, and [Lua][],
 the editor is extremely light on resources and very responsive.
@@ -53,17 +53,17 @@ This manual uses the following terminology:
 	a window.
 - *caret*: The visual that represents the text insertion point. It is usually a blinking
 	line. Some other applications call this object a cursor.
-- *module*: A package of Lua code that provides functionality for Textadept.
+- *module*: A package of Lua code that provides functionality for Li Moon.
 - *lexer*: A Lua module that highlights the syntax of source code written in a particular
-	programming language. Textadept refers to a programming language by its lexer's name.
-- *~/.textadept/*: Platform-specific directory where Textadept stores all settings and user data.
+	programming language. Li Moon refers to a programming language by its lexer's name.
+- *~/.limoon/*: Platform-specific directory where Li Moon stores all settings and user data.
 
 	Platform | Directory
 	-|-
-	Windows | *C:\\Users\\username\\.textadept\\*
-	macOS | */Users/username/.textadept/*
-	Linux | */home/username/.textadept/*
-	BSD | */home/username/.textadept/*
+	Windows | *C:\\Users\\username\\.limoon\\*
+	macOS | */Users/username/.limoon/*
+	Linux | */home/username/.limoon/*
+	BSD | */home/username/.limoon/*
 
 	(Substitute *username* for your actual user name.)
 
@@ -77,13 +77,13 @@ like to quickly get up to speed, or need a refresher, the [Lua Quick Reference][
 
 ### Requirements
 
-Textadept's pre-built binaries require the following:
+Li Moon's pre-built binaries require the following:
 
 - Windows 10+ (64-bit or ARM)
 - macOS 11+
 - Linux: [Qt][] 5 or [GTK][] 3 for the GUI version, and [ncurses][] for the terminal version.
 
-You can [compile](#compiling) Textadept from source for use with different UI library versions,
+You can [compile](#compiling) Li Moon from source for use with different UI library versions,
 such as Qt 6 and GTK 2.24.
 
 [Qt]: https://www.qt.io/
@@ -92,40 +92,40 @@ such as Qt 6 and GTK 2.24.
 
 ### Download
 
-Textadept releases and their release notes can be found [here][all releases]. Select the
+Li Moon releases and their release notes can be found [here][all releases]. Select the
 appropriate binary package for your platform. You can optionally download a companion set of
 modules that provide extra features and functionality for the core application.
 
 **Windows Note:** antivirus software may flag the Windows package as containing a virus or
-malware. This is a false-positive, caused by Textadept's terminal version executable, which is
+malware. This is a false-positive, caused by Li Moon's terminal version executable, which is
 a console application.
 
 **BSD Note:** binary packages for BSD are not available. You will have to [compile](#compiling)
-Textadept manually. Installing and running Textadept will be similar to the Linux instructions
+Li Moon manually. Installing and running Li Moon will be similar to the Linux instructions
 below.
 
-[all releases]: https://github.com/orbitalquark/textadept/releases
+[all releases]: https://github.com/orbitalquark/limoon/releases
 
 ### Installation
 
-Installing Textadept is simple and easy -- no administrator privileges necessary. On Windows and
-Linux, simply unpack the archive anywhere. On macOS, unpack the archive and move *Textadept.app*
+Installing Li Moon is simple and easy -- no administrator privileges necessary. On Windows and
+Linux, simply unpack the archive anywhere. On macOS, unpack the archive and move *Li Moon.app*
 to your user or system *Applications/* folder like any other macOS application. The macOS
-archive also contains a *ta* script for launching Textadept from the command line. You can put
+archive also contains a *ta* script for launching Li Moon from the command line. You can put
 this script somewhere in your `$PATH` (e.g. */usr/local/bin/*), but this is optional.
 
-If you downloaded Textadept's extra set of modules, unpack it into *~/.textadept/* (keeping
-the top-level *modules/* directory intact). If *~/.textadept/* does not exist, either create
-it manually, or [run Textadept](#running), which creates it for you. You could instead unpack
-the extra modules into Textadept's directory (thus merging the two *modules/* directories),
+If you downloaded Li Moon's extra set of modules, unpack it into *~/.limoon/* (keeping
+the top-level *modules/* directory intact). If *~/.limoon/* does not exist, either create
+it manually, or [run Li Moon](#running), which creates it for you. You could instead unpack
+the extra modules into Li Moon's directory (thus merging the two *modules/* directories),
 but this is not recommended, as it may make upgrading more difficult
 
-**Note:** Textadept generally does not auto-load modules, so you will need to load any extra
+**Note:** Li Moon generally does not auto-load modules, so you will need to load any extra
 modules you installed manually. The [modules](#modules) section describes this process.
 
 ### Updating
 
-Textadept does not have an auto-update process, as it does not connect to the internet (it is
+Li Moon does not have an auto-update process, as it does not connect to the internet (it is
 just a text editor). Instead, download new versions as they release (typically the first day of
 the month every month or two), and unpack or copy its contents into your current installation,
 overwriting it.
@@ -137,12 +137,12 @@ overwriting it.
 <a href="assets/images/linux.png"><img src="assets/images/linux.png" alt="linux" width="200" style="vertical-align: top;"/></a>
 <a href="assets/images/terminal.png"><img src="assets/images/terminal.png" alt="terminal" width="200" style="vertical-align: top;"/></a>
 
-Run Textadept on Windows by double-clicking *textadept.exe* or *textadept-curses.exe*. On
-macOS, double-click *Textadept.app* or invoke the *ta* script from the command line. On Linux,
-invoke *textadept*, *textadept-gtk*, or *textadept-curses* from a file browser, run dialog,
+Run Li Moon on Windows by double-clicking *limoon.exe* or *limoon-curses.exe*. On
+macOS, double-click *Li Moon.app* or invoke the *ta* script from the command line. On Linux,
+invoke *limoon*, *limoon-gtk*, or *limoon-curses* from a file browser, run dialog,
 terminal, etc.
 
-**Linux Note:** it is not possible to provide a single Textadept binary that runs correctly
+**Linux Note:** it is not possible to provide a single Li Moon binary that runs correctly
 on all systems. If the editor will not start on your machine, you must [compile](#compiling)
 it manually.
 
@@ -151,30 +151,30 @@ For better platform integration:
 - Windows: create shortcuts to the executables on the Windows Desktop, Start
 Menu, Quick Launch toolbar, etc.
 - macOS: pin the app to your dock.
-- Linux: use Textadept's *src/textadept.desktop*, *src/textadept-gtk.desktop*, and
-	*src/textadept-curses.desktop* files by picking one of the following:
+- Linux: use Li Moon's *src/limoon.desktop*, *src/limoon-gtk.desktop*, and
+	*src/limoon-curses.desktop* files by picking one of the following:
 
 	1. Create a symbolic link to the executables from somewhere in your `$PATH`
 	  (e.g. */usr/local/bin/*) and then copy those desktop files to a Freedesktop.org-specified
 	  applications directory on your system (e.g. */usr/local/share/applications* or
 	  *~/.local/share/applications/*).
-	2. Edit those desktop files with the absolute path to the Textadept executables and then copy
+	2. Edit those desktop files with the absolute path to the Li Moon executables and then copy
 	  those desktop files to an applications directory.
-	3. Edit those desktop files with the absolute path to the Textadept executables and then
+	3. Edit those desktop files with the absolute path to the Li Moon executables and then
 	  double-click the desktop file you want to run.
 
-	Picking 1 or 2 shows Textadept in your desktop environment's menu system (GNOME, KDE, XFCE,
+	Picking 1 or 2 shows Li Moon in your desktop environment's menu system (GNOME, KDE, XFCE,
 	etc.).
 
-	You can properly set Textadept's icon by either copying Textadept's
-	*core/images/textadept.svg* to a Freedesktop.org-specified "hicolor" theme directory
+	You can properly set Li Moon's icon by either copying Li Moon's
+	*core/images/limoon.svg* to a Freedesktop.org-specified "hicolor" theme directory
 	(e.g. */usr/share/icons/hicolor/scalable/apps* or *~/.local/share/icons/hicolor/scalable/apps*),
-	or by editing Textadept's desktop files to set "Icon" to the absolute path to
-	*core/images/textadept.svg*.
+	or by editing Li Moon's desktop files to set "Icon" to the absolute path to
+	*core/images/limoon.svg*.
 
-	**Note:** if you compiled Textadept, using CMake to install it will do all this for you.
+	**Note:** if you compiled Li Moon, using CMake to install it will do all this for you.
 
-Textadept accepts the following command line arguments:
+Li Moon accepts the following command line arguments:
 
 Option | Description
 -|-
@@ -194,50 +194,50 @@ Option | Description
 <sup>b</sup>Non-Windows terminal version only.<br/>
 <sup>c</sup>Qt interprets `--session` for itself, so `-s` must be used.
 
-**Note:** the `-L` and `--lua` options instructs Textadept to function as a standalone Lua
+**Note:** the `-L` and `--lua` options instructs Li Moon to function as a standalone Lua
 interpreter. All other command line options have no effect, but they are available to the script
-via the global `arg` table. Textadept defines `arg` as it is described in the Lua manual: the
+via the global `arg` table. Li Moon defines `arg` as it is described in the Lua manual: the
 script name goes at index 0, the first argument after the script name goes at index 1, and so
-on; arguments before the script name (i.e. the Textadept binary and the `-L` or `--lua` option)
-go to negative indices. Textadept does not emulate Lua's command line options or its default
+on; arguments before the script name (i.e. the Li Moon binary and the `-L` or `--lua` option)
+go to negative indices. Li Moon does not emulate Lua's command line options or its default
 `package.path` and `package.cpath` settings.
 
-Textadept also accepts files and projects to open from the command line. For example:
+Li Moon also accepts files and projects to open from the command line. For example:
 
 ```bash
-textadept /path/to/file1 ../relative/path/to/file2
-textadept /path/to/project/ relative/path/to/file1 relative/file2
+limoon /path/to/file1 ../relative/path/to/file2
+limoon /path/to/project/ relative/path/to/file1 relative/file2
 ```
 
-Unless you specify a filename as an absolute path, Textadept assumes it is relative to the
-application's current working directory (cwd). Textadept's cwd is initially the command line's
-cwd. (If Textadept is not being run from the command line, its cwd is unspecified.) If a project
-directory is specified, it becomes Textadept's cwd, but Textadept does not open any files in
+Unless you specify a filename as an absolute path, Li Moon assumes it is relative to the
+application's current working directory (cwd). Li Moon's cwd is initially the command line's
+cwd. (If Li Moon is not being run from the command line, its cwd is unspecified.) If a project
+directory is specified, it becomes Li Moon's cwd, but Li Moon does not open any files in
 that directory. If multiple project directories are specified, the last one becomes the cwd.
 
-By default, Textadept saves its state when it exits. If you do not give Textadept any files or
+By default, Li Moon saves its state when it exits. If you do not give Li Moon any files or
 projects to open, do not specify a session to load, and do not disable session functionality,
 the editor tries to restore its state at last exit.
 
-The GUI version of Textadept is a single-instance application -- if you invoke it again while it
+The GUI version of Li Moon is a single-instance application -- if you invoke it again while it
 is already open (e.g. opening a file from a file browser or command line), the action happens in
 the original instance. Pass the `-f` or `--force` command line flag to override this behavior and
-run a new instance of Textadept. You can disable this behavior on Windows by creating a shortcut
-to *textadept.exe* that passes this flag and use that shortcut to run Textadept. Similarly on
-Linux, you can set up your button or menu launchers to pass the flag to the *textadept* or
-*textadept-gtk* executables.
+run a new instance of Li Moon. You can disable this behavior on Windows by creating a shortcut
+to *limoon.exe* that passes this flag and use that shortcut to run Li Moon. Similarly on
+Linux, you can set up your button or menu launchers to pass the flag to the *limoon* or
+*limoon-gtk* executables.
 
-Textadept can run as a portable application, for example from a USB flash drive. Normally, all
-settings and user data is stored in *~/.textadept/*. However, you can override this user directory
-using the `-u` or `--userhome` command line option. For example, invoking *textadept.exe* with
+Li Moon can run as a portable application, for example from a USB flash drive. Normally, all
+settings and user data is stored in *~/.limoon/*. However, you can override this user directory
+using the `-u` or `--userhome` command line option. For example, invoking *limoon.exe* with
 the command line arguments `-u userdata` will read from and store settings and user data to a
-*userdata/* directory located inside an installation of Textadept. You can create a Windows
-shortcut that passes these command line arguments to the Textadept executable and use that
-shortcut to run Textadept portably.
+*userdata/* directory located inside an installation of Li Moon. You can create a Windows
+shortcut that passes these command line arguments to the Li Moon executable and use that
+shortcut to run Li Moon portably.
 
 ### Preferences
 
-The special file *~/.textadept/init.lua* is a Lua script where you specify your editor preferences
+The special file *~/.limoon/init.lua* is a Lua script where you specify your editor preferences
 and customize what the application does when it starts. Open it using the "Edit > Preferences"
 menu item. It is initially empty. You can use this file to:
 
@@ -251,10 +251,10 @@ menu item. It is initially empty. You can use this file to:
 - Run arbitrary Lua code.
 - And more!
 
-These topics will be covered throughout this manual. Textadept's comprehensive [Lua API][]
+These topics will be covered throughout this manual. Li Moon's comprehensive [Lua API][]
 includes all configurable settings for buffers, views, and modules.
 
-Here is a sample *~/.textadept/init.lua* for illustration:
+Here is a sample *~/.limoon/init.lua* for illustration:
 
 ```lua
 -- Adjust the default theme's font and size.
@@ -269,13 +269,13 @@ buffer.tab_width = 2
 
 -- Always strip trailing spaces on save, automatically highlight the current
 -- word, and use C89-style block comments in C code.
-textadept.editing.strip_trailing_spaces = true
-textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_CURRENT
-textadept.editing.comment_string.c = '/*|*/'
+limoon.editing.strip_trailing_spaces = true
+limoon.editing.highlight_words = limoon.editing.HIGHLIGHT_CURRENT
+limoon.editing.comment_string.c = '/*|*/'
 
 -- Create a key binding to the "Edit > Preferences" menu item.
 if not OSX and not CURSES then
-	keys['ctrl+,'] = textadept.menu.menubar['Edit/Preferences'][2]
+	keys['ctrl+,'] = limoon.menu.menubar['Edit/Preferences'][2]
 end
 
 -- Load an external module and bind a key to it.
@@ -286,8 +286,8 @@ keys['ctrl+f12'] = lsp.goto_declaration
 lexer.detect_extensions.luadoc = 'lua'
 
 -- Change the run commands for Lua and Python
-textadept.run.run_commands.lua = 'lua5.1 "%f"'
-textadept.run.run_commands.python = 'python3 "%f"'
+limoon.run.run_commands.lua = 'lua5.1 "%f"'
+limoon.run.run_commands.python = 'python3 "%f"'
 
 -- Always use PEP-8 indentation style for Python files, and spaces for YAML files.
 events.connect(events.LEXER_LOADED, function(name)
@@ -298,7 +298,7 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 ```
 
-**Note:** *~/.textadept/init.lua* must not call any functions that create buffers and views
+**Note:** *~/.limoon/init.lua* must not call any functions that create buffers and views
 (e.g. `ui.print()`, `io.open_file()`, and `buffer.new()`) at file-level scope. Buffers and
 views can only be created within functions assigned to keys, associated with menu items, or
 connected to events.
@@ -307,9 +307,9 @@ connected to events.
 
 ## User Interface
 
-<a href="assets/images/textadept.png"><img src="assets/images/textadept.png" alt="ui"/></a>
+<a href="assets/images/limoon.png"><img src="assets/images/limoon.png" alt="ui"/></a>
 
-Textadept's user interface is sleek and simple. It consists of:
+Li Moon's user interface is sleek and simple. It consists of:
 
 - Completely customizable menu bar
 - Scrollable tab bar
@@ -323,24 +323,24 @@ Textadept's user interface is sleek and simple. It consists of:
 The titlebar shows the name and path of the current, active buffer. A '\*' character, if present,
 indicates there are unsaved changes in that buffer.
 
-Textadept's user interface has been translated into a few different languages. When the application
+Li Moon's user interface has been translated into a few different languages. When the application
 starts, it attempts to auto-detect your language settings by reading from the `$LANG` environment
 variable. If this fails, or if the editor does not support your language, it falls back on
 English. You can manually set your locale by copying one of the locale configuration files from
-Textadept's *core/locales/* to your *~/.textadept/* directory and renaming it *locale.conf*. If
-you would like to translate Textadept into your language, please translate the English messages
+Li Moon's *core/locales/* to your *~/.limoon/* directory and renaming it *locale.conf*. If
+you would like to translate Li Moon into your language, please translate the English messages
 in *core/locale.conf* and send me (see the bottom of *README.md*) the modified file for inclusion
 in a future release.
 
 ### Menu
 
-The menu bar provides access to nearly all of Textadept's editing features. Almost every
+The menu bar provides access to nearly all of Li Moon's editing features. Almost every
 menu item has a key binding for quick access. Some languages and platforms also provide menu
 mnemonics for opening and selecting menu items. For example, on Windows and Linux/BSD with
 the English language, `Alt+E` opens the "Edit" menu, `S` opens the "Select" sub-menu, and `L`
 invokes the "Select Line" menu item.
 
-Textadept's menu items are also accessible in the form of a searchable dialog via `Ctrl+P`
+Li Moon's menu items are also accessible in the form of a searchable dialog via `Ctrl+P`
 on Windows and Linux/BSD, `⌘P` on macOS, and `^P` in the terminal version. (Despite the fact
 that the terminal version does not have a menu, it does have this dialog.) Typing part of the
 name of any command in the dialog filters the list, with spaces being wildcards. The arrow
@@ -355,27 +355,27 @@ look up key bindings for particular commands.
 **Note:** some commands have more than one key binding, but only one of those bindings (chosen
 at random) is shown in the menu and dialog.
 
-You can extend Textadept's menu (and dialog) with your own menus, sub-menus, and menu items by
-modifying the [`textadept.menu.menubar`][] table. For example, in your *~/.textadept/init.lua*:
+You can extend Li Moon's menu (and dialog) with your own menus, sub-menus, and menu items by
+modifying the [`limoon.menu.menubar`][] table. For example, in your *~/.limoon/init.lua*:
 
 ```lua
-local tools = textadept.menu.menubar['Tools']
+local tools = limoon.menu.menubar['Tools']
 tools[#tools + 1] = {''} -- separator
 tools[#tools + 1] = {'Reset L&ua State', reset} -- mark 'u' as the mnemonic
 ```
 
-[`textadept.menu.menubar`]: api.html#textadept.menu.menubar
+[`limoon.menu.menubar`]: api.html#limoon.menu.menubar
 
 ### Tab Bar
 
-The tab bar displays all of Textadept's open buffers by name, though it is only visible when
+The tab bar displays all of Li Moon's open buffers by name, though it is only visible when
 two or more buffers are open. A '\*' character, if present, indicates there are unsaved changes
 in the marked buffer. When two or more views are open, the active tab applies to the active
 view, and clicking on a tab switches to its buffer in that view. Right-clicking on the tab bar
 brings up a context menu. Rearrange tabs by clicking, dragging, and dropping them. Toggle the
 visibility of the tab bar (as long as more than one buffer is open) using the "Buffer > Toggle
 Tab Bar" menu item. Turn off the tab bar completely by setting [`ui.tabs`][]. For example,
-in your *~/.textadept/init.lua*:
+in your *~/.limoon/init.lua*:
 
 ```lua
 ui.tabs = false
@@ -387,7 +387,7 @@ Cycle to the next buffer via `Ctrl+Tab` or `Ctrl+PgDn` on Windows and Linux/BSD,
 on macOS, and `M-PgDn` in the terminal version. Cycle to the previous buffer via `Ctrl+Shift+Tab`
 or `Ctrl+PgUp`, `^⇧⇥` or `⌘{`, and `M-PgUp`.
 
-Textadept's tabs are also accessible in the form of a searchable dialog via `Ctrl+B` on Windows
+Li Moon's tabs are also accessible in the form of a searchable dialog via `Ctrl+B` on Windows
 and Linux/BSD, `⌘B` on macOS, and `^B` in the terminal version. (Despite the fact that the
 terminal version does not have a tab bar, it does have this dialog.) The dialog displays a
 list of currently open buffers. Typing part of any filename filters the list, with spaces
@@ -401,7 +401,7 @@ the tab bar is tedious.
 
 The dialog shows more recently used buffers towards the top. You can change the dialog show
 buffers in left-to-right tab order by setting [`ui.buffer_list_zorder`][]. For example, in
-your *~/.textadept/init.lua*:
+your *~/.limoon/init.lua*:
 
 ```lua
 ui.buffer_list_zorder = false
@@ -413,7 +413,7 @@ ui.buffer_list_zorder = false
 
 <a href="assets/images/windows.png"><img src="assets/images/windows.png" alt="editor" width="500"/></a>
 
-The editor view is where you will spend most of your time in Textadept. You can split it
+The editor view is where you will spend most of your time in Li Moon. You can split it
 vertically and horizontally as many times as you like, and you can view the same buffer in two
 or more separate views. Resize split views by clicking and dragging on the splitter bar that
 separates them. Right-clicking inside a view brings up a context menu.
@@ -444,7 +444,7 @@ find and replace functionality you would expect, along with "Match Case", "Whole
 "[Regex](#regex-and-lua-pattern-syntax)", and "In Files" options. The pane also stores find
 and replace history that you can cycle through.
 
-**Note:** Textadept does not support multi-line searches (either regex or plain text).
+**Note:** Li Moon does not support multi-line searches (either regex or plain text).
 
 **Terminal version note:** find and replace history is limited to 100 items each.
 
@@ -488,9 +488,9 @@ sequences:
 **Tip:** by default, "Replace All" replaces all text in the buffer. Selecting text and then
 performing "Replace All" replaces all text in that selection only.
 
-**Tip:** You can make Textadept automatically highlight all instances of found text in
+**Tip:** You can make Li Moon automatically highlight all instances of found text in
 the current buffer by setting [`ui.find.highlight_all_matches`][]. For example, in your
-*~/.textadept/init.lua*:
+*~/.limoon/init.lua*:
 
 ```lua
 ui.find.highlight_all_matches = true
@@ -500,7 +500,7 @@ ui.find.highlight_all_matches = true
 
 #### Find in Files
 
-Textadept can search for text within multiple files and directories via `Ctrl+Shift+F` on
+Li Moon can search for text within multiple files and directories via `Ctrl+Shift+F` on
 Windows and Linux/BSD, `⌘⇧F` on macOS, and `M-^F` in the terminal version. Invoking "Find
 Next" prompts you for a directory to search in. The "Replace" entry transforms into a "Filter"
 entry that contains files and directories to include or exclude from the search.
@@ -509,15 +509,15 @@ A [filter][] consists of a comma-separated list of shell-style glob patterns tha
 and directories to include or exclude. The default filter excludes many common binary files
 and version control directories from searches. It is included with any extra items you specify.
 
-**Tip:** Textadept keeps track of filters set per-directory. You can also set per-directory filters
-in Lua by modifying [`ui.find_in_files_filters`][]. For example, in your *~/.textadept/init.lua*:
+**Tip:** Li Moon keeps track of filters set per-directory. You can also set per-directory filters
+in Lua by modifying [`ui.find_in_files_filters`][]. For example, in your *~/.limoon/init.lua*:
 
 ```lua
 -- Only search in certain source directories.
 ui.find.find_in_files_filters['/path/to/project'] = {'include/**', 'src/**'}
 ```
 
-Textadept shows search results in a temporary buffer. Jump to the next or previous result via
+Li Moon shows search results in a temporary buffer. Jump to the next or previous result via
 `Ctrl+Alt+G` or `Ctrl+Alt+Shift+G`, respectively, on Windows and Linux/BSD; `^⌘G` or `^⌘⇧G`,
 respectively, on macOS; and `M-G` or `M-S-G`, respectively, in the terminal version. You can
 also double-click on a result to jump to it, or use the arrow keys to navigate within the list
@@ -530,7 +530,7 @@ and press `Enter`.
 
 #### Incremental Find
 
-Textadept searches for text incrementally as you type when you summon the find & replace pane via
+Li Moon searches for text incrementally as you type when you summon the find & replace pane via
 `Ctrl+Alt+F` on Windows and Linux/BSD, `^⌘F` on macOS, and `M-F` in the terminal version. The
 "In Files" option does not apply in this mode.
 
@@ -552,7 +552,7 @@ on Windows, Linux, BSD, and the terminal version; and `⇡` and `⇣` on macOS.
 
 Open the Lua command entry via `Ctrl+E` on Windows and Linux/BSD, `⌘E` on macOS, and `^E`
 in the terminal version. Type in the Lua command or code to run and press `Enter` to execute
-it. Textadept's [Lua API][] contains all of the application's built-in commands, settings, etc.
+it. Li Moon's [Lua API][] contains all of the application's built-in commands, settings, etc.
 
 Show code completion candidates via `Tab` on Windows, Linux, BSD, and the terminal version;
 and `⇥` on macOS. Use the arrow keys to make a selection and press `Enter` to insert it.
@@ -563,7 +563,7 @@ Lua code here runs in a modified environment for your convenience:
 	- [`buffer`](api.html#the-buffer-module)
 	- [`view`](api.html#the-view-module)
 	- [`ui`](api.html#ui)
-	- [`textadept`](api.html#textadept)
+	- [`limoon`](api.html#limoon)
 - The first argument to `buffer` and `view` functions may be omitted.
 - Commands with no arguments may omit the parentheses.
 
@@ -574,18 +574,18 @@ Lua code | Command entry equivalent
 `buffer:reload()` | `reload`
 `view:split(true)` | `split(true)`
 `ui.tabs = false` | `tabs = false`
-`textadept.keys['ctrl+n'] = buffer.new` | `keys['ctrl+n'] = new`
+`limoon.keys['ctrl+n'] = buffer.new` | `keys['ctrl+n'] = new`
 
-**Warning:** Textadept will not prevent you from wrecking its internal Lua state, so please
+**Warning:** Li Moon will not prevent you from wrecking its internal Lua state, so please
 be careful.
 
-**Tip:** Textadept's `-e` and `--execute` command line arguments run the given code as if
-it was entered in the editor's Lua command entry. Since the GUI version of Textadept is a
+**Tip:** Li Moon's `-e` and `--execute` command line arguments run the given code as if
+it was entered in the editor's Lua command entry. Since the GUI version of Li Moon is a
 single-instance application, you can send commands to that instance. For example:
 
 ```lua
-textadept /path/to/file &
-textadept -e "io.open_file('/path/to/another/file')"
+limoon /path/to/file &
+limoon -e "io.open_file('/path/to/another/file')"
 ```
 
 [Lua API]: api.html
@@ -610,7 +610,7 @@ Text passed as standard input to shell commands is determined as follows:
 The command's standard output replaces its input text.
 
 **Warning:** commands that emit stdout while reading stdin (as opposed to emitting stdout only
-after stdin is closed) may hang the GTK and terminal versions of Textadept if input generates
+after stdin is closed) may hang the GTK and terminal versions of Li Moon if input generates
 more output than stdout can buffer. For example, on Linux stdout may only be able to buffer
 64K while there is still incoming input.
 
@@ -633,11 +633,11 @@ Buffer status information includes:
 
 ## Working with Files and Projects
 
-Textadept provides many ways to open files:
+Li Moon provides many ways to open files:
 
 - Open, using a standard file chooser dialog, one or more files in a single directory via
 	`Ctrl+O` on Windows and Linux/BSD, `⌘O` on macOS, and `^O` in the terminal version.
-- Open, using a quick open dialog, one or more files in the current project or Textadept's
+- Open, using a quick open dialog, one or more files in the current project or Li Moon's
 	current working directory via `Ctrl+Shift+O` on Windows and Linux/BSD, `^⌘O` on macOS, and
 	`M-^O` in the terminal version. Typing part of any filename filters the list, with spaces
 	being wildcards. The arrow keys move the selection up and down. Holding down `Shift` while
@@ -646,41 +646,41 @@ Textadept provides many ways to open files:
 	opens it. (The terminal version requires pressing `Enter`.)
 - Open, using a quick open dialog, one or more files in the directory of the currently opened
 	file using the "Tools > Quick Open > Quickly Open Current Directory" menu item.
-- Open a file by dragging it from a file manager and dropping it into one of Textadept's views.
+- Open a file by dragging it from a file manager and dropping it into one of Li Moon's views.
 - Open a recently opened file from a list of recent files via the "File > Open Recent..." menu
 	item.
-- Open, using a quick open dialog, one or more files in *~/.textadept/* via `Ctrl+Alt+U`
+- Open, using a quick open dialog, one or more files in *~/.limoon/* via `Ctrl+Alt+U`
 	on Windows and Linux/BSD, `⌘⇧U` on macOS, and `M-U` in the terminal version.
 - Reopen the currently opened file, discarding any unsaved changes, using the "File > Reload"
-	menu item. (Textadept prompts you do this if the editor detects it has been modified externally.)
+	menu item. (Li Moon prompts you do this if the editor detects it has been modified externally.)
 
-**Windows Note:** Due to limitations in Lua and Microsoft's C runtime (MSVCRT), Textadept can
+**Windows Note:** Due to limitations in Lua and Microsoft's C runtime (MSVCRT), Li Moon can
 only open files whose *filenames* contain characters in the system's encoding, even if Windows
 properly displays characters outside that encoding. For example, if the system's encoding is
-CP1252 (English and most European languages), Textadept cannot open a filename that contains
+CP1252 (English and most European languages), Li Moon cannot open a filename that contains
 Japanese characters in it. This limitation only exists for file *names*, not file *contents*.
 
 ### Projects
 
-Textadept's only concept of a project is a parent directory under a recognized form of version
-control (Git, Mercurial, SVN, Bazaar, and Fossil). There is no "Open Project" action. Textadept
+Li Moon's only concept of a project is a parent directory under a recognized form of version
+control (Git, Mercurial, SVN, Bazaar, and Fossil). There is no "Open Project" action. Li Moon
 can work with multiple projects at once, since the current project depends largely on context:
 
-1. If the current buffer is a file, Textadept walks up its parent directory tree, looking for
+1. If the current buffer is a file, Li Moon walks up its parent directory tree, looking for
 	a version control directory. If one is found, its parent directory is the current project.
-2. Textadept walks up its current working directory (cwd) tree, looking for a version control
+2. Li Moon walks up its current working directory (cwd) tree, looking for a version control
 	directory. If one is found, its parent directory is the current project.
 3. If no version control directory is found, there is no current project.
 
-**Tip:** you can specify Textadept's current working directory by passing it on the command
-line when running the application. This effectively starts Textadept with a "default
+**Tip:** you can specify Li Moon's current working directory by passing it on the command
+line when running the application. This effectively starts Li Moon with a "default
 project". You can also change the current working from within the editor by running the
 `lfs.chdir('/path/to/folder')` command in the Lua command entry.
 
-Textadept's quick open dialog for opening a file from the current project displays the first
+Li Moon's quick open dialog for opening a file from the current project displays the first
 5000 files it finds. You can increase this limit by changing [`io.quick_open_max`][]. You can
 also filter out certain file types from showing in the list by adding a project-specific filter
-to [`io.quick_open_filters`][]. For example, in your *~/.textadept/init.lua*:
+to [`io.quick_open_filters`][]. For example, in your *~/.limoon/init.lua*:
 
 ```lua
 io.quick_open_max = 10000 -- support huge projects
@@ -695,8 +695,8 @@ and version control directories from searches. It is included with any extra ite
 
 You can mimic a more traditional approach to projects by saving and loading project-specific
 sessions using the "File > Save Session..." and "File > Load Session..." menu items, respectively,
-as well as using the `-s` and `--session` command line arguments. Textadept stores session
-files in *~/.textadept/*, and the default session name is "session".
+as well as using the `-s` and `--session` command line arguments. Li Moon stores session
+files in *~/.limoon/*, and the default session name is "session".
 
 [`io.quick_open_filters`]: api.html#io.quick_open_filters
 [`io.quick_open_max`]: api.html#io.quick_open_max
@@ -704,32 +704,32 @@ files in *~/.textadept/*, and the default session name is "session".
 
 ### Language
 
-Textadept attempts to identify the programming language associated with files it opens and
+Li Moon attempts to identify the programming language associated with files it opens and
 assign a lexer for syntax highlighting:
 
 1. The first line of the file is checked against the [Lua patterns](#regex-and-lua-pattern-syntax)
-	in [`lexer.detect_patterns`][]. If there is a match, Textadept uses the lexer associated with
+	in [`lexer.detect_patterns`][]. If there is a match, Li Moon uses the lexer associated with
 	that matching pattern.
 2. The file's extension is checked against those in [`lexer.detect_extensions`][]. If there is
-	a match, Textadept uses the lexer associated with that extension. If the file does not have
-	an extension, Textadept uses the entire file name in the check.
-3. Textadept falls back on a plain text lexer.
+	a match, Li Moon uses the lexer associated with that extension. If the file does not have
+	an extension, Li Moon uses the entire file name in the check.
+3. Li Moon falls back on a plain text lexer.
 
 You can change or add lexers associated with first line patterns, file extensions, and file
 names by modifying `lexer.detect_patterns` and `lexer.detect_extensions`. For example, in your
-*~/.textadept/init.lua*:
+*~/.limoon/init.lua*:
 
 ```lua
 lexer.detect_patterns['^#!.+/zsh'] = 'bash'
 lexer.detect_extensions.luadoc = 'lua'
 ```
 
-Textadept has lexers for more than 100 different programming languages, but if it is missing
-a lexer for your language, you can [write one][], place it in your *~/.textadept/lexers/*
+Li Moon has lexers for more than 100 different programming languages, but if it is missing
+a lexer for your language, you can [write one][], place it in your *~/.limoon/lexers/*
 directory, and add an extension and/or pattern for it.
 
 **Tip:** placing lexers in your user data directory avoids the possibility of you overwriting
-them when you update Textadept.
+them when you update Li Moon.
 
 You can manually change a buffer's lexer via `Ctrl+Shift+L` on Windows and Linux/ BSD, `⌘⇧L`
 on macOS, and `M-^L` in the terminal version. Typing part of a lexer name in the dialog filters
@@ -743,13 +743,13 @@ terminal version requires pressing `Enter`.)
 
 ### End of Line Mode
 
-Textadept attempts to detect a file's end-of-line mode (EOL mode), falling back on CRLF ("\r\n")
+Li Moon attempts to detect a file's end-of-line mode (EOL mode), falling back on CRLF ("\r\n")
 by default on Windows, and LF ('\n') on all other platforms. You can manually change this mode
 using the "Buffer > EOL Mode" menu.
 
 ### Indentation
 
-Textadept also attempts to identify a file's indentation settings, though the editor is more
+Li Moon also attempts to identify a file's indentation settings, though the editor is more
 likely to misidentify files with mixed indentation.
 
 You can manually change a buffer's indentation by following these steps:
@@ -761,7 +761,7 @@ You can manually change a buffer's indentation by following these steps:
 	Indentation > Convert Indentation" menu item.
 
 The default indentation setting is a tab representing 8 spaces, but you can change this globally
-and on a language-specific basis. For example, in your *~/.textadept/init.lua*:
+and on a language-specific basis. For example, in your *~/.limoon/init.lua*:
 
 ```lua
 -- Disallow auto-detection of indentation.
@@ -785,24 +785,24 @@ end)
 
 ### Encoding
 
-Textadept attempts to detect a file's character encoding, either UTF-8, ASCII, CP1252, or
+Li Moon attempts to detect a file's character encoding, either UTF-8, ASCII, CP1252, or
 UTF-16. If you have files with other encodings, you can either:
 
 - Add those encodings to the [`io.encodings`][] table before opening the file. For example,
-	in your *~/.textadept/init.lua*:
+	in your *~/.limoon/init.lua*:
 
 	```lua
 	io.encodings[#io.encodings + 1] = 'UTF-32'
 	table.insert(io.encodings, 3, 'CP936') -- before CP1252
 
 	-- Optionally add an item to the "Buffer > Encoding" menu.
-	local menu = textadept.menu.menubar['Buffer/Encoding']
+	local menu = limoon.menu.menubar['Buffer/Encoding']
 	local encoding = 'UTF-32'
 	menu[#menu + 1] = {encoding, function() buffer:set_encoding(encoding) end}
 	```
 
 - Change the current file's encoding by running the [`buffer:set_encoding()`][] command in the
-	[Lua Command Entry](#lua-command-entry). For example, if Textadept incorrectly detected a
+	[Lua Command Entry](#lua-command-entry). For example, if Li Moon incorrectly detected a
 	CP936 file as CP1252, run `set_encoding('CP936')` to switch the encoding to CP936.
 
 The "Buffer > Encoding"	menu also allows you to change the current file's encoding.
@@ -812,7 +812,7 @@ The "Buffer > Encoding"	menu also allows you to change the current file's encodi
 
 ### View Settings
 
-Textadept normally does not wrap long lines into view, nor does it show whitespace characters. You
+Li Moon normally does not wrap long lines into view, nor does it show whitespace characters. You
 can toggle line wrapping for the current buffer via `Ctrl+\` on Windows and Linux/BSD, `⌘\`
 on macOS, and `M-\` in the terminal version. You can toggle whitespace visibility for the current
 buffer using the "View > Toggle View Whitespace" menu item. The editor represents visible spaces
@@ -822,11 +822,11 @@ On the left side of each editor view are margins that show line numbers, [bookma
 and [fold markers](#code-folding). You can toggle the visibility of these margins using the
 "View > Toggle Margins" menu item.
 
-The GUI version of Textadept shows small guiding lines based on indentation level. You can toggle
+The GUI version of Li Moon shows small guiding lines based on indentation level. You can toggle
 the visibility of these guides for the current view using the "View > Toggle Show Indent Guides"
 menu item.
 
-The GUI version of Textadept also allows you to temporarily change the current view's font size:
+The GUI version of Li Moon also allows you to temporarily change the current view's font size:
 
 - Increase the view's font size via `Ctrl+=` on Windows and Linux/BSD, and `⌘=` on macOS.
 - Decrease the view's font size via `Ctrl+-` on Windows and Linux/BSD, and `⌘-` on macOS.
@@ -835,7 +835,7 @@ The GUI version of Textadept also allows you to temporarily change the current v
 
 ## Adept Editing
 
-Textadept implements a commonly accepted set of text editor features and [key bindings][keys]
+Li Moon implements a commonly accepted set of text editor features and [key bindings][keys]
 across each of its Platforms, including Bash-style key bindings on macOS and in the terminal
 version. The editor also has its own advanced features, many of which are described in the
 following sections.
@@ -844,7 +844,7 @@ following sections.
 
 ### Brace Matching, Auto-pair, and Typeover
 
-Textadept highlights matching brace characters when the caret is over one of them: '(', ')', '[',
+Li Moon highlights matching brace characters when the caret is over one of them: '(', ')', '[',
 ']', '{', or '}' for programming languages, and '<' or '>' for XML-like markup languages. Jump
 to the current character's complement via `Ctrl+M` on Windows and Linux/BSD, `⌘M` on macOS,
 and `M-M` in the terminal version.
@@ -852,68 +852,68 @@ and `M-M` in the terminal version.
 The editor automatically inserts the complement of typed opening brace and quote characters,
 deletes that complement if you type `Backspace`, and moves over the complement if you type it
 (as opposed to inserting it again). You can configure or disable this behavior by modifying
-[`textadept.editing.auto_pairs`][] and [`textadept.editing.typeover_auto_paired`][]. For example,
-in your *~/.textadept/init.lua*:
+[`limoon.editing.auto_pairs`][] and [`limoon.editing.typeover_auto_paired`][]. For example,
+in your *~/.limoon/init.lua*:
 
 ```lua
 -- Auto-pair and typeover '*' (Markdown emphasis/strong).
-textadept.editing.auto_pairs['*'] = '*'
+limoon.editing.auto_pairs['*'] = '*'
 
 -- Disable only typeover.
-textadept.editing.typeover_auto_paired = false
+limoon.editing.typeover_auto_paired = false
 
 -- Disable auto-pair and typeover.
-textadept.editing.auto_pairs = nil
+limoon.editing.auto_pairs = nil
 ```
 
-[`textadept.editing.auto_pairs`]: api.html#textadept.editing.auto_pairs
-[`textadept.editing.typeover_auto_paired`]: api.html#textadept.editing.typeover_auto_paired
+[`limoon.editing.auto_pairs`]: api.html#limoon.editing.auto_pairs
+[`limoon.editing.typeover_auto_paired`]: api.html#limoon.editing.typeover_auto_paired
 
 ### Word Highlight
 
-Textadept can automatically highlight all occurrences of the word under the
+Li Moon can automatically highlight all occurrences of the word under the
 caret, or all occurrences of the selected word (e.g. a variable name), by setting
-[`textadept.editing.highlight_words`][]. For example, in your *~/.textadept/init.lua*:
+[`limoon.editing.highlight_words`][]. For example, in your *~/.limoon/init.lua*:
 
 ```lua
 -- Highlight all occurrences of the current word.
-textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_CURRENT
+limoon.editing.highlight_words = limoon.editing.HIGHLIGHT_CURRENT
 -- Highlight all occurrences of the selected word.
-textadept.editing.highlight_words = textadept.editing.HIGHLIGHT_SELECTED
+limoon.editing.highlight_words = limoon.editing.HIGHLIGHT_SELECTED
 ```
 
 <a href="assets/images/wordhighlight.png"><img src="assets/images/wordhighlight.png" alt="word highlight" width="500"/></a>
 
-Textadept does not perform any automatic highlighting by default.
+Li Moon does not perform any automatic highlighting by default.
 
-[`textadept.editing.highlight_words`]: api.html#textadept.editing.highlight_words
+[`limoon.editing.highlight_words`]: api.html#limoon.editing.highlight_words
 
 ### Autocompletion
 
-Textadept autocompletes words in the current buffer via `Ctrl+Enter` on Windows and
+Li Moon autocompletes words in the current buffer via `Ctrl+Enter` on Windows and
 Linux/BSD, `⌘↩` on macOS, and `^Enter` in the terminal version. If there are multiple
 candidates, the editor shows a list of suggestions. Continuing to type may change the
 suggestion. Use the arrow keys to navigate within the list and press `Enter` to finish
 the completion. You can expand the word pool to include all open buffers by setting
-[`textadept.editing.autocomplete_all_words`][]. For example, in *~/.textadept/init.lua*:
+[`limoon.editing.autocomplete_all_words`][]. For example, in *~/.limoon/init.lua*:
 
 ```lua
-textadept.editing.autocomplete_all_words = true
+limoon.editing.autocomplete_all_words = true
 ```
 
 **Tip:** the external [Language Server Protocol module][] provides language-specific
 autocompletions. It also shows symbol documentation. These features enable you to easily
-configure and extend Textadept, as well as understand its API, all from within the editor itself.
+configure and extend Li Moon, as well as understand its API, all from within the editor itself.
 
 <a href="assets/images/lsp.png"><img src="assets/images/lsp.png" alt="autocomplete" width="365"/></a>
 <a href="assets/images/apidoc.png"><img src="assets/images/apidoc.png" alt="api doc" width="400"/></a>
 
-[Language Server Protocol module]: https://github.com/orbitalquark/textadept-lsp
-[`textadept.editing.autocomplete_all_words`]: api.html#textadept.editing.autocomplete_all_words
+[Language Server Protocol module]: https://github.com/orbitalquark/limoon-lsp
+[`limoon.editing.autocomplete_all_words`]: api.html#limoon.editing.autocomplete_all_words
 
 ### Text Selections
 
-Textadept has three kinds of text selections: contiguous, multiple, and rectangular.
+Li Moon has three kinds of text selections: contiguous, multiple, and rectangular.
 
 You can create contiguous selections as follows:
 
@@ -953,7 +953,7 @@ You can create multiple selections as follows:
 - Select as an additional selection the next occurrence of the current word via `Ctrl+D`
 	on Windows and Linux/BSD, `⌘D` on macOS, and `^D` in the terminal version.
 
-Textadept mirrors any typed or pasted text at each selection. Deselect a particular additional
+Li Moon mirrors any typed or pasted text at each selection. Deselect a particular additional
 selection by holding down `Ctrl` and clicking it with the mouse.
 
 <a href="assets/images/prerename.png"><img src="assets/images/prerename.png" alt="pre rename" width="400"/></a>
@@ -970,7 +970,7 @@ You can create a rectangular selection as follows:
 	`M-` in the terminal version, and then continue dragging the mouse. This works around the
 	Linux/BSD window managers that consume `Alt+Shift` + arrow keys and `Alt` + mouse drag.
 
-Textadept allows a zero-width rectangular selection that spans multiple lines, and mirrors any
+Li Moon allows a zero-width rectangular selection that spans multiple lines, and mirrors any
 typed or pasted text on all of those lines.
 
 <a href="assets/images/rectangularselection.png"><img src="assets/images/rectangularselection.png" alt="rectangular selection" width="400"/></a>
@@ -985,7 +985,7 @@ after copying a block of text.
 
 ### Text Transformations
 
-Textadept can apply many different transformations to the current word, line, and selected text:
+Li Moon can apply many different transformations to the current word, line, and selected text:
 
 - Enclose the current word or selected text within delimiters like parentheses, braces, brackets,
 	single quotes, double quotes, or HTML/XML tags using the key bindings listed in the "Edit >
@@ -1005,19 +1005,19 @@ Textadept can apply many different transformations to the current word, line, an
 	on macOS, and `^?` or `M-/` in the terminal version. You do not have to select whole lines;
 	selecting any part of a line is sufficient.
 - Enclose selected text between any typed punctuation character (taking into account
-	[`textadept.editing.auto_pairs`][]) after setting [`textadept.editing.auto_enclose`][]. For
-	example, in your *~/.textadept/init.lua*:
+	[`limoon.editing.auto_pairs`][]) after setting [`limoon.editing.auto_enclose`][]. For
+	example, in your *~/.limoon/init.lua*:
 
 	```lua
-	textadept.editing.auto_enclose = true
+	limoon.editing.auto_enclose = true
 	```
 
-[`textadept.editing.auto_pairs`]: api.html#textadept.editing.auto_pairs
-[`textadept.editing.auto_enclose`]: api.html#textadept.editing.auto_enclose
+[`limoon.editing.auto_pairs`]: api.html#limoon.editing.auto_pairs
+[`limoon.editing.auto_enclose`]: api.html#limoon.editing.auto_enclose
 
 ### Navigate Through History
 
-Textadept records buffer positions within views over time and allows for navigating through
+Li Moon records buffer positions within views over time and allows for navigating through
 that history. Navigate backward or forward via `Ctrl+[` or `Ctrl+]`, respectively, on Windows
 and Linux/BSD; `⌘[` or `⌘]`, respectively, on macOS; and `M-[` or `M-]`, respectively, in the
 terminal version.
@@ -1030,7 +1030,7 @@ and press `Enter` or click `OK`.
 
 ### Bookmarks
 
-Textadept allows you to bookmark lines and jump back to them later:
+Li Moon allows you to bookmark lines and jump back to them later:
 
 - Toggle a bookmark on the current line via `Ctrl+K` on Windows and Linux/BSD, `⌘K` on macOS,
 	and `^K` in the terminal version.
@@ -1106,11 +1106,11 @@ directory, with file names being trigger words.
 - Cancel the current snippet via `Esc`.
 
 [`snippets`]: api.html#_G.snippets
-[snippets documentation]: api.html#textadept.snippets
+[snippets documentation]: api.html#limoon.snippets
 
 ### Code Folding
 
-Many of Textadept's lexers can identify blocks of code and mark their fold points in the editor's
+Many of Li Moon's lexers can identify blocks of code and mark their fold points in the editor's
 left-hand margin.
 
 - Toggle the visibility of a code block by clicking on its marker, or toggle the visibility
@@ -1120,7 +1120,7 @@ left-hand margin.
 - Turn off/on code folding for a buffer using the "Buffer > Toggle Code Folding" menu item.
 
 **Tip:** you can turn off code folding completely by changing `buffer.folding`. For example
-in your *~/.textadept/init.lua*:
+in your *~/.limoon/init.lua*:
 
 ```lua
 buffer.folding = false
@@ -1130,7 +1130,7 @@ buffer.folding = false
 
 ### Virtual Space
 
-Textadept normally constrains the caret within the content of text lines. Enabling virtual
+Li Moon normally constrains the caret within the content of text lines. Enabling virtual
 space allows you to move the caret into the space beyond the ends of lines. Toggle virtual
 space using the "View > Toggle Virtual Space" menu item.
 
@@ -1142,13 +1142,13 @@ character or, if no such character exists, the string representation of the key 
 [`keys.KEYSYMS`][]. Language-specific keys are in a subtable assigned to their language's lexer
 name. You can assign key sequences to tables of key bindings to create key chains (e.g. Emacs
 `C-x` prefix). You can also group key bindings into modes such that while a mode is active,
-Textadept ignores all key bindings outside that mode until the mode is unset (e.g. Vim-style
+Li Moon ignores all key bindings outside that mode until the mode is unset (e.g. Vim-style
 modal editing). The [keys documentation][] describes all of this in more detail.
 
 **Tip**: you can query a key binding's sequence and see if it has an assigned command via
 `Ctrl+Shift+H` on Windows and Linux/BSD, `⌘⇧H` on macOS, and `M-S-H` in the terminal
 version. While this mode is active, the statusbar shows typed key sequences and their assigned
-commands, if any. Textadept also copies the sequence to the clipboard. Pressing `Esc` deactivates
+commands, if any. Li Moon also copies the sequence to the clipboard. Pressing `Esc` deactivates
 the mode.
 
 [`keys`]: api.html#keys
@@ -1157,9 +1157,9 @@ the mode.
 
 ## Compile, Run, Build, and Test
 
-Textadept knows most of the commands that compile and/or run code in source files. It also
+Li Moon knows most of the commands that compile and/or run code in source files. It also
 knows some of the commands that build projects, and you can tell the editor how to run your
-project's test suite. Finally, Textadept allows you to run arbitrary commands in the context
+project's test suite. Finally, Li Moon allows you to run arbitrary commands in the context
 of your project. The editor prints command output in real-time to a temporary buffer and marks
 any warning and error messages it recognizes.
 
@@ -1182,79 +1182,79 @@ any warning and error messages it recognizes.
 - Jump to the source of the recognized warning or error on the current line via `Enter`,
 	or by double-clicking on that line.
 
-Prior to running a compile, run, build, or test command, Textadept prompts you with either:
+Prior to running a compile, run, build, or test command, Li Moon prompts you with either:
 
 1. A command it thinks is appropriate for the current file or project.
-2. A command you have specified for the current context (e.g. via *~/.textadept/init.lua*).
+2. A command you have specified for the current context (e.g. via *~/.limoon/init.lua*).
 3. A command you have previously run in the current context.
 4. A blank command for you to fill in.
 
 Make any necessary changes to the command and then run it by pressing `Enter`. Cycle through
 command history via `Up` and `Down` on Windows, Linux, BSD, and the terminal version; and `⇡`
-and `⇣` on macOS. Cancel the prompt via `Esc`. Textadept remembers compile and run commands on
+and `⇣` on macOS. Cancel the prompt via `Esc`. Li Moon remembers compile and run commands on
 a per-filename basis, and it remembers build, test, and project commands on a per-directory basis.
 
 <a href="assets/images/runerror.png"><img src="assets/images/runerror.png" alt="runtime error" width="600"/></a>
 
-You can configure Textadept to run commands immediately without a prompt by setting
-[`textadept.run.run_without_prompt`][]. You can also have the editor print command output in
-the background by changing [`textadept.run.run_in_background`][]. For example, in your *~/.textadept/init.lua*:
+You can configure Li Moon to run commands immediately without a prompt by setting
+[`limoon.run.run_without_prompt`][]. You can also have the editor print command output in
+the background by changing [`limoon.run.run_in_background`][]. For example, in your *~/.limoon/init.lua*:
 
 ```lua
-textadept.run.run_without_prompt = true
-textadept.run.run_in_background = true
+limoon.run.run_without_prompt = true
+limoon.run.run_in_background = true
 ```
 
 You can change or add compile, run, build, test, and project commands by modifying
-the [`textadept.run.compile_commands`][], [`textadept.run.run_commands`][],
-[`textadept.run.build_commands`][], [`textadept.run.test_commands`][], and
-[`textadept.run.run_project_commands`][] tables, respectively. For example, in your
-*~/.textadept/init.lua*:
+the [`limoon.run.compile_commands`][], [`limoon.run.run_commands`][],
+[`limoon.run.build_commands`][], [`limoon.run.test_commands`][], and
+[`limoon.run.run_project_commands`][] tables, respectively. For example, in your
+*~/.limoon/init.lua*:
 
 ```lua
-textadept.run.compile_commands.foo = 'foo "%f"'
-textadept.run.run_commands.foo = './"%e"'
+limoon.run.compile_commands.foo = 'foo "%f"'
+limoon.run.run_commands.foo = './"%e"'
 
-textadept.run.build_commands['/path/to/project'] = 'make -C src -j4'
-textadept.run.test_commands['/path/to/project'] = 'lua tests.lua'
-textadept.run.run_project_commands['/path/to/project'] = function() ... end
+limoon.run.build_commands['/path/to/project'] = 'make -C src -j4'
+limoon.run.test_commands['/path/to/project'] = 'lua tests.lua'
+limoon.run.run_project_commands['/path/to/project'] = function() ... end
 ```
 
 **Tip:** you can set compile and run commands on a per-filename basis.
 
-**macOS Tip:** GUI applications like *Textadept.app* run in a restricted environment with a
-stripped-down `$PATH`. (The terminal version is unaffected.) Thus, Textadept may fail to find
+**macOS Tip:** GUI applications like *Li Moon.app* run in a restricted environment with a
+stripped-down `$PATH`. (The terminal version is unaffected.) Thus, Li Moon may fail to find
 compile/run programs outside that `$PATH` (e.g. programs installed with Homebrew). The editor
 attempts to work around this by silently invoking your `$SHELL` and extracting its environment
 (including its full `$PATH`), but if this fails, you will need to supply absolute paths to
 executables.
 
-[`textadept.run.run_without_prompt`]: api.html#textadept.run.run_without_prompt
-[`textadept.run.run_in_background`]: api.html#textadept.run.run_in_background
-[`textadept.run.compile_commands`]: api.html#textadept.run.compile_commands
-[`textadept.run.run_commands`]: api.html#textadept.run.run_commands
-[`textadept.run.build_commands`]: api.html#textadept.run.build_commands
-[`textadept.run.test_commands`]: api.html#textadept.run.test_commands
-[`textadept.run.run_project_commands`]: api.html#textadept.run.run_project_commands
+[`limoon.run.run_without_prompt`]: api.html#limoon.run.run_without_prompt
+[`limoon.run.run_in_background`]: api.html#limoon.run.run_in_background
+[`limoon.run.compile_commands`]: api.html#limoon.run.compile_commands
+[`limoon.run.run_commands`]: api.html#limoon.run.run_commands
+[`limoon.run.build_commands`]: api.html#limoon.run.build_commands
+[`limoon.run.test_commands`]: api.html#limoon.run.test_commands
+[`limoon.run.run_project_commands`]: api.html#limoon.run.run_project_commands
 
 ## Modules
 
-Modules are packages of Lua code that provide functionality for Textadept. Most of the editor's
-features come from individual modules (Textadept's *core/* and *modules/* directories). Textadept
+Modules are packages of Lua code that provide functionality for Li Moon. Most of the editor's
+features come from individual modules (Li Moon's *core/* and *modules/* directories). Li Moon
 can load modules when the application starts up, and it can load modules on-demand in response
 to events. Once a module is loaded, it persists in memory and is never unloaded.
 
-Textadept attempts to load a given module from the following locations:
+Li Moon attempts to load a given module from the following locations:
 
-1. Your *~/.textadept/modules/* directory.
-2. Textadept's *modules/* directory.
+1. Your *~/.limoon/modules/* directory.
+2. Li Moon's *modules/* directory.
 
 **Tip:** placing modules in your user data directory avoids the possibility of you overwriting
-them when you update Textadept.
+them when you update Li Moon.
 
-Just because a module exists does not mean Textadept will automatically load it. The editor
-only loads modules it is explicitly told to load (e.g. from your *~/.textadept/init.lua*). For
-example, in your *~/.textadept/init.lua*:
+Just because a module exists does not mean Li Moon will automatically load it. The editor
+only loads modules it is explicitly told to load (e.g. from your *~/.limoon/init.lua*). For
+example, in your *~/.limoon/init.lua*:
 
 ```lua
 local lsp = require('lsp')
@@ -1271,7 +1271,7 @@ end)
 ```
 
 **Note:** lexer language names are typically the names of lexer files in your
-*~/.textadept/lexers/* directory and Textadept's *lexers/* directory.
+*~/.limoon/lexers/* directory and Li Moon's *lexers/* directory.
 
 ### Developing Modules
 
@@ -1292,7 +1292,7 @@ for developing modules, and some things to keep in mind:
 
 ## Themes
 
-Themes customize the editor's look and feel. Textadept comes with three built-in themes: "light",
+Themes customize the editor's look and feel. Li Moon comes with three built-in themes: "light",
 "dark", and "term". The default theme for the GUI version is "light" if light mode is currently
 enabled, or "dark" if dark mode is enabled. The default theme for the terminal version is "term".
 
@@ -1303,22 +1303,22 @@ A theme consists of a single Lua file, and defines the [colors][] and [text disp
 (styles) used in syntax highlighting. It also assigns colors to various UI elements like carets,
 selections, margins, markers, highlights, errors, and warnings.
 
-**Note:** Textadept cannot theme its own GUI widgets. You must use the theming tools provided
+**Note:** Li Moon cannot theme its own GUI widgets. You must use the theming tools provided
 by the applicable Qt or GTK widget toolkit.
 
 [colors]: api.html#view.colors
 [text display settings]: api.html#view.styles
 
-Textadept attempts to load themes from the following locations:
+Li Moon attempts to load themes from the following locations:
 
-1. Your *~/.textadept/themes/* directory.
-2. Textadept's *themes/* directory.
+1. Your *~/.limoon/themes/* directory.
+2. Li Moon's *themes/* directory.
 
 **Tip:** placing themes in your user data directory avoids the possibility of you overwriting
-them when you update Textadept.
+them when you update Li Moon.
 
-You can set Textadept's theme using [`view:set_theme()`][]. You can also tweak a theme's styles
-on a per-language basis. For example, in your *~/.textadept/init.lua*:
+You can set Li Moon's theme using [`view:set_theme()`][]. You can also tweak a theme's styles
+on a per-language basis. For example, in your *~/.limoon/init.lua*:
 
 ```lua
 if not CURSES then
@@ -1335,9 +1335,9 @@ events.connect(events.LEXER_LOADED, function(name)
 end)
 ```
 
-**Tip:** you can experiment with themes without having to restart Textadept by using the
+**Tip:** you can experiment with themes without having to restart Li Moon by using the
 [`reset()`][] command in the [Lua Command Entry](#lua-command-entry). After making changes
-to either your *~/.textadept/init.lua* or theme file, issue the `reset` command to reload
+to either your *~/.limoon/init.lua* or theme file, issue the `reset` command to reload
 your changes.
 
 [`view:set_theme()`]: api.html#view.set_theme
@@ -1345,28 +1345,28 @@ your changes.
 
 ## Scripting
 
-Nearly every aspect of Textadept can be scripted, extended, and customized with Lua. In fact, most
+Nearly every aspect of Li Moon can be scripted, extended, and customized with Lua. In fact, most
 of the editor's features are implemented in Lua: syntax highlighting, opening and saving files,
-and search and replace, to name a few. Textadept contains its own internal copy of [Lua 5.4][].
+and search and replace, to name a few. Li Moon contains its own internal copy of [Lua 5.4][].
 
-Being an event-driven application, Textadept simply responds to input like key presses,
+Being an event-driven application, Li Moon simply responds to input like key presses,
 mouse clicks, and state changes by running Lua code (more specifically, executing Lua
-functions). For example, when you press a key, Textadept emits an `events.KEYPRESS` event,
+functions). For example, when you press a key, Li Moon emits an `events.KEYPRESS` event,
 which its *core/keys.lua* is listening for. When the editor recognizes a key sequence like
 `Ctrl+O` on Windows and Linux/BSD, *core/keys.lua* looks up which Lua function is assigned
-to the `keys['ctrl+o']` key. By default, it is `io.open_file()`, so Textadept executes that
+to the `keys['ctrl+o']` key. By default, it is `io.open_file()`, so Li Moon executes that
 function, which prompts the user for a file to open. You could bind a different function to
-that key and the editor will duly execute it instead. Similarly, when Textadept opens a file via
+that key and the editor will duly execute it instead. Similarly, when Li Moon opens a file via
 `io.open_file()`, that function emits a `events.FILE_OPENED` event, which you could listen for in
-your *~/.textadept/init.lua* and perform your own action, such as loading some project-specific
+your *~/.limoon/init.lua* and perform your own action, such as loading some project-specific
 tools for editing that file.
 
-Your *~/.textadept/init.lua* is the entry point to scripting Textadept. In this file you can set
+Your *~/.limoon/init.lua* is the entry point to scripting Li Moon. In this file you can set
 up custom key bindings, menu items, and event handlers that will perform custom actions. Here
 are some ideas:
 
 - Define custom [key bindings][] and [menu items][] that manipulate [`buffer`][] contents.
-- Extend Textadept's File menu with a menu item that prompts for a commit message using an
+- Extend Li Moon's File menu with a menu item that prompts for a commit message using an
 	[interactive dialog][], and then invokes a [project command][] that commits the current file
 	to version control using the provided message.
 - Listen for the `events.FILE_SAVED` [event][] and [spawn][] an asynchronous process that runs
@@ -1377,41 +1377,41 @@ are some ideas:
 - Auto-save files as you switch between buffers by listening for the `events.BUFFER_BEFORE_SWITCH`
 	event and calling `buffer:save()` for buffers that have a `buffer.filename`. You can even
 	auto-save on a timer via [`timeout()`][].
-- Overload Textadept's find & replace capabilities to use Lua patterns instead of regex by
-	reacting to `events.FIND` and `events.REPLACE` before Textadept can, and then determining
+- Overload Li Moon's find & replace capabilities to use Lua patterns instead of regex by
+	reacting to `events.FIND` and `events.REPLACE` before Li Moon can, and then determining
 	whether or not the editor's default routines should handle those events.
 - Register your own command line argument using [`args.register()`][] to add a "read-only" mode.
 - Add a custom command to the default right-click context menu by appending to
-	[`textadept.menu.context_menu`][].
+	[`limoon.menu.context_menu`][].
 
-Textadept's [Lua API][] is extensively documented and serves as the ultimate resource when it
+Li Moon's [Lua API][] is extensively documented and serves as the ultimate resource when it
 comes to scripting the editor.
 
 [Lua 5.4]: https://www.lua.org/manual/5.4
 [key bindings]: api.html#keys
-[menu items]: api.html#textadept.menu.menubar
+[menu items]: api.html#limoon.menu.menubar
 [`buffer`]: api.html#buffer
 [interactive dialog]: api.html#ui.dialogs
-[project command]: api.html#textadept.run.run_project
+[project command]: api.html#limoon.run.run_project
 [event]: api.html#events
 [spawn]: api.html#os.spawn
 [find & replace pane]: api.html#ui.find
 [`timeout()`]: api.html#timeout
 [`args.register()`]: api.html#args.register
-[`textadept.menu.context_menu`]: api.html#textadept.menu.context_menu
+[`limoon.menu.context_menu`]: api.html#limoon.menu.context_menu
 [Lua API]: api.html
 
 ## Compiling
 
-Textadept uses [CMake][] to build on Windows, macOS, Linux, and BSD. CMake automatically detects
+Li Moon uses [CMake][] to build on Windows, macOS, Linux, and BSD. CMake automatically detects
 which UI toolkits are available and builds for them. On Windows and macOS you can then use CMake
 to create a self-contained application to run from anywhere. On Linux and BSD you can either
-use CMake to install Textadept, or place compiled binaries into Textadept's root directory and
+use CMake to install Li Moon, or place compiled binaries into Li Moon's root directory and
 run it from there.
 
 ### Requirements
 
-Textadept requires the following:
+Li Moon requires the following:
 
 - [CMake][] 3.22+
 - A C and C++ compiler, such as:
@@ -1446,12 +1446,12 @@ packages are all that is needed.
 
 Basic procedure:
 
-1. Configure CMake by pointing it to Textadept's source directory (where *CMakeLists.txt* is),
+1. Configure CMake by pointing it to Li Moon's source directory (where *CMakeLists.txt* is),
 	specify a directory to build in, and optionally specify a directory to install to. CMake will
 	determine what UI toolkits are available and fetch third-party build dependencies.
 	<br/><a href="assets/images/compile.png"><img src="assets/images/compile.png" alt="cmake" width="400"/></a>
-2. Build Textadept.
-3. Either copy the built binaries to Textadept's source directory or use CMake to install it.
+2. Build Li Moon.
+3. Either copy the built binaries to Li Moon's source directory or use CMake to install it.
 
 For example:
 
@@ -1465,26 +1465,26 @@ cmake --install build_dir # self-contained installation is in build_dir/install/
 **Windows Note:** you need to run these commands from Visual Studio's developer command prompt
 if you are not using CMake's GUI and Visual Studio.
 
-**Tip:** you can use the environment variable `TEXTADEPT_HOME` to specify the location of
-Textadept's root directory. Doing so allows you to run Textadept executables directly from the
+**Tip:** you can use the environment variable `LIMOON_HOME` to specify the location of
+Li Moon's root directory. Doing so allows you to run Li Moon executables directly from the
 binary directory without having to install or copy them.
 
-**Windows and macOS Note:** when creating the self-contained Qt version of Textadept, Qt's
+**Windows and macOS Note:** when creating the self-contained Qt version of Li Moon, Qt's
 *bin/* directory should be in your `%PATH%` or `$PATH`, respectively.
 
 CMake boolean variables that affect the build:
 
-- `NIGHTLY`: Whether or not to build Textadept with bleeding-edge dependencies (i.e. the nightly
+- `NIGHTLY`: Whether or not to build Li Moon with bleeding-edge dependencies (i.e. the nightly
 	version). Defaults to off.
-- `QT`: Unless off, builds the Qt version of Textadept. The default is auto-detected.
-- `GTK3`: Unless off, builds the Gtk 3 version of Textadept. The default is auto-detected.
-- `GTK2`: Unless off, builds the Gtk 2 version of Textadept. The default is auto-detected.
-- `CURSES`: Unless off, builds the Curses (terminal) version of Textadept. The default is
+- `QT`: Unless off, builds the Qt version of Li Moon. The default is auto-detected.
+- `GTK3`: Unless off, builds the Gtk 3 version of Li Moon. The default is auto-detected.
+- `GTK2`: Unless off, builds the Gtk 2 version of Li Moon. The default is auto-detected.
+- `CURSES`: Unless off, builds the Curses (terminal) version of Li Moon. The default is
 	auto-detected.
 - `GENERATE_HTML`: When on, creates a `html` target to build HTML documentation in the *docs/*
 	directory (e.g. `cmake --build build_dir --target html`). Requires [Lua][] and [Ruby][]
 	to be installed. Defaults to off.
-- `TEXTADEPT_HOME`: When set on Linux or BSD, uses the given location as Textadept's root
+- `LIMOON_HOME`: When set on Linux or BSD, uses the given location as Li Moon's root
 	directory. Setting this is probably only useful for distribution managers that want to install
 	binaries separately from data files.
 
@@ -1534,7 +1534,7 @@ $ | $ | Matches the end of a line unless inside a set
 
 <sup>a</sup>In replacement text, "\0" (Regex) or "%0" (Lua) represents all matched text.
 
-Textadept's regular expressions are based on the C++11 standard for ECMAScript. There are a
+Li Moon's regular expressions are based on the C++11 standard for ECMAScript. There are a
 number of references for this syntax on the internet, including:
 
 - [ECMAScript syntax C++ reference](https://www.cplusplus.com/reference/regex/ECMAScript/)
@@ -1546,7 +1546,7 @@ Manual](https://www.lua.org/manual/5.4/manual.html#6.4.1).
 
 ### Terminal Version Compatibility
 
-Textadept's terminal version requires a font with good glyph support (like DejaVu Sans Mono or
+Li Moon's terminal version requires a font with good glyph support (like DejaVu Sans Mono or
 Liberation Mono), and lacks some GUI features due to the terminal's constraints:
 
 - No alpha values or transparency.
@@ -1573,20 +1573,20 @@ Liberation Mono), and lacks some GUI features due to the terminal's constraints:
 
 ### Directory Structure
 
-Textadept's directory structure is organized as follows:
+Li Moon's directory structure is organized as follows:
 
-- *core/*: Contains Textadept's core Lua modules. These modules are essential for the application
-	to run, providing Textadept's Lua to C interface, event framework, file and lexer interactions,
+- *core/*: Contains Li Moon's core Lua modules. These modules are essential for the application
+	to run, providing Li Moon's Lua to C interface, event framework, file and lexer interactions,
 	and localization.
 - *lexers/*: Houses the lexer modules that analyze source code for syntax highlighting.
 - *modules/*: Contains modules for editing text and source code.
-- *themes/*: Contains built-in themes that customize the look and feel of Textadept.
+- *themes/*: Contains built-in themes that customize the look and feel of Li Moon.
 - *iconengines/*, *imageformats/*, *platforms/*, *styles/*, and *translations/*: Qt support
 	directories that appear only in the Windows package.
 
 ### Technologies
 
-Textadept is composed of the following technologies:
+Li Moon is composed of the following technologies:
 
 - [Qt][]: cross-platform GUI toolkit
 - [GTK][]: cross-platform GUI toolkit
@@ -1622,7 +1622,7 @@ Textadept is composed of the following technologies:
 [SingleApplication]: https://github.com/itay-grudev/SingleApplication
 [reproc]: https://github.com/DaanDeMeyer/reproc
 
-### Migrating from Textadept 12 to 13
+### Migrating from Li Moon 12 to 13
 
 #### API Changes
 
@@ -1640,7 +1640,7 @@ parent_size | Renamed | [parent_split_pos][]
 
 #### Lua 5.5 Changes
 
-Textadept 13 uses Lua 5.5, which has some incompatibilities compared to Textadept 12's Lua 5.4:
+Li Moon 13 uses Lua 5.5, which has some incompatibilities compared to Li Moon 12's Lua 5.4:
 
 - The word `global` is a reserved word. Do not use it as a regular name.
 - The control variable in for loops is read only. If you need to change it, declare a local
@@ -1648,7 +1648,7 @@ Textadept 13 uses Lua 5.5, which has some incompatibilities compared to Textadep
 - A chain of `__call` metamethods can have at most 15 objects.
 - In an error, a `nil` as the error object is replaced by a string message.
 
-You may need to update your *~/.textadept/init.lua* or any custom modules, particularly if your
+You may need to update your *~/.limoon/init.lua* or any custom modules, particularly if your
 loops modify control variables.
 
 See [this page][] for more details on incompatibilities between Lua 5.4 and 5.5.

@@ -1,4 +1,4 @@
--- Tomorrow Night theme for Textadept (Chris Kempson)
+-- Tomorrow Night theme for Li Moon (Chris Kempson)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x211F1D -- #1D1F21

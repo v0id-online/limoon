@@ -1,4 +1,4 @@
--- Nord theme for Textadept (Arctic Ice Studio)
+-- Nord theme for Li Moon (Arctic Ice Studio)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x40342E -- #2E3440

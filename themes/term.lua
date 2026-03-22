@@ -1,5 +1,5 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
--- Terminal theme for Textadept.
+-- Terminal theme for Li Moon.
 
 local view, colors, styles = view, view.colors, view.styles
 
@@ -124,9 +124,9 @@ view.element_color[view.ELEMENT_WHITE_SPACE] = colors.black
 -- view:set_fold_margin_hi_color(true, colors.white)
 
 -- Markers.
-view.marker_back[textadept.bookmarks.MARK_BOOKMARK] = colors.blue
-view.marker_back[textadept.run.MARK_WARNING] = colors.yellow
-view.marker_back[textadept.run.MARK_ERROR] = colors.red
+view.marker_back[limoon.bookmarks.MARK_BOOKMARK] = colors.blue
+view.marker_back[limoon.run.MARK_WARNING] = colors.yellow
+view.marker_back[limoon.run.MARK_ERROR] = colors.red
 view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
 view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.green
 view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
@@ -134,8 +134,8 @@ view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
 
 -- Indicators.
 view.indic_fore[ui.find.INDIC_FIND] = colors.yellow
-view.indic_fore[textadept.editing.INDIC_HIGHLIGHT] = colors.yellow
-view.indic_fore[textadept.snippets.INDIC_PLACEHOLDER] = colors.magenta
+view.indic_fore[limoon.editing.INDIC_HIGHLIGHT] = colors.yellow
+view.indic_fore[limoon.snippets.INDIC_PLACEHOLDER] = colors.magenta
 
 -- Call tips.
 view.call_tip_fore_hlt = colors.blue

@@ -1,4 +1,4 @@
--- aliases.lua — short command-entry globals for Textadept
+-- aliases.lua — short command-entry globals for Li Moon
 -- Usage: press Ctrl+; and type any alias below.
 -- Call  aliases()  to display this list inside the editor.
 --
@@ -7,9 +7,9 @@
 -- ── Themes ────────────────────────────────────────────────────────────────
 -- theme "dracula"      → apply theme by name
 -- themes()             → interactive picker
-if textadept.themes then
-  theme  = function(n) textadept.themes.set(n)    end
-  themes = function()  textadept.themes.select()  end
+if limoon.themes then
+  theme  = function(n) limoon.themes.set(n)    end
+  themes = function()  limoon.themes.select()  end
 end
 
 -- ── Files / Buffers ────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ bprev = function() view:goto_buffer(-1) end
 
 -- ── Editor navigation ──────────────────────────────────────────────────────
 -- ln(n)   → go to line n (1-based)
-ln = function(n) textadept.editing.goto_line(n) end
+ln = function(n) limoon.editing.goto_line(n) end
 
 -- ── Syntax / Lexer ─────────────────────────────────────────────────────────
 -- lex "lua"   → set syntax highlight language
@@ -69,13 +69,13 @@ zoom = function(n)
 end
 
 -- ── Plugins ────────────────────────────────────────────────────────────────
-if textadept.plugins then
-  plugins = function() textadept.plugins.show() end
+if limoon.plugins then
+  plugins = function() limoon.plugins.show() end
 end
 
 -- ── Run ────────────────────────────────────────────────────────────────────
--- run()   → run current file via textadept.run
-run = function() textadept.run.run() end
+-- run()   → run current file via limoon.run
+run = function() limoon.run.run() end
 
 -- ── Help ───────────────────────────────────────────────────────────────────
 local _list = {
@@ -108,8 +108,8 @@ aliases = function()
   lines[#lines + 1] = string.rep('─', 48) .. '\n'
   for _, a in ipairs(_list) do
     -- skip theme/plugins aliases when those modules aren't loaded
-    if (a[1]:find('^theme') and not textadept.themes) or
-       (a[1] == 'plugins()' and not textadept.plugins) then
+    if (a[1]:find('^theme') and not limoon.themes) or
+       (a[1] == 'plugins()' and not limoon.plugins) then
       -- skip
     else
       lines[#lines + 1] = string.format('  %-20s %s\n', a[1], a[2])

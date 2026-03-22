@@ -1,4 +1,4 @@
--- Kanagawa theme for Textadept (rebelot)
+-- Kanagawa theme for Li Moon (rebelot)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x281F1F -- #1F1F28

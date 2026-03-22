@@ -49,7 +49,7 @@ for locale_conf in lfs.walk(_HOME .. '/core/locales') do
 end
 
 local stock_files = {}
-local filter = {'*.lua', 'core/*.lua', 'modules/textadept/*.lua', '!**/*_test.lua'}
+local filter = {'*.lua', 'core/*.lua', 'modules/limoon/*.lua', '!**/*_test.lua'}
 for filename in lfs.walk(_HOME, filter) do stock_files[#stock_files + 1] = filename:gsub('\\', '/') end
 table.sort(stock_files)
 

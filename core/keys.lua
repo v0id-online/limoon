@@ -1,6 +1,6 @@
 -- Copyright 2007-2026 Mitchell. See LICENSE.
 
---- Manages key bindings in Textadept.
+--- Manages key bindings in Li Moon.
 --
 -- ### Key Bindings Overview
 --
@@ -11,11 +11,11 @@
 -- - A string key mode and its table of key sequences and commands. This is called a key mode.
 -- - A key sequence and its table of more key sequences and commands. This is called a key chain.
 --
--- When searching for a command to run based on a key sequence, Textadept considers key bindings
+-- When searching for a command to run based on a key sequence, Li Moon considers key bindings
 -- in the current key mode to have priority. If no key mode is active, language-specific key
 -- bindings have priority, followed by the ones in the global table. This means if there are
--- two commands with the same key sequence, Textadept runs the language-specific one. However,
--- if the command returns the boolean value `false`, Textadept also runs the lower-priority
+-- two commands with the same key sequence, Li Moon runs the language-specific one. However,
+-- if the command returns the boolean value `false`, Li Moon also runs the lower-priority
 -- command. (This is useful for overriding commands like autocompletion with language-specific
 -- completion, but fall back to word autocompletion if the first command fails.)
 --
@@ -33,20 +33,20 @@
 -- Command | N/A | `'cmd'` | N/A
 -- Shift | `'shift'` | `'shift'` | `'shift'`
 --
--- The string representation of key values less than 255 is the character that Textadept would
+-- The string representation of key values less than 255 is the character that Li Moon would
 -- normally insert if the "Control", "Alt", and "Command" modifiers were not held down. Therefore,
 -- a combination of `Ctrl+Alt+Shift+A` has the key sequence `ctrl+alt+A` on Windows and Linux/BSD,
 -- but a combination of `Ctrl+Shift+Tab` has the key sequence `ctrl+shift+\t`. On a United States
 -- English keyboard, since the combination of `Ctrl+Shift+,` has the key sequence `ctrl+<`
--- (`Shift+,` inserts a `<`), Textadept recognizes the key binding as `Ctrl+<`. This allows
--- key bindings to be language and layout agnostic. For key values greater than 255, Textadept
+-- (`Shift+,` inserts a `<`), Li Moon recognizes the key binding as `Ctrl+<`. This allows
+-- key bindings to be language and layout agnostic. For key values greater than 255, Li Moon
 -- uses the `keys.KEYSYMS` lookup table. Therefore, `Ctrl+Right Arrow` has the key sequence
 -- `ctrl+right`.
 --
 -- Activating the "Tools > Show Keys..." menu item or its key binding will start showing key
 -- sequences in the statusbar, along with their assigned commands, if any. For sequences with
 -- a trailing "0x*XXXX*", that number can be aliased to a string representation in `keys.KEYSYMS`.
--- For your convenience, Textadept copies key sequences to the clipboard.
+-- For your convenience, Li Moon copies key sequences to the clipboard.
 --
 -- ### Commands
 --
@@ -63,12 +63,12 @@
 -- keys['0x1234'] = function() ... end -- key code not in keys.KEYSYMS
 -- ```
 --
--- Textadept handles `buffer` and `view` references properly in this context; it will use the
+-- Li Moon handles `buffer` and `view` references properly in this context; it will use the
 -- correct buffer and view when running the key command.
 --
 -- ### Modes
 --
--- Modes are groups of key bindings such that when a key [mode](#keys.mode) is active, Textadept
+-- Modes are groups of key bindings such that when a key [mode](#keys.mode) is active, Li Moon
 -- ignores all key bindings defined outside the mode until the mode is unset. Here is a simple
 -- vi mode example:
 --
@@ -92,7 +92,7 @@
 -- ```
 --
 -- **Warning**: When creating a mode, be sure to define a way to exit the mode, otherwise you
--- will probably have to restart Textadept.
+-- will probably have to restart Li Moon.
 --
 -- ### Key Chains
 --
@@ -209,7 +209,7 @@ local function key_command(prefix)
 	return select(2, xpcall(key, key_error)) == false and PROPAGATE or HALT
 end
 
--- Handles Textadept keypresses, executing commands based on a mode or lexer as necessary.
+-- Handles Li Moon keypresses, executing commands based on a mode or lexer as necessary.
 events.connect(events.KEYPRESS, function(key)
 	ui.statusbar_text = ''
 	local in_chain = #keychain > 0
@@ -258,7 +258,7 @@ function M.assign_platform_bindings(keys, bindings)
 	end
 end
 
---- Textadept's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
+--- Li Moon's [key bindings](#the-keys-module), a map of key shortcuts to commands or key chains.
 -- Language-specific keys are in subtables assigned to lexer names.
 -- @usage keys['ctrl+n'] = buffer.new
 -- @usage keys.c['shift+\n'] = function() -- language-specific key

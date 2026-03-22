@@ -192,7 +192,7 @@ end
 -- The returned path is not guaranteed to exist.
 -- @param filename String path to a file.
 -- @param[opt] prefix String prefix path prepended to a relative filename. The default
---	value is Textadept's current working directory.
+--	value is Li Moon's current working directory.
 function lfs.abspath(filename, prefix)
 	assert_type(filename, 'string', 1)
 	if WIN32 then filename = filename:gsub('/', '\\'):gsub('^%l:[/\\]', string.upper) end

@@ -1,7 +1,7 @@
--- Theme manager for Textadept.
+-- Theme manager for Li Moon.
 -- Usage:
---   textadept.themes.set('dracula')   -- apply a theme
---   textadept.themes.select()         -- interactive picker
+--   limoon.themes.set('dracula')   -- apply a theme
+--   limoon.themes.select()         -- interactive picker
 
 local M = {}
 

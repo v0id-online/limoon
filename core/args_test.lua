@@ -81,14 +81,14 @@ end)
 
 test('should open files in the original instance', function()
 	local f<close> = test.tmpfile()
-	local textadept = lfs.abspath(arg[0])
-	local command = string.format('"%s" "%s"', textadept, f.filename)
+	local limoon = lfs.abspath(arg[0])
+	local command = string.format('"%s" "%s"', limoon, f.filename)
 
 	test.log('spawning ', command)
 	local p = assert(os.spawn(command, test.log, test.log))
 
 	test.wait(function() return p:status() == 'terminated' end)
-	-- Note: Textadept seems to have trouble sending data to the original instance on CI and in
+	-- Note: Li Moon seems to have trouble sending data to the original instance on CI and in
 	-- containers, so just verify the secondary instance exited.
 	-- test.wait(function() buffer.filename == filename end)
 end)

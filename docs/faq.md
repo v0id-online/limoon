@@ -1,30 +1,30 @@
 ## FAQ
 
 **Q:**
-Why does Textadept fail to run on Linux? Why does the terminal version behave oddly or crash?
+Why does Li Moon fail to run on Linux? Why does the terminal version behave oddly or crash?
 
 **A:**
-It is not possible to provide a single Textadept binary that runs correctly on all Linux
-systems. You must [compile][] Textadept manually for your system.
+It is not possible to provide a single Li Moon binary that runs correctly on all Linux
+systems. You must [compile][] Li Moon manually for your system.
 
 [compile]: manual.html#compiling
 
 - - -
 
 **Q:**
-Why does my Windows anti-virus software say Textadept contains a virus?
+Why does my Windows anti-virus software say Li Moon contains a virus?
 
 **A:**
-This is a false-positive, caused by Textadept's terminal version executable, which is a console
-application. Textadept does not contain any viruses.
+This is a false-positive, caused by Li Moon's terminal version executable, which is a console
+application. Li Moon does not contain any viruses.
 
 - - -
 
 **Q:**
-Why does Textadept fail to correctly display my non-English file?
+Why does Li Moon fail to correctly display my non-English file?
 
 **A:**
-Textadept failed to detect the file's encoding. You'll need to [help it][].
+Li Moon failed to detect the file's encoding. You'll need to [help it][].
 
 On Windows, if you are seeing strange characters in the filename (including '?'), your file's name
 contains characters outside the system's encoding. You can try the following as an administrator:
@@ -42,15 +42,15 @@ contains characters outside the system's encoding. You can try the following as 
 
 **Q:**
 
-On my Windows HiDPI display at fractional scaling (e.g. 125% or 150%), Textadept does not render
+On my Windows HiDPI display at fractional scaling (e.g. 125% or 150%), Li Moon does not render
 text lines correctly. How do I fix it?
 
 **A:**
 
 Either use integer scaling (e.g. 200%), or instruct Windows to take over font rendering for
-the application: right-click on the Textadept executable and select "Properties"; click on the
+the application: right-click on the Li Moon executable and select "Properties"; click on the
 "Compatibility" tab and then the "Change high DPI settings" button; and check the "Override high
-DPI scaling" checkbox towards the bottom of the pop-up dialog. The next time you run Textadept,
+DPI scaling" checkbox towards the bottom of the pop-up dialog. The next time you run Li Moon,
 things should look better.
 
 - - -
@@ -60,7 +60,7 @@ Why doesn't middle-clicking in the terminal version on Linux paste the primary s
 doesn't selecting text copy to the primary selection?
 
 **A:**
-Textadept interprets mouse clicks like a GUI application. Use the `Shift` modifier key when
+Li Moon interprets mouse clicks like a GUI application. Use the `Shift` modifier key when
 you middle-click or select text to interact with the primary selection.
 
 - - -
@@ -88,8 +88,8 @@ This largely depends on your operating system and terminal emulator settings. Fo
 - - -
 
 **Q:**
-Where can I find a complete list of key bindings for Textadept?
+Where can I find a complete list of key bindings for Li Moon?
 
 **A:**
-[Here](api.html#textadept.keys).
+[Here](api.html#limoon.keys).
 

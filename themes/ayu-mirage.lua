@@ -1,4 +1,4 @@
--- Ayu Mirage theme for Textadept (dempfi)
+-- Ayu Mirage theme for Li Moon (dempfi)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x332721 -- #212733

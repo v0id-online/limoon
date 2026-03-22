@@ -13,11 +13,11 @@ globals = {
 	'io.quick_open_filters', 'io.quick_open_max', 'io.recent_files', 'io.save_all_files',
 	'io.track_changes', --
 	'is_hidpi', 'keys', 'lexer', 'lfs', 'LINUX', 'lpeg', 'move_buffer', 'OSX', 'os.spawn', 'QT', 'quit',
-	'regex', 'reset', 'snippets', 'string.iconv', 'table.map', 'textadept', 'timeout', 'ui', 'view',
+	'regex', 'reset', 'snippets', 'string.iconv', 'table.map', 'limoon', 'timeout', 'ui', 'view',
 	'WIN32'
 }
 include_files = {
-	'init.lua', 'core/*.lua', 'modules/textadept/*.lua', --
+	'init.lua', 'core/*.lua', 'modules/limoon/*.lua', --
 	'modules/*/*.lua', 'modules/debugger/*/init*.lua'
 }
 exclude_files = {'**/dkjson.lua', 'modules/lsp/ldoc.lua'}

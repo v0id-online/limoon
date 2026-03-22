@@ -1,4 +1,4 @@
--- ui_widgets.lua — Reusable UI components for Textadept plugins.
+-- ui_widgets.lua — Reusable UI components for Li Moon plugins.
 --
 -- Usage in a plugin:
 --   local W = require('ui_widgets')

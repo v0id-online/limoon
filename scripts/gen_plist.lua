@@ -40,7 +40,7 @@ xml[#xml + 1] = [[
 	<array>
 		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Textadept document</string>
+			<string>Li Moon document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
@@ -61,7 +61,7 @@ xml[#xml + 1] = [[
 				<string>com.sun.java-source</string>]]
 for _, lang in ipairs(languages) do
 	if #extensions[lang] > 0 then
-		xml[#xml + 1] = "\t\t\t\t<string>com.textadept." .. lang .. "-source</string>"
+		xml[#xml + 1] = "\t\t\t\t<string>com.limoon." .. lang .. "-source</string>"
 	end
 end
 xml[#xml + 1] = [[
@@ -122,7 +122,7 @@ for _, lang in ipairs(languages) do
 		xml[#xml + 1] = "\t\t\t<key>UTTypeDescription</key>"
 		xml[#xml + 1] = "\t\t\t<string>" .. lang .. " source</string>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeIdentifier</key>"
-		xml[#xml + 1] = "\t\t\t<string>com.textadept." .. lang .. "-source</string>"
+		xml[#xml + 1] = "\t\t\t<string>com.limoon." .. lang .. "-source</string>"
 		xml[#xml + 1] = "\t\t\t<key>UTTypeConformsTo</key>"
 		xml[#xml + 1] = "\t\t\t<array>"
 		xml[#xml + 1] = "\t\t\t\t<string>public.source-code</string>"
@@ -134,15 +134,15 @@ end
 xml[#xml + 1] = [[
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>textadept_osx</string>
+	<string>limoon_osx</string>
 	<key>CFBundleIconFile</key>
-	<string>textadept.icns</string>
+	<string>limoon.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.textadept</string>
+	<string>com.limoon</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Textadept</string>
+	<string>Li Moon</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>

@@ -1,4 +1,4 @@
--- Gruvbox Dark theme for Textadept (morhetz)
+-- Gruvbox Dark theme for Li Moon (morhetz)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x282828 -- #282828

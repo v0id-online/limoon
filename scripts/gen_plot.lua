@@ -20,7 +20,7 @@ lfs.chdir(dir)
 local counts, langs = {}, {}
 
 local function count(tag)
-	if tag == 'textadept_nightly' then return end
+	if tag == 'limoon_nightly' then return end
 
 	print('Counting ' .. tag)
 	os.execute('git checkout -q ' .. tag)
@@ -29,8 +29,8 @@ local function count(tag)
 	counts[#counts + 1], counts[time] = time, {}
 	local sum_code, sum_comments, sum_blanks = 0, 0, 0
 
-	local other_platforms = 'textadept_(curses|gtk)'
-	if not lfs.attributes(dir .. '/src/textadept_qt.cpp') then other_platforms = 'textadept_curses' end
+	local other_platforms = 'limoon_(curses|gtk)'
+	if not lfs.attributes(dir .. '/src/limoon_qt.cpp') then other_platforms = 'limoon_curses' end
 	local cmd = string.format([[
 		cloc --force-lang=C,h --include-lang=C,Lua,make,C++,CMake --quiet --csv \
 		--exclude-dir=doc,docs,scripts,themes,test,.github \

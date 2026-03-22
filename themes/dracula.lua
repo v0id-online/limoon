@@ -1,4 +1,4 @@
--- Dracula theme for Textadept (dracula.github.io)
+-- Dracula theme for Li Moon (dracula.github.io)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x362A28 -- #282A36

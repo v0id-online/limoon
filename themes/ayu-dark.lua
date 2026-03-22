@@ -1,4 +1,4 @@
--- Ayu Dark theme for Textadept (dempfi)
+-- Ayu Dark theme for Li Moon (dempfi)
 local view, colors, styles = view, view.colors, view.styles
 
 colors.bg      = 0x140E0B -- #0B0E14
