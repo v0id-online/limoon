@@ -27,6 +27,150 @@
 #include "limoon.h"
 #include "limoon_platform.h"
 
+/* ------------------------------------------------------------------ */
+/* UI Theme                                                              */
+
+typedef struct {
+    /* Tab bar */
+    uint32_t tab_act_a, tab_act_b, tab_act_text;   /* active tab gradient + text */
+    uint32_t tab_ina_a, tab_ina_b, tab_ina_text;   /* inactive tab gradient + text */
+    uint32_t tab_close_act, tab_close_ina;          /* × button colors */
+    uint32_t tabbar_bg, tabbar_sep;                 /* empty space + separator */
+    /* Status bar */
+    uint32_t sb_bg, sb_fg, sb_sep;
+    /* Scrollbar */
+    uint32_t sc_bg, sc_arrow, sc_thumb, sc_track;
+    /* Split bar */
+    uint32_t sp_fg, sp_bg;
+    /* Find bar */
+    uint32_t fb_bar, fb_entry, fb_border, fb_label;
+    uint32_t fb_text, fb_cursor, fb_cursor_fg, fb_dim;
+    uint32_t fb_btn, fb_nav, fb_hiall, fb_close, fb_repl;
+    uint32_t fb_opt_on, fb_opt_off;
+    /* Dialogs (message, input, list) */
+    uint32_t dlg_bg, dlg_border, dlg_title, dlg_text;
+    uint32_t dlg_btn_fg, dlg_btn_bg, dlg_foc_fg, dlg_foc_bg, dlg_accel;
+    /* File browser dialog */
+    uint32_t fd_bg, fd_title_a, fd_title_b, fd_title_fg, fd_title_bg;
+    uint32_t fd_path, fd_sep;
+    uint32_t fd_sel_a, fd_sel_b, fd_sel_bg;
+    uint32_t fd_dir_sel, fd_dir_unsel, fd_file_sel, fd_file_unsel;
+    uint32_t fd_entry_focus, fd_entry_blur, fd_entry_text;
+    uint32_t fd_ok_foc_bg, fd_ok_foc_fg, fd_cancel_foc_bg, fd_cancel_foc_fg;
+    uint32_t fd_idle_bg, fd_idle_fg;
+    /* File tree panel */
+    uint32_t ft_bg, ft_title_fg, ft_title_bg;
+    uint32_t ft_dir_fg, ft_file_fg;
+    uint32_t ft_sel_fg, ft_sel_bg;
+    uint32_t ft_sep_fg, ft_sep_bg;
+    uint32_t ft_icon_fg;
+} LimoonTheme;
+
+/* Helpers: unpack 0xRRGGBB and set fg/bg on a plane */
+#define TH_FG(p,c) ncplane_set_fg_rgb8(p,((c)>>16)&0xFF,((c)>>8)&0xFF,(c)&0xFF)
+#define TH_BG(p,c) ncplane_set_bg_rgb8(p,((c)>>16)&0xFF,((c)>>8)&0xFF,(c)&0xFF)
+
+/* Blue (original Catppuccin-based palette) */
+static const LimoonTheme THEME_BLUE = {
+    .tab_act_a=0x1E41AF, .tab_act_b=0x4B78E6, .tab_act_text=0xDCE6FF,
+    .tab_ina_a=0x1C1C20, .tab_ina_b=0x34343C, .tab_ina_text=0x91919B,
+    .tab_close_act=0xFF7878, .tab_close_ina=0xB45A5A,
+    .tabbar_bg=0x141418, .tabbar_sep=0x3C3C46,
+    .sb_bg=0x1E1E24, .sb_fg=0xC8C8D2, .sb_sep=0x50505A,
+    .sc_bg=0x1E1E28, .sc_arrow=0xB4B4C8, .sc_thumb=0x8C8CB4, .sc_track=0x373746,
+    .sp_fg=0x646464, .sp_bg=0x282828,
+    .fb_bar=0x1E1E2E, .fb_entry=0x11111B, .fb_border=0x89B4FA, .fb_label=0x6C7086,
+    .fb_text=0xCDD6F4, .fb_cursor=0x89B4FA, .fb_cursor_fg=0x1E1E2E, .fb_dim=0x45475A,
+    .fb_btn=0x313244, .fb_nav=0x89B4FA, .fb_hiall=0xF9E2AF, .fb_close=0xF38BA8,
+    .fb_repl=0xA6E3A1, .fb_opt_on=0xA6E3A1, .fb_opt_off=0x585B70,
+    .dlg_bg=0x313244, .dlg_border=0x89B4FA, .dlg_title=0xCDD6F4, .dlg_text=0xBAC2DE,
+    .dlg_btn_fg=0xCDD6F4, .dlg_btn_bg=0x45475A, .dlg_foc_fg=0x1E1E2E,
+    .dlg_foc_bg=0x89B4FA, .dlg_accel=0xF9E2AF,
+    .fd_bg=0x121218, .fd_title_a=0x1E3C8C, .fd_title_b=0x141418,
+    .fd_title_fg=0xF0F0FF, .fd_title_bg=0x193278,
+    .fd_path=0x64AFFF, .fd_sep=0x2D3748,
+    .fd_sel_a=0x234BB4, .fd_sel_b=0x3C6EDC, .fd_sel_bg=0x305AC3,
+    .fd_dir_sel=0xB4DCFF, .fd_dir_unsel=0x64A0FF,
+    .fd_file_sel=0xE6EBFF, .fd_file_unsel=0xAFAFBE,
+    .fd_entry_focus=0x1C1C26, .fd_entry_blur=0x16161E, .fd_entry_text=0xD2D2DC,
+    .fd_ok_foc_bg=0x2D55AF, .fd_ok_foc_fg=0xF0F0FF,
+    .fd_cancel_foc_bg=0x2D1919, .fd_cancel_foc_fg=0xFFA0A0,
+    .fd_idle_bg=0x16161C, .fd_idle_fg=0xA0A0AF,
+    .ft_bg=0x1A1A24, .ft_title_fg=0xDCE6FF, .ft_title_bg=0x1E3C8C,
+    .ft_dir_fg=0x89B4FA, .ft_file_fg=0xBAC2DE,
+    .ft_sel_fg=0xF0F4FF, .ft_sel_bg=0x2E4E9A,
+    .ft_sep_fg=0x3C3C5A, .ft_sep_bg=0x141418,
+    .ft_icon_fg=0x6C7086,
+};
+
+/* Black & White */
+static const LimoonTheme THEME_BW = {
+    .tab_act_a=0x2A2A2A, .tab_act_b=0x484848, .tab_act_text=0xFFFFFF,
+    .tab_ina_a=0x141414, .tab_ina_b=0x202020, .tab_ina_text=0x666666,
+    .tab_close_act=0xFFAAAA, .tab_close_ina=0x886666,
+    .tabbar_bg=0x0A0A0A, .tabbar_sep=0x2A2A2A,
+    .sb_bg=0x141414, .sb_fg=0xCCCCCC, .sb_sep=0x444444,
+    .sc_bg=0x0F0F0F, .sc_arrow=0xAAAAAA, .sc_thumb=0x888888, .sc_track=0x333333,
+    .sp_fg=0x888888, .sp_bg=0x1A1A1A,
+    .fb_bar=0x1A1A1A, .fb_entry=0x0D0D0D, .fb_border=0xAAAAAA, .fb_label=0x666666,
+    .fb_text=0xDDDDDD, .fb_cursor=0xAAAAAA, .fb_cursor_fg=0x0A0A0A, .fb_dim=0x444444,
+    .fb_btn=0x2A2A2A, .fb_nav=0xCCCCCC, .fb_hiall=0xEEEEEE, .fb_close=0xFFAAAA,
+    .fb_repl=0xBBBBBB, .fb_opt_on=0xCCCCCC, .fb_opt_off=0x555555,
+    .dlg_bg=0x2A2A2A, .dlg_border=0x888888, .dlg_title=0xEEEEEE, .dlg_text=0xCCCCCC,
+    .dlg_btn_fg=0xEEEEEE, .dlg_btn_bg=0x3A3A3A, .dlg_foc_fg=0x0A0A0A,
+    .dlg_foc_bg=0xAAAAAA, .dlg_accel=0xFFFFAA,
+    .fd_bg=0x111111, .fd_title_a=0x2A2A2A, .fd_title_b=0x111111,
+    .fd_title_fg=0xFFFFFF, .fd_title_bg=0x222222,
+    .fd_path=0xAAAAAA, .fd_sep=0x333333,
+    .fd_sel_a=0x3A3A3A, .fd_sel_b=0x505050, .fd_sel_bg=0x404040,
+    .fd_dir_sel=0xFFFFFF, .fd_dir_unsel=0xAAAAAA,
+    .fd_file_sel=0xFFFFFF, .fd_file_unsel=0x777777,
+    .fd_entry_focus=0x1E1E1E, .fd_entry_blur=0x161616, .fd_entry_text=0xDDDDDD,
+    .fd_ok_foc_bg=0x555555, .fd_ok_foc_fg=0xFFFFFF,
+    .fd_cancel_foc_bg=0x3A1E1E, .fd_cancel_foc_fg=0xFFAAAA,
+    .fd_idle_bg=0x1A1A1A, .fd_idle_fg=0xAAAAAA,
+    .ft_bg=0x181818, .ft_title_fg=0xFFFFFF, .ft_title_bg=0x2A2A2A,
+    .ft_dir_fg=0xCCCCCC, .ft_file_fg=0x888888,
+    .ft_sel_fg=0xFFFFFF, .ft_sel_bg=0x404040,
+    .ft_sep_fg=0x333333, .ft_sep_bg=0x101010,
+    .ft_icon_fg=0x666666,
+};
+
+/* Green — limão (default) */
+static const LimoonTheme THEME_GREEN = {
+    .tab_act_a=0x0F4A20, .tab_act_b=0x1E8A3E, .tab_act_text=0xC0EBC8,
+    .tab_ina_a=0x0C160E, .tab_ina_b=0x182A1A, .tab_ina_text=0x4A7A54,
+    .tab_close_act=0xFF9090, .tab_close_ina=0x8A5050,
+    .tabbar_bg=0x080E09, .tabbar_sep=0x1A2A1C,
+    .sb_bg=0x0F1910, .sb_fg=0x80C888, .sb_sep=0x2A4A2E,
+    .sc_bg=0x0A140C, .sc_arrow=0x5AAA68, .sc_thumb=0x2E7A3C, .sc_track=0x1A2E1C,
+    .sp_fg=0x2A5E30, .sp_bg=0x0A140C,
+    .fb_bar=0x0F1910, .fb_entry=0x080E09, .fb_border=0x3DBA5E, .fb_label=0x3A5E40,
+    .fb_text=0xC0EBC8, .fb_cursor=0x3DBA5E, .fb_cursor_fg=0x080E09, .fb_dim=0x1E3A22,
+    .fb_btn=0x152218, .fb_nav=0x3DBA5E, .fb_hiall=0xD8D870, .fb_close=0xF07878,
+    .fb_repl=0x5ADA7A, .fb_opt_on=0x5ADA7A, .fb_opt_off=0x304A36,
+    .dlg_bg=0x152218, .dlg_border=0x3DBA5E, .dlg_title=0xC0EBC8, .dlg_text=0x90BE98,
+    .dlg_btn_fg=0xC0EBC8, .dlg_btn_bg=0x1E3222, .dlg_foc_fg=0x080E09,
+    .dlg_foc_bg=0x3DBA5E, .dlg_accel=0xD8D870,
+    .fd_bg=0x0A140C, .fd_title_a=0x0E3C1A, .fd_title_b=0x0A140C,
+    .fd_title_fg=0xC0EBC8, .fd_title_bg=0x0C2E16,
+    .fd_path=0x3DBA5E, .fd_sep=0x1E3A22,
+    .fd_sel_a=0x0E4A1E, .fd_sel_b=0x1A7A36, .fd_sel_bg=0x145028,
+    .fd_dir_sel=0xB0E8B8, .fd_dir_unsel=0x3DA050,
+    .fd_file_sel=0xD0EDD4, .fd_file_unsel=0x607060,
+    .fd_entry_focus=0x0E1E10, .fd_entry_blur=0x0A140C, .fd_entry_text=0xC0EBC8,
+    .fd_ok_foc_bg=0x1A6830, .fd_ok_foc_fg=0xC0EBC8,
+    .fd_cancel_foc_bg=0x3A1A1A, .fd_cancel_foc_fg=0xFFA0A0,
+    .fd_idle_bg=0x0C1A0E, .fd_idle_fg=0x608060,
+    .ft_bg=0x0A140C, .ft_title_fg=0xC0EBC8, .ft_title_bg=0x0E3C1A,
+    .ft_dir_fg=0x3DBA5E, .ft_file_fg=0x80A885,
+    .ft_sel_fg=0xC0EBC8, .ft_sel_bg=0x0E4A1E,
+    .ft_sep_fg=0x1A2E1C, .ft_sep_bg=0x080E09,
+    .ft_icon_fg=0x3A5E40,
+};
+
+static const LimoonTheme *T = &THEME_GREEN; /* active theme */
+
 /* Li Moon globals */
 extern SciObject *focused_view, *command_entry;
 extern FindButton *find_next, *find_prev, *replace, *replace_all;
@@ -143,6 +287,9 @@ static bool scrollbar_enabled = false;
 static bool want_quit = false;
 static int ctrl_c_count = 0;
 
+/* Dirty flag: only call notcurses_render() when something actually changed. */
+static bool needs_render = true;
+
 /* Word-level undo grouping: track active begin_undo_action per target */
 static bool in_word_undo = false;
 static SciObject *word_undo_target = NULL;
@@ -153,6 +300,382 @@ static void end_word_group(void) {
         in_word_undo = false;
         word_undo_target = NULL;
     }
+}
+
+/* ------------------------------------------------------------------ */
+/* File tree panel                                                       */
+
+#define FT_MAX 4096
+#define FT_DEFAULT_WIDTH 30
+
+typedef struct {
+    char path[4096];    /* PATH_MAX equivalent */
+    char name[256];
+    bool is_dir;
+    bool expanded;
+    int depth;
+} FTEntry;
+
+static FTEntry ft_entries[FT_MAX];
+static int ft_count = 0;
+static char ft_root_path[4096] = "";
+static int ft_cursor = 0;
+static int ft_scroll = 0;
+static bool ft_visible = false;
+static bool ft_focused = false;
+static int ft_width = FT_DEFAULT_WIDTH;
+static struct ncplane *ft_plane = NULL;
+
+static int ft_compare(const void *a, const void *b) {
+    const FTEntry *x = (const FTEntry *)a;
+    const FTEntry *y = (const FTEntry *)b;
+    if (x->is_dir && !y->is_dir) return -1;
+    if (!x->is_dir && y->is_dir) return 1;
+    return strcasecmp(x->name, y->name);
+}
+
+/* ---- Scan arena: single heap buffer, reused across directory scans ---- */
+typedef struct { char *buf; size_t cap, used; } FTArena;
+static FTArena ft_arena = {0};
+
+static FTEntry *ft_arena_push(void) {
+    size_t need = ft_arena.used + sizeof(FTEntry);
+    if (need > ft_arena.cap) {
+        size_t new_cap = ft_arena.cap ? ft_arena.cap * 2 : 64 * sizeof(FTEntry);
+        while (new_cap < need) new_cap *= 2;
+        char *nb = realloc(ft_arena.buf, new_cap);
+        if (!nb) return NULL;
+        ft_arena.buf = nb;
+        ft_arena.cap = new_cap;
+    }
+    FTEntry *e = (FTEntry *)(ft_arena.buf + ft_arena.used);
+    ft_arena.used += sizeof(FTEntry);
+    return e;
+}
+
+static void ft_arena_reset(void) { ft_arena.used = 0; }
+
+static void ft_scan_into(const char *dir_path, int depth, int insert_at) {
+    ft_arena_reset();
+    DIR *d = opendir(dir_path);
+    if (!d) return;
+    struct dirent *de;
+    int n = 0;
+    while ((de = readdir(d)) != NULL) {
+        if (de->d_name[0] == '.') continue;
+        FTEntry *e = ft_arena_push();
+        if (!e) break;
+        snprintf(e->path, 4096, "%s/%s", dir_path, de->d_name);
+        snprintf(e->name, 256, "%s", de->d_name);
+        e->depth = depth;
+        e->expanded = false;
+        struct stat st;
+        e->is_dir = (stat(e->path, &st) == 0 && S_ISDIR(st.st_mode));
+        n++;
+    }
+    closedir(d);
+    if (n == 0) return;
+    FTEntry *tmp = (FTEntry *)ft_arena.buf;
+    qsort(tmp, n, sizeof(FTEntry), ft_compare);
+    int after = ft_count - insert_at;
+    if (ft_count + n > FT_MAX) n = FT_MAX - ft_count;
+    if (n > 0) {
+        memmove(&ft_entries[insert_at + n], &ft_entries[insert_at],
+                after * sizeof(FTEntry));
+        memcpy(&ft_entries[insert_at], tmp, (size_t)n * sizeof(FTEntry));
+        ft_count += n;
+    }
+    /* arena stays allocated — reset reuses it next scan */
+}
+
+static void ft_load_root(const char *path) {
+    strncpy(ft_root_path, path ? path : "", 4095);
+    ft_count = 0; ft_cursor = 0; ft_scroll = 0;
+    if (!path || !path[0]) return;
+    ft_scan_into(path, 0, 0);
+}
+
+static void ft_expand(int i) {
+    if (i < 0 || i >= ft_count) return;
+    if (!ft_entries[i].is_dir || ft_entries[i].expanded) return;
+    ft_scan_into(ft_entries[i].path, ft_entries[i].depth + 1, i + 1);
+    ft_entries[i].expanded = true;
+}
+
+static void ft_collapse(int i) {
+    if (i < 0 || i >= ft_count) return;
+    if (!ft_entries[i].is_dir || !ft_entries[i].expanded) return;
+    int base = ft_entries[i].depth;
+    int j = i + 1;
+    while (j < ft_count && ft_entries[j].depth > base) j++;
+    int remove_n = j - (i + 1);
+    if (remove_n > 0) {
+        memmove(&ft_entries[i + 1], &ft_entries[j],
+                (ft_count - j) * sizeof(FTEntry));
+        ft_count -= remove_n;
+        if (ft_cursor > i && ft_cursor < j) ft_cursor = i;
+        else if (ft_cursor >= j) ft_cursor -= remove_n;
+    }
+    ft_entries[i].expanded = false;
+    if (ft_scroll >= ft_count) ft_scroll = ft_count > 0 ? ft_count - 1 : 0;
+}
+
+static void ft_open_file(const char *path, bool do_split) {
+    if (!lua) return;
+    if (do_split) {
+        lua_getglobal(lua, "view");
+        if (lua_istable(lua, -1)) {
+            lua_getfield(lua, -1, "split");
+            if (lua_isfunction(lua, -1)) {
+                lua_insert(lua, -2);
+                lua_pushboolean(lua, 1);
+                if (lua_pcall(lua, 2, 0, 0) != LUA_OK) lua_pop(lua, 1);
+            } else { lua_pop(lua, 2); }
+        } else { lua_pop(lua, 1); }
+    }
+    lua_getglobal(lua, "io");
+    if (lua_istable(lua, -1)) {
+        lua_getfield(lua, -1, "open_file");
+        lua_remove(lua, -2);
+        if (lua_isfunction(lua, -1)) {
+            lua_pushstring(lua, path);
+            if (lua_pcall(lua, 1, 0, 0) != LUA_OK) lua_pop(lua, 1);
+        } else { lua_pop(lua, 1); }
+    } else { lua_pop(lua, 1); }
+    ft_focused = false;
+    if (focused_view) scintilla_set_focus(focused_view, true);
+    needs_render = true;
+}
+
+static void ft_draw(void) {
+    if (!ft_plane || !ft_visible) return;
+    unsigned rows, cols;
+    ncplane_dim_yx(ft_plane, &rows, &cols);
+    ncplane_erase(ft_plane);
+
+    /* Title bar */
+    TH_FG(ft_plane, T->ft_title_fg);
+    TH_BG(ft_plane, T->ft_title_bg);
+    int content_w = (int)cols - 1; /* last col = separator */
+    char title[256];
+    const char *rname = strrchr(ft_root_path, '/');
+    snprintf(title, sizeof(title), " %s", rname ? rname + 1 : ft_root_path);
+    for (int c = 0; c < content_w; c++) ncplane_putchar_yx(ft_plane, 0, c, ' ');
+    int tlen = (int)strlen(title);
+    if (tlen > content_w) tlen = content_w;
+    ncplane_putstr_yx(ft_plane, 0, 0, title);
+
+    /* Separator column (rightmost) */
+    TH_FG(ft_plane, T->ft_sep_fg);
+    TH_BG(ft_plane, T->ft_sep_bg);
+    for (int r = 0; r < (int)rows; r++)
+        ncplane_putstr_yx(ft_plane, r, (int)cols - 1, "│");
+
+    /* Entries */
+    int vis = (int)rows - 1;
+    for (int r = 0; r < vis; r++) {
+        int i = ft_scroll + r;
+        if (i >= ft_count) break;
+        FTEntry *e = &ft_entries[i];
+        bool is_cursor = (i == ft_cursor);
+        bool is_sel = is_cursor && ft_focused;
+
+        /* Row background */
+        TH_BG(ft_plane, is_sel ? T->ft_sel_bg : T->ft_bg);
+        TH_FG(ft_plane, is_sel ? T->ft_sel_fg :
+              (e->is_dir ? T->ft_dir_fg : T->ft_file_fg));
+        /* Clear row */
+        for (int c = 0; c < content_w; c++)
+            ncplane_putchar_yx(ft_plane, r + 1, c, ' ');
+
+        /* Cursor indicator (unfocused) */
+        if (is_cursor && !ft_focused) {
+            TH_FG(ft_plane, T->ft_icon_fg);
+            TH_BG(ft_plane, T->ft_bg);
+        }
+
+        int col = e->depth * 2;
+        if (col >= content_w - 3) col = content_w - 3;
+        if (col < 0) col = 0;
+
+        /* Icon */
+        TH_FG(ft_plane, is_sel ? T->ft_sel_fg : T->ft_icon_fg);
+        TH_BG(ft_plane, is_sel ? T->ft_sel_bg : T->ft_bg);
+        if (e->is_dir) {
+            ncplane_putstr_yx(ft_plane, r + 1, col,
+                              e->expanded ? "▾" : "▸");
+        } else {
+            ncplane_putchar_yx(ft_plane, r + 1, col, ' ');
+        }
+
+        /* Name */
+        TH_FG(ft_plane, is_sel ? T->ft_sel_fg :
+              (e->is_dir ? T->ft_dir_fg : T->ft_file_fg));
+        TH_BG(ft_plane, is_sel ? T->ft_sel_bg : T->ft_bg);
+        int name_col = col + 2;
+        int max_ch = content_w - name_col;
+        if (max_ch > 0) {
+            char trunc[256];
+            int len = (int)strlen(e->name);
+            if (len > max_ch) {
+                strncpy(trunc, e->name, (size_t)(max_ch - 1));
+                trunc[max_ch - 1] = '\0';
+            } else {
+                strncpy(trunc, e->name, 255);
+                trunc[255] = '\0';
+            }
+            /* Append '/' to dirs */
+            if (e->is_dir && len < max_ch - 1) {
+                size_t tlen = strlen(trunc);
+                if (tlen + 1 < sizeof(trunc)) {
+                    trunc[tlen] = '/'; trunc[tlen + 1] = '\0';
+                }
+            }
+            ncplane_putstr_yx(ft_plane, r + 1, name_col, trunc);
+        }
+    }
+}
+
+static void ft_toggle(void);   /* forward declaration */
+static void handle_resize(void); /* forward declaration for ft_toggle */
+static inline int view_top_row(void);
+static inline unsigned view_overhead(void);
+
+static bool ft_handle_key(int key, int mods) {
+    if (!ft_visible || !ft_focused) return false;
+    (void)mods;
+
+    unsigned rows = 0;
+    if (ft_plane) ncplane_dim_yx(ft_plane, &rows, NULL);
+    int vis = rows > 1 ? (int)rows - 1 : 1;
+
+    switch (key) {
+        case SCK_UP:
+            if (ft_cursor > 0) ft_cursor--;
+            if (ft_cursor < ft_scroll) ft_scroll = ft_cursor;
+            break;
+        case SCK_DOWN:
+            if (ft_cursor < ft_count - 1) ft_cursor++;
+            if (ft_cursor >= ft_scroll + vis) ft_scroll = ft_cursor - vis + 1;
+            break;
+        case SCK_PRIOR: /* Page Up */
+            ft_cursor -= vis;
+            if (ft_cursor < 0) ft_cursor = 0;
+            ft_scroll -= vis;
+            if (ft_scroll < 0) ft_scroll = 0;
+            break;
+        case SCK_NEXT: /* Page Down */
+            ft_cursor += vis;
+            if (ft_cursor >= ft_count) ft_cursor = ft_count > 0 ? ft_count - 1 : 0;
+            if (ft_cursor >= ft_scroll + vis) ft_scroll = ft_cursor - vis + 1;
+            break;
+        case SCK_RIGHT: /* Right: expand dir */
+            if (ft_cursor >= 0 && ft_cursor < ft_count) {
+                FTEntry *e = &ft_entries[ft_cursor];
+                if (e->is_dir && !e->expanded) ft_expand(ft_cursor);
+                else if (!e->is_dir) { ft_open_file(e->path, false); return true; }
+            }
+            break;
+        case SCK_LEFT: /* Left: collapse dir (or go to parent) */
+            if (ft_cursor >= 0 && ft_cursor < ft_count) {
+                FTEntry *e = &ft_entries[ft_cursor];
+                if (e->is_dir && e->expanded) {
+                    ft_collapse(ft_cursor);
+                } else if (e->depth > 0) {
+                    /* Move cursor to parent */
+                    int pdepth = e->depth - 1;
+                    int pi = ft_cursor - 1;
+                    while (pi >= 0 && ft_entries[pi].depth != pdepth) pi--;
+                    if (pi >= 0) {
+                        ft_cursor = pi;
+                        if (ft_cursor < ft_scroll) ft_scroll = ft_cursor;
+                    }
+                }
+            }
+            break;
+        case '\r': /* Enter */
+            if (ft_cursor >= 0 && ft_cursor < ft_count) {
+                FTEntry *e = &ft_entries[ft_cursor];
+                if (e->is_dir) {
+                    if (e->expanded) ft_collapse(ft_cursor);
+                    else ft_expand(ft_cursor);
+                } else {
+                    ft_open_file(e->path, false);
+                    return true;
+                }
+            }
+            break;
+        case '\t': /* Tab: open in split */
+            if (ft_cursor >= 0 && ft_cursor < ft_count) {
+                FTEntry *e = &ft_entries[ft_cursor];
+                if (!e->is_dir) {
+                    ft_open_file(e->path, true);
+                    return true;
+                }
+            }
+            break;
+        case SCK_ESCAPE:
+            ft_focused = false;
+            if (focused_view) scintilla_set_focus(focused_view, true);
+            break;
+        default:
+            return false;
+    }
+    needs_render = true;
+    return true;
+}
+
+static void ft_toggle(void) {
+    if (ft_visible) {
+        ft_visible = false;
+        ft_focused = false;
+        if (ft_plane) { ncplane_destroy(ft_plane); ft_plane = NULL; }
+        if (focused_view) scintilla_set_focus(focused_view, true);
+    } else {
+        char root[4096] = "";
+        if (lua) {
+            lua_getglobal(lua, "limoon");
+            if (lua_istable(lua, -1)) {
+                lua_getfield(lua, -1, "workspace");
+                if (lua_istable(lua, -1)) {
+                    lua_getfield(lua, -1, "dir");
+                    if (lua_isstring(lua, -1)) {
+                        const char *d = lua_tostring(lua, -1);
+                        if (d && d[0]) strncpy(root, d, 4095);
+                    }
+                    lua_pop(lua, 1); /* dir */
+                }
+                lua_pop(lua, 1); /* workspace */
+            }
+            lua_pop(lua, 1); /* limoon */
+        }
+        if (!root[0]) {
+            if (!getcwd(root, 4096)) root[0] = '\0';
+        }
+        ft_load_root(root);
+        ft_visible = true;
+        ft_focused = true;
+        if (nc) {
+            unsigned rows, cols;
+            ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
+            unsigned over = view_overhead();
+            int vh = (int)(rows > over ? rows - over : 1);
+            if (find_visible && vh > 3) vh -= 3;
+            if (command_entry_active && command_entry_height_stored > 0)
+                vh = vh > command_entry_height_stored
+                    ? vh - command_entry_height_stored : 1;
+            struct ncplane_options opt = {
+                .y = view_top_row(), .x = 0,
+                .rows = (unsigned)vh,
+                .cols = (unsigned)ft_width,
+                .name = "filetree"
+            };
+            ft_plane = ncplane_create(notcurses_stdplane(nc), &opt);
+            if (!ft_plane) { ft_visible = false; ft_focused = false; return; }
+        }
+    }
+    handle_resize();
+    needs_render = true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -258,27 +781,23 @@ static void draw_scrollbar(NCPane *pane) {
     ncplane_set_styles(sp, NCSTYLE_NONE);
 
     /* Top arrow */
-    ncplane_set_fg_rgb8(sp, 180, 180, 200);
-    ncplane_set_bg_rgb8(sp, 30, 30, 40);
+    TH_FG(sp, T->sc_arrow); TH_BG(sp, T->sc_bg);
     ncplane_putstr_yx(sp, 0, 0, "▲");
 
     /* Track and thumb */
     for (int r = 0; r < track_h; r++) {
         bool in_thumb = (r >= thumb_pos && r < thumb_pos + thumb_h);
         if (in_thumb) {
-            ncplane_set_fg_rgb8(sp, 140, 140, 180);
-            ncplane_set_bg_rgb8(sp, 30, 30, 40);
+            TH_FG(sp, T->sc_thumb); TH_BG(sp, T->sc_bg);
             ncplane_putstr_yx(sp, r + 1, 0, "█");
         } else {
-            ncplane_set_fg_rgb8(sp, 55, 55, 70);
-            ncplane_set_bg_rgb8(sp, 30, 30, 40);
+            TH_FG(sp, T->sc_track); TH_BG(sp, T->sc_bg);
             ncplane_putstr_yx(sp, r + 1, 0, "│");
         }
     }
 
     /* Bottom arrow */
-    ncplane_set_fg_rgb8(sp, 180, 180, 200);
-    ncplane_set_bg_rgb8(sp, 30, 30, 40);
+    TH_FG(sp, T->sc_arrow); TH_BG(sp, T->sc_bg);
     ncplane_putstr_yx(sp, rows - 1, 0, "▼");
 }
 
@@ -306,8 +825,8 @@ static void ncpane_render(NCPane *pane) {
         }
     } else {
         if (pane->split_plane) {
-            ncplane_set_fg_rgb8(pane->split_plane, 100, 100, 100);
-            ncplane_set_bg_rgb8(pane->split_plane, 40, 40, 40);
+            TH_FG(pane->split_plane, T->sp_fg);
+            TH_BG(pane->split_plane, T->sp_bg);
             ncplane_set_styles(pane->split_plane, NCSTYLE_NONE);
             if (pane->type == NC_VSPLIT) {
                 for (int r = 0; r < pane->rows; r++)
@@ -376,6 +895,13 @@ static inline unsigned view_overhead(void) {
     return (tabs_shown ? 1u : 0u) + (statusbar_visible ? 1u : 0u);
 }
 
+/* First column of the main editor area (0 = no file tree, ft_width = tree shown). */
+static inline int view_left_col(void) { return ft_visible ? ft_width : 0; }
+/* Width of the main editor area. */
+static inline int view_edit_cols(int total_cols) {
+    return ft_visible ? total_cols - ft_width : total_cols;
+}
+
 /* Row index of the status bar (-1 = off screen when not visible). */
 static inline int statusbar_row(unsigned rows) {
     return statusbar_visible ? (int)rows - 1 : (int)rows;
@@ -394,6 +920,7 @@ static NCPane *ncpane_find_sci(NCPane *pane, SciObject *sci) {
 /* Centralized resize handler: refreshes display and resizes all panes. */
 static void handle_resize(void) {
     if (!nc) return;
+    needs_render = true;
     notcurses_refresh(nc, NULL, NULL);
     unsigned rows, cols;
     ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
@@ -404,6 +931,17 @@ static void handle_resize(void) {
         ncplane_resize_simple(statusbar_plane, 1, cols);
         ncplane_move_yx(statusbar_plane, (int)rows - 1, 0);
     }
+    /* File tree plane */
+    if (ft_visible && ft_plane) {
+        unsigned over = view_overhead();
+        int vh = (int)(rows > over ? rows - over : 1);
+        if (find_visible && vh > 3) vh -= 3;
+        if (command_entry_active && command_entry_height_stored > 0)
+            vh = vh > command_entry_height_stored ? vh - command_entry_height_stored : 1;
+        ncplane_resize_simple(ft_plane, (unsigned)vh, (unsigned)ft_width);
+        ncplane_move_yx(ft_plane, view_top_row(), 0);
+    }
+
     if (root_pane) {
         unsigned over = view_overhead();
         unsigned view_h = rows > over ? rows - over : 1;
@@ -414,7 +952,10 @@ static void handle_resize(void) {
                             (unsigned)command_entry_height_stored : 1;
             view_h = view_h > ce_h ? view_h - ce_h : 1;
         }
-        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+        int ed_x = view_left_col();
+        int ed_w = view_edit_cols((int)cols);
+        if (ed_w < 1) ed_w = 1;
+        ncpane_resize(root_pane, (int)view_h, ed_w, view_top_row(), ed_x);
     }
     if (command_entry_active && command_entry) {
         unsigned ce_h = command_entry_height_stored > 0 ?
@@ -451,6 +992,7 @@ static void process_timeouts(void) {
     while (*pt) {
         Timeout *t = *pt;
         if (now >= t->trigger_time) {
+            needs_render = true;
             bool repeat = t->f(t->reference);
             if (repeat) {
                 t->trigger_time = now + t->interval;
@@ -474,8 +1016,10 @@ static void drain_proc_fd(NProcess *np, int fd, bool is_stdout) {
     ssize_t n;
     while ((n = read(fd, buf, sizeof(buf))) > 0) {
         bool monitoring = is_stdout ? np->monitor_stdout : np->monitor_stderr;
-        if (monitoring)
+        if (monitoring) {
+            needs_render = true;
             process_output((Process *)np, buf, (size_t)n, is_stdout);
+        }
     }
 }
 
@@ -629,6 +1173,16 @@ static void handle_keypress(struct ncinput *ni) {
     if ((sci_mods & SCMOD_CTRL) && emit_key >= 'A' && emit_key <= 'Z')
         emit_key += 'a' - 'A';
 
+    /* ctrl+k toggles file tree (intercepted before Lua) */
+    if (emit_key == 'k' && (sci_mods & SCMOD_CTRL) &&
+        !(sci_mods & (SCMOD_ALT | SCMOD_SHIFT))) {
+        ft_toggle();
+        return;
+    }
+
+    /* File tree: when focused, route all keys to it */
+    if (ft_focused && ft_handle_key(emit_key, sci_mods)) return;
+
     /* Oferecer ao Lua primeiro */
     if (emit("key", LUA_TNUMBER, emit_key, LUA_TNUMBER, sci_mods, -1)) return;
 
@@ -675,6 +1229,27 @@ static void handle_keypress(struct ncinput *ni) {
 /* Main event loop                                                       */
 
 int main(int argc, char **argv) {
+    /* Select UI color theme via LIMOON_THEME env var.
+     * Valid values: green (default), blue, bw */
+    const char *th = getenv("LIMOON_THEME");
+    if (th) {
+        if      (strcmp(th, "blue") == 0) T = &THEME_BLUE;
+        else if (strcmp(th, "bw")   == 0) T = &THEME_BW;
+        else                              T = &THEME_GREEN;
+    }
+
+    /* Allow the user to override graphics protocol detection via LIMOON_GRAPHICS.
+     * Valid values: kitty, sixel, none, auto (default).
+     * Must be called before scintilla_notcurses_init(). */
+    const char *gfx = getenv("LIMOON_GRAPHICS");
+    if (gfx) {
+        ScintermGraphicsProtocol proto = SCINTERM_GRAPHICS_AUTO;
+        if      (strcmp(gfx, "kitty") == 0) proto = SCINTERM_GRAPHICS_KITTY;
+        else if (strcmp(gfx, "sixel") == 0) proto = SCINTERM_GRAPHICS_SIXEL;
+        else if (strcmp(gfx, "none")  == 0) proto = SCINTERM_GRAPHICS_NONE;
+        scinterm_set_graphics_protocol(proto);
+    }
+
     if (!scintilla_notcurses_init()) return 1;
 
     if (!init_limoon(argc, argv)) {
@@ -688,6 +1263,11 @@ int main(int argc, char **argv) {
          * This prevents Ctrl+Z from suspending the process. We handle Ctrl+C
          * ourselves (3x = quit) and Ctrl+Z is undo. */
         notcurses_linesigs_disable(nc);
+        /* Drain stale terminal input: terminals with XON/XOFF flow control may
+         * inject 0x11 (XON/Ctrl+Q) into the input stream during initialization,
+         * which would trigger the quit keybinding before the user does anything. */
+        struct ncinput _drain;
+        while (notcurses_get_nblock(nc, &_drain) != 0) {}
     }
 
     struct ncinput ni;
@@ -698,6 +1278,7 @@ int main(int argc, char **argv) {
         uint32_t nc_key;
         while ((nc_key = notcurses_get_nblock(nc, &ni)) != 0) {
             if (nc_key == (uint32_t)-1) break;
+            needs_render = true;
 
             if (nc_key == NCKEY_RESIZE) {
                 handle_resize();
@@ -705,6 +1286,34 @@ int main(int argc, char **argv) {
             }
 
             if (nckey_mouse_p(nc_key)) {
+                /* File tree mouse routing */
+                if (ft_visible && ni.x < ft_width &&
+                    ni.y >= view_top_row() && nc_key != NCKEY_MOTION) {
+                    if (nc_key == NCKEY_BUTTON1 && ni.evtype != NCTYPE_RELEASE) {
+                        int row_in_tree = ni.y - view_top_row() - 1; /* -1 for title */
+                        int clicked = ft_scroll + row_in_tree;
+                        ft_focused = true;
+                        if (clicked >= 0 && clicked < ft_count) {
+                            ft_cursor = clicked;
+                            FTEntry *e = &ft_entries[ft_cursor];
+                            if (e->is_dir) {
+                                if (e->expanded) ft_collapse(ft_cursor);
+                                else ft_expand(ft_cursor);
+                            } else {
+                                ft_open_file(e->path, false);
+                            }
+                        }
+                        needs_render = true;
+                    } else if (nc_key == NCKEY_SCROLL_UP) {
+                        if (ft_scroll > 0) ft_scroll--;
+                        needs_render = true;
+                    } else if (nc_key == NCKEY_SCROLL_DOWN) {
+                        if (ft_scroll + 1 < ft_count) ft_scroll++;
+                        needs_render = true;
+                    }
+                    continue;
+                }
+
                 /* Tab bar click — y==0 is the tab bar row */
                 if (ni.y == 0 && tabs_shown && nc_key == NCKEY_BUTTON1) {
                     if (ni.evtype != NCTYPE_RELEASE)
@@ -849,15 +1458,19 @@ static void lerp_rgb(int t, int total,
 static void set_tab_color(struct ncplane *plane, int t, int total, bool active) {
     int r, g, b;
     if (active) {
-        /* Active: deep navy → brighter blue gradient */
-        lerp_rgb(t, total, 30, 65, 175, 75, 120, 230, &r, &g, &b);
+        lerp_rgb(t, total,
+                 (T->tab_act_a>>16)&0xFF, (T->tab_act_a>>8)&0xFF, T->tab_act_a&0xFF,
+                 (T->tab_act_b>>16)&0xFF, (T->tab_act_b>>8)&0xFF, T->tab_act_b&0xFF,
+                 &r, &g, &b);
         ncplane_set_bg_rgb8(plane, r, g, b);
-        ncplane_set_fg_rgb8(plane, 220, 230, 255); /* near-white text */
+        TH_FG(plane, T->tab_act_text);
     } else {
-        /* Inactive: dark charcoal → slightly lighter gradient */
-        lerp_rgb(t, total, 28, 28, 32, 52, 52, 60, &r, &g, &b);
+        lerp_rgb(t, total,
+                 (T->tab_ina_a>>16)&0xFF, (T->tab_ina_a>>8)&0xFF, T->tab_ina_a&0xFF,
+                 (T->tab_ina_b>>16)&0xFF, (T->tab_ina_b>>8)&0xFF, T->tab_ina_b&0xFF,
+                 &r, &g, &b);
         ncplane_set_bg_rgb8(plane, r, g, b);
-        ncplane_set_fg_rgb8(plane, 145, 145, 155); /* grey text */
+        TH_FG(plane, T->tab_ina_text);
     }
 }
 
@@ -867,9 +1480,9 @@ static void draw_tabbar(void) {
     unsigned tcols = ncplane_dim_x(tabbar_plane);
     ncplane_erase(tabbar_plane);
 
-    /* Fill remaining area with dark background */
-    ncplane_set_fg_rgb8(tabbar_plane, 80, 80, 90);
-    ncplane_set_bg_rgb8(tabbar_plane, 20, 20, 24);
+    /* Fill remaining area with theme background */
+    TH_FG(tabbar_plane, T->tabbar_sep);
+    TH_BG(tabbar_plane, T->tabbar_bg);
 
     int x = 0;
     for (int i = 0; i < num_tabs && x < (int)tcols; i++) {
@@ -918,16 +1531,15 @@ static void draw_tabbar(void) {
         set_tab_color(tabbar_plane, x - t0, tabw, active);
         ncplane_putchar_yx(tabbar_plane, 0, x++, '[');
 
-        /* × — close button, slightly reddish fg */
-        if (active)
-            ncplane_set_fg_rgb8(tabbar_plane, 255, 120, 120);
-        else
-            ncplane_set_fg_rgb8(tabbar_plane, 180, 90, 90);
+        /* × — close button */
+        TH_FG(tabbar_plane, active ? T->tab_close_act : T->tab_close_ina);
         /* keep gradient bg */
         { int r, g, b;
+          uint32_t ca = active ? T->tab_act_a : T->tab_ina_a;
+          uint32_t cb = active ? T->tab_act_b : T->tab_ina_b;
           lerp_rgb(x - t0, tabw,
-                   active ? 30 : 28, active ? 65 : 28, active ? 175 : 32,
-                   active ? 75 : 52, active ? 120 : 52, active ? 230 : 60,
+                   (ca>>16)&0xFF,(ca>>8)&0xFF,ca&0xFF,
+                   (cb>>16)&0xFF,(cb>>8)&0xFF,cb&0xFF,
                    &r, &g, &b);
           ncplane_set_bg_rgb8(tabbar_plane, r, g, b); }
         tab_close_x[i] = x;
@@ -937,17 +1549,17 @@ static void draw_tabbar(void) {
         set_tab_color(tabbar_plane, x - t0, tabw, active);
         ncplane_putchar_yx(tabbar_plane, 0, x++, ']');
 
-        /* Trailing separator space — fade to dark bg */
-        ncplane_set_fg_rgb8(tabbar_plane, 60, 60, 70);
-        ncplane_set_bg_rgb8(tabbar_plane, 20, 20, 24);
+        /* Trailing separator space */
+        TH_FG(tabbar_plane, T->tabbar_sep);
+        TH_BG(tabbar_plane, T->tabbar_bg);
         ncplane_putchar_yx(tabbar_plane, 0, x++, ' ');
 
         tab_x1[i] = x;
     }
 
-    /* Fill rest of bar with dark background */
+    /* Fill rest of bar */
     ncplane_set_fg_default(tabbar_plane);
-    ncplane_set_bg_rgb8(tabbar_plane, 20, 20, 24);
+    TH_BG(tabbar_plane, T->tabbar_bg);
     for (int cx = x; cx < (int)tcols; cx++)
         ncplane_putchar_yx(tabbar_plane, 0, cx, ' ');
     ncplane_set_bg_default(tabbar_plane);
@@ -962,9 +1574,8 @@ static void draw_statusbar(void) {
     unsigned scols = ncplane_dim_x(statusbar_plane);
     ncplane_erase(statusbar_plane);
 
-    /* Dark background, light foreground */
-    ncplane_set_bg_rgb8(statusbar_plane, 30, 30, 36);
-    ncplane_set_fg_rgb8(statusbar_plane, 200, 200, 210);
+    TH_BG(statusbar_plane, T->sb_bg);
+    TH_FG(statusbar_plane, T->sb_fg);
 
     /* Fill entire row with background first */
     for (int cx = 0; cx < (int)scols; cx++)
@@ -992,9 +1603,9 @@ static void draw_statusbar(void) {
         if (rx > llen + 1) {
             /* Separator between left and right sections */
             if (llen > 0) {
-                ncplane_set_fg_rgb8(statusbar_plane, 80, 80, 90);
+                TH_FG(statusbar_plane, T->sb_sep);
                 ncplane_putchar_yx(statusbar_plane, 0, llen + 1, '|');
-                ncplane_set_fg_rgb8(statusbar_plane, 200, 200, 210);
+                TH_FG(statusbar_plane, T->sb_fg);
             }
             ncplane_putstr_yx(statusbar_plane, 0, rx, right);
         }
@@ -1244,7 +1855,10 @@ void show_tabs(bool show) {
         ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
         unsigned over = view_overhead();
         unsigned view_h = rows > over ? rows - over : 1;
-        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+        int ed_x = view_left_col();
+        int ed_w = view_edit_cols((int)cols);
+        if (ed_w < 1) ed_w = 1;
+        ncpane_resize(root_pane, (int)view_h, ed_w, view_top_row(), ed_x);
     }
 }
 
@@ -1253,12 +1867,14 @@ void add_tab(void) {
     tabs[num_tabs].label[0] = '\0';
     tabs[num_tabs].used = true;
     num_tabs++;
+    needs_render = true;
 }
 
 void set_tab(int index) {
     if (index >= 0) {
         end_word_group(); /* close any open word undo group on buffer switch */
         active_tab = index;
+        needs_render = true;
     }
 }
 
@@ -1268,6 +1884,7 @@ void set_tab_label(int index, const char *text) {
         snprintf(tabs[index].label, sizeof(tabs[index].label), "%s", text);
     else
         tabs[index].label[0] = '\0';
+    needs_render = true;
 }
 
 void move_tab(int from, int to) {
@@ -1278,6 +1895,7 @@ void move_tab(int from, int to) {
     else
         memmove(&tabs[to + 1], &tabs[to], (from - to) * sizeof(TabEntry));
     tabs[to] = tmp;
+    needs_render = true;
 }
 
 void remove_tab(int index) {
@@ -1285,6 +1903,7 @@ void remove_tab(int index) {
     memmove(&tabs[index], &tabs[index + 1], (num_tabs - index - 1) * sizeof(TabEntry));
     num_tabs--;
     if (active_tab >= num_tabs && num_tabs > 0) active_tab = num_tabs - 1;
+    needs_render = true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1403,7 +2022,7 @@ static int fb_draw_button(struct ncplane *p, int row, int x,
                           FBHit *hits, int *nhits, int action, bool focused)
 {
     int bw = display_w + 2; /* space + label + space */
-    fb_fg(p, focused ? 0x1E1E2E : fg);
+    fb_fg(p, focused ? T->fb_cursor_fg : fg);
     fb_bg(p, focused ? fg : bg);
     ncplane_putchar_yx(p, row, x, ' ');
     ncplane_putstr_yx(p, row, x + 1, label);
@@ -1425,7 +2044,7 @@ static int fb_draw_entry(struct ncplane *p, int row, int x, int w,
     int off = (cur >= w) ? cur - w + 1 : 0;
 
     /* Opening bracket */
-    fb_fg(p, focused ? c_border : 0x45475A);
+    fb_fg(p, focused ? c_border : T->fb_dim);
     fb_bg(p, bg_entry);
     ncplane_putchar_yx(p, row, x, focused ? '\xe2' : '['); /* draw later */
     /* Actually use plain bracket always, color indicates focus */
@@ -1435,14 +2054,14 @@ static int fb_draw_entry(struct ncplane *p, int row, int x, int w,
     for (int i = 0; i < w; i++) {
         int ci = off + i;
         bool is_cur = focused && (ci == cur);
-        fb_fg(p, is_cur ? 0x1E1E2E : fg_text);
+        fb_fg(p, is_cur ? T->fb_cursor_fg : fg_text);
         fb_bg(p, is_cur ? c_cursor : bg_entry);
         char ch = (ci < len) ? text[ci] : ' ';
         ncplane_putchar_yx(p, row, x + 1 + i, ch);
     }
 
     /* Closing bracket */
-    fb_fg(p, focused ? c_border : 0x45475A);
+    fb_fg(p, focused ? c_border : T->fb_dim);
     fb_bg(p, bg_entry);
     ncplane_putchar_yx(p, row, x + 1 + w, ']');
 
@@ -1469,20 +2088,20 @@ static void draw_findbar(struct ncplane *fp, int cols,
     *nhits = 0;
     ncplane_erase(fp);
 
-    /* ── Palette (Catppuccin Mocha-inspired) ── */
-    const uint32_t C_BAR      = 0x1E1E2E; /* bar background */
-    const uint32_t C_ENTRY    = 0x11111B; /* text entry bg */
-    const uint32_t C_BORDER   = 0x89B4FA; /* focused entry border */
-    const uint32_t C_LABEL    = 0x6C7086; /* "Find:" / "Repl:" */
-    const uint32_t C_TEXT     = 0xCDD6F4; /* entry text */
-    const uint32_t C_CURSOR   = 0x89B4FA; /* cursor highlight */
-    const uint32_t C_BTN      = 0x313244; /* button background */
-    const uint32_t C_NAV      = 0x89B4FA; /* Prev/Next — blue */
-    const uint32_t C_HIALL    = 0xF9E2AF; /* Highlight All — yellow */
-    const uint32_t C_CLOSE    = 0xF38BA8; /* Close — pink/red */
-    const uint32_t C_REPL     = 0xA6E3A1; /* Replace buttons — green */
-    const uint32_t C_OPT_ON   = 0xA6E3A1; /* checked option — green */
-    const uint32_t C_OPT_OFF  = 0x585B70; /* unchecked — grey */
+    /* ── Palette from active theme ── */
+    const uint32_t C_BAR    = T->fb_bar;
+    const uint32_t C_ENTRY  = T->fb_entry;
+    const uint32_t C_BORDER = T->fb_border;
+    const uint32_t C_LABEL  = T->fb_label;
+    const uint32_t C_TEXT   = T->fb_text;
+    const uint32_t C_CURSOR = T->fb_cursor;
+    const uint32_t C_BTN    = T->fb_btn;
+    const uint32_t C_NAV    = T->fb_nav;
+    const uint32_t C_HIALL  = T->fb_hiall;
+    const uint32_t C_CLOSE  = T->fb_close;
+    const uint32_t C_REPL   = T->fb_repl;
+    const uint32_t C_OPT_ON  = T->fb_opt_on;
+    const uint32_t C_OPT_OFF = T->fb_opt_off;
 
     /* Option names */
     const char *onames[4];
@@ -1605,7 +2224,9 @@ void focus_find(void) {
     if (root_pane) {
         unsigned over = view_overhead();
         unsigned main_h = rows > over + 3 ? rows - over - 3 : 1;
-        ncpane_resize(root_pane, (int)main_h, (int)cols, view_top_row(), 0);
+        int ed_x = view_left_col(), ed_w = view_edit_cols((int)cols);
+        if (ed_w < 1) ed_w = 1;
+        ncpane_resize(root_pane, (int)main_h, ed_w, view_top_row(), ed_x);
     }
 
     emit("find_pane_show", -1);
@@ -1664,7 +2285,9 @@ void focus_find(void) {
             if (root_pane) {
                 unsigned over = view_overhead();
                 unsigned vh = rows2 > over + 3 ? rows2 - over - 3 : 1;
-                ncpane_resize(root_pane, (int)vh, (int)cols2, view_top_row(), 0);
+                int ed_x2 = view_left_col(), ed_w2 = view_edit_cols((int)cols2);
+                if (ed_w2 < 1) ed_w2 = 1;
+                ncpane_resize(root_pane, (int)vh, ed_w2, view_top_row(), ed_x2);
             }
             fp_y = statusbar_row(rows2) - 3;
             if (fp_y < 1) fp_y = 1;
@@ -1906,7 +2529,9 @@ void focus_find(void) {
         ncplane_dim_yx(notcurses_stdplane(nc), &rows2, &cols2);
         unsigned over = view_overhead();
         unsigned main_h = rows2 > over ? rows2 - over : 1;
-        ncpane_resize(root_pane, (int)main_h, (int)cols2, view_top_row(), 0);
+        int ed_x3 = view_left_col(), ed_w3 = view_edit_cols((int)cols2);
+        if (ed_w3 < 1) ed_w3 = 1;
+        ncpane_resize(root_pane, (int)main_h, ed_w3, view_top_row(), ed_x3);
     }
     emit("find_pane_hide", -1);
     find_visible = false;
@@ -1930,7 +2555,11 @@ static void resize_views_for_command_entry(bool active) {
     else
         main_h = rows > over ? rows - over : 1;
 
-    ncpane_resize(root_pane, (int)main_h, (int)cols, view_top_row(), 0);
+    {
+        int ed_x4 = view_left_col(), ed_w4 = view_edit_cols((int)cols);
+        if (ed_w4 < 1) ed_w4 = 1;
+        ncpane_resize(root_pane, (int)main_h, ed_w4, view_top_row(), ed_x4);
+    }
 
     if (active && command_entry) {
         struct ncplane *ce_p = scintilla_get_plane(command_entry);
@@ -2044,7 +2673,9 @@ void set_statusbar_visible(bool visible) {
         ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
         unsigned over = view_overhead();
         unsigned view_h = rows > over ? rows - over : 1;
-        ncpane_resize(root_pane, (int)view_h, (int)cols, view_top_row(), 0);
+        int ed_x5 = view_left_col(), ed_w5 = view_edit_cols((int)cols);
+        if (ed_w5 < 1) ed_w5 = 1;
+        ncpane_resize(root_pane, (int)view_h, ed_w5, view_top_row(), ed_x5);
     }
 }
 void set_scrollbar_visible(bool visible) {
@@ -2061,6 +2692,7 @@ const char *get_statusbar_text(int bar) {
 void set_statusbar_text(int bar, const char *text) {
     if (bar == 0 && text) snprintf(statusbar_text0, sizeof(statusbar_text0), "%s", text);
     else if (bar == 1 && text) snprintf(statusbar_text1, sizeof(statusbar_text1), "%s", text);
+    needs_render = true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -2131,19 +2763,29 @@ void update_ui(void) {
     process_timeouts();
     monitor_processes();
 
-    /* Ensure pane geometry is always consistent with current terminal size
-     * and tabbar/statusbar visibility (guards against missed resize paths). */
+    /* Geometry check runs every frame (lightweight): detects resize events that
+     * slipped through NCKEY_RESIZE and sets needs_render if correction needed. */
     if (root_pane && !command_entry_active && !find_visible) {
         unsigned rows, cols;
         ncplane_dim_yx(notcurses_stdplane(nc), &rows, &cols);
         unsigned over = view_overhead();
         int expected_h = (int)(rows > over ? rows - over : 1);
         int expected_y = view_top_row();
-        if (root_pane->rows != expected_h || root_pane->y != expected_y)
-            ncpane_resize(root_pane, expected_h, (int)cols, expected_y, 0);
+        int expected_x = view_left_col();
+        int expected_w = view_edit_cols((int)cols);
+        if (expected_w < 1) expected_w = 1;
+        if (root_pane->rows != expected_h || root_pane->y != expected_y ||
+            root_pane->x != expected_x || root_pane->cols != expected_w) {
+            ncpane_resize(root_pane, expected_h, expected_w, expected_y, expected_x);
+            needs_render = true;
+        }
     }
 
+    if (!needs_render) return;
+    needs_render = false;
+
     if (root_pane) ncpane_render(root_pane);
+    if (ft_visible) ft_draw();
 
     /* Update cursors: focused view gets active cursor; others get inactive cursor */
     if (root_pane) ncpane_update_cursors(root_pane);
@@ -2204,15 +2846,15 @@ int message_dialog(DialogOptions opts, lua_State *L) {
     if (btn_x < 1) btn_x = 1;
 
     /* Color helpers (reuse dialog plane directly) */
-    const uint32_t C_BG      = 0x313244; /* Catppuccin surface0 */
-    const uint32_t C_BORDER  = 0x89B4FA; /* blue */
-    const uint32_t C_TITLE   = 0xCDD6F4; /* text */
-    const uint32_t C_TEXT    = 0xBAC2DE; /* subtext */
-    const uint32_t C_BTN_FG  = 0xCDD6F4;
-    const uint32_t C_BTN_BG  = 0x45475A; /* surface2 */
-    const uint32_t C_FOC_FG  = 0x1E1E2E;
-    const uint32_t C_FOC_BG  = 0x89B4FA; /* focused = inverted blue */
-    const uint32_t C_ACCEL   = 0xF9E2AF; /* yellow for underlined letter */
+    const uint32_t C_BG     = T->dlg_bg;
+    const uint32_t C_BORDER = T->dlg_border;
+    const uint32_t C_TITLE  = T->dlg_title;
+    const uint32_t C_TEXT   = T->dlg_text;
+    const uint32_t C_BTN_FG = T->dlg_btn_fg;
+    const uint32_t C_BTN_BG = T->dlg_btn_bg;
+    const uint32_t C_FOC_FG = T->dlg_foc_fg;
+    const uint32_t C_FOC_BG = T->dlg_foc_bg;
+    const uint32_t C_ACCEL  = T->dlg_accel;
 
 #define DLG_FG(r,g,b) ncplane_set_fg_rgb8(dplane,(r),(g),(b))
 #define DLG_BG(r,g,b) ncplane_set_bg_rgb8(dplane,(r),(g),(b))
@@ -2302,7 +2944,7 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         }
 
         /* ── Hint line ── */
-        DLG_FGHEX(0x585B70); DLG_BGHEX(C_BG);
+        DLG_FGHEX(T->dlg_accel); DLG_BGHEX(C_BG); /* hint text */
         ncplane_putstr_yx(dplane, h - 2, 2, "←/→ Tab · Enter · underlined letter");
 
         notcurses_render(nc);
@@ -2367,16 +3009,32 @@ int input_dialog(DialogOptions opts, lua_State *L) {
     };
     struct ncplane *dplane = ncplane_create(std, &popt);
     if (!dplane) return 0;
-    ncplane_set_base(dplane, " ", 0, 0);
+    /* Paint background */
+    TH_FG(dplane, T->dlg_text); TH_BG(dplane, T->dlg_bg);
+    for (int r = 0; r < h; r++)
+        for (int c = 0; c < w; c++)
+            ncplane_putchar_yx(dplane, r, c, ' ');
+    /* Border */
+    TH_FG(dplane, T->dlg_border); TH_BG(dplane, T->dlg_bg);
+    ncplane_putstr_yx(dplane, 0, 0, "╭");
+    ncplane_putstr_yx(dplane, 0, w-1, "╮");
+    ncplane_putstr_yx(dplane, h-1, 0, "╰");
+    ncplane_putstr_yx(dplane, h-1, w-1, "╯");
+    for (int c = 1; c < w-1; c++) { ncplane_putstr_yx(dplane,0,c,"─"); ncplane_putstr_yx(dplane,h-1,c,"─"); }
+    for (int r = 1; r < h-1; r++) { ncplane_putstr_yx(dplane,r,0,"│"); ncplane_putstr_yx(dplane,r,w-1,"│"); }
 
     if (opts.title) {
         int tx = (w - (int)strlen(opts.title)) / 2;
         if (tx < 0) tx = 0;
+        TH_FG(dplane, T->dlg_title); ncplane_set_styles(dplane, NCSTYLE_BOLD);
         ncplane_putstr_yx(dplane, 1, tx, opts.title);
+        ncplane_set_styles(dplane, NCSTYLE_NONE);
     }
+    TH_FG(dplane, T->dlg_text);
     if (opts.text) ncplane_putstr_yx(dplane, 3, 2, opts.text);
 
     int iy = 5, ix = 2, iw = w - 4;
+    TH_FG(dplane, T->dlg_border);
     ncplane_putstr_yx(dplane, iy, ix, "┌");
     for (int i = 0; i < iw - 2; i++) ncplane_putstr_yx(dplane, iy, ix + 1 + i, "─");
     ncplane_putstr_yx(dplane, iy, ix + iw - 1, "┐");
@@ -2385,6 +3043,7 @@ int input_dialog(DialogOptions opts, lua_State *L) {
     ncplane_putstr_yx(dplane, iy + 2, ix, "└");
     for (int i = 0; i < iw - 2; i++) ncplane_putstr_yx(dplane, iy + 2, ix + 1 + i, "─");
     ncplane_putstr_yx(dplane, iy + 2, ix + iw - 1, "┘");
+    TH_FG(dplane, T->dlg_text);
 
     int text_x = ix + 1, text_y = iy + 1, max_len = iw - 2;
     char *buf = calloc(max_len + 1, 1);
@@ -2614,25 +3273,23 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
 
     while (!done) {
         /* ── Background fill ── */
-        for (int row = 0; row < dh; row++) {
-            for (int col = 0; col < dw; col++) {
-                ncplane_set_bg_rgb8(dp, 18, 18, 24);
-                ncplane_set_fg_rgb8(dp, 80, 80, 90);
+        TH_BG(dp, T->fd_bg); TH_FG(dp, T->fd_idle_fg);
+        for (int row = 0; row < dh; row++)
+            for (int col = 0; col < dw; col++)
                 ncplane_putchar_yx(dp, row, col, ' ');
-            }
-        }
 
         /* ── Title (gradient bar) ── */
-        draw_gradient_row(dp, 0, dw, 30, 60, 140, 20, 20, 24, 200, 210, 255);
+        draw_gradient_row(dp, 0, dw,
+            (T->fd_title_a>>16)&0xFF,(T->fd_title_a>>8)&0xFF, T->fd_title_a&0xFF,
+            (T->fd_title_b>>16)&0xFF,(T->fd_title_b>>8)&0xFF, T->fd_title_b&0xFF,
+            (T->fd_title_fg>>16)&0xFF,(T->fd_title_fg>>8)&0xFF, T->fd_title_fg&0xFF);
         const char *title = opts.title ? opts.title : (save_mode ? "Save File" : "Open File");
         int tx = (dw - (int)strlen(title)) / 2;
-        ncplane_set_fg_rgb8(dp, 240, 240, 255);
-        ncplane_set_bg_rgb8(dp, 25, 50, 120);
+        TH_FG(dp, T->fd_title_fg); TH_BG(dp, T->fd_title_bg);
         ncplane_putstr_yx(dp, 0, tx > 0 ? tx : 0, title);
 
         /* ── Current path ── */
-        ncplane_set_fg_rgb8(dp, 100, 175, 255);
-        ncplane_set_bg_rgb8(dp, 18, 18, 24);
+        TH_FG(dp, T->fd_path); TH_BG(dp, T->fd_bg);
         int path_avail = dw - 8;
         const char *pdisp = cwd;
         if ((int)strlen(cwd) > path_avail) pdisp = cwd + strlen(cwd) - path_avail;
@@ -2640,16 +3297,14 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
 
         /* ── Filter entry ── */
         bool filter_focused = (focus == 1);
-        ncplane_set_bg_rgb8(dp, filter_focused ? 28 : 22, filter_focused ? 28 : 22,
-                            filter_focused ? 38 : 30);
-        ncplane_set_fg_rgb8(dp, 200, 200, 210);
+        TH_BG(dp, filter_focused ? T->fd_entry_focus : T->fd_entry_blur);
+        TH_FG(dp, T->fd_entry_text);
         int f_off = filter_cur > entry_w ? filter_cur - entry_w : 0;
         ncplane_printf_yx(dp, filt_row, 1, "Filter:[%-*.*s]",
                           entry_w, entry_w, filter + f_off);
 
         /* ── Separator ── */
-        ncplane_set_fg_rgb8(dp, 45, 55, 75);
-        ncplane_set_bg_rgb8(dp, 18, 18, 24);
+        TH_FG(dp, T->fd_sep); TH_BG(dp, T->fd_bg);
         for (int c = 0; c < dw; c++) ncplane_putchar_yx(dp, sep1_row, c, '-');
 
         /* ── File list ── */
@@ -2661,7 +3316,7 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
             int row = list_top + i;
             if (fi >= n_filtered) {
                 /* empty row */
-                ncplane_set_bg_rgb8(dp, 18, 18, 24);
+                TH_BG(dp, T->fd_bg);
                 for (int c = 0; c < dw; c++) ncplane_putchar_yx(dp, row, c, ' ');
                 continue;
             }
@@ -2670,20 +3325,20 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
             bool sel = (fi == cur_item && focus == 0);
 
             if (sel) {
-                /* Gradient highlight: blue */
                 draw_gradient_row(dp, row, dw,
-                                  35, 75, 180, 60, 110, 220,
-                                  220, 235, 255);
-                ncplane_set_bg_rgb8(dp, 48, 90, 195);
+                    (T->fd_sel_a>>16)&0xFF,(T->fd_sel_a>>8)&0xFF, T->fd_sel_a&0xFF,
+                    (T->fd_sel_b>>16)&0xFF,(T->fd_sel_b>>8)&0xFF, T->fd_sel_b&0xFF,
+                    (T->fd_title_fg>>16)&0xFF,(T->fd_title_fg>>8)&0xFF, T->fd_title_fg&0xFF);
+                TH_BG(dp, T->fd_sel_bg);
             } else {
-                ncplane_set_bg_rgb8(dp, 18, 18, 24);
+                TH_BG(dp, T->fd_bg);
             }
 
             /* Icon */
             if (is_dir)
-                ncplane_set_fg_rgb8(dp, sel ? 180 : 100, sel ? 220 : 160, 255);
+                TH_FG(dp, sel ? T->fd_dir_sel : T->fd_dir_unsel);
             else
-                ncplane_set_fg_rgb8(dp, sel ? 230 : 175, sel ? 235 : 175, sel ? 255 : 190);
+                TH_FG(dp, sel ? T->fd_file_sel : T->fd_file_unsel);
 
             const char *icon = is_dir ? " [/] " : "     ";
             ncplane_putstr_yx(dp, row, 0, icon);
@@ -2694,39 +3349,37 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
         }
 
         /* ── Separator bottom ── */
-        ncplane_set_fg_rgb8(dp, 45, 55, 75);
-        ncplane_set_bg_rgb8(dp, 18, 18, 24);
+        TH_FG(dp, T->fd_sep); TH_BG(dp, T->fd_bg);
         for (int c = 0; c < dw; c++) ncplane_putchar_yx(dp, sep2_row, c, '-');
 
         /* ── Filename entry (save mode) ── */
         if (save_mode && fn_row >= 0) {
             bool fn_focused = (focus == 2);
-            ncplane_set_bg_rgb8(dp, fn_focused ? 28 : 22, fn_focused ? 28 : 22,
-                                fn_focused ? 38 : 30);
-            ncplane_set_fg_rgb8(dp, 210, 210, 220);
+            TH_BG(dp, fn_focused ? T->fd_entry_focus : T->fd_entry_blur);
+            TH_FG(dp, T->fd_entry_text);
             int fn_off = fname_cur > entry_w ? fname_cur - entry_w : 0;
             ncplane_printf_yx(dp, fn_row, 1, "Name:  [%-*.*s]",
                               entry_w, entry_w, fname + fn_off);
         }
 
         /* ── Buttons ── */
-        ncplane_set_bg_rgb8(dp, 18, 18, 24);
+        TH_BG(dp, T->fd_bg);
         if (focus == 3) draw_gradient_row(dp, btn_row, dw/2 - 1,
-                                          30, 65, 160, 60, 110, 200, 220, 235, 255);
+            (T->fd_sel_a>>16)&0xFF,(T->fd_sel_a>>8)&0xFF, T->fd_sel_a&0xFF,
+            (T->fd_sel_b>>16)&0xFF,(T->fd_sel_b>>8)&0xFF, T->fd_sel_b&0xFF,
+            (T->fd_title_fg>>16)&0xFF,(T->fd_title_fg>>8)&0xFF, T->fd_title_fg&0xFF);
         if (focus == 4) draw_gradient_row(dp, btn_row, dw - dw/2,
-                                          30, 65, 160, 60, 110, 200, 220, 235, 255);
+            (T->fd_sel_a>>16)&0xFF,(T->fd_sel_a>>8)&0xFF, T->fd_sel_a&0xFF,
+            (T->fd_sel_b>>16)&0xFF,(T->fd_sel_b>>8)&0xFF, T->fd_sel_b&0xFF,
+            (T->fd_title_fg>>16)&0xFF,(T->fd_title_fg>>8)&0xFF, T->fd_title_fg&0xFF);
 
-        ncplane_set_bg_rgb8(dp, focus == 3 ? 45 : 22, focus == 3 ? 85 : 22,
-                            focus == 3 ? 175 : 28);
-        ncplane_set_fg_rgb8(dp, focus == 3 ? 240 : 160, focus == 3 ? 240 : 160,
-                            focus == 3 ? 255 : 175);
+        TH_BG(dp, focus == 3 ? T->fd_ok_foc_bg : T->fd_idle_bg);
+        TH_FG(dp, focus == 3 ? T->fd_ok_foc_fg : T->fd_idle_fg);
         ncplane_printf_yx(dp, btn_row, dw/2 - 5,
                           focus == 3 ? "[ OK ]" : "  OK  ");
 
-        ncplane_set_bg_rgb8(dp, focus == 4 ? 45 : 22, focus == 4 ? 25 : 22,
-                            focus == 4 ? 25 : 28);
-        ncplane_set_fg_rgb8(dp, focus == 4 ? 255 : 160, focus == 4 ? 160 : 160,
-                            focus == 4 ? 160 : 175);
+        TH_BG(dp, focus == 4 ? T->fd_cancel_foc_bg : T->fd_idle_bg);
+        TH_FG(dp, focus == 4 ? T->fd_cancel_foc_fg : T->fd_idle_fg);
         ncplane_printf_yx(dp, btn_row, dw/2 + 2,
                           focus == 4 ? "[Cancel]" : " Cancel ");
 
@@ -3023,6 +3676,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
     };
     struct ncplane *dp = ncplane_create(std, &dpopt);
     if (!dp) return 0;
+    TH_FG(dp, T->dlg_text); TH_BG(dp, T->dlg_bg);
     ncplane_set_base(dp, " ", 0, 0);
     ncplane_move_top(dp);
 
@@ -3134,17 +3788,32 @@ int list_dialog(DialogOptions opts, lua_State *L) {
     while (!done) {
         ncplane_erase(dp);
 
+        /* Background */
+        TH_FG(dp, T->dlg_text); TH_BG(dp, T->dlg_bg);
+        for (int r = 0; r < dh; r++)
+            for (int c = 0; c < dw; c++) ncplane_putchar_yx(dp, r, c, ' ');
+        /* Border */
+        TH_FG(dp, T->dlg_border);
+        ncplane_putstr_yx(dp,0,0,"╭"); ncplane_putstr_yx(dp,0,dw-1,"╮");
+        ncplane_putstr_yx(dp,dh-1,0,"╰"); ncplane_putstr_yx(dp,dh-1,dw-1,"╯");
+        for (int c=1;c<dw-1;c++){ncplane_putstr_yx(dp,0,c,"─");ncplane_putstr_yx(dp,dh-1,c,"─");}
+        for (int r=1;r<dh-1;r++){ncplane_putstr_yx(dp,r,0,"│");ncplane_putstr_yx(dp,r,dw-1,"│");}
+
         /* Title */
         if (opts.title) {
             int tx = (dw - (int)strlen(opts.title)) / 2;
+            TH_FG(dp, T->dlg_title); ncplane_set_styles(dp, NCSTYLE_BOLD);
             ncplane_putstr_yx(dp, 0, tx > 0 ? tx : 0, opts.title);
+            ncplane_set_styles(dp, NCSTYLE_NONE);
         }
 
         /* Filter entry */
+        TH_FG(dp, T->dlg_text); TH_BG(dp, T->dlg_bg);
         ncplane_printf_yx(dp, 1, 1, "Filter: [%-*s]", dw - 12, filter);
 
         /* Column headers */
         if (opts.columns) {
+            TH_FG(dp, T->dlg_accel);
             int hx = 1;
             for (int c = 0; c < num_cols; c++) {
                 lua_rawgeti(L, opts.columns, c + 1);
@@ -3154,6 +3823,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
                 lua_pop(L, 1);
                 hx += col_w[c] + 1;
             }
+            TH_FG(dp, T->dlg_text);
         }
 
         /* Item list */
@@ -3165,17 +3835,25 @@ int list_dialog(DialogOptions opts, lua_State *L) {
             for (int i = 0; i < list_h && scroll + i < num_filtered; i++) {
                 int ri = filtered[scroll + i];
                 bool sel = (scroll + i == cur_row) && cur_btn < 0;
+                if (sel) { TH_FG(dp, T->dlg_foc_fg); TH_BG(dp, T->dlg_foc_bg); }
+                else     { TH_FG(dp, T->dlg_text);   TH_BG(dp, T->dlg_bg); }
                 ncplane_printf_yx(dp, list_top + i, 1, sel ? ">%-*s" : " %-*s",
                                   dw - 3, row_strs[ri]);
             }
+            TH_FG(dp, T->dlg_text); TH_BG(dp, T->dlg_bg);
         }
 
         /* Buttons */
         int btn_y = dh - 2;
         int b0x = dw / 2 - (int)strlen(b0) - 3;
         int b1x = dw / 2 + 1;
+        TH_FG(dp, cur_btn == 0 ? T->dlg_foc_fg : T->dlg_btn_fg);
+        TH_BG(dp, cur_btn == 0 ? T->dlg_foc_bg : T->dlg_btn_bg);
         ncplane_printf_yx(dp, btn_y, b0x, cur_btn == 0 ? "[%s]" : " %s ", b0);
+        TH_FG(dp, cur_btn == 1 ? T->dlg_foc_fg : T->dlg_btn_fg);
+        TH_BG(dp, cur_btn == 1 ? T->dlg_foc_bg : T->dlg_btn_bg);
         ncplane_printf_yx(dp, btn_y, b1x, cur_btn == 1 ? "[%s]" : " %s ", b1);
+        TH_FG(dp, T->dlg_text); TH_BG(dp, T->dlg_bg);
 
         notcurses_render(nc);
         notcurses_get_blocking(nc, &ni);

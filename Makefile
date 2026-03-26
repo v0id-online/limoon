@@ -15,6 +15,7 @@ TARGET      = $(BUILD)/li
 all: dev-setup
 	cmake -S . -B $(BUILD)
 	cmake --build $(BUILD) --parallel
+	@cp $(BUILD)/li ./li 2>/dev/null || true
 
 run: dev-setup $(TARGET)
 	LIMOON_HOME=$(LIMOON_HOME) $(TARGET) $(ARGS)

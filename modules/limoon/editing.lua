@@ -623,4 +623,29 @@ events.connect(events.FILE_BEFORE_SAVE, function()
 	buffer:end_undo_action()
 end)
 
+--- Adds a cursor on the line above or below each existing cursor.
+-- Enables multiple-selection mode automatically.
+-- @param direction Integer -1 for above, 1 for below.
+local function add_cursor(direction)
+	buffer.multiple_selection = true
+	buffer.additional_carets_visible = true
+	local positions = {}
+	for i = 0, buffer.selections - 1 do
+		positions[#positions + 1] = {caret = buffer.selection_n_caret[i], col = buffer.column[buffer.selection_n_caret[i]]}
+	end
+	for _, sel in ipairs(positions) do
+		local target = buffer:line_from_position(sel.caret) + direction
+		if target >= 1 and target <= buffer.line_count then
+			local new_pos = buffer:find_column(target, sel.col)
+			buffer:add_selection(new_pos, new_pos)
+		end
+	end
+end
+
+--- Adds a cursor on the line above each existing cursor (Ctrl+Alt+Up).
+function M.add_cursor_above() add_cursor(-1) end
+
+--- Adds a cursor on the line below each existing cursor (Ctrl+Alt+Down).
+function M.add_cursor_below() add_cursor(1) end
+
 return M

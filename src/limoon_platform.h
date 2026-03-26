@@ -22,7 +22,8 @@
 #include <Scintilla.h>
 #endif
 
-typedef void SciObject;
+struct ScintillaNotCurses; /* forward declaration — matches ScintillaHandle in scinterm_notcurses.h */
+typedef struct ScintillaNotCurses SciObject;
 typedef void Pane;
 typedef void FindButton;
 typedef void FindOption;

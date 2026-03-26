@@ -189,7 +189,14 @@ local default_menubar = {
 		SEPARATOR, --
 		{_L['Load Session...'], limoon.session.load}, --
 		{_L['Save Session...'], limoon.session.save}, --
-		SEPARATOR, --
+		SEPARATOR, {
+			title = 'Workspace', --
+			{'New Workspace...', limoon.workspace.new}, --
+			{'Open Workspace...', limoon.workspace.open}, --
+			{'Save Workspace', limoon.workspace.save}, --
+			SEPARATOR, --
+			{'Delete Workspace...', limoon.workspace.delete} --
+		}, SEPARATOR, --
 		{_L['Quit'], quit}
 	}, {
 		title = _L['Edit'], --

@@ -338,6 +338,7 @@ keys.assign_platform_bindings{
 	[io.close_all_buffers] = {'ctrl+W', 'cmd+W', 'ctrl+meta+w'},
 	-- TODO: limoon.sessions.load
 	-- TODO: limoon.sessions.save
+	[limoon.workspace.open] = {nil, nil, 'ctrl+{'},
 	[quit] = {'ctrl+q', 'cmd+q', {'ctrl+q', 'meta+q'}},
 
 	-- Edit.
@@ -360,7 +361,8 @@ keys.assign_platform_bindings{
 	-- Select.
 	[m('Edit/Select/Select between Matching Delimiters')] = {
 		'ctrl+M', 'cmd+M', {'ctrl+meta+m', 'meta+\n', 'ctrl+shift+\n'}
-	}, [limoon.editing.select_word] = {'ctrl+d', 'cmd+d', 'ctrl+d'},
+	}, [limoon.editing.select_word] = {nil, nil, nil},
+	[buffer.line_delete] = {'ctrl+d', 'cmd+d', 'ctrl+d'},
 	[m('Edit/Select/Deselect Word')] = {'ctrl+alt+d', 'ctrl+cmd+d', 'meta+d'},
 	[limoon.editing.select_line] = {'ctrl+l', 'cmd+l', 'ctrl+l'},
 	[limoon.editing.select_paragraph] = {'ctrl+P', 'cmd+P', 'ctrl+meta+p'},
@@ -374,8 +376,8 @@ keys.assign_platform_bindings{
 	[m('Edit/Selection/Enclose in Parentheses')] = {'alt+(', 'ctrl+(', 'meta+('},
 	[m('Edit/Selection/Enclose in Brackets')] = {'alt+[', 'ctrl+[', nil},
 	[m('Edit/Selection/Enclose in Braces')] = {'alt+{', 'ctrl+{', 'meta+{'},
-	[buffer.move_selected_lines_down] = {'ctrl+alt+shift+down', 'ctrl+cmd+shift+down', nil},
-	[buffer.move_selected_lines_up] = {'ctrl+alt+shift+up', 'ctrl+cmd+shift+up', nil},
+	[buffer.move_selected_lines_down] = {'alt+down', 'ctrl+cmd+shift+down', 'meta+down'},
+	[buffer.move_selected_lines_up] = {'alt+up', 'ctrl+cmd+shift+up', 'meta+up'},
 	-- History.
 	[limoon.history.back] = {{'ctrl+[', 'alt+left'}, 'cmd+[', {'meta+[', 'meta+left'}},
 	[limoon.history.forward] = {{'ctrl+]', 'alt+right'}, 'cmd+]', {'meta+]', 'meta+right'}},
@@ -498,8 +500,10 @@ keys.assign_platform_bindings{
 	[m('Help/Show LuaDoc')] = {'shift+f1', 'shift+f1', nil},
 
 	-- Other.
-	[view.line_scroll_down] = {'ctrl+alt+down', 'ctrl+cmd+down', 'meta+down'},
-	[view.line_scroll_up] = {'ctrl+alt+up', 'ctrl+cmd+up', 'meta+up'},
+	[view.line_scroll_down] = {nil, 'ctrl+cmd+down', nil},
+	[view.line_scroll_up] = {nil, 'ctrl+cmd+up', nil},
+	[limoon.editing.add_cursor_below] = {'ctrl+alt+down', nil, 'ctrl+meta+down'},
+	[limoon.editing.add_cursor_above] = {'ctrl+alt+up', nil, 'ctrl+meta+up'},
 	[function() view:line_scroll(0, view.lines_on_screen) end] = {'alt+pgdn', 'ctrl+pgdn', nil},
 	[function() view:line_scroll(0, -view.lines_on_screen) end] = {'alt+pgup', 'ctrl+pgup', nil},
 	[start_new_line] = {'shift+\n', 'shift+\n', nil},
