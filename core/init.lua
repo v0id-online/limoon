@@ -8,8 +8,8 @@ for _, arg in ipairs(arg) do if arg == '-T' or arg == '--cov' then require('luac
 --- The Li Moon release version string.
 _RELEASE = 'Li Moon 13.0 alpha 2'
 --- Li Moon's copyright information.
-_COPYRIGHT = 'Copyright © 2007-2026 Mitchell. See LICENSE.\n' ..
-	'https://orbitalquark.github.io/limoon'
+_COPYRIGHT = 'Copyright © 2007-2026 Mitchell. Copyright © 2026 Yuri Harrison. See LICENSE.\n' ..
+	'https://github.com/yuriharrison1/limoon'
 
 package.path = string.format('%s/core/?.lua;%s', _HOME, package.path)
 

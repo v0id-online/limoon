@@ -104,7 +104,7 @@ a console application.
 Li Moon manually. Installing and running Li Moon will be similar to the Linux instructions
 below.
 
-[all releases]: https://github.com/orbitalquark/limoon/releases
+[all releases]: https://github.com/yuriharrison1/limoon/releases
 
 ### Installation
 
@@ -908,7 +908,7 @@ configure and extend Li Moon, as well as understand its API, all from within the
 <a href="assets/images/lsp.png"><img src="assets/images/lsp.png" alt="autocomplete" width="365"/></a>
 <a href="assets/images/apidoc.png"><img src="assets/images/apidoc.png" alt="api doc" width="400"/></a>
 
-[Language Server Protocol module]: https://github.com/orbitalquark/limoon-lsp
+[Language Server Protocol module]: https://github.com/yuriharrison1/limoon-lsp
 [`limoon.editing.autocomplete_all_words`]: api.html#limoon.editing.autocomplete_all_words
 
 ### Text Selections

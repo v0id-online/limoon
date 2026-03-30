@@ -389,7 +389,12 @@ static void ft_scan_into(const char *dir_path, int depth, int insert_at) {
 }
 
 static void ft_load_root(const char *path) {
-    strncpy(ft_root_path, path ? path : "", 4095);
+    if (path) {
+        strncpy(ft_root_path, path, 4095);
+        ft_root_path[4095] = '\0';
+    } else {
+        ft_root_path[0] = '\0';
+    }
     ft_count = 0; ft_cursor = 0; ft_scroll = 0;
     if (!path || !path[0]) return;
     ft_scan_into(path, 0, 0);
@@ -641,7 +646,10 @@ static void ft_toggle(void) {
                     lua_getfield(lua, -1, "dir");
                     if (lua_isstring(lua, -1)) {
                         const char *d = lua_tostring(lua, -1);
-                        if (d && d[0]) strncpy(root, d, 4095);
+                        if (d && d[0]) {
+                            strncpy(root, d, 4095);
+                            root[4095] = '\0';
+                        }
                     }
                     lua_pop(lua, 1); /* dir */
                 }
@@ -676,6 +684,15 @@ static void ft_toggle(void) {
     }
     handle_resize();
     needs_render = true;
+}
+
+/* Focus the file tree (if visible). Returns true if focused. */
+bool ft_focus(void) {
+    if (!ft_visible) return false;
+    ft_focused = true;
+    if (focused_view) scintilla_set_focus(focused_view, false);
+    needs_render = true;
+    return true;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1060,6 +1077,7 @@ static int nc_to_sci_mods(unsigned nc_mods) {
     if (nc_mods & NCKEY_MOD_SHIFT) sci_mods |= SCMOD_SHIFT;
     if (nc_mods & NCKEY_MOD_CTRL)  sci_mods |= SCMOD_CTRL;
     if (nc_mods & NCKEY_MOD_ALT)   sci_mods |= SCMOD_ALT;
+    if (nc_mods & NCKEY_MOD_META)  sci_mods |= SCMOD_ALT;  /* Meta treated as Alt */
     return sci_mods;
 }
 
@@ -1094,6 +1112,11 @@ static void handle_keypress(struct ncinput *ni) {
      * instead of the raw code, or scinterm will misread 8→BS, 9→Tab, 13→CR. */
     bool remapped_ctrl = false;
 
+    /* Key code to send to scinterm (NotCurses codes) vs Lua/Scintilla (SCK_* codes).
+     * scintilla_send_key expects NotCurses key codes (NCKEY_*), not Scintilla codes.
+     * Lua and the file tree handler use Scintilla key codes (SCK_*). */
+    int scinterm_key = (int)key;
+
     if (key >= 1 && key <= 26) {
         /* Control codes 1–26: may arrive with or without NCKEY_MOD_CTRL.
          * Without CTRL flag (non-Kitty): 0x08/0x09/0x0a/0x0d are ambiguous
@@ -1101,10 +1124,10 @@ static void handle_keypress(struct ncinput *ni) {
          * With CTRL flag (Kitty or some terminals): always Ctrl+letter. */
         if (!(nc_mods & NCKEY_MOD_CTRL)) {
             switch (key) {
-                case 0x08: emit_key = SCK_BACK; break;
-                case 0x09: emit_key = '\t';     break;
+                case 0x08: emit_key = SCK_BACK; scinterm_key = NCKEY_BACKSPACE; break;
+                case 0x09: emit_key = '\t';     scinterm_key = '\t';             break;
                 case 0x0a: /* fallthrough */
-                case 0x0d: emit_key = '\r';     break;
+                case 0x0d: emit_key = '\r';     scinterm_key = NCKEY_ENTER;      break;
                 default:
                     emit_key = (int)(key + 'a' - 1);
                     sci_mods |= SCMOD_CTRL;
@@ -1119,22 +1142,22 @@ static void handle_keypress(struct ncinput *ni) {
         }
     } else {
         switch (key) {
-            case NCKEY_UP:        emit_key = SCK_UP;      break;
-            case NCKEY_DOWN:      emit_key = SCK_DOWN;    break;
-            case NCKEY_LEFT:      emit_key = SCK_LEFT;    break;
-            case NCKEY_RIGHT:     emit_key = SCK_RIGHT;   break;
-            case NCKEY_HOME:      emit_key = SCK_HOME;    break;
-            case NCKEY_END:       emit_key = SCK_END;     break;
-            case NCKEY_PGUP:      emit_key = SCK_PRIOR;   break;
-            case NCKEY_PGDOWN:    emit_key = SCK_NEXT;    break;
-            case NCKEY_DEL:       emit_key = SCK_DELETE;  break;
-            case NCKEY_INS:       emit_key = SCK_INSERT;  break;
+            case NCKEY_UP:        emit_key = SCK_UP;      scinterm_key = NCKEY_UP;     break;
+            case NCKEY_DOWN:      emit_key = SCK_DOWN;    scinterm_key = NCKEY_DOWN;   break;
+            case NCKEY_LEFT:      emit_key = SCK_LEFT;    scinterm_key = NCKEY_LEFT;   break;
+            case NCKEY_RIGHT:     emit_key = SCK_RIGHT;   scinterm_key = NCKEY_RIGHT;  break;
+            case NCKEY_HOME:      emit_key = SCK_HOME;    scinterm_key = NCKEY_HOME;   break;
+            case NCKEY_END:       emit_key = SCK_END;     scinterm_key = NCKEY_END;    break;
+            case NCKEY_PGUP:      emit_key = SCK_PRIOR;   scinterm_key = NCKEY_PGUP;   break;
+            case NCKEY_PGDOWN:    emit_key = SCK_NEXT;    scinterm_key = NCKEY_PGDOWN; break;
+            case NCKEY_DEL:       emit_key = SCK_DELETE;  scinterm_key = NCKEY_DEL;    break;
+            case NCKEY_INS:       emit_key = SCK_INSERT;  scinterm_key = NCKEY_INS;    break;
             case NCKEY_BACKSPACE: case 0x08: case 0x7f:
-                                  emit_key = SCK_BACK;    break;
-            case NCKEY_ESC:       emit_key = SCK_ESCAPE;  break;
+                                  emit_key = SCK_BACK;    scinterm_key = NCKEY_BACKSPACE; break;
+            case NCKEY_ESC:       emit_key = SCK_ESCAPE;  scinterm_key = NCKEY_ESC;    break;
             case NCKEY_ENTER: case '\r': case '\n':
-                                  emit_key = '\r';        break;
-            case '\t':            emit_key = '\t';        break;
+                                  emit_key = '\r';        scinterm_key = NCKEY_ENTER;  break;
+            case '\t':            emit_key = '\t';        scinterm_key = '\t';         break;
             /* Ctrl+especiais fora do range 1-26 */
             case 0x00: emit_key = '@';  sci_mods |= SCMOD_CTRL; break;
             case 0x1c: emit_key = '\\'; sci_mods |= SCMOD_CTRL; break;
@@ -1169,8 +1192,9 @@ static void handle_keypress(struct ncinput *ni) {
         ctrl_c_count = 0;
     }
 
-    /* Kitty protocol envia Ctrl+letra como uppercase. Normalizar para lowercase. */
-    if ((sci_mods & SCMOD_CTRL) && emit_key >= 'A' && emit_key <= 'Z')
+    /* Kitty protocol envia Ctrl+letra como uppercase. Normalizar para lowercase.
+     * Também normalizar Alt+letra para garantir que Alt+Q seja 'q', não 'Q'. */
+    if ((sci_mods & (SCMOD_CTRL | SCMOD_ALT)) && emit_key >= 'A' && emit_key <= 'Z')
         emit_key += 'a' - 'A';
 
     /* ctrl+k toggles file tree (intercepted before Lua) */
@@ -1188,6 +1212,9 @@ static void handle_keypress(struct ncinput *ni) {
 
     SciObject *key_target = (command_entry_active && command_entry) ?
                             command_entry : focused_view;
+
+    /* No target available - ignore key */
+    if (!key_target) return;
 
     /* Fallback direto para Ctrl+Z → undo e Ctrl+Y → redo,
      * in case Lua has not handled them (binding not loaded yet, etc.). */
@@ -1218,11 +1245,13 @@ static void handle_keypress(struct ncinput *ni) {
     }
 
     /* For remapped control codes (non-Kitty), pass letter + NCKEY_MOD_CTRL
-     * so scinterm does not misread 8→BS, 9→Tab, 13→CR. */
+     * so scinterm does not misread 8→BS, 9→Tab, 13→CR.
+     * Use scinterm_key (NotCurses codes) for scintilla_send_key, not emit_key
+     * which contains Scintilla codes (SCK_*). */
     if (remapped_ctrl)
-        scintilla_send_key(key_target, emit_key, (int)(nc_mods | NCKEY_MOD_CTRL));
+        scintilla_send_key(key_target, scinterm_key, (int)(nc_mods | NCKEY_MOD_CTRL));
     else
-        scintilla_send_key(key_target, (int)key, (int)nc_mods);
+        scintilla_send_key(key_target, scinterm_key, (int)nc_mods);
 }
 
 /* ------------------------------------------------------------------ */
@@ -1380,8 +1409,29 @@ int main(int argc, char **argv) {
                         nc_to_sci_mods(ni.modifiers), ni.y, ni.x);
                 }
             } else {
-                if (ni.evtype != NCTYPE_RELEASE)
+                if (ni.evtype != NCTYPE_RELEASE) {
+                    /* ESC + printable = Alt+printable.
+                     * Terminals that lack kitty keyboard protocol send Alt+X as
+                     * the two-byte sequence ESC X.  notcurses_get_nblock returns
+                     * NCKEY_ESC for the ESC byte and leaves X in the buffer.
+                     * Read the next byte immediately: if it is a printable ASCII
+                     * char with no modifiers, re-inject it as Alt+X. */
+                    if (nc_key == NCKEY_ESC && ni.modifiers == 0) {
+                        struct ncinput ni2 = {0};
+                        uint32_t k2 = notcurses_get_nblock(nc, &ni2);
+                        if (k2 != 0 && k2 != (uint32_t)-1 &&
+                            !nckey_synthesized_p(k2) &&
+                            k2 >= 0x20 && k2 < 0x7f &&
+                            ni2.modifiers == 0 &&
+                            ni2.evtype != NCTYPE_RELEASE) {
+                            ni2.modifiers |= NCKEY_MOD_ALT;
+                            handle_keypress(&ni2);
+                            continue;
+                        }
+                        /* Not ESC+printable — process ESC normally. */
+                    }
                     handle_keypress(&ni);
+                }
             }
         }
 

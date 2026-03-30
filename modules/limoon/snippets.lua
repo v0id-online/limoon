@@ -425,12 +425,21 @@ function snippet:add_part(part)
 		-- Linux and macOS need a shell to expand environment variables in, so execute
 		-- the shell code in a script.
 		local tmpfile = not WIN32 and os.tmpname()
-		if tmpfile then io.open(tmpfile, 'w'):write(part.shell):close() end
+		if tmpfile then
+			local f = io.open(tmpfile, 'w')
+			if f then f:write(part.shell):close() end
+		end
 		local cmd, env_cmd = not WIN32 and 'sh ' .. tmpfile or part.shell, not WIN32 and 'env' or 'set'
 		local env = {}
-		for k, v in os.spawn(env_cmd):read('a'):gmatch('([^=]+)=([^\r\n]*)\r?\n') do env[k] = v end
+		local env_proc = os.spawn(env_cmd)
+		if env_proc then
+			for k, v in env_proc:read('a'):gmatch('([^=]+)=([^\r\n]*)\r?\n') do env[k] = v end
+		end
 		for k, v in pairs(self.variables) do env[k] = v end
-		self:add_part(os.spawn(cmd, env):read('a'):match('^(.-)\r?\n?$')) -- omit trailing newline
+		local shell_proc = os.spawn(cmd, env)
+		if shell_proc then
+			self:add_part(shell_proc:read('a'):match('^(.-)\r?\n?$')) -- omit trailing newline
+		end
 		if tmpfile then os.remove(tmpfile) end
 	elseif part.lua then
 		local env = setmetatable({}, {__index = _G})
@@ -632,7 +641,8 @@ function snippet:transform(placeholder)
 		buffer:text_range(self.placeholder_pos, buffer.selection_end) or
 		tostring(self.variables[placeholder.variable])
 	if not regex.match(text, placeholder.regex) then return placeholder.repl[1]['else'] or '' end
-	return regex.gsub(text, string.format('(%s)', placeholder.regex), function(...captures)
+	return regex.gsub(text, string.format('(%s)', placeholder.regex), function(...)
+		local captures = {...}
 		local repl = table.map(placeholder.repl, function(part)
 			if type(part) ~= 'table' then return part end
 			local capture = captures[part.index + 1] -- $0 is captures[1]

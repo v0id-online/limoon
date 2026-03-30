@@ -43,7 +43,7 @@ end
 -- @see ui.print_to
 -- @see ui.print_silent_to
 -- @see output_to
-local function print_to(buffer_type, silent, ...args)
+local function print_to(buffer_type, silent, ...)
 	local print_view, buffer = get_print_view(buffer_type), get_print_buffer(buffer_type)
 	if not buffer or not silent and not print_view then -- no buffer or buffer not visible
 		if not silent and #_VIEWS > 1 then
@@ -130,7 +130,10 @@ function ui.output_silent(...) return output_to(true, ...) end
 -- function.
 -- @param ... Values to print. Lua's `tostring()` function is called for each value. They will
 --	be printed as tab-separated values.
-function ui.print(...args) ui.output(table.concat(table.map(args, tostring), '\t'), '\n') end
+function ui.print(...)
+	local args = {...}
+	ui.output(table.concat(table.map(args, tostring), '\t'), '\n')
+end
 
 --- Buffer z-order list (most recently accessed buffer on top).
 local buffers_zorder = {}

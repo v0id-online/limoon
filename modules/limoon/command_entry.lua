@@ -177,7 +177,7 @@ end
 -- @param[optchain] ... Additional arguments to pass to *f*.
 -- @usage ui.command_entry.run('echo:', ui.print)
 -- @usage ui.command_entry.run('$', os.spawn, 'bash', 'env', ui.print) -- spawn a process
-function M.run(label, f, keys, lang, initial_text, ...args)
+function M.run(label, f, keys, lang, initial_text, ...)
 	if _G.keys.mode == '_command_entry' then return end -- already in command entry
 	if not label then
 		label, f, keys, lang = _L['Lua command:'], run_lua, {['\t'] = complete_lua}, 'lua'

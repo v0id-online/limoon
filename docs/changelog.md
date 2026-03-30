@@ -1,6 +1,6 @@
 # Changelog
 
-[Atom Feed](https://github.com/orbitalquark/limoon/releases.atom)
+[Atom Feed](https://github.com/yuriharrison1/limoon/releases.atom)
 
 ## 13.0 alpha 2 (01 Feb 2026)
 
@@ -34,11 +34,11 @@ Changes:
 - Updated to [Lua][] 5.5.0.
 
 [migration guide]: manual.html#migrating-from-limoon-12-to-13
-[Li Moon 13.0 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.win.zip
-[Li Moon 13.0 alpha 2 -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.macOS.zip
-[Li Moon 13.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.tgz
-[Li Moon 13.0 alpha 2 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.arm.tgz
-[Li Moon 13.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.modules.zip
+[Li Moon 13.0 alpha 2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.win.zip
+[Li Moon 13.0 alpha 2 -- macOS 13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.macOS.zip
+[Li Moon 13.0 alpha 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.tgz
+[Li Moon 13.0 alpha 2 -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.linux.arm.tgz
+[Li Moon 13.0 alpha 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha_2/limoon_13.0_alpha_2.modules.zip
 [Lua]: https://lua.org
 [`view.split_pos`]: api.html#view.split_pos
 [`view.parent_split_pos`]: api.html#view.parent_split_pos
@@ -74,11 +74,11 @@ Changes:
 - Updated to [Lua][] 5.5.0 (rc1).
 - Updated to [Scintilla][] 5.5.8.
 
-[Li Moon 13.0 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.win.zip
-[Li Moon 13.0 alpha -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.macOS.zip
-[Li Moon 13.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.tgz
-[Li Moon 13.0 alpha -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.arm.tgz
-[Li Moon 13.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.modules.zip
+[Li Moon 13.0 alpha -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.win.zip
+[Li Moon 13.0 alpha -- macOS 13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.macOS.zip
+[Li Moon 13.0 alpha -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.tgz
+[Li Moon 13.0 alpha -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.linux.arm.tgz
+[Li Moon 13.0 alpha -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_13.0_alpha/limoon_13.0_alpha.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -109,11 +109,11 @@ Changes:
 - Updated ini, Dart, and org lexers.
 - Autoupdate: renamed module from "autoupdate" to "update_notifier" to better reflect functionality.
 
-[Li Moon 12.9 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.win.zip
-[Li Moon 12.9 -- macOS 13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.macOS.zip
-[Li Moon 12.9 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.linux.tgz
-[Li Moon 12.9 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.linux.arm.tgz
-[Li Moon 12.9 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.9/limoon_12.9.modules.zip
+[Li Moon 12.9 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.9/limoon_12.9.win.zip
+[Li Moon 12.9 -- macOS 13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.9/limoon_12.9.macOS.zip
+[Li Moon 12.9 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.9/limoon_12.9.linux.tgz
+[Li Moon 12.9 -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.9/limoon_12.9.linux.arm.tgz
+[Li Moon 12.9 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.9/limoon_12.9.modules.zip
 
 
 ## 12.8 (01 Aug 2025)
@@ -150,11 +150,11 @@ Changes:
 - Updated to [Lua][] 5.4.8.
 - Updated to [Scintilla][] 5.5.7.
 
-[Li Moon 12.8 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.win.zip
-[Li Moon 12.8 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.macOS.zip
-[Li Moon 12.8 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.linux.tgz
-[Li Moon 12.8 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.linux.arm.tgz
-[Li Moon 12.8 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.8/limoon_12.8.modules.zip
+[Li Moon 12.8 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.8/limoon_12.8.win.zip
+[Li Moon 12.8 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.8/limoon_12.8.macOS.zip
+[Li Moon 12.8 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.8/limoon_12.8.linux.tgz
+[Li Moon 12.8 -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.8/limoon_12.8.linux.arm.tgz
+[Li Moon 12.8 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.8/limoon_12.8.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -201,15 +201,15 @@ Changes:
 - LSP: support diagnostic tags.
 - LSP: allow preselected items in completion lists.
 
-[Li Moon 12.7 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.win.zip
-[Li Moon 12.7 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.macOS.zip
-[Li Moon 12.7 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.linux.tgz
-[Li Moon 12.7 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.linux.arm.tgz
-[Li Moon 12.7 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7/limoon_12.7.modules.zip
+[Li Moon 12.7 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7/limoon_12.7.win.zip
+[Li Moon 12.7 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7/limoon_12.7.macOS.zip
+[Li Moon 12.7 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7/limoon_12.7.linux.tgz
+[Li Moon 12.7 -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7/limoon_12.7.linux.arm.tgz
+[Li Moon 12.7 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7/limoon_12.7.modules.zip
 [`lexer.line_start`]: api.html#lexer.line_start
 [`lexer.line_end`]: api.html#lexer.line_end
 [`lexer.text_range()`]: api.html#lexer.text_range
-[autocompletion list icons]: https://github.com/orbitalquark/limoon-lsp#icon-reference
+[autocompletion list icons]: https://github.com/yuriharrison1/limoon-lsp#icon-reference
 
 ## 12.7 beta 2 (01 May 2025)
 
@@ -280,11 +280,11 @@ Changes:
 - Lua REPL: added tab-completion.
 - Updated to [Scintilla][] 5.5.6.
 
-[Li Moon 12.7 beta 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.win.zip
-[Li Moon 12.7 beta 2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.macOS.zip
-[Li Moon 12.7 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.tgz
-[Li Moon 12.7 beta 2 -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.arm.tgz
-[Li Moon 12.7 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.modules.zip
+[Li Moon 12.7 beta 2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.win.zip
+[Li Moon 12.7 beta 2 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.macOS.zip
+[Li Moon 12.7 beta 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.tgz
+[Li Moon 12.7 beta 2 -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.linux.arm.tgz
+[Li Moon 12.7 beta 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta_2/limoon_12.7_beta_2.modules.zip
 [`io.track_changes`]: api.html#io.track_changes
 [`limoon.clipboard`]: api.html#limoon.clipboard
 [`ui.get_clipboard_text()`]: api.html#ui.get_clipboard_text
@@ -327,11 +327,11 @@ Changes:
 - LSP: Lua server hides Markdown escapes in call tip text.
 - Export: use default browser on Linux instead of hardcoding one.
 
-[Li Moon 12.7 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.win.zip
-[Li Moon 12.7 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.macOS.zip
-[Li Moon 12.7 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.tgz
-[Li Moon 12.7 beta -- Linux ARM]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.arm.tgz
-[Li Moon 12.7 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.modules.zip
+[Li Moon 12.7 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.win.zip
+[Li Moon 12.7 beta -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.macOS.zip
+[Li Moon 12.7 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.tgz
+[Li Moon 12.7 beta -- Linux ARM]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.linux.arm.tgz
+[Li Moon 12.7 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.7_beta/limoon_12.7_beta.modules.zip
 
 ## 12.6 (01 Feb 2025)
 
@@ -359,10 +359,10 @@ Changes:
 - Scintilla: improve performance of brace matching.
 - Updated to [Scintilla][] 5.5.4.
 
-[Li Moon 12.6 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.win.zip
-[Li Moon 12.6 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.macOS.zip
-[Li Moon 12.6 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.linux.tgz
-[Li Moon 12.6 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.6/limoon_12.6.modules.zip
+[Li Moon 12.6 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.6/limoon_12.6.win.zip
+[Li Moon 12.6 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.6/limoon_12.6.macOS.zip
+[Li Moon 12.6 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.6/limoon_12.6.linux.tgz
+[Li Moon 12.6 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.6/limoon_12.6.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.5 (01 Dec 2024)
@@ -388,10 +388,10 @@ Changes:
 - LSP: added support for code actions and workspace edits.
 - Updated to [Scinterm][] 5.2.
 
-[Li Moon 12.5 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.win.zip
-[Li Moon 12.5 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.macOS.zip
-[Li Moon 12.5 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.linux.tgz
-[Li Moon 12.5 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5/limoon_12.5.modules.zip
+[Li Moon 12.5 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5/limoon_12.5.win.zip
+[Li Moon 12.5 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5/limoon_12.5.macOS.zip
+[Li Moon 12.5 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5/limoon_12.5.linux.tgz
+[Li Moon 12.5 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5/limoon_12.5.modules.zip
 [Scinterm]: https://github.com/orbitalquark/scinterm
 
 ## 12.5 beta 3 (01 Oct 2024)
@@ -443,11 +443,11 @@ Changes:
 - Format: use Homebrew's `gfmt` for formatting paragraphs on macOS.
 - Updated to [CDK][] 5.0-20240619.
 
-[Li Moon 12.5 beta 3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.win.zip
-[Li Moon 12.5 beta 3 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.macOS.zip
-[Li Moon 12.5 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.linux.tgz
-[Li Moon 12.5 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.modules.zip
-[`format.prefix_map`]: https://github.com/orbitalquark/limoon-format/?tab=readme-ov-file#formatprefix_map-table
+[Li Moon 12.5 beta 3 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.win.zip
+[Li Moon 12.5 beta 3 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.macOS.zip
+[Li Moon 12.5 beta 3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.linux.tgz
+[Li Moon 12.5 beta 3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_3/limoon_12.5_beta_3.modules.zip
+[`format.prefix_map`]: https://github.com/yuriharrison1/limoon-format/?tab=readme-ov-file#formatprefix_map-table
 [CDK]: https://invisible-island.net/cdk/
 
 ## 12.5 beta 2 (01 Sep 2024)
@@ -502,10 +502,10 @@ Changes:
 - Updated to [Scintilla][] 5.5.2.
 - Updated to [Scinterm][] 5.1.
 
-[Li Moon 12.5 beta 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.win.zip
-[Li Moon 12.5 beta 2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.macOS.zip
-[Li Moon 12.5 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.linux.tgz
-[Li Moon 12.5 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.modules.zip
+[Li Moon 12.5 beta 2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.win.zip
+[Li Moon 12.5 beta 2 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.macOS.zip
+[Li Moon 12.5 beta 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.linux.tgz
+[Li Moon 12.5 beta 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta_2/limoon_12.5_beta_2.modules.zip
 [`timeout()`]: api.html#timeout
 [reproc]: https://github.com/DaanDeMeyer/reproc
 [`buffer.copy_separator`]: api.html#buffer.copy_separator
@@ -540,10 +540,10 @@ Changes:
 - Added basic auto-detection of file indentation, conrtrolled with [`io.detect_indentation`][].
 - Updated to [Lua][] 5.4.7.
 
-[Li Moon 12.5 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.win.zip
-[Li Moon 12.5 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.macOS.zip
-[Li Moon 12.5 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.linux.tgz
-[Li Moon 12.5 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.modules.zip
+[Li Moon 12.5 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.win.zip
+[Li Moon 12.5 beta -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.macOS.zip
+[Li Moon 12.5 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.linux.tgz
+[Li Moon 12.5 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.5_beta/limoon_12.5_beta.modules.zip
 [`io.detect_indentation`]: api.html#io.detect_indentation
 [Lua]: https://lua.org
 
@@ -570,10 +570,10 @@ Changes:
 - Scintilla: scale reverse arrow margin cursor to match user's cursor size.
 - Updated to [Scintilla][] 5.5.0.
 
-[Li Moon 12.4 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.win.zip
-[Li Moon 12.4 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.macOS.zip
-[Li Moon 12.4 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.linux.tgz
-[Li Moon 12.4 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.4/limoon_12.4.modules.zip
+[Li Moon 12.4 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.4/limoon_12.4.win.zip
+[Li Moon 12.4 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.4/limoon_12.4.macOS.zip
+[Li Moon 12.4 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.4/limoon_12.4.linux.tgz
+[Li Moon 12.4 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.4/limoon_12.4.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.3 (01 Mar 2024)
@@ -597,10 +597,10 @@ Changes:
 
 - None.
 
-[Li Moon 12.3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.win.zip
-[Li Moon 12.3 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.macOS.zip
-[Li Moon 12.3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.linux.tgz
-[Li Moon 12.3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3/limoon_12.3.modules.zip
+[Li Moon 12.3 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3/limoon_12.3.win.zip
+[Li Moon 12.3 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3/limoon_12.3.macOS.zip
+[Li Moon 12.3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3/limoon_12.3.linux.tgz
+[Li Moon 12.3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3/limoon_12.3.modules.zip
 
 ## 12.3 beta (01 Jan 2024)
 
@@ -635,10 +635,10 @@ Changes:
 	work for regular selections.
 - Updated to [Scintilla][] 5.4.1.
 
-[Li Moon 12.3 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.win.zip
-[Li Moon 12.3 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.macOS.zip
-[Li Moon 12.3 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.linux.tgz
-[Li Moon 12.3 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.modules.zip
+[Li Moon 12.3 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.win.zip
+[Li Moon 12.3 beta -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.macOS.zip
+[Li Moon 12.3 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.linux.tgz
+[Li Moon 12.3 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.3_beta/limoon_12.3_beta.modules.zip
 [`limoon.snippets.active`]: api.html#limoon.snippets.active
 [`buffer:change_selection_mode()`]: api.html#buffer.change_selection_mode
 [Scintilla]: https://scintilla.org
@@ -664,10 +664,10 @@ Changes:
 
 - Updated Brazilian Portuguese and Spanish localizations.
 
-[Li Moon 12.2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.win.zip
-[Li Moon 12.2 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.macOS.zip
-[Li Moon 12.2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.linux.tgz
-[Li Moon 12.2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2/limoon_12.2.modules.zip
+[Li Moon 12.2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2/limoon_12.2.win.zip
+[Li Moon 12.2 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2/limoon_12.2.macOS.zip
+[Li Moon 12.2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2/limoon_12.2.linux.tgz
+[Li Moon 12.2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2/limoon_12.2.modules.zip
 
 ## 12.2 beta (01 Oct 2023)
 
@@ -698,10 +698,10 @@ Changes:
 - Updated Bash lexer to disable conditional and arithmetic operator highlighting due to performance.
 - Updated to [Scintilla][] 5.3.7.
 
-[Li Moon 12.2 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.win.zip
-[Li Moon 12.2 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.macOS.zip
-[Li Moon 12.2 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.linux.tgz
-[Li Moon 12.2 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.modules.zip
+[Li Moon 12.2 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.win.zip
+[Li Moon 12.2 beta -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.macOS.zip
+[Li Moon 12.2 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.linux.tgz
+[Li Moon 12.2 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.2_beta/limoon_12.2_beta.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 12.1 (01 Sep 2023)
@@ -729,10 +729,10 @@ Changes:
 - Added [`limoon.run.run_without_prompt`][] for running commands immediately
 - Updated Hare lexer.
 
-[Li Moon 12.1 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.win.zip
-[Li Moon 12.1 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.macOS.zip
-[Li Moon 12.1 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.linux.tgz
-[Li Moon 12.1 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.1/limoon_12.1.modules.zip
+[Li Moon 12.1 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.1/limoon_12.1.win.zip
+[Li Moon 12.1 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.1/limoon_12.1.macOS.zip
+[Li Moon 12.1 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.1/limoon_12.1.linux.tgz
+[Li Moon 12.1 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.1/limoon_12.1.modules.zip
 [`limoon.run.run_without_prompt`]: api.html#limoon.run.run_without_prompt
 
 ## 12.0 (01 Aug 2023)
@@ -769,10 +769,10 @@ Changes:
 - Updated to [Scintilla][] 5.3.6.
 
 [11 to 12 migration guide]: manual.html#migrating-from-limoon-11-to-12
-[Li Moon 12.0 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.win.zip
-[Li Moon 12.0 -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.macOS.zip
-[Li Moon 12.0 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.linux.tgz
-[Li Moon 12.0 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0/limoon_12.0.modules.zip
+[Li Moon 12.0 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0/limoon_12.0.win.zip
+[Li Moon 12.0 -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0/limoon_12.0.macOS.zip
+[Li Moon 12.0 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0/limoon_12.0.linux.tgz
+[Li Moon 12.0 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0/limoon_12.0.modules.zip
 [Lua]: https://lua.org
 [LPeg]: http://www.inf.puc-rio.br/~roberto/lpeg/
 [Scintilla]: https://scintilla.org
@@ -816,10 +816,10 @@ Changes:
 - LSP: added support for snippet completions.
 - LSP: support per-project language servers.
 
-[Li Moon 12.0 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.win.zip
-[Li Moon 12.0 beta -- macOS 11+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.macOS.zip
-[Li Moon 12.0 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.linux.tgz
-[Li Moon 12.0 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.modules.zip
+[Li Moon 12.0 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.win.zip
+[Li Moon 12.0 beta -- macOS 11+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.macOS.zip
+[Li Moon 12.0 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.linux.tgz
+[Li Moon 12.0 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_beta/limoon_12.0_beta.modules.zip
 [macro registers]: manual.html#macros
 [lua-std-regex]: https://github.com/orbitalquark/lua-std-regex
 
@@ -884,10 +884,10 @@ Changes:
 - Updated to [Scintilla][] 5.3.4.
 - Updated to [Scinterm][] 5.0.
 
-[Li Moon 12.0 alpha 3 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.win.zip
-[Li Moon 12.0 alpha 3 -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.macOS.zip
-[Li Moon 12.0 alpha 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.linux.tgz
-[Li Moon 12.0 alpha 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.modules.zip
+[Li Moon 12.0 alpha 3 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.win.zip
+[Li Moon 12.0 alpha 3 -- macOS 10.13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.macOS.zip
+[Li Moon 12.0 alpha 3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.linux.tgz
+[Li Moon 12.0 alpha 3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_3/limoon_12.0_alpha_3.modules.zip
 [`limoon.menu.menubar`]: api.html#limoon.menu.menubar
 [Scintilla]: https://scintilla.org
 [Scinterm]: https://github.com/orbitalquark/scinterm
@@ -959,10 +959,10 @@ Changes:
 - LSP: stop logging to a buffer and added "Show Log" menu option instead.
 - LSP: allow for launching servers outside a project.
 
-[Li Moon 12.0 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.win.zip
-[Li Moon 12.0 alpha 2 -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.macOS.zip
-[Li Moon 12.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.linux.tgz
-[Li Moon 12.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.modules.zip
+[Li Moon 12.0 alpha 2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.win.zip
+[Li Moon 12.0 alpha 2 -- macOS 10.13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.macOS.zip
+[Li Moon 12.0 alpha 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.linux.tgz
+[Li Moon 12.0 alpha 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha_2/limoon_12.0_alpha_2.modules.zip
 [`lexer.names()`]: api.html#lexer.names
 [`typeover_auto_paired`]: api.html#limoon.editing.typeover_auto_paired
 [LDoc]: https://stevedonovan.github.io/ldoc/
@@ -1027,10 +1027,10 @@ Changes:
 - Added [`limoon.run.INDIC_WARNING`][] and [`limoon.run.INDIC_ERROR`][] for underlining
 	compile, run, build, and test warning and error messages.
 
-[Li Moon 12.0 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.win.zip
-[Li Moon 12.0 alpha -- macOS 10.13+]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.macOS.zip
-[Li Moon 12.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.linux.tgz
-[Li Moon 12.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.modules.zip
+[Li Moon 12.0 alpha -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.win.zip
+[Li Moon 12.0 alpha -- macOS 10.13+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.macOS.zip
+[Li Moon 12.0 alpha -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.linux.tgz
+[Li Moon 12.0 alpha -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_12.0_alpha/limoon_12.0_alpha.modules.zip
 [CMake-based build]: manual.html#compiling
 [`ui.buffer_list_zorder`]: api.html#ui.buffer_list_zorder
 [`ui.suspend()`]: api.html#ui.suspend
@@ -1083,10 +1083,10 @@ Changes:
 - `limoon.run.stop()` presents a list dialog if there is more than one process running.
 - Moved process spawning into platform C code.
 
-[Li Moon 11.5 alpha 2 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.win.zip
-[Li Moon 11.5 alpha 2 -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.macOS.zip
-[Li Moon 11.5 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.linux.tgz
-[Li Moon 11.5 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.modules.zip
+[Li Moon 11.5 alpha 2 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.win.zip
+[Li Moon 11.5 alpha 2 -- Mac OSX 10.10+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.macOS.zip
+[Li Moon 11.5 alpha 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.linux.tgz
+[Li Moon 11.5 alpha 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha_2/limoon_11.5_alpha_2.modules.zip
 [`ui.dialogs.message()`]: api.html#ui.dialogs.message
 [`ui.dialogs.input()`]: api.html#ui.dialogs.input
 [`ui.dialogs.open()`]: api.html#ui.dialogs.open
@@ -1155,10 +1155,10 @@ Changes:
 - Scintilla: allow large fonts to be used in `view.STYLE_CALLTIP` without affecting text display.
 - Updated to [Scintilla][] 5.3.0.
 
-[Li Moon 11.5 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.win.zip
-[Li Moon 11.5 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.macOS.zip
-[Li Moon 11.5 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.linux.tgz
-[Li Moon 11.5 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.modules.zip
+[Li Moon 11.5 alpha -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.win.zip
+[Li Moon 11.5 alpha -- Mac OSX 10.10+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.macOS.zip
+[Li Moon 11.5 alpha -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.linux.tgz
+[Li Moon 11.5 alpha -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.5_alpha/limoon_11.5_alpha.modules.zip
 [`view.colors`]: api.html#view.colors
 [`view.styles`]: api.html#view.styles
 [`view:set_styles()`]: api.html#view.set_styles
@@ -1209,10 +1209,10 @@ Changes:
 - Updated R, Fortran, and Go lexers.
 - Updated to [Scintilla][] 5.2.4.
 
-[Li Moon 11.4 -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.win.zip
-[Li Moon 11.4 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.macOS.zip
-[Li Moon 11.4 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.linux.tgz
-[Li Moon 11.4 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4/limoon_11.4.modules.zip
+[Li Moon 11.4 -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4/limoon_11.4.win.zip
+[Li Moon 11.4 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4/limoon_11.4.macOS.zip
+[Li Moon 11.4 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4/limoon_11.4.linux.tgz
+[Li Moon 11.4 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4/limoon_11.4.modules.zip
 [`ui.popup_menu()`]: api.html#ui.popup_menu
 [Scintilla]: https://scintilla.org
 
@@ -1239,10 +1239,10 @@ Changes:
 - Scintilla: Improved performance of `view:fold_all(view.FOLDACTION_EXPAND)`.
 - Updated to [Scintilla][] 5.2.3.
 
-[Li Moon 11.4 beta -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.win.zip
-[Li Moon 11.4 beta -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.macOS.zip
-[Li Moon 11.4 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.linux.tgz
-[Li Moon 11.4 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.modules.zip
+[Li Moon 11.4 beta -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.win.zip
+[Li Moon 11.4 beta -- Mac OSX 10.10+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.macOS.zip
+[Li Moon 11.4 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.linux.tgz
+[Li Moon 11.4 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_beta/limoon_11.4_beta.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 11.4 alpha (01 Apr 2022)
@@ -1294,10 +1294,10 @@ Files searches.
 - Updated to [Lua][] 5.4.4.
 - Updated to libtermkey 0.22.
 
-[Li Moon 11.4 alpha -- Windows]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.win.zip
-[Li Moon 11.4 alpha -- Mac OSX 10.10+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.macOS.zip
-[Li Moon 11.4 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.linux.tgz
-[Li Moon 11.4 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.modules.zip
+[Li Moon 11.4 alpha -- Windows]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.win.zip
+[Li Moon 11.4 alpha -- Mac OSX 10.10+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.macOS.zip
+[Li Moon 11.4 alpha -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.linux.tgz
+[Li Moon 11.4 alpha -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.4_alpha/limoon_11.4_alpha.modules.zip
 [GTK]: https://gtk.org
 [Docker image]: manual.html#compiling-using-docker
 [`ui.find.show_filenames_in_progressbar`]: api.html#ui.find.show_filenames_in_progressbar
@@ -1326,10 +1326,10 @@ Changes:
 - Improve repeated building of Li Moon.app on macOS.
 - Updated Perl lexer to recognize more numbers.
 
-[Li Moon 11.3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.win32.zip
-[Li Moon 11.3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.macOS.zip
-[Li Moon 11.3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.linux.tgz
-[Li Moon 11.3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3/limoon_11.3.modules.zip
+[Li Moon 11.3 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3/limoon_11.3.win32.zip
+[Li Moon 11.3 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3/limoon_11.3.macOS.zip
+[Li Moon 11.3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3/limoon_11.3.linux.tgz
+[Li Moon 11.3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3/limoon_11.3.modules.zip
 
 ## 11.3 beta 3 (01 Dec 2021)
 
@@ -1352,10 +1352,10 @@ Changes:
 - Scintilla: DEL (0x7F) is considered a space character.
 - Updated to [Scintilla][] 5.1.4.
 
-[Li Moon 11.3 beta 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.win32.zip
-[Li Moon 11.3 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.macOS.zip
-[Li Moon 11.3 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.linux.tgz
-[Li Moon 11.3 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.modules.zip
+[Li Moon 11.3 beta 3 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.win32.zip
+[Li Moon 11.3 beta 3 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.macOS.zip
+[Li Moon 11.3 beta 3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.linux.tgz
+[Li Moon 11.3 beta 3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_3/limoon_11.3_beta_3.modules.zip
 [Scintilla]: https://scintilla.org
 
 ## 11.3 beta 2 (01 Nov 2021)
@@ -1383,10 +1383,10 @@ Changes:
 - Debugger: Implement setting stack frames in Lua and pretty-print variable values.
 - Debugger: Prefer status buffers for variables and call stacks.
 
-[Li Moon 11.3 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.win32.zip
-[Li Moon 11.3 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.macOS.zip
-[Li Moon 11.3 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.linux.tgz
-[Li Moon 11.3 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.modules.zip
+[Li Moon 11.3 beta 2 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.win32.zip
+[Li Moon 11.3 beta 2 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.macOS.zip
+[Li Moon 11.3 beta 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.linux.tgz
+[Li Moon 11.3 beta 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta_2/limoon_11.3_beta_2.modules.zip
 
 ## 11.3 beta (01 Oct 2021)
 
@@ -1420,10 +1420,10 @@ Changes:
 - Scintilla: Deprecated `view.property_expanded` in favor of `lexer.property_expanded`.
 - Updated to [Scintilla][] 5.1.3.
 
-[Li Moon 11.3 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.win32.zip
-[Li Moon 11.3 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.macOS.zip
-[Li Moon 11.3 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.linux.tgz
-[Li Moon 11.3 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.modules.zip
+[Li Moon 11.3 beta -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.win32.zip
+[Li Moon 11.3 beta -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.macOS.zip
+[Li Moon 11.3 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.linux.tgz
+[Li Moon 11.3 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.3_beta/limoon_11.3_beta.modules.zip
 [`view.caret_line_highlight_subline`]: api.html#view.caret_line_highlight_subline
 [Scintilla]: https://scintilla.org
 
@@ -1449,10 +1449,10 @@ Changes:
 - Scintilla: Optimize search in documents that contain mainly ASCII text.
 - Updated to [Scintilla][] 5.1.1.
 
-[Li Moon 11.2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.win32.zip
-[Li Moon 11.2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.macOS.zip
-[Li Moon 11.2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.linux.tgz
-[Li Moon 11.2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2/limoon_11.2.modules.zip
+[Li Moon 11.2 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2/limoon_11.2.win32.zip
+[Li Moon 11.2 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2/limoon_11.2.macOS.zip
+[Li Moon 11.2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2/limoon_11.2.linux.tgz
+[Li Moon 11.2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2/limoon_11.2.modules.zip
 [representations]: api.html#view.representation
 [`buffer:replace_rectangular()`]: api.html#buffer.replace_rectangular
 [Scintilla]: https://scintilla.org
@@ -1478,10 +1478,10 @@ Changes:
 - `limoon.editing.filter_through()` respects multiple and rectangular selections.
 - Support "Replace All" in multiple and rectangular selection.
 
-[Li Moon 11.2 beta 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.win32.zip
-[Li Moon 11.2 beta 3 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.macOS.zip
-[Li Moon 11.2 beta 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.linux.tgz
-[Li Moon 11.2 beta 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.modules.zip
+[Li Moon 11.2 beta 3 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.win32.zip
+[Li Moon 11.2 beta 3 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.macOS.zip
+[Li Moon 11.2 beta 3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.linux.tgz
+[Li Moon 11.2 beta 3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_3/limoon_11.2_beta_3.modules.zip
 
 ## 11.2 beta 2 (01 Jun 2021)
 
@@ -1524,10 +1524,10 @@ Changes:
 - Scintilla: Update to Unicode 13.
 - Updated to [Scintilla][] 5.0.3.
 
-[Li Moon 11.2 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.win32.zip
-[Li Moon 11.2 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.macOS.zip
-[Li Moon 11.2 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.linux.tgz
-[Li Moon 11.2 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.modules.zip
+[Li Moon 11.2 beta 2 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.win32.zip
+[Li Moon 11.2 beta 2 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.macOS.zip
+[Li Moon 11.2 beta 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.linux.tgz
+[Li Moon 11.2 beta 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta_2/limoon_11.2_beta_2.modules.zip
 [`ui.find.entry_font`]: api.html#ui.find.entry_font
 [`events.BUFFER_BEFORE_REPLACE_TEXT`]: api.html#events.BUFFER_BEFORE_REPLACE_TEXT
 [`events.BUFFER_AFTER_REPLACE_TEXT`]: api.html#events.BUFFER_AFTER_REPLACE_TEXT
@@ -1576,10 +1576,10 @@ Changes:
 - Updated to [Lua][] 5.4.2.
 - Updated to [Scintilla][] 5.0.0.
 
-[Li Moon 11.2 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.win32.zip
-[Li Moon 11.2 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.macOS.zip
-[Li Moon 11.2 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.linux.tgz
-[Li Moon 11.2 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.modules.zip
+[Li Moon 11.2 beta -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.win32.zip
+[Li Moon 11.2 beta -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.macOS.zip
+[Li Moon 11.2 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.linux.tgz
+[Li Moon 11.2 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.2_beta/limoon_11.2_beta.modules.zip
 [Lua]: https://lua.org
 [Scintilla]: https://scintilla.org
 
@@ -1615,10 +1615,10 @@ Changes:
 - Added [`limoon.run.test()`][] and [`limoon.run.test_commands`][].
 - `io.get_project_root()` accepts an optional flag for returning a submodule root.
 
-[Li Moon 11.1 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.win32.zip
-[Li Moon 11.1 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.macOS.zip
-[Li Moon 11.1 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.linux.tgz
-[Li Moon 11.1 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.1/limoon_11.1.modules.zip
+[Li Moon 11.1 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.1/limoon_11.1.win32.zip
+[Li Moon 11.1 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.1/limoon_11.1.macOS.zip
+[Li Moon 11.1 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.1/limoon_11.1.linux.tgz
+[Li Moon 11.1 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.1/limoon_11.1.modules.zip
 [`limoon.run.test()`]: api.html#limoon.run.test
 [`limoon.run.test_commands`]: api.html#limoon.run.test_commands
 
@@ -1646,10 +1646,10 @@ Changes:
 - Added [`events.UNFOCUS`][].
 
 [10 to 11 migration guide]: manual.html#migrating-from-limoon-10-to-11
-[Li Moon 11.0 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.win32.zip
-[Li Moon 11.0 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.macOS.zip
-[Li Moon 11.0 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.linux.tgz
-[Li Moon 11.0 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0/limoon_11.0.modules.zip
+[Li Moon 11.0 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0/limoon_11.0.win32.zip
+[Li Moon 11.0 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0/limoon_11.0.macOS.zip
+[Li Moon 11.0 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0/limoon_11.0.linux.tgz
+[Li Moon 11.0 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0/limoon_11.0.modules.zip
 [`events.FIND_RESULT_FOUND`]: api.html#events.FIND_RESULT_FOUND
 [`events.UNFOCUS`]: api.html#events.UNFOCUS
 
@@ -1693,10 +1693,10 @@ Changes:
 - Updated to [CDK][] 5.0-20200923.
 - Updated to [LuaFileSystem][] 1.8.0.
 
-[Li Moon 11.0 beta 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.win32.zip
-[Li Moon 11.0 beta 2 -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.macOS.zip
-[Li Moon 11.0 beta 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.linux.tgz
-[Li Moon 11.0 beta 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.modules.zip
+[Li Moon 11.0 beta 2 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.win32.zip
+[Li Moon 11.0 beta 2 -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.macOS.zip
+[Li Moon 11.0 beta 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.linux.tgz
+[Li Moon 11.0 beta 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta_2/limoon_11.0_beta_2.modules.zip
 [`limoon.history`]: api.html#limoon.history
 [`limoon.run.set_arguments()`]: api.html#limoon.run.set_arguments
 [CDK]: https://invisible-island.net/cdk/
@@ -1768,10 +1768,10 @@ Changes:
 - Updated to [Scintilla][] 4.4.5.
 - Switched back to utilizing [Scintillua][] and [Scinterm][].
 
-[Li Moon 11.0 beta -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.win32.zip
-[Li Moon 11.0 beta -- Mac OSX 10.7+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.macOS.zip
-[Li Moon 11.0 beta -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.linux.tgz
-[Li Moon 11.0 beta -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.modules.zip
+[Li Moon 11.0 beta -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.win32.zip
+[Li Moon 11.0 beta -- Mac OSX 10.7+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.macOS.zip
+[Li Moon 11.0 beta -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.linux.tgz
+[Li Moon 11.0 beta -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_beta/limoon_11.0_beta.modules.zip
 [`limoon.editing.auto_enclose()`]: api.html#limoon.editing.auto_enclose
 [`ui.command_entry.active`]: api.html#ui.command_entry.active
 [building with Docker]: manual.html#compiling-using-docker
@@ -1848,11 +1848,11 @@ Changes:
 - Scintilla: Fixed GTK on Linux bug when pasting from closed application.
 - Updated to [Scintilla][] 3.21.0.
 
-[Li Moon 11.0 alpha 3 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.win32.zip
-[Li Moon 11.0 alpha 3 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.osx.zip
-[Li Moon 11.0 alpha 3 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.i386.tgz
-[Li Moon 11.0 alpha 3 -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.x86_64.tgz
-[Li Moon 11.0 alpha 3 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.modules.zip
+[Li Moon 11.0 alpha 3 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.win32.zip
+[Li Moon 11.0 alpha 3 -- Mac OSX 10.6+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.osx.zip
+[Li Moon 11.0 alpha 3 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.i386.tgz
+[Li Moon 11.0 alpha 3 -- Linux x86_64]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.x86_64.tgz
+[Li Moon 11.0 alpha 3 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_3/limoon_11.0_alpha_3.modules.zip
 [`view:set_theme()`]: api.html#view.set_theme
 [`lfs.walk()`]: api.html#lfs.walk
 [`buffer:style_of_name()`]: api.html#buffer.style_of_name
@@ -1897,11 +1897,11 @@ Changes:
 - Scintilla: Improved behavior of IME.
 - Updated to [Scintilla][] 3.20.0.
 
-[Li Moon 11.0 alpha 2 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.win32.zip
-[Li Moon 11.0 alpha 2 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.osx.zip
-[Li Moon 11.0 alpha 2 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.i386.tgz
-[Li Moon 11.0 alpha 2 -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.x86_64.tgz
-[Li Moon 11.0 alpha 2 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.modules.zip
+[Li Moon 11.0 alpha 2 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.win32.zip
+[Li Moon 11.0 alpha 2 -- Mac OSX 10.6+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.osx.zip
+[Li Moon 11.0 alpha 2 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.i386.tgz
+[Li Moon 11.0 alpha 2 -- Linux x86_64]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.x86_64.tgz
+[Li Moon 11.0 alpha 2 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha_2/limoon_11.0_alpha_2.modules.zip
 [API suggestions]: manual.html#view-api-additions-and-buffer-api-changes
 [`buffer:marker_handle_from_line()`]: api.html#buffer.marker_handle_from_line
 [`buffer:marker_number_from_line()`]: api.html#buffer.marker_number_from_line
@@ -1980,11 +1980,11 @@ Changes:
 - Experimental set of "standard" modules is provided in the modules archive instead of just
 	language modules.
 
-[Li Moon 11.0 alpha -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.win32.zip
-[Li Moon 11.0 alpha -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.osx.zip
-[Li Moon 11.0 alpha -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.i386.tgz
-[Li Moon 11.0 alpha -- Linux x86_64]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.x86_64.tgz
-[Li Moon 11.0 alpha -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.modules.zip
+[Li Moon 11.0 alpha -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.win32.zip
+[Li Moon 11.0 alpha -- Mac OSX 10.6+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.osx.zip
+[Li Moon 11.0 alpha -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.i386.tgz
+[Li Moon 11.0 alpha -- Linux x86_64]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.x86_64.tgz
+[Li Moon 11.0 alpha -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_11.0_alpha/limoon_11.0_alpha.modules.zip
 [`buffer:name_of_style()`]: api.html#buffer.name_of_style
 [`events.SESSION_SAVE`]: api.html#events.SESSION_SAVE
 [`events.SESSION_LOAD`]: api.html#events.SESSION_LOAD
@@ -2018,10 +2018,10 @@ Changes:
 - Scintilla: The target can have virtual space.
 - Updated to [Scintilla][] 3.11.2.
 
-[Li Moon 10.8 -- Win32]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.win32.zip
-[Li Moon 10.8 -- Mac OSX 10.6+]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.macOS.zip
-[Li Moon 10.8 -- Linux]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.linux.tgz
-[Li Moon 10.8 -- Modules]: https://github.com/orbitalquark/limoon/releases/download/limoon_10.8/limoon_10.8.modules.zip
+[Li Moon 10.8 -- Win32]: https://github.com/yuriharrison1/limoon/releases/download/limoon_10.8/limoon_10.8.win32.zip
+[Li Moon 10.8 -- Mac OSX 10.6+]: https://github.com/yuriharrison1/limoon/releases/download/limoon_10.8/limoon_10.8.macOS.zip
+[Li Moon 10.8 -- Linux]: https://github.com/yuriharrison1/limoon/releases/download/limoon_10.8/limoon_10.8.linux.tgz
+[Li Moon 10.8 -- Modules]: https://github.com/yuriharrison1/limoon/releases/download/limoon_10.8/limoon_10.8.modules.zip
 [`events.TAB_CLICKED`]: api.html#events.TAB_CLICKED
 [Scintilla]: https://scintilla.org
 
@@ -2927,7 +2927,7 @@ Changes:
 	indicators.
 - Updated to [Scintilla][] 3.5.4.
 
-[new repository]: https://github.com/orbitalquark/limoon-modules
+[new repository]: https://github.com/yuriharrison1/limoon-modules
 [`events.FILE_AFTER_SAVE`]: api.html#events.FILE_AFTER_SAVE
 [`buffer.indic_hover_fore`]: api.html#buffer.indic_hover_fore
 [`buffer.indic_hover_style`]: api.html#buffer.indic_hover_style
@@ -4255,7 +4255,7 @@ Changes:
 
 [events]: api.html#events
 [documentation]: manual.html#getting-modules
-[official modules]: https://github.com/orbitalquark/limoon-modules
+[official modules]: https://github.com/yuriharrison1/limoon-modules
 [`buffer:move_selected_lines_up()`]: api.html#buffer.move_selected_lines_up
 [`buffer:move_selected_lines_down()`]: api.html#buffer.move_selected_lines_down
 [Scintilla]: https://scintilla.org
@@ -4308,7 +4308,7 @@ Changes:
 
 [Scintilla]: https://scintilla.org
 [`_m.limoon.snippets`]: api.html#limoon.snippets
-[repository]: https://github.com/orbitalquark/limoon-modules
+[repository]: https://github.com/yuriharrison1/limoon-modules
 
 ## 3.7 beta 2 (01 Mar 2011)
 

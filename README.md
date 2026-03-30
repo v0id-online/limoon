@@ -8,7 +8,7 @@
 
 ## What is Li Moon?
 
-Li Moon is a terminal-first IDE forked from [Textadept](https://orbitalquark.github.io/textadept/),
+Li Moon is a terminal-first IDE forked from [Textadept](https://github.com/orbitalquark/textadept),
 replacing the traditional curses backend with [notcurses](https://github.com/dankamongmen/notcurses)
 for rich terminal rendering. It uses the [Scintilla](https://www.scintilla.org/) editing component
 (via scinterm-notcurses) and is scripted entirely in Lua — every keybinding, menu, and behaviour
@@ -80,9 +80,9 @@ Themes live in `themes/`. All built-in modules are in `modules/limoon/`.
 
 ## License
 
-Li Moon is released under the **CR-BSD License**. See [LICENSE](LICENSE) for details.
+Li Moon is released under the **BSD 3 License**. 
 
-The upstream Textadept project is copyright Mitchell and contributors.
+Li Moon is copyright Yuri Harrison and contributors.
 notcurses is copyright Nick Black and contributors.
 
 ---

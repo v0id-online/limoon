@@ -299,11 +299,14 @@ static int update_ui_lua(lua_State *L) { return (update_ui(), 0); }
 // `ui.suspend()` Lua function.
 static int suspend_lua(lua_State *L) { return (suspend(), 0); }
 
+// `ui.focus_file_tree()` Lua function.
+static int focus_file_tree_lua(lua_State *L) { return (lua_pushboolean(L, ft_focus()), 1); }
+
 // Registry of Lua functions for the `ui` table.
 static luaL_Reg ui_f[] = {{"get_clipboard_text", get_clipboard_text_lua},
 	{"get_split_table", get_split_table}, {"goto_view", goto_view}, {"menu", menu},
 	{"popup_menu", popup_menu_lua}, {"update", update_ui_lua}, {"suspend", suspend_lua},
-	{NULL, NULL}};
+	{"focus_file_tree", focus_file_tree_lua}, {NULL, NULL}};
 
 // `ui.__index` Lua metamethod.
 static int ui_index(lua_State *L) {
@@ -562,8 +565,9 @@ int get_int_field(lua_State *L, int index, int n) {
 static int call_scintilla_lua(lua_State *L) {
 	SciObject *view = focused_view;
 	// If optional buffer/view argument is given, check it.
-	if (is_type(L, 1, "ta_buffer"))
+	if (is_type(L, 1, "ta_buffer")) {
 		view = view_for_doc(L, 1);
+	}
 	else if (is_type(L, 1, "ta_view"))
 		view = lua_toview(L, 1);
 	// Interface table is of the form {msg, rtype, wtype, ltype}.

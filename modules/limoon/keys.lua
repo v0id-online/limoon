@@ -153,8 +153,8 @@
 -- Ctrl+Alt+PgUp | ^⌘{<br/>^⌘⇞ | M-^PgUp<br/>M-PgDn<sup>d</sup> | Previous view
 -- Ctrl+Alt+_ | ^⌘_ | M-_ | Split view horizontal
 -- Ctrl+Alt+&#124; | ^⌘&#124; | M-&#124; | Split view vertical
--- Ctrl+Alt+W | ^⌘W | M-W | Unsplit view
--- Ctrl+Alt+Shift+W | ^⌘⇧W | M-S-W | Unsplit all views
+-- Alt+Q | ^⌘W | M-q | Unsplit view
+-- Alt+W | ^⌘W | M-W | Unsplit all views
 -- Ctrl+Alt++<br/>Ctrl+Alt+= | ^⌘+<br/>^⌘= | M-+<br/>M-= | Grow view
 -- Ctrl+Alt+- | ^⌘- | M-- | Shrink view
 -- Ctrl+) | ⌘) | M-) | Toggle current fold
@@ -324,6 +324,35 @@ local function macro_register(f)
 	})
 end
 
+--- Split view helper - only splits if there are 2+ buffers, and switches to the other buffer.
+-- @param vertical If true, split vertically (left/right), else horizontally (top/bottom)
+local function split_view_safe(vertical)
+	if #_BUFFERS < 2 then
+		ui.statusbar_text = 'Need 2+ buffers to split'
+		return
+	end
+	-- Get current buffer index
+	local current_idx = _BUFFERS[buffer]
+	-- Find next buffer to display in the new view
+	local next_idx = current_idx + 1
+	if next_idx > #_BUFFERS then next_idx = 1 end
+	-- Get the target buffer first
+	local target_buffer = _BUFFERS[next_idx]
+	if not target_buffer then
+		ui.statusbar_text = 'Invalid buffer index'
+		return
+	end
+	-- Split the view
+	view:split(vertical)
+	-- Switch new view to the other buffer
+	view:goto_buffer(target_buffer)
+end
+
+--- Unsplit view helper.
+local function unsplit_view()
+	view:unsplit()
+end
+
 -- Bindings for Windows/Linux/BSD, macOS, Terminal.
 keys.assign_platform_bindings{
 	-- File.
@@ -339,7 +368,7 @@ keys.assign_platform_bindings{
 	-- TODO: limoon.sessions.load
 	-- TODO: limoon.sessions.save
 	[limoon.workspace.open] = {nil, nil, 'ctrl+{'},
-	[quit] = {'ctrl+q', 'cmd+q', {'ctrl+q', 'meta+q'}},
+	[quit] = {'ctrl+q', 'cmd+q', 'ctrl+q'},
 
 	-- Edit.
 	[buffer.undo] = {'ctrl+z', 'cmd+z', 'ctrl+z'},
@@ -369,8 +398,8 @@ keys.assign_platform_bindings{
 	-- Selection.
 	[m('Edit/Selection/Upper Case Selection')] = {{'ctrl+U', 'ctrl+alt+U'}, 'cmd+U', 'ctrl+meta+u'},
 	[m('Edit/Selection/Lower Case Selection')] = {'ctrl+u', 'cmd+u', 'ctrl+u'},
-	[m('Edit/Selection/Enclose as XML Tags')] = {'alt+<', 'ctrl+<', 'meta+<'},
-	[m('Edit/Selection/Enclose as Single XML Tag')] = {'alt+>', 'ctrl+>', 'meta+>'},
+	[m('Edit/Selection/Enclose as XML Tags')] = {'alt+<', nil, 'meta+<'},
+	[m('Edit/Selection/Enclose as Single XML Tag')] = {'alt+>', nil, 'meta+>'},
 	[m('Edit/Selection/Enclose in Single Quotes')] = {"alt+'", "ctrl+'", "meta+'"},
 	[m('Edit/Selection/Enclose in Double Quotes')] = {'alt+"', 'ctrl+"', 'meta+"'},
 	[m('Edit/Selection/Enclose in Parentheses')] = {'alt+(', 'ctrl+(', 'meta+('},
@@ -474,10 +503,11 @@ keys.assign_platform_bindings{
 		'ctrl+alt+pgdn', {'ctrl+cmd+}', 'ctrl+cmd+pgdn'}, WIN32 and 'meta+pgdn' or 'ctrl+meta+pgdn'
 	}, [m('View/Previous View')] = {
 		'ctrl+alt+pgup', {'ctrl+cmd+{', 'ctrl+cmd+pgup'}, WIN32 and 'meta+pgup' or 'ctrl+meta+pgup'
-	}, [m('View/Split View Horizontal')] = {'ctrl+alt+_', 'ctrl+cmd+_', 'meta+_'},
-	[m('View/Split View Vertical')] = {'ctrl+alt+|', 'ctrl+cmd+|', 'meta+|'},
-	[m('View/Unsplit View')] = {'ctrl+alt+w', 'ctrl+cmd+w', 'meta+w'},
-	[m('View/Unsplit All Views')] = {'ctrl+alt+W', 'ctrl+cmd+W', 'meta+W'}, --
+	}, -- Terminal: Ctrl+> = split vertical, Ctrl+< = unsplit
+	[m('View/Split View Horizontal')] = {'ctrl+alt+_', 'ctrl+cmd+_', function() split_view_safe(false) end},
+		[m('View/Split View Vertical')] = {'ctrl+alt+|', 'ctrl+cmd+|', function() split_view_safe(true) end},
+		[m('View/Unsplit View')] = {'alt+q', 'ctrl+cmd+w', function() unsplit_view() end},
+	[m('View/Unsplit All Views')] = {'alt+W', 'ctrl+cmd+W', nil}, --
 	[m('View/Grow View')] = {
 		{'ctrl+alt++', 'ctrl+alt+='}, {'ctrl+cmd++', 'ctrl+cmd+='}, {'meta++', 'meta+='}
 	}, [m('View/Shrink View')] = {'ctrl+alt+-', 'ctrl+cmd+-', 'meta+-'},
@@ -531,9 +561,9 @@ keys.assign_platform_bindings{
 	[buffer.word_right] = {'ctrl+right', 'alt+right', 'ctrl+right'},
 	[buffer.word_right_end_extend] = {'ctrl+shift+right', 'alt+shift+right', 'ctrl+shift+right'},
 	[buffer.vc_home] = {'home', {'home', 'cmd+left', 'ctrl+a'}, 'home'},
-	[buffer.vc_home_extend] = {'shift+home', {'shift+home', 'cmd+shift+left', 'ctrl+A'}, nil},
+	[buffer.vc_home_extend] = {'shift+home', {'shift+home', 'cmd+shift+left', 'ctrl+A'}, 'shift+home'},
 	[buffer.line_end] = {'end', {'end', 'cmd+right', 'ctrl+e'}, 'end'},
-	[buffer.line_end_extend] = {'shift+end', {'shift+end', 'cmd+shift+right', 'ctrl+E'}, nil},
+	[buffer.line_end_extend] = {'shift+end', {'shift+end', 'cmd+shift+right', 'ctrl+E'}, 'shift+end'},
 	-- Custom movement commands.
 	[buffer.word_part_right] = {'ctrl+alt+right', 'ctrl+alt+right', nil},
 	[buffer.word_part_right_extend] = {'ctrl+alt+shift+right', 'ctrl+alt+shift+right', nil},
@@ -568,3 +598,37 @@ keys.assign_platform_bindings{
 	[function() buffer.selection_mode = 0 end] = {nil, nil, 'ctrl+^'},
 	[buffer.swap_main_anchor_caret] = {nil, nil, 'ctrl+]'}
 }
+
+-- Extra terminal bindings for split view and buffer navigation
+if CURSES then
+	-- Ctrl+< = unsplit
+	keys['ctrl+<'] = unsplit_view
+	-- Ctrl+> = split vertical
+	keys['ctrl+>'] = function() split_view_safe(true) end
+	-- Alt+Left = previous buffer (circular)
+	keys['meta+left'] = function()
+		local current = _BUFFERS[buffer]
+		if not current then return end
+		local n = current - 1
+		if n < 1 then n = #_BUFFERS end
+		view:goto_buffer(_BUFFERS[n])
+	end
+	-- Alt+Right = next buffer (circular)
+	keys['meta+right'] = function()
+		local current = _BUFFERS[buffer]
+		if not current then return end
+		local n = current + 1
+		if n > #_BUFFERS then n = 1 end
+		view:goto_buffer(_BUFFERS[n])
+	end
+	-- ESC, q = close current buffer
+	-- ESC, k = focus file tree
+	keys['esc'] = {
+		q = function() buffer:close() end,
+		k = function() 
+			if not ui.focus_file_tree() then
+				ui.statusbar_text = 'File tree not visible (press Ctrl+K to toggle)'
+			end
+		end
+	}
+end

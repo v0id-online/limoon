@@ -1,13 +1,13 @@
 #!/bin/sh
-# Li Moon Notcurses — install script
-# Usage:  sh <(curl -sSf https://raw.githubusercontent.com/yuriharrison1/limoon/default/install.sh)
+# Li Moon — install script
+# Usage:  sh <(curl -sSf https://raw.githubusercontent.com/v0id-online/limoon/default/install.sh)
 set -e
 
-REPO_URL="https://github.com/yuriharrison1/limoon.git"
-INSTALL_DIR="${LIMOON_INSTALL_DIR:-$HOME/.local/share/limoon-notcurses}"
+REPO_URL="https://github.com/v0id-online/limoon.git"
+INSTALL_DIR="${LIMOON_INSTALL_DIR:-$HOME/.local/share/limoon}"
 BIN_DIR="${LIMOON_BIN_DIR:-$HOME/.local/bin}"
-BINARY="$INSTALL_DIR/limoon-notcurses"
-WRAPPER="$BIN_DIR/limoon-notcurses"
+BINARY="$INSTALL_DIR/li"
+WRAPPER="$BIN_DIR/li"
 WORK_DIR="${LIMOON_BUILD_DIR:-/tmp/limoon-build-$$}"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -81,7 +81,6 @@ build() {
     -DQT=OFF -DGTK3=OFF -DGTK2=OFF \
     -DFETCHCONTENT_QUIET=OFF \
     -DCMAKE_BUILD_TYPE=Release \
-    --log-level=WARNING \
     > "$WORK_DIR/cmake-deps.log" 2>&1 || {
       cat "$WORK_DIR/cmake-deps.log"
       die "cmake configure failed — see log above."
@@ -96,11 +95,11 @@ build() {
     }
   ok "Static libraries built."
 
-  info "Building limoon-notcurses (make)..."
+  info "Building limoon (make)..."
   make -C "$WORK_DIR" -j"$NPROC" 2>&1 | tee "$WORK_DIR/make.log" || {
     die "make failed — see $WORK_DIR/make.log"
   }
-  ok "Binary built: $WORK_DIR/limoon-notcurses"
+  ok "Binary built: $WORK_DIR/li"
 }
 
 # ── install ───────────────────────────────────────────────────────────────────
@@ -110,12 +109,12 @@ install_files() {
   mkdir -p "$INSTALL_DIR" "$BIN_DIR"
 
   # Binary
-  cp "$WORK_DIR/limoon-notcurses" "$BINARY"
+  cp "$WORK_DIR/li" "$BINARY"
   chmod 755 "$BINARY"
 
   # Lua runtime files (same dir as binary so _HOME resolves correctly)
   cp "$WORK_DIR/init.lua" "$INSTALL_DIR/"
-  for d in core modules plugins themes; do
+  for d in core modules plugins themes docs; do
     if [ -d "$WORK_DIR/$d" ]; then
       cp -r "$WORK_DIR/$d" "$INSTALL_DIR/"
     fi
@@ -128,7 +127,7 @@ install_files() {
 
   ok "Files installed."
 
-  # Wrapper script so user can just type 'limoon-notcurses'
+  # Wrapper script so user can just type 'li'
   info "Creating wrapper script at $WRAPPER ..."
   cat > "$WRAPPER" <<EOF
 #!/bin/sh
@@ -164,8 +163,8 @@ cleanup() {
 
 main() {
   printf '\n'
-  printf '  Li Moon Notcurses — Installer\n'
-  printf '  ================================\n\n'
+  printf '  Li Moon — Installer\n'
+  printf '  ====================\n\n'
 
   if [ "${SKIP_DEPS:-0}" != "1" ]; then
     install_deps
@@ -186,7 +185,7 @@ main() {
 
   printf '\n'
   printf '\033[1;32m  Installation complete!\033[0m\n'
-  printf '  Run: limoon-notcurses\n\n'
+  printf '  Run: li\n\n'
   path_hint
 }
 

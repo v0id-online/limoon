@@ -1,163 +1,22 @@
--- Copyright 2007-2026 Mitchell. See LICENSE.
--- Argonaut theme for Li Moon.
+-- Argonaut theme for Li Moon
+-- Based on the classic terminal theme with vibrant colors
 
 local view, colors, styles = view, view.colors, view.styles
 
--- Greyscale colors.
-colors.black = 0x121212
-colors.light_black = 0x333333
-colors.dark_grey = 0x666666
-colors.grey = 0x999999
-colors.light_grey = 0xCCCCCC
-colors.white = 0xFFFFFF
+colors.bg      = 0x121212 -- #121212
+colors.fg      = 0xE5E5E5 -- #E5E5E5
+colors.comment = 0x666666 -- #666666
+colors.str     = 0x55FF55 -- #55FF55 (bright green)
+colors.kw      = 0x5555FF -- #5555FF (bright blue)
+colors.func    = 0xFF9B3B -- #FF9B3B (orange)
+colors.num     = 0xFFFF55 -- #FFFF55 (yellow)
+colors.cls     = 0x55FFFF -- #55FFFF (cyan)
+colors.builtin = 0xCC0066 -- #CC0066 (magenta)
+colors.attr    = 0xFF9B55 -- #FF9B55 (light orange)
+colors.err     = 0xFF5555 -- #FF5555 (red)
+colors.sel     = 0x333333 -- #333333
+colors.find    = 0xFFCC00 -- #00CCFF (bright cyan)
+colors.cur     = 0x1A1A1A -- #1A1A1A
+colors.lnum    = 0x666666 -- #666666
 
--- Normal colors.
-colors.red = 0x5555FF
-colors.orange = 0xFF9B55
-colors.yellow = 0xFFFF55
-colors.lime = 0x55FF55
-colors.green = 0x009900
-colors.teal = 0x999900
-colors.blue = 0xFF9B3B
-colors.violet = 0xCC0066
-colors.purple = 0x990099
-colors.magenta = 0xFF3B9B
-
--- Selection colors - phosphor green.
-colors.sel_back = 0x00FF00
-colors.sel_back_dim = 0x00CC00
-
--- Default font.
-if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
-if not size then size = not OSX and 10 or 12 end
-
--- Predefined styles.
-styles[view.STYLE_DEFAULT] = {
-	font = font, size = size, fore = colors.light_grey, back = colors.black
-}
-styles[view.STYLE_LINENUMBER] = {fore = colors.dark_grey, back = colors.black}
-styles[view.STYLE_BRACELIGHT] = {fore = colors.blue, bold = true}
-styles[view.STYLE_BRACEBAD] = {fore = colors.red}
-styles[view.STYLE_INDENTGUIDE] = {fore = colors.light_black}
-styles[view.STYLE_CALLTIP] = {fore = colors.light_grey, back = colors.light_black}
-styles[view.STYLE_FOLDDISPLAYTEXT] = {fore = colors.dark_grey, back = colors.light_black}
-
--- Tag styles.
-styles[lexer.ANNOTATION] = {fore = colors.magenta}
-styles[lexer.ATTRIBUTE] = {fore = colors.violet}
-styles[lexer.BOLD] = {bold = true}
-styles[lexer.CLASS] = {fore = colors.yellow}
-styles[lexer.CODE] = {fore = colors.dark_grey, eol_filled = true}
-styles[lexer.COMMENT] = {fore = colors.dark_grey}
-styles[lexer.CONSTANT_BUILTIN] = {fore = colors.purple}
-styles[lexer.EMBEDDED] = {fore = colors.purple}
-styles[lexer.ERROR] = {fore = colors.red}
-styles[lexer.FUNCTION_BUILTIN] = {fore = colors.orange}
-styles[lexer.HEADING] = {fore = colors.magenta}
-styles[lexer.ITALIC] = {italic = true}
-styles[lexer.KEYWORD] = {fore = colors.red}
-styles[lexer.LABEL] = {fore = colors.magenta}
-styles[lexer.LINK] = {underline = true}
-styles[lexer.LIST] = {fore = colors.teal}
-styles[lexer.NUMBER] = {fore = colors.magenta}
-styles[lexer.PREPROCESSOR] = {fore = colors.magenta}
-styles[lexer.REFERENCE] = {underline = true}
-styles[lexer.REGEX] = {fore = colors.lime}
-styles[lexer.STRING] = {fore = colors.green}
-styles[lexer.TAG] = {fore = colors.blue}
-styles[lexer.TYPE] = {fore = colors.yellow}
-styles[lexer.UNDERLINE] = {underline = true}
-styles[lexer.VARIABLE_BUILTIN] = {fore = colors.yellow}
-
--- CSS.
-styles.property = styles[lexer.ATTRIBUTE]
--- Diff.
-styles.addition = {fore = colors.green}
-styles.deletion = {fore = colors.red}
-styles.change = {fore = colors.yellow}
--- HTML.
-styles.tag_unknown = styles.tag .. {italic = true}
-styles.attribute_unknown = styles.attribute .. {italic = true}
--- Latex, TeX, and Texinfo.
-styles.command = styles[lexer.KEYWORD]
-styles.command_section = styles[lexer.HEADING]
-styles.environment = styles[lexer.TYPE]
-styles.environment_math = styles[lexer.NUMBER]
--- Output.
-styles.csi = {visible = false}
-local csi_colors = {
-	black = colors.black, red = colors.red, green = colors.green, yellow = colors.yellow,
-	blue = colors.blue, magenta = colors.magenta, cyan = colors.teal, white = colors.white
-}
-for k, v in pairs(csi_colors) do styles['csi_' .. k] = {fore = v} end
-for k, v in pairs(csi_colors) do styles['csi_' .. k .. '_bright'] = {fore = v, bold = true} end
--- Python.
-styles.keyword_soft = {}
--- YAML.
-styles.error_indent = {back = colors.red}
-
--- Element colors.
--- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla ignores the color.
-view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.sel_back | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.sel_back | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.sel_back | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.sel_back_dim | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.black | 0xFF000000
-view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.sel_back_dim | 0xFF000000
-view.element_color[view.ELEMENT_CARET] = colors.lime
-if view ~= ui.command_entry then
-	view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.light_black
-end
-view.caret_line_layer = view.LAYER_UNDER_TEXT
-
--- Fold Margin.
-view:set_fold_margin_color(true, colors.black)
-view:set_fold_margin_hi_color(true, colors.black)
-
--- Markers.
-view.marker_back[limoon.bookmarks.MARK_BOOKMARK] = colors.blue
-view.marker_back[limoon.run.MARK_WARNING] = colors.yellow
-view.marker_back[limoon.run.MARK_ERROR] = colors.red
-view.marker_fore[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
-view.marker_back[view.MARKNUM_HISTORY_MODIFIED] = colors.yellow
-view.marker_fore[view.MARKNUM_HISTORY_SAVED] = colors.green
-view.marker_back[view.MARKNUM_HISTORY_SAVED] = colors.green
-view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
-view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_MODIFIED] = colors.yellow
-view.marker_fore[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
-view.marker_back[view.MARKNUM_HISTORY_REVERTED_TO_ORIGIN] = colors.yellow
-for i = view.MARKNUM_FOLDEREND, view.MARKNUM_FOLDEROPEN do -- fold margin
-	view.marker_fore[i] = colors.black
-	view.marker_back[i] = colors.dark_grey
-	view.marker_back_selected[i] = colors.light_grey
-end
-
--- Indicators.
-view.indic_fore[ui.find.INDIC_FIND] = colors.yellow
-view.indic_alpha[ui.find.INDIC_FIND] = 0x80
-view.indic_fore[limoon.editing.INDIC_HIGHLIGHT] = colors.orange
-view.indic_alpha[limoon.editing.INDIC_HIGHLIGHT] = 0x80
-view.indic_fore[limoon.snippets.INDIC_PLACEHOLDER] = colors.light_grey
-view.indic_fore[limoon.run.INDIC_WARNING] = colors.yellow
-view.indic_fore[limoon.run.INDIC_ERROR] = colors.red
-view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_INSERTION] = colors.green
-view.indic_fore[view.INDICATOR_HISTORY_MODIFIED_DELETION] = colors.red
-view.indic_fore[view.INDICATOR_HISTORY_SAVED_INSERTION] = colors.green
-view.indic_fore[view.INDICATOR_HISTORY_SAVED_DELETION] = colors.red
-view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_INSERTION] = colors.green
-view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_MODIFIED_DELETION] = colors.red
-view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_INSERTION] = colors.green
-view.indic_fore[view.INDICATOR_HISTORY_REVERTED_TO_ORIGIN_DELETION] = colors.red
-
--- Call tips.
-view.call_tip_fore_hlt = colors.blue
-
--- Long Lines.
-view.edge_color = colors.light_black
-
--- Find & replace pane entries.
-ui.find.entry_font = font .. ' ' .. size
+dofile(_HOME .. '/themes/_base.lua')(view, colors, styles)

@@ -5948,7 +5948,7 @@ Lua lexers with the aforementioned Li Moon and SciTE editors. Finally there are 
 on lexer performance and limitations.
 
 [LPeg library]: http://www.inf.puc-rio.br/~roberto/lpeg/lpeg.html
-[Li Moon]: https://orbitalquark.github.io/limoon
+[Li Moon]: https://github.com/yuriharrison1/limoon
 [SciTE]: https://scintilla.org/SciTE.html
 
 ### Lexer Basics

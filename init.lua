@@ -31,7 +31,8 @@ for _, mt in ipairs{buffer_mt, view_mt} do
 		local v = mt.__orig_index(t, k)
 		if type(v) == 'function' then
 			if k:find('^new_') and (k:find('_number$') or k:find('_type$')) then return v end
-			return function(...args)
+			return function(...)
+				local args = {...}
 				if type(args[1]) == 'table' then table.remove(args, 1) end -- self
 				for i = 1, #args do args[i] = repr(args[i]) end
 				table.insert(settings[mt], string.format('%s:%s(%s)', name[mt], k, table.concat(args, ',')))

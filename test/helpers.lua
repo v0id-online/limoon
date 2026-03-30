@@ -70,7 +70,8 @@ end
 -- @param ... Arguments to log. Tables have their contents logged (non-recursively).
 -- @function log
 M.log = setmetatable({clear = function(self) for i = 1, #self do self[i] = nil end end}, {
-	__call = function(self, ...args)
+	__call = function(self, ...)
+		local args = {...}
 		self[#self + 1] = table.concat(table.map(args, function(arg)
 			if type(arg) ~= 'table' then return tostring(arg) end
 			local kvs = {}
@@ -98,15 +99,16 @@ end
 -- @param[opt] ... Values to return when called.
 -- @usage local f = stub()
 -- @usage assert(f.called)
-function M.stub(callback, ...returns)
+function M.stub(callback, ...)
+	local returns = {...}
 	if not is_callable(callback) then
 		table.insert(returns, 1, callback)
 		callback = nil
 	end
 	return setmetatable({called = false}, {
-		__call = function(self, ...args)
+		__call = function(self, ...)
 			self.called = type(self.called) == 'number' and self.called + 1 or self.called and 2 or true
-			self.args = args
+			self.args = {...}
 			if callback then callback(...) end
 			return table.unpack(returns)
 		end

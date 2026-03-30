@@ -72,11 +72,41 @@ end
 
 --- Prompts the user to select a menu command to run.
 function M.select_command()
+	local items = get_menu_items(getmetatable(M.menubar).menu)
+	-- Add custom commands
+	items[#items + 1] = 'theme: Select Theme'
+	items[#items + 1] = 'Ctrl+; theme()'
+	items[#items + 1] = 'setcolor: Set UI Color (green/blue/bw)'
+	items[#items + 1] = 'Ctrl+; setcolor("green")'
+	
 	local i = ui.dialogs.list{
 		title = _L['Run Command'], columns = {_L['Command'], _L['Key Binding']},
-		items = get_menu_items(getmetatable(M.menubar).menu)
+		items = items
 	}
-	if i then events.emit(events.MENU_CLICKED, i) end
+	if not i then return end
+	
+	-- Handle custom commands
+	local num_menu_items = #get_menu_items(getmetatable(M.menubar).menu) / 2
+	if i == num_menu_items + 1 then
+		-- theme selected
+		if limoon.themes then limoon.themes.select() end
+	elseif i == num_menu_items + 2 then
+		-- setcolor selected
+		local color = ui.dialogs.input{title = 'Set UI Color', text = 'Enter color (green, blue, or bw):'}
+		if color then
+			local colors = {green = 'green', blue = 'blue', bw = 'bw', black = 'bw', white = 'bw'}
+			local c = colors[color:lower()]
+			if c then
+				local f = io.open(_USERHOME .. '/theme_color', 'w')
+				if f then f:write(c) f:close() end
+				ui.statusbar_text = 'UI color: ' .. c .. ' (restart to apply)'
+			else
+				ui.statusbar_text = 'Invalid color. Use: green, blue, or bw'
+			end
+		end
+	else
+		events.emit(events.MENU_CLICKED, i)
+	end
 end
 
 local press_any_key = _L['Press any key or Esc to cancel...']

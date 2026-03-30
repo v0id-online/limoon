@@ -4,6 +4,28 @@
 --   bg, fg, comment, str, kw, func, num, cls, builtin, attr, err, sel, find, cur, lnum, sep
 
 return function(view, colors, styles)
+  -- Ensure all required colors have fallback defaults
+  local default_bg = 0x1e1e1e
+  local default_fg = 0xCCCCCC
+  
+  -- Set defaults for missing colors
+  colors.bg      = colors.bg or default_bg
+  colors.fg      = colors.fg or default_fg
+  colors.comment = colors.comment or 0x666666
+  colors.str     = colors.str or 0x00CC99
+  colors.kw      = colors.kw or 0xCC6600
+  colors.func    = colors.func or 0xFF9B3B
+  colors.num     = colors.num or 0x009999
+  colors.cls     = colors.cls or 0xFABD2F
+  colors.builtin = colors.builtin or 0x83A598
+  colors.attr    = colors.attr or 0xFE8019
+  colors.err     = colors.err or 0xFF3333
+  colors.sel     = colors.sel or 0x333333
+  colors.find    = colors.find or 0xE6B450
+  colors.cur     = colors.cur or 0x333333
+  colors.lnum    = colors.lnum or 0x666666
+  colors.sep     = colors.sep or colors.sel
+
   if not font then font = WIN32 and 'Consolas' or OSX and 'Monaco' or 'Monospace' end
   if not size then size = not OSX and 10 or 12 end
   colors.sep = colors.sep or colors.sel
@@ -13,6 +35,7 @@ return function(view, colors, styles)
   styles[view.STYLE_LINENUMBER]     = {fore=colors.lnum, back=colors.bg}
   styles[view.STYLE_BRACELIGHT]     = {fore=colors.func, bold=true}
   styles[view.STYLE_BRACEBAD]       = {fore=colors.err}
+  -- styles[view.STYLE_CONTROLCHAR] = {}
   styles[view.STYLE_INDENTGUIDE]    = {fore=colors.sep}
   styles[view.STYLE_CALLTIP]        = {fore=colors.fg, back=colors.sel}
   styles[view.STYLE_FOLDDISPLAYTEXT]= {fore=colors.comment, back=colors.sel}
@@ -24,17 +47,22 @@ return function(view, colors, styles)
   styles[lexer.CLASS]             = {fore=colors.cls}
   styles[lexer.CODE]              = {fore=colors.comment, eol_filled=true}
   styles[lexer.COMMENT]           = {fore=colors.comment}
+  -- styles[lexer.CONSTANT]       = {}
   styles[lexer.CONSTANT_BUILTIN]  = {fore=colors.builtin}
   styles[lexer.EMBEDDED]          = {fore=colors.builtin}
   styles[lexer.ERROR]             = {fore=colors.err}
+  -- styles[lexer.FUNCTION]       = {}
   styles[lexer.FUNCTION_BUILTIN]  = {fore=colors.builtin}
+  -- styles[lexer.FUNCTION_METHOD]= {}
   styles[lexer.HEADING]           = {fore=colors.kw, bold=true}
+  -- styles[lexer.IDENTIFIER]     = {}
   styles[lexer.ITALIC]            = {italic=true}
   styles[lexer.KEYWORD]           = {fore=colors.kw}
   styles[lexer.LABEL]             = {fore=colors.attr}
   styles[lexer.LINK]              = {underline=true}
   styles[lexer.LIST]              = {fore=colors.num}
   styles[lexer.NUMBER]            = {fore=colors.num}
+  -- styles[lexer.OPERATOR]       = {}
   styles[lexer.PREPROCESSOR]      = {fore=colors.kw}
   styles[lexer.REFERENCE]         = {underline=true}
   styles[lexer.REGEX]             = {fore=colors.str}
@@ -42,7 +70,9 @@ return function(view, colors, styles)
   styles[lexer.TAG]               = {fore=colors.attr}
   styles[lexer.TYPE]              = {fore=colors.cls}
   styles[lexer.UNDERLINE]         = {underline=true}
+  -- styles[lexer.VARIABLE]       = {}
   styles[lexer.VARIABLE_BUILTIN]  = {fore=colors.builtin}
+  -- styles[lexer.WHITESPACE]     = {}
 
   -- Language-specific
   styles.property            = styles[lexer.ATTRIBUTE]

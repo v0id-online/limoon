@@ -1,6 +1,6 @@
 # limoon-notcurses
 
-> A drop-in third binary for [Li Moon](https://orbitalquark.github.io/limoon/)
+> A drop-in third binary for [Li Moon](https://github.com/yuriharrison1/limoon/)
 > that replaces the curses backend with [notcurses](https://github.com/dankamongmen/notcurses) —
 > bringing true 24-bit color, smooth rendering, and a modern terminal UI to one of the
 > most elegant editors ever written.

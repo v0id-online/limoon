@@ -7,9 +7,23 @@
 -- ── Themes ────────────────────────────────────────────────────────────────
 -- theme "dracula"      → apply theme by name
 -- themes()             → interactive picker
+-- setcolor("green")    → set UI color scheme (green/blue/bw)
 if limoon.themes then
   theme  = function(n) limoon.themes.set(n)    end
   themes = function()  limoon.themes.select()  end
+end
+
+setcolor = function(c)
+  local colors = {green = 'green', blue = 'blue', bw = 'bw', black = 'bw', white = 'bw'}
+  local color = colors[c and c:lower() or '']
+  if color then
+    -- Save to file for persistence
+    local f = io.open(_USERHOME .. '/theme_color', 'w')
+    if f then f:write(color) f:close() end
+    ui.statusbar_text = 'UI color set to: ' .. color .. ' (restart to apply)'
+  else
+    ui.statusbar_text = 'Usage: setcolor("green") or setcolor("blue") or setcolor("bw")'
+  end
 end
 
 -- ── Files / Buffers ────────────────────────────────────────────────────────
@@ -28,6 +42,14 @@ reload = function()  buffer:reload() end
 -- bnext() / bprev()   → cycle buffers
 bnext = function() view:goto_buffer(1)  end
 bprev = function() view:goto_buffer(-1) end
+
+-- ── View/Split ─────────────────────────────────────────────────────────────
+-- sp()       → split view vertical (Ctrl+>)
+-- uns()      → unsplit view (Ctrl+<)
+-- unsplitall() → close all splits
+sp       = function() view:split(true) end
+uns      = function() view:unsplit() end
+unsplitall = function() while view:unsplit() do end end
 
 -- ── Editor navigation ──────────────────────────────────────────────────────
 -- ln(n)   → go to line n (1-based)
@@ -89,6 +111,9 @@ local _list = {
   {'reload()',        'reload file from disk'},
   {'bnext()',         'go to next buffer'},
   {'bprev()',         'go to prev buffer'},
+  {'sp()',            'split view vertical (Ctrl+>)'},
+  {'uns()',           'unsplit view (Ctrl+<)'},
+  {'unsplitall()',    'close all splits'},
   {'ln(n)',           'go to line n'},
   {'lex "name"',      'set syntax  e.g. lex "lua"'},
   {'wrap()',          'toggle line wrap on/off'},
@@ -97,6 +122,7 @@ local _list = {
   {'zoom(n)',         'zoom: 1=in  -1=out  0=reset'},
   {'run()',           'run current file'},
   {'plugins()',       'show loaded plugins'},
+  {'setcolor("name")','set UI color (green/blue/bw)'},
   {'aliases()',       'show this list'},
 }
 

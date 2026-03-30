@@ -23,6 +23,9 @@ extern lua_State *lua;
 // Li Moon's exit status. Platforms should return it from their main() functions.
 extern int exit_status;
 
+// File tree focus function (implemented in platform).
+bool ft_focus(void);
+
 /** Initializes Li Moon.
  * Initializes Lua, asks the Platform to create the main application window, and runs Lua
  * startup scripts. Platforms should typically call this after their own initialization and

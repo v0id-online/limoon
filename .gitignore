@@ -55,3 +55,4 @@ modules/update_notifier
 luacov.*.out
 test.log
 .aider*
+log
