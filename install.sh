@@ -52,13 +52,19 @@ install_deps() {
       else
         sudo yum install -y $PKGS
       fi
+      # Optional: clipboard integration (install if available, but don't fail if not)
+      sudo dnf install -y xsel 2>/dev/null || true
       ;;
     deb)
       sudo apt-get update -qq
       sudo apt-get install -y git cmake gcc g++ make pkg-config libncurses-dev libnotcurses-dev
+      # Optional: clipboard integration (try wl-clipboard first for Wayland, then xsel for X11)
+      sudo apt-get install -y wl-clipboard 2>/dev/null || sudo apt-get install -y xsel 2>/dev/null || true
       ;;
     arch)
       sudo pacman -Sy --noconfirm git cmake gcc make pkgconf ncurses notcurses
+      # Optional: clipboard integration
+      sudo pacman -S --noconfirm wl-clipboard xsel 2>/dev/null || true
       ;;
   esac
 
@@ -186,6 +192,19 @@ main() {
   printf '\n'
   printf '\033[1;32m  Installation complete!\033[0m\n'
   printf '  Run: li\n\n'
+  
+  # Optional features info
+  if command -v xsel >/dev/null 2>&1 || command -v wl-copy >/dev/null 2>&1; then
+    printf '\033[1;32m  ✓\033[0m System clipboard integration available\n'
+  else
+    printf '\033[1;33m  !\033[0m For system clipboard support, install: xsel (X11) or wl-clipboard (Wayland)\n'
+  fi
+  
+  printf '\n  Available themes: dark, light, gruvbox-dark, gruvbox-light,\n'
+  printf '                    neon-cyberpunk, neon-purple, neon-blue,\n'
+  printf '                    neon-amber, matrix, vaporwave, and 23 more!\n'
+  printf '  Set theme: view:set_theme(\"neon-cyberpunk\") in ~/.limoon/init.lua\n\n'
+  
   path_hint
 }
 

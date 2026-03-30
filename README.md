@@ -25,6 +25,7 @@ Tree-sitter integration are planned.
 |---|---|---|
 | [notcurses](https://github.com/dankamongmen/notcurses) | >= 3.0.16 | Terminal rendering backend |
 | Lua | 5.4 | Scripting engine (fetched by CMake) |
+| xsel or wl-clipboard | — | Optional: system clipboard integration |
 | libgit2 | — | Planned |
 | Tree-sitter | — | Planned |
 
@@ -94,7 +95,7 @@ notcurses is copyright Nick Black and contributors.
 | Terminal rendering (notcurses) | Working |
 | Scintilla editing | Working |
 | Lua scripting | Working |
-| Themes | Working (20+ themes) |
+| Themes | Working (33 themes) |
 | LSP | Planned |
 | DAP | Planned |
 | Tree-sitter | Planned |
