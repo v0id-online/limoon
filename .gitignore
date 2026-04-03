@@ -16,6 +16,7 @@ _deps/
 *.out
 li
 limoon
+!modules/limoon
 
 # Editor / IDE.
 .cache/
