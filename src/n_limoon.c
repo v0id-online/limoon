@@ -1292,6 +1292,11 @@ int main(int argc, char **argv) {
 
     if (!scintilla_notcurses_init()) return 1;
 
+    /* Ignore SIGPIPE: subprocesses closing stdin/stdout mid-write would
+     * otherwise terminate Li Moon. We handle EPIPE via write() return
+     * values in write_process_input and drain_proc_fd. */
+    signal(SIGPIPE, SIG_IGN);
+
     if (!init_limoon(argc, argv)) {
         scintilla_notcurses_shutdown();
         return 1;
@@ -4311,7 +4316,11 @@ void write_process_input(Process *proc, const char *s, size_t len) {
     ssize_t written = 0;
     while ((size_t)written < len) {
         ssize_t n = write(np->stdin_fd, s + written, len - written);
-        if (n <= 0) break;
+        if (n < 0) {
+            if (errno == EINTR) continue;
+            break; /* EPIPE, EAGAIN, or real error */
+        }
+        if (n == 0) break;
         written += n;
     }
 }
