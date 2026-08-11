@@ -40,7 +40,7 @@ local function open_scratch()
     _buf = buffer.new()
     _buf._type = SCRATCH_TYPE
     _buf:append_text('-- Scratch Pad --\n\n')
-    _buf.modify = false
+    _buf:set_save_point()
   end
   _buf:set_lexer('text')
   W.notify('Scratch Pad  (auto-saves on close)', 3)
@@ -49,12 +49,42 @@ end
 local function save_scratch(buf)
   buf = buf or find_scratch()
   if not buf then return end
-  local f = io.open(SCRATCH_FILE, 'w')
-  if f then
-    f:write(buf:get_text())
-    f:close()
-    buf.modify = false
+
+  -- Write atomically via .tmp + rename to avoid data loss on crash, and
+  -- surface every failure instead of silently discarding the buffer's
+  -- content (io.open/write/close/rename can all fail: disk full,
+  -- permission denied, read-only filesystem).
+  local tmp_path = SCRATCH_FILE .. '.tmp'
+  local f, err = io.open(tmp_path, 'w')
+  if not f then
+    W.notify('Scratch pad save FAILED (open): ' .. tostring(err), 5)
+    return
   end
+
+  local ok, werr = f:write(buf:get_text())
+  if not ok then
+    W.notify('Scratch pad save FAILED (write): ' .. tostring(werr), 5)
+    f:close()
+    os.remove(tmp_path)
+    return
+  end
+
+  local ok_close, cerr = f:close()
+  if not ok_close then
+    W.notify('Scratch pad save FAILED (close): ' .. tostring(cerr), 5)
+    os.remove(tmp_path)
+    return
+  end
+
+  -- Atomic swap: only replace SCRATCH_FILE if the write succeeded fully.
+  local ok_ren, rerr = os.rename(tmp_path, SCRATCH_FILE)
+  if not ok_ren then
+    W.notify('Scratch pad save FAILED (rename): ' .. tostring(rerr), 5)
+    os.remove(tmp_path)
+    return
+  end
+
+  buf:set_save_point()
 end
 
 -- Auto-save when leaving the scratch buffer.
