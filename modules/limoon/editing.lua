@@ -588,16 +588,22 @@ events.connect(events.UPDATE_UI, function(updated)
 	end
 end)
 
--- Enables and disables bracketed paste mode in curses and disables auto-pair and auto-indent
--- while pasting.
+-- Disables auto-pair and auto-indent while pasting, via events.CSI.
+--
+-- NOTE: this fork's notcurses input loop (src/n_limoon.c) never parses or
+-- forwards unrecognized CSI sequences, so events.CSI never actually fires
+-- from real terminal input — this listener is currently dormant (unit-tested
+-- only via a manual events.emit(events.CSI, ...), which does not exercise
+-- the real input path). This also means turning on the terminal's bracketed
+-- paste mode (ESC[?2004h) would be actively harmful here: with nothing to
+-- strip the ESC[200~ / ESC[201~ markers it wraps pastes in, notcurses would
+-- likely feed those marker bytes through as literal keypresses, typing
+-- garbage into the buffer around every paste. So bracketed paste mode is
+-- intentionally left disabled (never enabled) until a real "csi" event
+-- bridge is added to the notcurses input loop. TODO(yuri): wire CSI-sequence
+-- forwarding into n_limoon.c's handle_keypress()/input loop to make this
+-- listener reachable.
 if CURSES and not WIN32 then
-	local function enable_br_paste() io.stdout:write('\x1b[?2004h'):flush() end
-	local function disable_br_paste() io.stdout:write('\x1b[?2004l'):flush() end
-	events.connect(events.INITIALIZED, enable_br_paste)
-	events.connect(events.SUSPEND, disable_br_paste)
-	events.connect(events.RESUME, enable_br_paste)
-	events.connect(events.QUIT, disable_br_paste)
-
 	local auto_pairs, auto_indent
 	events.connect(events.CSI, function(cmd, args)
 		if cmd ~= string.byte('~') then return end
