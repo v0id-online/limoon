@@ -1279,15 +1279,31 @@ void close_limoon(void) {
 	if (limoon_home) free(limoon_home), limoon_home = NULL;
 }
 
+/**
+ * @brief Resolves `limoon_home` (the running executable's directory) and boots the Lua core.
+ *
+ * @return true on success. false means initialization failed — could not allocate or resolve
+ *   `limoon_home`, or `init_lua()` failed (in which case `exit_status` has already been set).
+ *   The caller must treat false as fatal and exit rather than continue.
+ */
 bool init_limoon(int argc, char **argv) {
 	char *last_slash = NULL;
 	limoon_home = malloc(FILENAME_MAX + 1);
+	if (!limoon_home) return false;
 #if __linux__
-	limoon_home[readlink("/proc/self/exe", limoon_home, FILENAME_MAX + 1)] = '\0';
+	// readlink() does not null-terminate, and returns -1 on failure (no /proc, sandboxed,
+	// permission denied) or a byte count that could in principle reach the buffer size — either
+	// case previously indexed limoon_home[-1] or limoon_home[FILENAME_MAX + 1], out of bounds.
+	ssize_t n = readlink("/proc/self/exe", limoon_home, FILENAME_MAX);
+	if (n < 0 || n > FILENAME_MAX) { free(limoon_home), limoon_home = NULL; return false; }
+	limoon_home[n] = '\0';
 	if ((last_slash = strrchr(limoon_home, '/'))) *last_slash = '\0';
 	os = "LINUX";
 #elif _WIN32
-	GetModuleFileName(NULL, limoon_home, FILENAME_MAX + 1);
+	// GetModuleFileName returns 0 on failure, and (unlike readlink) DOES null-terminate; a return
+	// value == the buffer size indicates truncation (path too long for the buffer).
+	DWORD wn = GetModuleFileName(NULL, limoon_home, FILENAME_MAX + 1);
+	if (wn == 0 || wn >= FILENAME_MAX + 1) { free(limoon_home), limoon_home = NULL; return false; }
 	if ((last_slash = strrchr(limoon_home, '\\'))) *last_slash = '\0';
 	os = "WIN32";
 #elif __APPLE__
