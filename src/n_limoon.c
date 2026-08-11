@@ -1239,7 +1239,19 @@ static void handle_keypress(struct ncinput *ni) {
      * Printable non-separator chars (letters, digits, symbols except space/enter)
      * are grouped into a single undo action per word.
      * Space, tab, enter, backspace and special keys close the current group. */
-    bool is_word_char = (emit_key >= 33 && emit_key <= 0x10FFFF)
+    /* Function keys (F1-F12) use GDK-style codes >= 0xFF00. Arrows, Home/End,
+     * PgUp/PgDn, Delete and Insert use this fork's small SCK_* values (300-315,
+     * see Scintilla.h) which fall inside 33..0x10FFFF, so navigating with
+     * arrow keys was treated as typing a word character — it opened or
+     * extended an undo group instead of leaving it alone, corrupting undo
+     * grouping around cursor movement. Exclude both ranges explicitly. */
+    bool is_special_key = (emit_key == SCK_UP || emit_key == SCK_DOWN ||
+                            emit_key == SCK_LEFT || emit_key == SCK_RIGHT ||
+                            emit_key == SCK_HOME || emit_key == SCK_END ||
+                            emit_key == SCK_PRIOR || emit_key == SCK_NEXT ||
+                            emit_key == SCK_DELETE || emit_key == SCK_INSERT ||
+                            emit_key >= 0xFF00);
+    bool is_word_char = (emit_key >= 33 && emit_key <= 0x10FFFF) && !is_special_key
                         && !(sci_mods & (SCMOD_CTRL | SCMOD_ALT));
     if (is_word_char) {
         /* Muda de target (ex: command entry <-> editor)? Fecha grupo anterior. */
