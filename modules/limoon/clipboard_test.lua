@@ -61,3 +61,14 @@ test('buffer.paste should use the system clipboard', function()
 end)
 if not CURSES then skip('the GUI version uses the system clipboard') end
 if BSD and os.getenv('CI') == 'true' then skip('X is not running on CI') end
+
+test('buffer.paste should replace the current selection', function()
+	buffer:set_text('hello world')
+	buffer:set_sel(1, 6) -- select "hello"
+	buffer:copy_text('BYE')
+
+	buffer:paste()
+
+	test.assert_equal(buffer:get_text(), 'BYE world')
+end)
+if not CURSES then skip('the GUI version uses the system clipboard') end

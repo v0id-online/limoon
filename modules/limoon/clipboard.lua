@@ -59,6 +59,16 @@ end
 -- Internal clipboard storage for cross-buffer copy/paste
 local internal_clipboard = nil
 
+-- Capture originals once, at module load. Never re-wrap: enable_system_clipboard
+-- previously re-read buffer.paste/copy/cut/copy_text on every call, but since it
+-- runs on every events.BUFFER_NEW, and it had already replaced those fields on
+-- the first call, each new buffer wrapped the PREVIOUS wrapper instead of the
+-- true original — stacking N nested calls after N buffers were opened.
+local orig_paste     = buffer.paste
+local orig_copy      = buffer.copy
+local orig_cut       = buffer.cut
+local orig_copy_text = buffer.copy_text
+
 -- Get text from system clipboard
 local function get_system_clipboard()
 	if not M.paste_command then return nil end
@@ -116,13 +126,9 @@ function ui.get_clipboard_text(internal)
 end
 
 -- Replaces buffer clipboard functions with functions that use the system clipboard.
+-- Installs onto the shared `buffer` table, so it applies to all buffers without
+-- needing to run again per-buffer (see orig_* capture above).
 local function enable_system_clipboard()
-	-- Capture original functions
-	local orig_paste = buffer.paste
-	local orig_copy = buffer.copy
-	local orig_cut = buffer.cut
-	local orig_copy_text = buffer.copy_text
-	
 	-- Copy: save to both internal and system clipboard
 	buffer.copy = function(self)
 		orig_copy(self)
@@ -156,8 +162,15 @@ local function enable_system_clipboard()
 		end
 		
 		if text and text ~= '' then
-			-- Use add_text which is safer than native paste
-			local ok = pcall(function() self:add_text(text) end)
+			-- Insert if there's no selection; otherwise replace it — add_text
+			-- alone only inserts, so pasting over a selection used to leave
+			-- the old selected text in place with the paste appended after it.
+			local ok
+			if self.selection_empty then
+				ok = pcall(function() self:add_text(text) end)
+			else
+				ok = pcall(function() self:replace_sel(text) end)
+			end
 			if not ok then orig_paste(self) end
 		else
 			orig_paste(self)
@@ -166,6 +179,5 @@ local function enable_system_clipboard()
 end
 
 enable_system_clipboard()
-events.connect(events.BUFFER_NEW, enable_system_clipboard)
 
 return M
