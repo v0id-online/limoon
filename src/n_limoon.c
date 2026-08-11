@@ -1520,6 +1520,24 @@ static void lerp_rgb(int t, int total,
     *b = b1 + (b2 - b1) * t / (total - 1);
 }
 
+/**
+ * @brief Compute the on-screen (terminal cell) width of a UTF-8 string.
+ *
+ * strlen() counts bytes, not cells: Portuguese accented characters (ç, ã,
+ * õ, á, é, í, ó, ú, â, ê, ô) are 2 bytes but 1 cell, and emoji/CJK are
+ * commonly 1 codepoint but 2 cells. Using strlen() for layout math
+ * mis-sizes anything outside ASCII.
+ *
+ * @param s UTF-8 string. NULL treated as empty.
+ * @return Terminal cell count, or the byte length as a conservative
+ *   fallback if `s` contains invalid UTF-8.
+ */
+static int utf8_visual_width(const char *s) {
+    if (!s || !*s) return 0;
+    int width = ncstrwidth(s, NULL, NULL);
+    return width >= 0 ? width : (int)strlen(s);
+}
+
 /* Set gradient color for position t within a tab of total columns */
 static void set_tab_color(struct ncplane *plane, int t, int total, bool active) {
     int r, g, b;
@@ -1556,8 +1574,10 @@ static void draw_tabbar(void) {
         const char *lbl = tabs[i].label[0] ? tabs[i].label : "Untitled";
 
         /* Tab layout:  SP label SP [×] SP
-         * Minimum width: 1+1+1+3+1 = 7 columns */
-        int labcols = (int)strlen(lbl); /* ASCII filenames: bytes == columns */
+         * Minimum width: 1+1+1+3+1 = 7 columns
+         * UTF-8 aware: byte count != cell count (see utf8_visual_width). */
+        int full_width = utf8_visual_width(lbl);
+        int labcols = full_width;
         int tabw = 1 + labcols + 1 + 3 + 1;
         int avail = (int)tcols - x;
         if (avail < 7) break;
@@ -1575,17 +1595,26 @@ static void draw_tabbar(void) {
         set_tab_color(tabbar_plane, x - t0, tabw, active);
         ncplane_putchar_yx(tabbar_plane, 0, x++, ' ');
 
-        /* Label characters */
-        for (int c = 0; c < labcols && lbl[c]; c++) {
-            /* Ellipsis on last label char if label was truncated */
-            bool truncated = (labcols < (int)strlen(lbl));
+        /* Label characters: walk one grapheme cluster at a time (never split
+         * a UTF-8 codepoint), budgeted in cells (labcols), not bytes. */
+        bool truncated = (labcols < full_width);
+        int cell_budget = truncated ? labcols - 1 : labcols; /* reserve 1 cell for … */
+        const char *p = lbl;
+        int used = 0;
+        while (*p && used < cell_budget) {
+            size_t consumed = 0;
             set_tab_color(tabbar_plane, x - t0, tabw, active);
-            if (truncated && c == labcols - 1) {
-                /* Draw UTF-8 ellipsis … (U+2026, 3 bytes) */
-                ncplane_putstr_yx(tabbar_plane, 0, x, "\xe2\x80\xa6");
-            } else {
-                ncplane_putchar_yx(tabbar_plane, 0, x, lbl[c]);
-            }
+            int w = ncplane_putegc_yx(tabbar_plane, 0, x, p, &consumed);
+            if (w < 0 || consumed == 0) break; /* invalid byte sequence */
+            if (used + w > cell_budget) break; /* wide glyph would overflow the budget */
+            x += w;
+            used += w;
+            p += consumed;
+        }
+        if (truncated) {
+            /* Draw UTF-8 ellipsis … (U+2026, 3 bytes) */
+            set_tab_color(tabbar_plane, x - t0, tabw, active);
+            ncplane_putstr_yx(tabbar_plane, 0, x, "\xe2\x80\xa6");
             x++;
         }
 
