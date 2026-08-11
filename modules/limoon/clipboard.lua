@@ -7,12 +7,20 @@ if not CURSES then return nil end
 -- @module limoon.clipboard
 local M = {}
 
--- Helper function to check if a command exists
+-- Helper function to check if a command exists.
+-- io.popen always returns a handle for the SHELL, even when `cmd` itself
+-- doesn't exist — it can only fail to launch a shell at all, which is rare.
+-- So the previous implementation reported every command as available,
+-- silently breaking system clipboard detection whenever the underlying
+-- tool (xsel, wl-copy, ...) was actually missing.
 local function command_exists(cmd)
-	local f = io.popen(cmd .. ' 2>/dev/null', 'r')
-	if not f then return false end
-	f:close()
-	return true
+	-- `command -v` is a POSIX shell builtin that succeeds only if the
+	-- command exists, and only test the first token (the binary itself):
+	-- `command -v 'xsel -b -o'` would fail since that's not a binary name.
+	local first_token = cmd:match('^%S+')
+	if not first_token then return false end
+	local ok = os.execute('command -v ' .. first_token .. ' >/dev/null 2>&1')
+	return ok == true
 end
 
 -- Check if we have a display/clipboard environment available
