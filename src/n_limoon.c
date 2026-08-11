@@ -4224,6 +4224,26 @@ static int poll_with_ui(int fd) {
     return r;
 }
 
+/**
+ * @brief Read output from a subprocess's stdout according to `option`.
+ *
+ * Options:
+ *  - 'a': read everything currently available (until EOF).
+ *  - 'l': read one line, stripping the trailing newline.
+ *  - 'L': read one line, keeping the trailing newline.
+ *  - 'n': read exactly `*len` bytes (see `len` below).
+ *
+ * Buffer growth ('l'/'L'/'a' modes): the capacity guard grows whenever
+ * `total >= cap - 1`, so a write always lands at index <= cap - 2 and the
+ * loop-terminating `result[total] = '\0'` always lands at index <= cap - 1
+ * — both in bounds for a `cap`-sized allocation, including the 'L' case
+ * where the loop can write the newline and break in the same iteration.
+ *
+ * @param len IN for option 'n' (bytes requested); OUT for every option
+ *   (bytes actually read, i.e. the returned string's length). Must be
+ *   read into a local BEFORE being reset for the output role, or 'n'
+ *   always requests zero bytes.
+ */
 char *read_process_output(Process *proc, char option, size_t *len, const char **error, int *code) {
     NProcess *np = (NProcess *)proc;
     if (!np || np->stdout_fd < 0) {
@@ -4234,10 +4254,15 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
 
     int fd = np->stdout_fd;
     char *result = NULL;
+    /* For option 'n', *len is an INPUT (bytes requested) that must be read
+     * before being overwritten below with the OUTPUT (bytes actually read).
+     * Reading it after the reset made `want` always 0, so 'n' never read
+     * anything. */
+    size_t requested_n = (option == 'n') ? *len : 0;
     *len = 0;
 
     if (option == 'n') {
-        size_t want = *len;
+        size_t want = requested_n;
         result = malloc(want + 1);
         if (!result) return NULL;
         ssize_t total = 0;
