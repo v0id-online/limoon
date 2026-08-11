@@ -1432,7 +1432,14 @@ int main(int argc, char **argv) {
                     else if (nc_key == NCKEY_BUTTON3)  button = 3;
                     else if (nc_key == NCKEY_SCROLL_UP)   button = 4;
                     else if (nc_key == NCKEY_SCROLL_DOWN) button = 5;
-                    mouse_pressed_button = button;
+                    /* Scroll-wheel "clicks" (4/5) never get a matching
+                     * NCTYPE_RELEASE from the terminal, so latching them into
+                     * mouse_pressed_button left it stuck at 4/5 after every
+                     * scroll — the next plain NCKEY_MOTION (no button held)
+                     * was then misread as an active drag, sending spurious
+                     * SCM_DRAG events and corrupting the selection. Only real
+                     * buttons (1-3) participate in press/drag/release state. */
+                    if (button <= 3) mouse_pressed_button = button;
                     scintilla_send_mouse(mouse_view, SCM_PRESS, button,
                         nc_to_sci_mods(ni.modifiers), ni.y, ni.x);
                 }
