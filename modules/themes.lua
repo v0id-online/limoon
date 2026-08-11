@@ -74,11 +74,22 @@ function M.select()
 end
 
 -- Initialize: apply saved preference or default.
--- In CURSES mode, only use terminal-compatible themes.
+-- Every theme in M.available inherits from themes/_base.lua, which sets up
+-- CURSES-compatible defaults for any theme, so a curated whitelist here was
+-- both unnecessary and wrong: it rejected valid themes like dracula and the
+-- gruvbox/catppuccin/tokyo-night/etc. variants on every boot, silently
+-- falling back to the default regardless of what the user had chosen.
 local saved = M.get_saved()
-if CURSES and saved and saved ~= 'term' and saved ~= 'dark' and saved ~= 'light'
-    and saved ~= 'highcontrast' and saved ~= 'phosphor' and saved ~= 'argonaut' then
-  saved = nil -- ignore incompatible saved theme
+if saved then
+  local found = false
+  for _, name in ipairs(M.available) do
+    if name == saved then found = true; break end
+  end
+  if not found then
+    -- Saved theme was removed or the preference file is stale/corrupted.
+    ui.statusbar_text = 'Theme "' .. saved .. '" not found; using default'
+    saved = nil
+  end
 end
 M.current = saved or 'dark'
 
