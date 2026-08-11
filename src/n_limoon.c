@@ -286,6 +286,7 @@ static bool scrollbar_enabled = false;
 /* Emergency exit */
 static bool want_quit = false;
 static int ctrl_c_count = 0;
+static double last_ctrl_c_time = 0.0;
 
 /* Dirty flag: only call notcurses_render() when something actually changed. */
 static bool needs_render = true;
@@ -1185,8 +1186,18 @@ static void handle_keypress(struct ncinput *ni) {
         }
     }
 
-    /* Emergency exit — 3 consecutive Ctrl+C presses */
+    /* Emergency exit — 3 consecutive Ctrl+C presses within a short window.
+     * Ctrl+C is also the copy shortcut, so without the time window a user
+     * who copies three unrelated fragments in one session would trigger
+     * this and lose unsaved work. Only presses within 500ms of each other
+     * count as "consecutive"; a slower cadence is normal copying, not a
+     * panic mash. */
     if (emit_key == 'c' && (sci_mods & SCMOD_CTRL)) {
+        struct timespec ts;
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+        double now = ts.tv_sec + ts.tv_nsec / 1e9;
+        if (now - last_ctrl_c_time > 0.5) ctrl_c_count = 0;
+        last_ctrl_c_time = now;
         if (++ctrl_c_count >= 3) { want_quit = true; return; }
     } else {
         ctrl_c_count = 0;
