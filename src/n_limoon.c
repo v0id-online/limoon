@@ -4386,13 +4386,28 @@ bool spawn(lua_State *L, Process *proc, int index, const char *cmd, const char *
         close(p_stdout[0]); close(p_stdout[1]);
         close(p_stderr[0]); close(p_stderr[1]);
 
+        /* notcurses disables SIGINT/SIGQUIT/SIGTSTP delivery for the parent
+         * (linesigs off); the child inherits that disposition, so an
+         * interactive child (git commit, less, ...) couldn't be interrupted
+         * and its own Ctrl+C was ignored. The parent also ignores SIGPIPE
+         * (see main()); the child should not. Reset all four to defaults. */
+        signal(SIGINT,  SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+        signal(SIGPIPE, SIG_DFL);
+
         if (cwd) { if (chdir(cwd) < 0) {} }
 
+        /* Writing to `environ` before exec is undefined behavior per POSIX
+         * (execvp uses it implicitly, so this "worked" on Linux, but races
+         * with any other thread reading environ and isn't portable). Use
+         * execvpe with an explicit envp instead when one was provided. */
         if (envp) {
-            extern char **environ;
-            environ = envp;
+            execvpe(argv[0], argv, envp);
+        } else {
+            execvp(argv[0], argv);
         }
-        execvp(argv[0], argv);
+        /* If we get here, exec failed. */
         _exit(127);
     }
 
