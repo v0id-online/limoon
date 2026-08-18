@@ -1557,6 +1557,104 @@ static int utf8_visual_width(const char *s) {
     return width >= 0 ? width : (int)strlen(s);
 }
 
+/**
+ * @brief Truncate a UTF-8 string to fit within `max_cells` visual cells,
+ *   never splitting a codepoint.
+ *
+ * @param src Source string. NULL treated as empty.
+ * @param out Destination buffer (>= 1 byte).
+ * @param out_size Bytes available in `out`, including the trailing '\0'.
+ * @param max_cells Visual cell budget.
+ * @return Bytes written, excluding the trailing '\0'.
+ */
+static size_t utf8_truncate(const char *src, char *out, size_t out_size, int max_cells) {
+    if (!src || !out || out_size == 0) return 0;
+    size_t written = 0;
+    int cells_used = 0;
+    const char *p = src;
+    while (*p && cells_used < max_cells) {
+        int cp_len = 1;
+        unsigned char b = (unsigned char)*p;
+        if      ((b & 0x80) == 0x00) cp_len = 1;
+        else if ((b & 0xE0) == 0xC0) cp_len = 2;
+        else if ((b & 0xF0) == 0xE0) cp_len = 3;
+        else if ((b & 0xF8) == 0xF0) cp_len = 4;
+
+        char cp[5] = {0};
+        for (int i = 0; i < cp_len && p[i]; i++) cp[i] = p[i];
+        int w = utf8_visual_width(cp);
+
+        if (cells_used + w > max_cells) break;
+        if (written + (size_t)cp_len + 1 > out_size) break;
+
+        memcpy(out + written, p, (size_t)cp_len);
+        written += (size_t)cp_len;
+        cells_used += w;
+        p += cp_len;
+    }
+    out[written] = '\0';
+    return written;
+}
+
+/**
+ * @brief Draw a UTF-8 string on a plane at (y,x), one grapheme cluster at
+ *   a time, up to `max_cells` cells wide.
+ *
+ * @param plane notcurses plane.
+ * @param y,x Start cell.
+ * @param s UTF-8 string. NULL or empty draws nothing.
+ * @param max_cells Cell budget.
+ * @return Cells actually drawn.
+ */
+static int draw_utf8(struct ncplane *plane, int y, int x, const char *s, int max_cells) {
+    if (!s || !*s) return 0;
+    const char *p = s;
+    int cursor_x = x;
+    int cells = 0;
+    while (*p && cells < max_cells) {
+        size_t consumed = 0;
+        int cell_w = ncplane_putegc_yx(plane, y, cursor_x, p, &consumed);
+        if (cell_w < 0 || consumed == 0) break; /* invalid byte sequence */
+        if (cells + cell_w > max_cells) break; /* wide glyph would overflow the budget */
+        cursor_x += cell_w;
+        cells += cell_w;
+        p += consumed;
+    }
+    return cells;
+}
+
+/**
+ * @brief Advance one codepoint forward in a UTF-8 string, without
+ *   splitting a multi-byte sequence.
+ *
+ * @param s UTF-8 string.
+ * @param pos Current byte offset into `s`.
+ * @return Byte offset of the start of the next codepoint, or `pos`
+ *   unchanged if already at the terminating NUL.
+ */
+static int utf8_next(const char *s, int pos) {
+    if (!s[pos]) return pos;
+    int n = 1;
+    while (s[pos + n] && (s[pos + n] & 0xC0) == 0x80) n++;
+    return pos + n;
+}
+
+/**
+ * @brief Retreat one codepoint backward in a UTF-8 string, without
+ *   splitting a multi-byte sequence.
+ *
+ * @param s UTF-8 string.
+ * @param pos Current byte offset into `s`.
+ * @return Byte offset of the start of the previous codepoint, or 0 if
+ *   `pos` was already at or before the start of the string.
+ */
+static int utf8_prev(const char *s, int pos) {
+    if (pos <= 0) return 0;
+    int n = pos - 1;
+    while (n > 0 && ((unsigned char)s[n] & 0xC0) == 0x80) n--;
+    return n;
+}
+
 /* Set gradient color for position t within a tab of total columns */
 static void set_tab_color(struct ncplane *plane, int t, int total, bool active) {
     int r, g, b;
