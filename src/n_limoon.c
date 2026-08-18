@@ -3145,7 +3145,7 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         if (opts.title) {
             DLG_FGHEX(C_TITLE); DLG_BGHEX(C_BG);
             ncplane_set_styles(dplane, NCSTYLE_BOLD);
-            int tx = (w - (int)strlen(opts.title)) / 2;
+            int tx = (w - utf8_visual_width(opts.title)) / 2;
             if (tx < 1) tx = 1;
             ncplane_putstr_yx(dplane, 1, tx, opts.title);
             ncplane_set_styles(dplane, NCSTYLE_NONE);
@@ -3276,7 +3276,7 @@ int input_dialog(DialogOptions opts, lua_State *L) {
     for (int r = 1; r < h-1; r++) { ncplane_putstr_yx(dplane,r,0,"│"); ncplane_putstr_yx(dplane,r,w-1,"│"); }
 
     if (opts.title) {
-        int tx = (w - (int)strlen(opts.title)) / 2;
+        int tx = (w - utf8_visual_width(opts.title)) / 2;
         if (tx < 0) tx = 0;
         TH_FG(dplane, T->dlg_title); ncplane_set_styles(dplane, NCSTYLE_BOLD);
         ncplane_putstr_yx(dplane, 1, tx, opts.title);
@@ -3536,7 +3536,7 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
             (T->fd_title_b>>16)&0xFF,(T->fd_title_b>>8)&0xFF, T->fd_title_b&0xFF,
             (T->fd_title_fg>>16)&0xFF,(T->fd_title_fg>>8)&0xFF, T->fd_title_fg&0xFF);
         const char *title = opts.title ? opts.title : (save_mode ? "Save File" : "Open File");
-        int tx = (dw - (int)strlen(title)) / 2;
+        int tx = (dw - utf8_visual_width(title)) / 2;
         TH_FG(dp, T->fd_title_fg); TH_BG(dp, T->fd_title_bg);
         ncplane_putstr_yx(dp, 0, tx > 0 ? tx : 0, title);
 
@@ -3837,7 +3837,7 @@ int progress_dialog(DialogOptions opts, lua_State *L,
     ncplane_set_base(dplane, " ", 0, 0);
 
     if (opts.title) {
-        int tx = (w - (int)strlen(opts.title)) / 2;
+        int tx = (w - utf8_visual_width(opts.title)) / 2;
         if (tx < 0) tx = 0;
         ncplane_putstr_yx(dplane, 1, tx, opts.title);
     }
@@ -4053,7 +4053,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
 
         /* Title */
         if (opts.title) {
-            int tx = (dw - (int)strlen(opts.title)) / 2;
+            int tx = (dw - utf8_visual_width(opts.title)) / 2;
             TH_FG(dp, T->dlg_title); ncplane_set_styles(dp, NCSTYLE_BOLD);
             ncplane_putstr_yx(dp, 0, tx > 0 ? tx : 0, opts.title);
             ncplane_set_styles(dp, NCSTYLE_NONE);
