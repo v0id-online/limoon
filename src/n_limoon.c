@@ -70,6 +70,11 @@ typedef struct {
 #define TH_FG(p,c) ncplane_set_fg_rgb8(p,((c)>>16)&0xFF,((c)>>8)&0xFF,(c)&0xFF)
 #define TH_BG(p,c) ncplane_set_bg_rgb8(p,((c)>>16)&0xFF,((c)>>8)&0xFF,(c)&0xFF)
 
+/* Retry a syscall that failed with EINTR (signal delivery interrupting a
+ * blocking read/write/poll/waitpid). Usage: RETRY_INTR(n, write(fd, buf, len)); */
+#define RETRY_INTR(result, call) \
+    do { (result) = (call); } while ((result) == -1 && errno == EINTR)
+
 /* Blue (original Catppuccin-based palette) */
 static const LimoonTheme THEME_BLUE = {
     .tab_act_a=0x1E41AF, .tab_act_b=0x4B78E6, .tab_act_text=0xDCE6FF,
@@ -1035,7 +1040,13 @@ static void drain_proc_fd(NProcess *np, int fd, bool is_stdout) {
     if (fd < 0) return;
     char buf[4096];
     ssize_t n;
-    while ((n = read(fd, buf, sizeof(buf))) > 0) {
+    while (true) {
+        n = read(fd, buf, sizeof(buf));
+        if (n < 0) {
+            if (errno == EINTR) continue;
+            break; /* EAGAIN (no more data right now) or a real error */
+        }
+        if (n == 0) break; /* EOF */
         bool monitoring = is_stdout ? np->monitor_stdout : np->monitor_stderr;
         if (monitoring) {
             needs_render = true;
@@ -1057,7 +1068,8 @@ static void monitor_processes(void) {
 
         /* Check if process has exited */
         int status;
-        pid_t result = waitpid(np->pid, &status, WNOHANG);
+        pid_t result;
+        RETRY_INTR(result, waitpid(np->pid, &status, WNOHANG));
         if (result > 0) {
             /* Drain remaining output */
             drain_proc_fd(np, np->stdout_fd, true);
@@ -4428,8 +4440,8 @@ bool is_process_running(Process *proc) {
 void wait_process(Process *proc) {
     NProcess *np = (NProcess *)proc;
     if (!np || !np->running) return;
-    int status;
-    waitpid(np->pid, &status, 0);
+    int status, r;
+    RETRY_INTR(r, waitpid(np->pid, &status, 0));
     np->running = false;
     np->exit_status = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
 }
@@ -4437,7 +4449,8 @@ void wait_process(Process *proc) {
 /* Poll fd with short timeout; render UI on timeout. Returns poll result. */
 static int poll_with_ui(int fd) {
     struct pollfd pfd = { .fd = fd, .events = POLLIN };
-    int r = poll(&pfd, 1, 50);
+    int r;
+    RETRY_INTR(r, poll(&pfd, 1, 50));
     if (r == 0 && nc && root_pane) {
         ncpane_render(root_pane);
         notcurses_render(nc);
@@ -4502,7 +4515,8 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
                 free(result); return NULL;
             }
             if (r == 0) continue; /* timeout — UI was pumped */
-            ssize_t n = read(fd, result + total, want - (size_t)total);
+            ssize_t n;
+            RETRY_INTR(n, read(fd, result + total, want - (size_t)total));
             if (n > 0) total += n;
             else break; /* EOF or error */
         }
@@ -4518,7 +4532,8 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
             int r = poll_with_ui(fd);
             if (r < 0) break;
             if (r == 0) continue;
-            ssize_t n = read(fd, result + total, cap - (size_t)total - 1);
+            ssize_t n;
+            RETRY_INTR(n, read(fd, result + total, cap - (size_t)total - 1));
             if (n <= 0) break;
             total += n;
             if ((size_t)total >= cap - 1) {
@@ -4542,7 +4557,8 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
             if (r < 0) break;
             if (r == 0) continue;
             char ch;
-            ssize_t n = read(fd, &ch, 1);
+            ssize_t n;
+            RETRY_INTR(n, read(fd, &ch, 1));
             if (n <= 0) break;
             if ((size_t)total >= cap - 1) {
                 cap *= 2;
