@@ -4616,7 +4616,10 @@ void close_process_input(Process *proc) {
 
 void kill_process(Process *proc, int sig) {
     NProcess *np = (NProcess *)proc;
-    if (!np || np->pid <= 0) return;
+    /* Once a child has exited and been reaped, the kernel may recycle its
+     * PID for an unrelated process. Sending a signal by a stale PID would
+     * kill that innocent bystander instead. */
+    if (!np || np->pid <= 0 || !np->running) return;
     kill(np->pid, sig ? sig : SIGTERM);
 }
 
@@ -4633,6 +4636,26 @@ void cleanup_process(Process *proc) {
     while (*pp) {
         if (*pp == np) { *pp = np->next; break; }
         pp = &(*pp)->next;
+    }
+    /* If the child is still alive when Lua GC calls this (e.g. the Process
+     * userdata was dropped without ever being read to EOF/waited on), it
+     * would otherwise become a zombie until Li Moon itself exits. Ask
+     * politely, then insist. */
+    if (np->running) {
+        kill(np->pid, SIGTERM);
+        for (int i = 0; i < 10; i++) {
+            struct timespec ts = {0, 10 * 1000 * 1000}; /* 10ms */
+            nanosleep(&ts, NULL);
+            int status, r;
+            RETRY_INTR(r, waitpid(np->pid, &status, WNOHANG));
+            if (r == np->pid) { np->running = false; break; }
+        }
+        if (np->running) {
+            kill(np->pid, SIGKILL);
+            int status, r;
+            RETRY_INTR(r, waitpid(np->pid, &status, 0));
+            np->running = false;
+        }
     }
     close_process_input(np);
     if (np->stdout_fd != -1) { close(np->stdout_fd); np->stdout_fd = -1; }
