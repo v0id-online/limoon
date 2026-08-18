@@ -2691,14 +2691,19 @@ void focus_find(void) {
 
         } else if (k == NCKEY_LEFT) {
             if (on_entry) {
-                int *cur = (cur_focus == FOCUS_FIND_ENTRY) ? &fcur : &rcur;
-                if (*cur > 0) (*cur)--;
+                /* Byte-wise (*cur)-- could land mid-codepoint on multi-byte
+                 * UTF-8 (Portuguese accents, etc.), corrupting the byte
+                 * offset that fb_draw_entry() and Backspace/Delete rely on
+                 * always being codepoint-aligned. */
+                char *tx  = (cur_focus == FOCUS_FIND_ENTRY) ? ftext : rtext;
+                int  *cur = (cur_focus == FOCUS_FIND_ENTRY) ? &fcur : &rcur;
+                *cur = utf8_prev(tx, *cur);
             }
         } else if (k == NCKEY_RIGHT) {
             if (on_entry) {
                 char *tx  = (cur_focus == FOCUS_FIND_ENTRY) ? ftext : rtext;
                 int  *cur = (cur_focus == FOCUS_FIND_ENTRY) ? &fcur : &rcur;
-                if (*cur < (int)strlen(tx)) (*cur)++;
+                *cur = utf8_next(tx, *cur);
             }
         } else if (k == NCKEY_HOME) {
             if (cur_focus == FOCUS_FIND_ENTRY) fcur = 0;
