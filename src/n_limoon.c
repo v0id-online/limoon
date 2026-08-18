@@ -1009,27 +1009,43 @@ typedef struct Timeout {
 } Timeout;
 
 static Timeout *timeout_list = NULL;
+static Timeout *timeout_tail = NULL; /* tail of timeout_list, for O(1) append */
 
+/* Uses an explicit prev/t walk (not the Timeout** back-pointer idiom) so
+ * that unlinking a node reads its CURRENT t->next/timeout_tail rather than
+ * a value captured before running its callback. This matters because a
+ * timeout's own callback can call add_timeout(): since add_timeout()
+ * appends at timeout_tail instead of prepending at the head, an in-progress
+ * traversal's already-visited links are never touched by that append,
+ * except when the node currently being processed is itself the tail —
+ * that append becomes this node's new t->next, and the unlink/tail-update
+ * below picks it up correctly instead of orphaning it. (Un-prepending was
+ * the actual bug: prepending at the head raced with removing the
+ * then-current head, silently discarding the newly added timeout.) A
+ * timeout added during another node's callback is simply visited on the
+ * next process_timeouts() call, not this one. */
 static void process_timeouts(void) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     double now = ts.tv_sec + ts.tv_nsec / 1e9;
-    Timeout **pt = &timeout_list;
-    while (*pt) {
-        Timeout *t = *pt;
+    Timeout *prev = NULL, *t = timeout_list;
+    while (t) {
+        Timeout *next = t->next;
         if (now >= t->trigger_time) {
             needs_render = true;
             bool repeat = t->f(t->reference);
             if (repeat) {
                 t->trigger_time = now + t->interval;
-                pt = &(*pt)->next;
+                prev = t;
             } else {
-                *pt = t->next;
+                if (prev) prev->next = t->next; else timeout_list = t->next;
+                if (t == timeout_tail) timeout_tail = prev;
                 free(t);
             }
         } else {
-            pt = &(*pt)->next;
+            prev = t;
         }
+        t = next;
     }
 }
 
@@ -3022,8 +3038,14 @@ void add_timeout(double interval, bool (*f)(int *), int *reference) {
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     t->trigger_time = ts.tv_sec + ts.tv_nsec / 1e9 + interval;
-    t->next = timeout_list;
-    timeout_list = t;
+    t->next = NULL;
+    /* Append at the tail (not prepend at head) — see process_timeouts(). */
+    if (!timeout_list) {
+        timeout_list = timeout_tail = t;
+    } else {
+        timeout_tail->next = t;
+        timeout_tail = t;
+    }
 }
 
 /* ------------------------------------------------------------------ */
