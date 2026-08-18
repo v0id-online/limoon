@@ -872,7 +872,7 @@ static bool init_lua(int argc, char **argv) {
 		lua_pop(L, 2), lua_gc(L, LUA_GCCOLLECT, 0); // pop package.loaded, _G
 	}
 	luaL_openlibs(L);
-	// Ajustar package.cpath e package.path para incluir caminhos do sistema Lua 5.4
+	// Adjust package.cpath and package.path to include Lua 5.4 system paths
 	lua_getglobal(L, "package");
 	// cpath
 	lua_getfield(L, -1, "cpath");

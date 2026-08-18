@@ -128,7 +128,7 @@ install_files() {
 
   # Lexers (if present)
   if [ -d "$WORK_DIR/lexers" ]; then
-    # Se for um link simbolico, copia o conteudo real
+    # If it's a symbolic link, copy the actual content
     if [ -L "$WORK_DIR/lexers" ]; then
       cp -rL "$WORK_DIR/lexers" "$INSTALL_DIR/"
     else
@@ -139,7 +139,7 @@ install_files() {
   ok "Files installed."
 
   # Wrapper script so user can just type 'li'
-  # Importante: o binario precisa do LIMOON_HOME apontando para o diretorio de instalacao
+  # Important: the binary needs LIMOON_HOME pointing to the install directory
   info "Creating wrapper script at $WRAPPER ..."
   cat > "$WRAPPER" <<EOF
 #!/bin/sh

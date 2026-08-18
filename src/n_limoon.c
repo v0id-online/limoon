@@ -136,7 +136,7 @@ static const LimoonTheme THEME_BW = {
     .ft_icon_fg=0x666666,
 };
 
-/* Green — limão (default) */
+/* Green — lemon/"limão" (Li Moon pun, default) */
 static const LimoonTheme THEME_GREEN = {
     .tab_act_a=0x0F4A20, .tab_act_b=0x1E8A3E, .tab_act_text=0xC0EBC8,
     .tab_ina_a=0x0C160E, .tab_ina_b=0x182A1A, .tab_ina_text=0x4A7A54,
@@ -1206,8 +1206,8 @@ static void handle_keypress(struct ncinput *ni) {
         ctrl_c_count = 0;
     }
 
-    /* Kitty protocol envia Ctrl+letra como uppercase. Normalizar para lowercase.
-     * Também normalizar Alt+letra para garantir que Alt+Q seja 'q', não 'Q'. */
+    /* Kitty protocol sends Ctrl+letter as uppercase. Normalize to lowercase.
+     * Also normalize Alt+letter to ensure Alt+Q is 'q', not 'Q'. */
     if ((sci_mods & (SCMOD_CTRL | SCMOD_ALT)) && emit_key >= 'A' && emit_key <= 'Z')
         emit_key += 'a' - 'A';
 

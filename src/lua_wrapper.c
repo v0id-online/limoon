@@ -1,22 +1,22 @@
-/* Wrapper para fornecer o símbolo luaopen_scintillua que falta.
- * Inicializa o LPEG e retorna uma tabela vazia para o Scintillua.
+/* Wrapper providing the missing luaopen_scintillua symbol.
+ * Initializes LPeg and returns an empty table for Scintillua.
  */
 
 #include <lua.h>
 #include <lauxlib.h>
 
-/* Declaração da função luaopen_lpeg, fornecida pela libscintillua.so */
+/* Declaration of luaopen_lpeg, provided by libscintillua.so */
 int luaopen_lpeg(lua_State *L);
 
 int luaopen_scintillua(lua_State *L) {
-    /* Inicializa o LPEG e coloca sua tabela na pilha */
+    /* Initialize LPeg and push its table onto the stack */
     luaopen_lpeg(L);
-    /* Remove a tabela do LPEG da pilha (deixando-a para o require) */
+    /* Pop the LPeg table off the stack (leaving it for require) */
     lua_pop(L, 1);
 
-    /* Cria uma nova tabela para o módulo scintillua.
-       Aqui deveriam ser adicionadas funções, mas não temos.
-       Retorna uma tabela vazia por enquanto. */
+    /* Create a new table for the scintillua module.
+       Functions should be added here, but we have none.
+       Returns an empty table for now. */
     lua_newtable(L);
     return 1;
 }
