@@ -3,6 +3,7 @@
 -- Ctrl+Shift+G opens a git status output buffer.
 
 local W = require('ui_widgets')
+local commands = require('commands.registry')
 
 -- Cache result for 5 seconds to avoid shelling out on every keypress.
 local _cache, _cache_time = '', 0
@@ -43,7 +44,7 @@ end
 W.status_add('git_status', git_branch, 5)
 
 -- Ctrl+Shift+G → show full `git status` in an output buffer
-keys['ctrl+shift+g'] = function()
+local function show_git_status()
   local root = io.get_project_root()
   if not root then W.notify('Not a git repository', 3); return end
 
@@ -55,6 +56,16 @@ keys['ctrl+shift+g'] = function()
   W.write(buf, out, true)
   buf:set_lexer('bash')
 end
+keys['ctrl+shift+g'] = show_git_status
+
+commands.register{
+  id = 'git.status',
+  name = 'Git Status',
+  description = 'Show `git status` for the current project in an output buffer',
+  category = 'Git',
+  keybinding = 'ctrl+shift+g',
+  action = show_git_status,
+}
 
 return {
   _meta = {

@@ -53,60 +53,27 @@ local function change_case(upper)
 	if select then buffer:goto_pos(pos) end
 end
 
---- Returns for a list dialog a list of menu items and their key shortcuts.
--- @param menu Menu to read from.
--- @param[opt] items Table to append items to. This is used internally and should not be set.
-local function get_menu_items(menu, items)
-	if not items then items = {} end
-	for _, item in ipairs(menu) do
-		if item.title then
-			get_menu_items(item, items)
-		elseif item[1] ~= '' then -- item = {label, function}
-			local label = menu.title and string.format('%s: %s', menu.title, item[1]) or item[1]
-			items[#items + 1] = label:gsub('[_&]([^_&])', '%1')
-			items[#items + 1] = key_shortcuts[item[2]] or ''
-		end
-	end
-	return items
-end
-
---- Prompts the user to select a menu command to run.
+--- Prompts the user to select a command to run.
+-- Sourced entirely from the command registry (modules/commands/registry.lua),
+-- grouped by its fixed category order, so this palette and the registry can
+-- never drift apart. See docs/commands.md for how to add new commands.
 function M.select_command()
-	local items = get_menu_items(getmetatable(M.menubar).menu)
-	-- Add custom commands
-	items[#items + 1] = 'theme: Select Theme'
-	items[#items + 1] = 'Ctrl+; theme()'
-	items[#items + 1] = 'setcolor: Set UI Color (green/blue/bw)'
-	items[#items + 1] = 'Ctrl+; setcolor("green")'
-	
-	local i = ui.dialogs.list{
-		title = _L['Run Command'], columns = {_L['Command'], _L['Key Binding']},
-		items = items
-	}
-	if not i then return end
-	
-	-- Handle custom commands
-	local num_menu_items = #get_menu_items(getmetatable(M.menubar).menu) / 2
-	if i == num_menu_items + 1 then
-		-- theme selected
-		if limoon.themes then limoon.themes.select() end
-	elseif i == num_menu_items + 2 then
-		-- setcolor selected
-		local color = ui.dialogs.input{title = 'Set UI Color', text = 'Enter color (green, blue, or bw):'}
-		if color then
-			local colors = {green = 'green', blue = 'blue', bw = 'bw', black = 'bw', white = 'bw'}
-			local c = colors[color:lower()]
-			if c then
-				local f = io.open(_USERHOME .. '/theme_color', 'w')
-				if f then f:write(c) f:close() end
-				ui.statusbar_text = 'UI color: ' .. c .. ' (restart to apply)'
-			else
-				ui.statusbar_text = 'Invalid color. Use: green, blue, or bw'
-			end
+	local commands = limoon.commands
+	if not commands then return end -- registry not loaded (should not happen in CURSES builds)
+
+	local rows, actions = {}, {}
+	for _, category in ipairs(commands.categories()) do
+		for _, cmd in ipairs(commands.list(category)) do
+			rows[#rows + 1] = string.format('%s: %s', category, cmd.name)
+			rows[#rows + 1] = cmd.keybinding or ''
+			actions[#actions + 1] = cmd.action
 		end
-	else
-		events.emit(events.MENU_CLICKED, i)
 	end
+
+	local i = ui.dialogs.list{
+		title = _L['Run Command'], columns = {_L['Command'], _L['Key Binding']}, items = rows
+	}
+	if i and actions[i] then actions[i]() end
 end
 
 local press_any_key = _L['Press any key or Esc to cancel...']

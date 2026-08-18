@@ -3,6 +3,7 @@
 -- Ctrl+Shift+W opens a detail dialog with selection stats.
 
 local W = require('ui_widgets')
+local commands = require('commands.registry')
 
 local function count()
   local text  = buffer:get_text()
@@ -13,7 +14,7 @@ end
 
 W.status_add('word_count', count, 20)
 
-keys['ctrl+shift+w'] = function()
+local function show_word_count()
   local text  = buffer:get_text()
   local chars = #text
   local lines = buffer.line_count
@@ -32,6 +33,16 @@ keys['ctrl+shift+w'] = function()
     button1 = 'OK',
   }
 end
+keys['ctrl+shift+w'] = show_word_count
+
+commands.register{
+  id = 'edit.word_count',
+  name = 'Word Count',
+  description = 'Show document/selection word, line, and character counts',
+  category = 'Edit',
+  keybinding = 'ctrl+shift+w',
+  action = show_word_count,
+}
 
 return {
   _meta = {

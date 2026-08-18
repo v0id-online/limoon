@@ -4,6 +4,7 @@
 -- Ctrl+S inside → save (handled by standard file save once _type cleared)
 
 local W = require('ui_widgets')
+local commands = require('commands.registry')
 
 local SCRATCH_FILE = _USERHOME .. '/scratch.txt'
 local SCRATCH_TYPE = '[Scratch Pad]'
@@ -96,6 +97,15 @@ end)
 events.connect(events.QUIT, function() save_scratch() end)
 
 keys['ctrl+shift+n'] = open_scratch
+
+commands.register{
+  id = 'edit.scratch_pad',
+  name = 'Scratch Pad',
+  description = 'Open the persistent notes buffer (auto-saves to scratch.txt)',
+  category = 'Edit',
+  keybinding = 'ctrl+shift+n',
+  action = open_scratch,
+}
 
 return {
   _meta = {

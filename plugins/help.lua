@@ -3,6 +3,7 @@
 -- A persistent hint is shown at the right of the status bar.
 
 local W = require('ui_widgets')
+local commands = require('commands.registry')
 
 local HELP_TYPE = '[Help]'
 
@@ -140,6 +141,15 @@ local function open_help()
 end
 
 keys['ctrl+h'] = open_help
+
+commands.register{
+  id = 'edit.help',
+  name = 'Help',
+  description = 'Toggle the quick-reference buffer',
+  category = 'Edit',
+  keybinding = 'ctrl+h',
+  action = open_help,
+}
 
 -- ── Status bar hint ───────────────────────────────────────────────────────
 -- Priority 90 → appears at the far right, after word count and git status.

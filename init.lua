@@ -94,6 +94,13 @@ if CURSES then
   -- Widget library and plugin system.
   limoon.widgets = require('ui_widgets')
   limoon.plugins = require('plugin_manager')
+
+  -- Command registry: single source of truth for the Ctrl+P palette.
+  -- Must load before plugins, since built-in plugins self-register
+  -- commands into it (see plugins/git_status.lua etc.).
+  limoon.commands = require('commands.registry')
+  require('commands.bootstrap') -- registers all default menu commands once events.INITIALIZED fires
+
   limoon.plugins.load_all()
 
   -- Ctrl+Shift+P → show loaded-plugin list.
