@@ -1800,20 +1800,15 @@ static void draw_statusbar(void) {
     const char *left = statusbar_text0;
     int llen = 0;
     if (left && left[0]) {
-        ncplane_putstr_yx(statusbar_plane, 0, 1, left);
-        /* Approximate display width (ASCII safe; UTF-8 sequences counted as 1) */
-        for (const char *p = left; *p; p++) {
-            if ((*p & 0xC0) != 0x80) llen++; /* count leading bytes only */
-        }
-        llen += 1; /* leading space */
+        int budget = (int)scols - 1;
+        int drawn = draw_utf8(statusbar_plane, 0, 1, left, budget > 0 ? budget : 0);
+        llen = drawn + 1; /* leading space */
     }
 
     /* Right side: file info / statusbar_text1 */
     const char *right = statusbar_text1;
     if (right && right[0]) {
-        int rlen = 0;
-        for (const char *p = right; *p; p++)
-            if ((*p & 0xC0) != 0x80) rlen++;
+        int rlen = utf8_visual_width(right);
         int rx = (int)scols - rlen - 1;
         if (rx > llen + 1) {
             /* Separator between left and right sections */
@@ -1822,7 +1817,7 @@ static void draw_statusbar(void) {
                 ncplane_putchar_yx(statusbar_plane, 0, llen + 1, '|');
                 TH_FG(statusbar_plane, T->sb_fg);
             }
-            ncplane_putstr_yx(statusbar_plane, 0, rx, right);
+            draw_utf8(statusbar_plane, 0, rx, right, (int)scols - rx);
         }
     }
 
