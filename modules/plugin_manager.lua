@@ -27,10 +27,16 @@ M.dirs = {
 function M.load(file)
   local ok, result = pcall(dofile, file)
   local record = {file = file, ok = ok}
+  local id
   if ok then
     if type(result) == 'table' then
       record.meta = result._meta or {}
-      local id = record.meta.name or file:match('([^/\\]+)%.lua$') or file
+      id = record.meta.name or file:match('([^/\\]+)%.lua$') or file
+      -- M.dirs is searched in priority order (_USERHOME before _HOME), so
+      -- the first plugin registered under an id is the highest-priority
+      -- one; skip re-registering (and running setup() again) if a
+      -- lower-priority plugin with the same id loads afterward.
+      if M.plugins[id] then return M.plugins[id].ok, M.plugins[id].err end
       M.plugins[id] = record
       -- Call setup() if provided.
       if type(result.setup) == 'function' then
@@ -41,13 +47,15 @@ function M.load(file)
       end
     else
       -- Plugin returned nothing (side-effect-only) — register by filename.
-      local id = file:match('([^/\\]+)%.lua$') or file
+      id = file:match('([^/\\]+)%.lua$') or file
+      if M.plugins[id] then return M.plugins[id].ok, M.plugins[id].err end
       record.meta = {}
       M.plugins[id] = record
     end
   else
     record.err = result  -- result holds the error message on failure
-    local id = file:match('([^/\\]+)%.lua$') or file
+    id = file:match('([^/\\]+)%.lua$') or file
+    if M.plugins[id] then return M.plugins[id].ok, M.plugins[id].err end
     M.plugins[id] = record
   end
   return ok, record.err
