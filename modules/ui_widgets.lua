@@ -118,7 +118,7 @@ function M.output_buffer(name)
   buf.read_only = false
   buf:append_text('')
   buf.read_only = true
-  buf.modify = false
+  buf:set_save_point()
   return buf
 end
 
@@ -133,7 +133,7 @@ function M.write(buf, text, clear)
   if clear then buf:clear_all() end
   buf:document_end()
   buf:append_text(text)
-  buf.modify = false
+  buf:set_save_point()
   if was_ro then buf.read_only = true end
 end
 
