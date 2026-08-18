@@ -3542,18 +3542,42 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
 
         /* ── Current path ── */
         TH_FG(dp, T->fd_path); TH_BG(dp, T->fd_bg);
-        int path_avail = dw - 8;
+        int path_avail = dw - 8; if (path_avail < 0) path_avail = 0;
         const char *pdisp = cwd;
-        if ((int)strlen(cwd) > path_avail) pdisp = cwd + strlen(cwd) - path_avail;
-        ncplane_printf_yx(dp, path_row, 1, "Path: %.*s", dw - 8, pdisp);
+        /* Byte-offset truncation from the right (strlen(cwd) - path_avail)
+         * could land mid-codepoint on a UTF-8 path component. Walk back
+         * from the end one codepoint at a time until the tail fits the
+         * cell budget. */
+        if (utf8_visual_width(cwd) > path_avail) {
+            int pos = (int)strlen(cwd), w = 0;
+            while (pos > 0 && w < path_avail) {
+                int prev = utf8_prev(cwd, pos);
+                int gl = pos - prev > 4 ? 4 : pos - prev;
+                char glyph[5] = {0};
+                memcpy(glyph, cwd + prev, (size_t)gl);
+                int gw = utf8_visual_width(glyph);
+                if (w + gw > path_avail) break;
+                w += gw;
+                pos = prev;
+            }
+            pdisp = cwd + pos;
+        }
+        ncplane_putstr_yx(dp, path_row, 1, "Path: ");
+        draw_utf8(dp, path_row, 7, pdisp, path_avail);
 
         /* ── Filter entry ── */
         bool filter_focused = (focus == 1);
         TH_BG(dp, filter_focused ? T->fd_entry_focus : T->fd_entry_blur);
         TH_FG(dp, T->fd_entry_text);
         int f_off = filter_cur > entry_w ? filter_cur - entry_w : 0;
-        ncplane_printf_yx(dp, filt_row, 1, "Filter:[%-*.*s]",
-                          entry_w, entry_w, filter + f_off);
+        ncplane_putstr_yx(dp, filt_row, 1, "Filter:[");
+        {
+            char ftrunc[160];
+            utf8_truncate(filter + f_off, ftrunc, sizeof(ftrunc), entry_w);
+            int fdrawn = draw_utf8(dp, filt_row, 1 + 8, ftrunc, entry_w);
+            for (int c = fdrawn; c < entry_w; c++) ncplane_putchar_yx(dp, filt_row, 1 + 8 + c, ' ');
+            ncplane_putstr_yx(dp, filt_row, 1 + 8 + entry_w, "]");
+        }
 
         /* ── Separator ── */
         TH_FG(dp, T->fd_sep); TH_BG(dp, T->fd_bg);
@@ -3597,7 +3621,12 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
 
             /* Name, truncated */
             int maxname = dw - 6;
-            ncplane_printf_yx(dp, row, 5, "%-*.*s", maxname, maxname, entries[ei].name);
+            if (maxname > 0) {
+                char trunc[512];
+                utf8_truncate(entries[ei].name, trunc, sizeof(trunc), maxname);
+                int drawn = draw_utf8(dp, row, 5, trunc, maxname);
+                for (int c = drawn; c < maxname; c++) ncplane_putchar_yx(dp, row, 5 + c, ' ');
+            }
         }
 
         /* ── Separator bottom ── */
@@ -3610,8 +3639,14 @@ static int file_browser_dialog(DialogOptions opts, lua_State *L, bool save_mode)
             TH_BG(dp, fn_focused ? T->fd_entry_focus : T->fd_entry_blur);
             TH_FG(dp, T->fd_entry_text);
             int fn_off = fname_cur > entry_w ? fname_cur - entry_w : 0;
-            ncplane_printf_yx(dp, fn_row, 1, "Name:  [%-*.*s]",
-                              entry_w, entry_w, fname + fn_off);
+            ncplane_putstr_yx(dp, fn_row, 1, "Name:  [");
+            {
+                char ntrunc[512];
+                utf8_truncate(fname + fn_off, ntrunc, sizeof(ntrunc), entry_w);
+                int ndrawn = draw_utf8(dp, fn_row, 1 + 8, ntrunc, entry_w);
+                for (int c = ndrawn; c < entry_w; c++) ncplane_putchar_yx(dp, fn_row, 1 + 8 + c, ' ');
+                ncplane_putstr_yx(dp, fn_row, 1 + 8 + entry_w, "]");
+            }
         }
 
         /* ── Buttons ── */
