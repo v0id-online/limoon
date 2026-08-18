@@ -2251,7 +2251,24 @@ static int fb_draw_entry(struct ncplane *p, int row, int x, int w,
                          FBHit *hits, int *nhits, int action)
 {
     int len = (int)strlen(text);
-    int off = (cur >= w) ? cur - w + 1 : 0;
+    if (cur < 0) cur = 0;
+    if (cur > len) cur = len;
+
+    /* `cur` is a byte offset kept codepoint-aligned by the find-bar's
+     * LEFT/RIGHT/Backspace/Delete handlers (see utf8_next()/utf8_prev()).
+     * Convert to a cell offset here so the w-cell viewport scrolls
+     * correctly for multi-byte, non-1-cell-wide UTF-8 (Portuguese accents,
+     * wide glyphs, ...) instead of assuming 1 byte == 1 cell. */
+    int cur_cell = 0;
+    for (int b = 0; b < cur; ) {
+        int nb = utf8_next(text, b);
+        int gl = nb - b > 4 ? 4 : nb - b;
+        char glyph[5] = {0};
+        memcpy(glyph, text + b, (size_t)gl);
+        cur_cell += utf8_visual_width(glyph);
+        b = nb;
+    }
+    int off_cell = (cur_cell >= w) ? cur_cell - w + 1 : 0;
 
     /* Opening bracket */
     fb_fg(p, focused ? c_border : T->fb_dim);
@@ -2260,14 +2277,34 @@ static int fb_draw_entry(struct ncplane *p, int row, int x, int w,
     /* Actually use plain bracket always, color indicates focus */
     ncplane_putchar_yx(p, row, x, '[');
 
-    /* Characters */
-    for (int i = 0; i < w; i++) {
-        int ci = off + i;
-        bool is_cur = focused && (ci == cur);
+    /* Characters: walk codepoint by codepoint (byte-safe), drawing only
+     * the glyphs that fall inside the [off_cell, off_cell + w) viewport. */
+    int b = 0, cell_col = 0;
+    while (b < len && cell_col < off_cell + w) {
+        int nb = utf8_next(text, b);
+        int gl = nb - b > 4 ? 4 : nb - b;
+        char glyph[5] = {0};
+        memcpy(glyph, text + b, (size_t)gl);
+        int gw = utf8_visual_width(glyph);
+        if (gw <= 0) gw = 1;
+        if (cell_col >= off_cell) {
+            bool is_cur = focused && (cell_col == cur_cell);
+            fb_fg(p, is_cur ? T->fb_cursor_fg : fg_text);
+            fb_bg(p, is_cur ? c_cursor : bg_entry);
+            size_t consumed = 0;
+            ncplane_putegc_yx(p, row, x + 1 + (cell_col - off_cell), glyph, &consumed);
+        }
+        cell_col += gw;
+        b = nb;
+    }
+    /* Blank-fill the rest of the viewport (past end of text, or a wide
+     * glyph straddling the right edge). */
+    for (int c = cell_col - off_cell; c < w; c++) {
+        if (c < 0) continue;
+        bool is_cur = focused && (off_cell + c == cur_cell);
         fb_fg(p, is_cur ? T->fb_cursor_fg : fg_text);
         fb_bg(p, is_cur ? c_cursor : bg_entry);
-        char ch = (ci < len) ? text[ci] : ' ';
-        ncplane_putchar_yx(p, row, x + 1 + i, ch);
+        ncplane_putchar_yx(p, row, x + 1 + c, ' ');
     }
 
     /* Closing bracket */
