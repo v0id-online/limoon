@@ -4308,6 +4308,13 @@ char *read_process_output(Process *proc, char option, size_t *len, const char **
      * anything. */
     size_t requested_n = (option == 'n') ? *len : 0;
     *len = 0;
+    /* Default to "no error" (clean EOF) unless a branch below overwrites this
+     * with strerror(). Without this, proc_read()'s `error` local is
+     * uninitialized stack garbage whenever a read legitimately returns
+     * nothing (e.g. 'a' mode against an empty pipe) — proc_read() then
+     * treats that garbage pointer as a real error string and passes it to
+     * lua_pushstring(), segfaulting inside Lua's string interner. */
+    if (error) *error = NULL;
 
     if (option == 'n') {
         size_t want = requested_n;
