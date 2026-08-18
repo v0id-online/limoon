@@ -98,16 +98,18 @@ return function(view, colors, styles)
   -- Element colors
   -- Alpha must be 0xFF for IsValid() to return true; otherwise Scintilla
   -- treats the color as "not set" and shows no selection highlight.
+  -- colors.find is Ctrl+F match highlighting; reusing it here made selected
+  -- text visually identical to find matches. colors.sel exists for this.
   view.element_color[view.ELEMENT_SELECTION_TEXT]                     = colors.fg   | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_BACK]                     = colors.sel  | 0xFF000000
   view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_TEXT]          = colors.fg   | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_ADDITIONAL_BACK]          = colors.sel  | 0xFF000000
   view.element_color[view.ELEMENT_SELECTION_SECONDARY_TEXT]           = colors.fg   | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_SECONDARY_BACK]           = colors.sel  | 0xFF000000
   view.element_color[view.ELEMENT_SELECTION_INACTIVE_TEXT]            = colors.fg   | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_BACK]            = colors.sel  | 0xFF000000
   view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_TEXT] = colors.fg   | 0xFF000000
-  view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.find | 0xFF000000
+  view.element_color[view.ELEMENT_SELECTION_INACTIVE_ADDITIONAL_BACK] = colors.sel  | 0xFF000000
   view.element_color[view.ELEMENT_CARET] = colors.fg
   if view ~= ui.command_entry then
     view.element_color[view.ELEMENT_CARET_LINE_BACK] = colors.cur | 0x80000000
