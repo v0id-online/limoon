@@ -5,11 +5,31 @@
 local W = require('ui_widgets')
 local commands = require('commands.registry')
 
+-- Cache the word count and only recompute it when the buffer's text
+-- actually changes. count() runs on every UPDATE_UI event (i.e. every
+-- keystroke); buffer:get_text() copies the entire buffer, so recomputing
+-- unconditionally made every keystroke pay an O(buffer size) cost.
+local cached_words = 0
+local cache_dirty  = true
+
+local function recount_words()
+  local text = buffer:get_text()
+  local w = 0
+  for _ in text:gmatch('%S+') do w = w + 1 end
+  cached_words = w
+  cache_dirty  = false
+end
+
+events.connect(events.BUFFER_AFTER_SWITCH, function() cache_dirty = true end)
+events.connect(events.BUFFER_NEW, function() cache_dirty = true end)
+events.connect(events.MODIFIED, function(_, mod_type)
+  -- SC_MOD_INSERTTEXT = 1, SC_MOD_DELETETEXT = 2
+  if mod_type and (mod_type & 3) ~= 0 then cache_dirty = true end
+end)
+
 local function count()
-  local text  = buffer:get_text()
-  local words = 0
-  for _ in text:gmatch('%S+') do words = words + 1 end
-  return string.format('W:%d  L:%d', words, buffer.line_count)
+  if cache_dirty then recount_words() end
+  return string.format('W:%d  L:%d', cached_words, buffer.line_count)
 end
 
 W.status_add('word_count', count, 20)
