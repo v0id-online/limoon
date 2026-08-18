@@ -247,6 +247,11 @@ static struct ncplane *statusbar_plane = NULL;
 static void draw_tabbar(void);
 static void draw_statusbar(void);
 static void tabbar_click(int cx, bool close_btn);
+static int utf8_visual_width(const char *s);
+static size_t utf8_truncate(const char *src, char *out, size_t out_size, int max_cells);
+static int draw_utf8(struct ncplane *plane, int y, int x, const char *s, int max_cells);
+static int utf8_next(const char *s, int pos);
+static int utf8_prev(const char *s, int pos);
 static bool str_contains_ci(const char *hay, const char *needle);
 
 /* Find & replace state */
@@ -463,13 +468,12 @@ static void ft_draw(void) {
     TH_FG(ft_plane, T->ft_title_fg);
     TH_BG(ft_plane, T->ft_title_bg);
     int content_w = (int)cols - 1; /* last col = separator */
-    char title[256];
+    char raw_title[256], title[256];
     const char *rname = strrchr(ft_root_path, '/');
-    snprintf(title, sizeof(title), " %s", rname ? rname + 1 : ft_root_path);
+    snprintf(raw_title, sizeof(raw_title), " %s", rname ? rname + 1 : ft_root_path);
     for (int c = 0; c < content_w; c++) ncplane_putchar_yx(ft_plane, 0, c, ' ');
-    int tlen = (int)strlen(title);
-    if (tlen > content_w) tlen = content_w;
-    ncplane_putstr_yx(ft_plane, 0, 0, title);
+    utf8_truncate(raw_title, title, sizeof(title), content_w > 0 ? content_w : 0);
+    draw_utf8(ft_plane, 0, 0, title, content_w > 0 ? content_w : 0);
 
     /* Separator column (rightmost) */
     TH_FG(ft_plane, T->ft_sep_fg);
@@ -521,23 +525,22 @@ static void ft_draw(void) {
         int name_col = col + 2;
         int max_ch = content_w - name_col;
         if (max_ch > 0) {
+            /* Cell-based (not byte-based) truncation: strncpy() by byte
+             * count against a cell budget under- or over-shoots as soon as
+             * the name contains any non-ASCII character. */
             char trunc[256];
-            int len = (int)strlen(e->name);
-            if (len > max_ch) {
-                strncpy(trunc, e->name, (size_t)(max_ch - 1));
-                trunc[max_ch - 1] = '\0';
-            } else {
-                strncpy(trunc, e->name, 255);
-                trunc[255] = '\0';
-            }
-            /* Append '/' to dirs */
-            if (e->is_dir && len < max_ch - 1) {
+            int name_w = utf8_visual_width(e->name);
+            int budget = e->is_dir ? max_ch - 1 : max_ch; /* reserve 1 cell for trailing / */
+            if (budget < 0) budget = 0;
+            utf8_truncate(e->name, trunc, sizeof(trunc), budget);
+            /* Append '/' to dirs, only if the name wasn't truncated */
+            if (e->is_dir && name_w <= budget) {
                 size_t tlen = strlen(trunc);
                 if (tlen + 1 < sizeof(trunc)) {
                     trunc[tlen] = '/'; trunc[tlen + 1] = '\0';
                 }
             }
-            ncplane_putstr_yx(ft_plane, r + 1, name_col, trunc);
+            draw_utf8(ft_plane, r + 1, name_col, trunc, max_ch);
         }
     }
 }
