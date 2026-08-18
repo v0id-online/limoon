@@ -1076,6 +1076,13 @@ static void monitor_processes(void) {
             drain_proc_fd(np, np->stderr_fd, false);
             np->running = false;
             np->exit_status = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+            /* Close now instead of waiting for cleanup_process() (called by
+             * Lua GC on the Process userdata, which may not run for a
+             * while). Left open, these fds accumulate under heavy
+             * short-lived-process use until RLIMIT_NOFILE is hit. */
+            if (np->stdout_fd >= 0) { close(np->stdout_fd); np->stdout_fd = -1; }
+            if (np->stderr_fd >= 0) { close(np->stderr_fd); np->stderr_fd = -1; }
+            if (np->stdin_fd  >= 0) { close(np->stdin_fd);  np->stdin_fd  = -1; }
             *pp = np->next; /* remove from list */
             process_exited((Process *)np, np->exit_status);
             /* Do not advance pp — *pp already points to next */
