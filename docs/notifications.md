@@ -36,6 +36,15 @@ notify.info('my_new_id', some_value)
 same lookup — the level actually shown is always the one recorded in the
 catalog entry, not implied by which wrapper you call.
 
+## Catalog coverage
+
+The catalog is grouped by the same categories as the command registry
+(File, Edit, View, Buffer, Clipboard, Git) plus Session/Config, LSP, and
+DAP. **LSP and DAP ids are pre-seeded for future subsystems; do not wire
+them into anything until those features actually exist** — they exist
+now so LSP/DAP work can call `notify.*` from day one instead of adding
+catalog entries piecemeal later.
+
 ## Level conventions
 
 | Level | Meaning | Default duration |
