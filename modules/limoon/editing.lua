@@ -180,7 +180,10 @@ end
 function M.select_enclosed(left, right)
 	local s, e, anchor, pos = -1, -1, buffer.anchor, buffer.current_pos
 	if assert_type(left, 'string/nil', 1) and assert_type(right, 'string', 2) then
-		if anchor ~= pos then buffer:goto_pos(pos - #right) end
+		-- Clamp: pos - #right underflows negative when the caret is near
+		-- the start of the document (e.g. pos=0), which SCI_GOTOPOS should
+		-- not be handed.
+		if anchor ~= pos then buffer:goto_pos(math.max(0, pos - #right)) end
 		buffer:search_anchor()
 		s, e = buffer:search_prev(0, left), buffer:search_next(0, right)
 	elseif M.auto_pairs then
