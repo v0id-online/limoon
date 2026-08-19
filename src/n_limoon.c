@@ -336,6 +336,8 @@ static bool ft_visible = false;
 static bool ft_focused = false;
 static int ft_width = FT_DEFAULT_WIDTH;
 static struct ncplane *ft_plane = NULL;
+static bool ft_show_hidden = false; /* toggled with 'h' while the tree is focused */
+static bool ft_truncated = false;   /* set when a scan hit FT_MAX and had to drop entries */
 
 static int ft_compare(const void *a, const void *b) {
     const FTEntry *x = (const FTEntry *)a;
@@ -373,15 +375,29 @@ static void ft_scan_into(const char *dir_path, int depth, int insert_at) {
     struct dirent *de;
     int n = 0;
     while ((de = readdir(d)) != NULL) {
-        if (de->d_name[0] == '.') continue;
+        /* "." and ".." would otherwise let expanding an entry rescan its own
+         * directory (or its parent) forever. */
+        if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) continue;
+        if (!ft_show_hidden && de->d_name[0] == '.') continue;
+        /* Check lengths BEFORE consuming an arena slot: a truncated path
+         * would silently point at the wrong file (or a nonexistent one),
+         * and skipping the entry after ft_arena_push() would leave a gap in
+         * tmp[0..n), which qsort/memcpy below assume is contiguous. */
+        size_t dl = strlen(dir_path), nl = strlen(de->d_name);
+        if (dl + 1 + nl >= sizeof(((FTEntry *)0)->path) || nl >= sizeof(((FTEntry *)0)->name))
+            continue;
         FTEntry *e = ft_arena_push();
         if (!e) break;
-        snprintf(e->path, 4096, "%s/%s", dir_path, de->d_name);
-        snprintf(e->name, 256, "%s", de->d_name);
+        snprintf(e->path, sizeof(e->path), "%s/%s", dir_path, de->d_name);
+        snprintf(e->name, sizeof(e->name), "%s", de->d_name);
         e->depth = depth;
         e->expanded = false;
+        /* lstat (not stat): a symlinked directory reports is_dir=false here,
+         * so it's shown but never auto-expanded/rescanned. A symlink whose
+         * target is an ancestor directory (or itself) would otherwise let
+         * the user "expand" the same subtree into itself indefinitely. */
         struct stat st;
-        e->is_dir = (stat(e->path, &st) == 0 && S_ISDIR(st.st_mode));
+        e->is_dir = (lstat(e->path, &st) == 0 && S_ISDIR(st.st_mode));
         n++;
     }
     closedir(d);
@@ -389,7 +405,7 @@ static void ft_scan_into(const char *dir_path, int depth, int insert_at) {
     FTEntry *tmp = (FTEntry *)ft_arena.buf;
     qsort(tmp, n, sizeof(FTEntry), ft_compare);
     int after = ft_count - insert_at;
-    if (ft_count + n > FT_MAX) n = FT_MAX - ft_count;
+    if (ft_count + n > FT_MAX) { n = FT_MAX - ft_count; ft_truncated = true; }
     if (n > 0) {
         memmove(&ft_entries[insert_at + n], &ft_entries[insert_at],
                 after * sizeof(FTEntry));
@@ -406,7 +422,7 @@ static void ft_load_root(const char *path) {
     } else {
         ft_root_path[0] = '\0';
     }
-    ft_count = 0; ft_cursor = 0; ft_scroll = 0;
+    ft_count = 0; ft_cursor = 0; ft_scroll = 0; ft_truncated = false;
     if (!path || !path[0]) return;
     ft_scan_into(path, 0, 0);
 }
@@ -475,7 +491,8 @@ static void ft_draw(void) {
     int content_w = (int)cols - 1; /* last col = separator */
     char raw_title[256], title[256];
     const char *rname = strrchr(ft_root_path, '/');
-    snprintf(raw_title, sizeof(raw_title), " %s", rname ? rname + 1 : ft_root_path);
+    snprintf(raw_title, sizeof(raw_title), " %s%s", rname ? rname + 1 : ft_root_path,
+             ft_truncated ? " [truncated]" : "");
     for (int c = 0; c < content_w; c++) ncplane_putchar_yx(ft_plane, 0, c, ' ');
     utf8_truncate(raw_title, title, sizeof(title), content_w > 0 ? content_w : 0);
     draw_utf8(ft_plane, 0, 0, title, content_w > 0 ? content_w : 0);
@@ -632,6 +649,14 @@ static bool ft_handle_key(int key, int mods) {
             ft_focused = false;
             if (focused_view) scintilla_set_focus(focused_view, true);
             break;
+        case 'h': { /* Toggle hidden (dotfile) visibility; reloads the tree */
+            ft_show_hidden = !ft_show_hidden;
+            char saved_root[4096];
+            strncpy(saved_root, ft_root_path, 4095);
+            saved_root[4095] = '\0';
+            ft_load_root(saved_root);
+            break;
+        }
         default:
             return false;
     }
