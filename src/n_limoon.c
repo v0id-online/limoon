@@ -1545,6 +1545,7 @@ static void switch_to_tab(int tab_idx) {
 /* Call _BUFFERS[tab_idx+1]:close() to close a tab */
 static void close_tab(int tab_idx) {
     if (!lua || tab_idx < 0 || tab_idx >= num_tabs) return;
+    free(ft_arena.buf); /* scan scratch buffer, reused across scans, never freed until now */
     lua_getglobal(lua, "_BUFFERS");
     if (!lua_istable(lua, -1)) { lua_pop(lua, 1); return; }
     lua_rawgeti(lua, -1, tab_idx + 1); /* _BUFFERS[n] */
