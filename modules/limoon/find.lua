@@ -3,6 +3,7 @@
 --- Li Moon's Find & Replace pane.
 -- @module ui.find
 local M = ui.find
+local notify = require('notifications.bar')
 
 --- Whether or not the Find & Replace pane is active.
 M.active = false
@@ -181,6 +182,11 @@ events.connect(events.FIND, function(text, next)
 		goto retry
 	end
 	ui.statusbar_text = _L['No results found']
+	-- No dedicated event for this specific case (as opposed to
+	-- events.FIND_WRAPPED, which fires on the retry regardless of whether
+	-- the retry then finds anything) — call notify.bar directly rather
+	-- than invent one just for this.
+	notify.warning('search_no_matches', text)
 	buffer:set_empty_selection(incremental_orig_pos or anchor)
 end)
 

@@ -101,6 +101,7 @@ if CURSES then
   limoon.commands = require('commands.registry')
   require('commands.bootstrap') -- registers all default menu commands once events.INITIALIZED fires
   require('commands.language') -- registers the "Select Language" command (force English vs $LANG)
+  require('notifications.wiring') -- connects existing events (file save/open/close, search) to notify.*
 
   limoon.plugins.load_all()
 

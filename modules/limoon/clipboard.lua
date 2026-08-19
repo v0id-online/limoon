@@ -209,6 +209,8 @@ end
 -- itself resolves to focused_view) so they work both bare and when called
 -- with an explicit target via colon syntax (e.g. command_entry.lua's
 -- `M:copy_allow_line()`).
+local notify = require('notifications.bar')
+
 local function enable_system_clipboard()
 	-- Copy: save to both internal and system clipboard
 	buffer.copy = function(self)
@@ -216,6 +218,7 @@ local function enable_system_clipboard()
 		orig_copy(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
+		notify.info('copied')
 	end
 
 	-- Cut: same as copy
@@ -224,6 +227,7 @@ local function enable_system_clipboard()
 		orig_cut(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
+		notify.info('cut')
 	end
 
 	-- Copy-allow-line: same as copy, but this is what Ctrl+C and the Edit
@@ -234,6 +238,7 @@ local function enable_system_clipboard()
 		orig_copy_allow_line(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
+		notify.info('copied')
 	end
 
 	-- Cut-allow-line: same as cut, but this is what Ctrl+X and the Edit
@@ -243,6 +248,7 @@ local function enable_system_clipboard()
 		orig_cut_allow_line(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
+		notify.info('cut')
 	end
 
 	-- Copy text directly
@@ -251,6 +257,7 @@ local function enable_system_clipboard()
 		orig_copy_text(target, text)
 		internal_clipboard = text
 		set_system_clipboard(text)
+		notify.info('copied')
 	end
 
 	-- Paste: try system clipboard first, fall back to internal
@@ -265,7 +272,11 @@ local function enable_system_clipboard()
 			internal_clipboard = text
 		end
 
+		local had_selection = not target.selection_empty
 		insert_at_caret(target, text, function() orig_paste(target) end)
+		if text and text ~= '' then
+			notify.info(had_selection and 'paste_replaced_selection' or 'pasted')
+		end
 	end
 end
 

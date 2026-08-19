@@ -1,9 +1,10 @@
 -- bar.lua — Notification bar: FIFO queue + level-aware display.
 --
--- This module is a foundation piece: it is fully usable on its own (via
--- the stub renderer below) but is NOT wired into any existing Li Moon
--- subsystem yet. Nothing that currently writes to the statusbar (see
--- modules/ui_widgets.lua's M.notify) has been touched or replaced.
+-- Renders through modules/ui_widgets.lua's existing M.notify (a temporary
+-- statusbar message with an auto-restoring timeout) rather than a new
+-- notcurses plane — that mechanism already works and is already visible
+-- on screen, so this module is a queue/catalog layer on top of it, not a
+-- competing display.
 --
 -- Usage:
 --   local notify = require('notifications.bar')
@@ -11,6 +12,7 @@
 --   notify.raw('warning', 'ad-hoc message not in the catalog')
 
 local messages = require('notifications.messages')
+local ui_widgets = require('ui_widgets')
 
 local M = {}
 
@@ -27,13 +29,10 @@ M.durations = {
 
 M._queue = {}  -- FIFO: array of {level, text, time}
 
---- Render function. Defaults to a stderr stub (dev mode) so the module
--- is testable/usable before the real UI integration exists.
--- TODO(yuri): wire to actual notification plane in src/n_limoon.c once
--- the plane API for overlay/toast rendering is finalized. The renderer
--- signature (level, text) should stay stable across that change.
+--- Render function. Defaults to ui_widgets.M.notify (statusbar flash),
+-- passed this level's M.durations entry as the auto-restore timeout.
 function M._default_renderer(level, text)
-  io.stderr:write(string.format('[notify:%s] %s\n', level, text))
+  ui_widgets.notify(text, M.durations[level])
 end
 
 M.renderer = M._default_renderer
