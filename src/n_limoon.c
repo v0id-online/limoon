@@ -75,6 +75,13 @@ typedef struct {
 #define RETRY_INTR(result, call) \
     do { (result) = (call); } while ((result) == -1 && errno == EINTR)
 
+/* Minimum dialog width in cells, enforced by message_dialog/input_dialog/
+ * progress_dialog/list_dialog: on a very narrow terminal, `cols * fraction`
+ * can come out tiny or even <= 0; ncplane_options.cols is unsigned, so a
+ * negative width would wrap into a huge allocation request. This floor
+ * comfortably fits a border plus an "OK" button. */
+#define DLG_MIN_W 20
+
 /* Blue (original Catppuccin-based palette) */
 static const LimoonTheme THEME_BLUE = {
     .tab_act_a=0x1E41AF, .tab_act_b=0x4B78E6, .tab_act_text=0xDCE6FF,
@@ -379,25 +386,24 @@ static void ft_scan_into(const char *dir_path, int depth, int insert_at) {
          * directory (or its parent) forever. */
         if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) continue;
         if (!ft_show_hidden && de->d_name[0] == '.') continue;
-        /* Check lengths BEFORE consuming an arena slot: a truncated path
-         * would silently point at the wrong file (or a nonexistent one),
-         * and skipping the entry after ft_arena_push() would leave a gap in
-         * tmp[0..n), which qsort/memcpy below assume is contiguous. */
-        size_t dl = strlen(dir_path), nl = strlen(de->d_name);
-        if (dl + 1 + nl >= sizeof(((FTEntry *)0)->path) || nl >= sizeof(((FTEntry *)0)->name))
-            continue;
+        /* Format into scratch buffers and check snprintf's own return value
+         * BEFORE consuming an arena slot: a truncated path would silently
+         * point at the wrong file (or a nonexistent one), and skipping the
+         * entry after ft_arena_push() would leave a gap in tmp[0..n),
+         * which qsort/memcpy below assume is contiguous. */
+        char path_buf[sizeof(((FTEntry *)0)->path)], name_buf[sizeof(((FTEntry *)0)->name)];
+        int plen = snprintf(path_buf, sizeof(path_buf), "%s/%s", dir_path, de->d_name);
+        if (plen < 0 || (size_t)plen >= sizeof(path_buf)) continue;
+        int nlen = snprintf(name_buf, sizeof(name_buf), "%s", de->d_name);
+        if (nlen < 0 || (size_t)nlen >= sizeof(name_buf)) continue;
         FTEntry *e = ft_arena_push();
         if (!e) break;
-        snprintf(e->path, sizeof(e->path), "%s/%s", dir_path, de->d_name);
-        snprintf(e->name, sizeof(e->name), "%s", de->d_name);
+        memcpy(e->path, path_buf, (size_t)plen + 1);
+        memcpy(e->name, name_buf, (size_t)nlen + 1);
         e->depth = depth;
         e->expanded = false;
-        /* lstat (not stat): a symlinked directory reports is_dir=false here,
-         * so it's shown but never auto-expanded/rescanned. A symlink whose
-         * target is an ancestor directory (or itself) would otherwise let
-         * the user "expand" the same subtree into itself indefinitely. */
         struct stat st;
-        e->is_dir = (lstat(e->path, &st) == 0 && S_ISDIR(st.st_mode));
+        e->is_dir = (stat(e->path, &st) == 0 && S_ISDIR(st.st_mode));
         n++;
     }
     closedir(d);
@@ -427,9 +433,33 @@ static void ft_load_root(const char *path) {
     ft_scan_into(path, 0, 0);
 }
 
+/* True if `path` resolves (via realpath) to the same real directory as
+ * any ancestor of tree entry `i`, or the tree root itself — i.e.
+ * expanding `path` there would recurse into itself. stat() (not lstat)
+ * is used for is_dir, so ordinary cross-directory symlinks stay
+ * expandable; this check specifically catches the self/ancestor-pointing
+ * case that would otherwise let a directory be "expanded" into itself
+ * indefinitely. */
+static bool ft_would_cycle(int i) {
+    char target_real[4096];
+    if (!realpath(ft_entries[i].path, target_real)) return false; /* unresolvable; harmless to allow */
+    char cand_real[4096];
+    if (realpath(ft_root_path, cand_real) && strcmp(cand_real, target_real) == 0) return true;
+    int depth = ft_entries[i].depth;
+    for (int a = i - 1; a >= 0 && depth > 0; a--) {
+        if (ft_entries[a].depth < depth) {
+            if (realpath(ft_entries[a].path, cand_real) && strcmp(cand_real, target_real) == 0)
+                return true;
+            depth = ft_entries[a].depth;
+        }
+    }
+    return false;
+}
+
 static void ft_expand(int i) {
     if (i < 0 || i >= ft_count) return;
     if (!ft_entries[i].is_dir || ft_entries[i].expanded) return;
+    if (ft_would_cycle(i)) return;
     ft_scan_into(ft_entries[i].path, ft_entries[i].depth + 1, i + 1);
     ft_entries[i].expanded = true;
 }
@@ -1545,6 +1575,7 @@ int main(int argc, char **argv) {
 
     close_limoon();
     scintilla_notcurses_shutdown();
+    free(ft_arena.buf); /* scan scratch buffer, reused across scans, never freed until now */
     return exit_status;
 }
 
@@ -1570,7 +1601,6 @@ static void switch_to_tab(int tab_idx) {
 /* Call _BUFFERS[tab_idx+1]:close() to close a tab */
 static void close_tab(int tab_idx) {
     if (!lua || tab_idx < 0 || tab_idx >= num_tabs) return;
-    free(ft_arena.buf); /* scan scratch buffer, reused across scans, never freed until now */
     lua_getglobal(lua, "_BUFFERS");
     if (!lua_istable(lua, -1)) { lua_pop(lua, 1); return; }
     lua_rawgeti(lua, -1, tab_idx + 1); /* _BUFFERS[n] */
@@ -3130,6 +3160,7 @@ int message_dialog(DialogOptions opts, lua_State *L) {
     ncplane_dim_yx(std, &rows, &cols);
     int h = 9, w = (int)cols * 2 / 3;
     if (w > 72) w = 72;
+    if (w < DLG_MIN_W) w = DLG_MIN_W;
     int y = ((int)rows - h) / 2, x = ((int)cols - w) / 2;
 
     struct ncplane_options popt = {
@@ -3155,10 +3186,6 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         total_btn_w += btn_widths[i] + (i < num_btn - 1 ? 2 : 0); /* gap */
     }
 
-    /* A very narrow terminal (cols small) can make w tiny or even <= 0;
-     * ncplane_options.cols is unsigned, so a negative w would wrap into a
-     * huge allocation request. Floor it to fit at least a border + "OK". */
-    if (w < 20) w = 20;
     int btn_y = h - 3;
     int btn_x = (w - total_btn_w) / 2;
     if (btn_x < 1) btn_x = 1;
@@ -3320,6 +3347,7 @@ int input_dialog(DialogOptions opts, lua_State *L) {
     ncplane_dim_yx(std, &rows, &cols);
     int h = 10, w = (int)cols * 2 / 3;
     if (w > 70) w = 70;
+    if (w < DLG_MIN_W) w = DLG_MIN_W;
     int y = ((int)rows - h) / 2, x = ((int)cols - w) / 2;
 
     struct ncplane_options popt = {
@@ -3345,7 +3373,6 @@ int input_dialog(DialogOptions opts, lua_State *L) {
         int tx = (w - utf8_visual_width(opts.title)) / 2;
         if (tx < 0) tx = 0;
         TH_FG(dplane, T->dlg_title); ncplane_set_styles(dplane, NCSTYLE_BOLD);
-    if (w < 20) w = 20; /* see message_dialog() for why this floor is needed */
         ncplane_putstr_yx(dplane, 1, tx, opts.title);
         ncplane_set_styles(dplane, NCSTYLE_NONE);
     }
@@ -3929,6 +3956,7 @@ int progress_dialog(DialogOptions opts, lua_State *L,
     ncplane_dim_yx(std, &rows, &cols);
     int h = 10, w = (int)cols * 2 / 3;
     if (w > 60) w = 60;
+    if (w < DLG_MIN_W) w = DLG_MIN_W;
     int y = ((int)rows - h) / 2, x = ((int)cols - w) / 2;
 
     struct ncplane_options popt = {
@@ -3954,7 +3982,6 @@ int progress_dialog(DialogOptions opts, lua_State *L,
     bool cancelled = false;
     struct ncinput ni;
 
-    if (w < 20) w = 20; /* see message_dialog() for why this floor is needed */
     void update(double percent, const char *text, void *udata) {
         (void)udata;
         int filled = (int)((bar_w - 2) * percent / 100.0);
@@ -4021,6 +4048,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
     /* Dialog dimensions */
     int dw = (int)scr_cols - 4;
     if (dw > 80) dw = 80;
+    if (dw < DLG_MIN_W) dw = DLG_MIN_W;
     int dh = (int)scr_rows - 4;
     if (dh < 8) dh = 8;
     int dy = ((int)scr_rows - dh) / 2;
@@ -4046,7 +4074,6 @@ int list_dialog(DialogOptions opts, lua_State *L) {
     int list_bot = dh - 3; /* exclusive */
     int list_h = list_bot - list_top;
     if (list_h < 1) list_h = 1;
-    if (dw < 20) dw = 20; /* see message_dialog() for why this floor is needed */
 
     /* Column widths */
     int *col_w = calloc(num_cols, sizeof(int));
@@ -4080,6 +4107,13 @@ int list_dialog(DialogOptions opts, lua_State *L) {
         for (int c = 0; c < num_cols; c++) len += col_w[c] + 2;
         len += 1;
         char *s = calloc(len, 1);
+        if (!s) {
+            for (int rr = 0; rr < r; rr++) free(row_strs[rr]);
+            free(row_strs);
+            free(col_w);
+            ncplane_destroy(dp);
+            return 0;
+        }
         char *p = s;
         for (int c = 0; c < num_cols; c++) {
             int idx = r * num_cols + c + 1;
@@ -4311,6 +4345,7 @@ static void free_argv(char **argv, int argc);
 static int parse_cmd(const char *cmd, char ***argv_out) {
     int argc = 0, cap = 16;
     char **argv = malloc(cap * sizeof(char *));
+    if (!argv) { *argv_out = NULL; return 0; }
     const char *p = cmd;
     while (*p) {
         while (*p == ' ') p++;
