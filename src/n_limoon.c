@@ -2992,36 +2992,25 @@ void set_menubar(lua_State *L, int index)  { (void)L; (void)index; }
 /* ------------------------------------------------------------------ */
 /* Clipboard                                                             */
 
+/**
+ * @brief Return the Scintilla-internal clipboard's contents (NOT the
+ *   system/X11/Wayland clipboard).
+ *
+ * This is the sole implementation behind `ui.get_clipboard_text()`, whose
+ * only caller in CURSES mode is modules/limoon/clipboard.lua, which
+ * captures it specifically to read Scintilla's OWN clipboard register
+ * (`ui.get_clipboard_text(true)`, right after a native buffer:copy()/cut())
+ * as opposed to the system one. clipboard.lua already implements its own,
+ * more correct system-clipboard read/write (os.spawn + a paste/copy
+ * command chosen via `command -v`, not a hardcoded tool list). This used
+ * to ALSO shell out to wl-paste/xclip/xsel here first, which made the
+ * "internal only" read return whatever the SYSTEM clipboard currently held
+ * instead of what was just copied — clipboard.lua would then read that
+ * stale/wrong value back into its own internal_clipboard var and push it
+ * right back out to the system clipboard, silently clobbering the actual
+ * just-copied text.
+ */
 char *get_clipboard_text(int *len) {
-    /* Try external clipboard tools first (Wayland, X11) */
-    const char *cmds[] = { "wl-paste 2>/dev/null", "xclip -o -sel clipboard 2>/dev/null", "xsel -bo 2>/dev/null", NULL };
-    for (int i = 0; cmds[i]; i++) {
-        FILE *f = popen(cmds[i], "r");
-        if (!f) continue;
-        char *buf = NULL;
-        size_t cap = 0, total = 0;
-        char tmp[4096];
-        size_t n;
-        while ((n = fread(tmp, 1, sizeof(tmp), f)) > 0) {
-            if (total + n + 1 > cap) {
-                cap = cap ? cap * 2 : 4096;
-                while (cap < total + n + 1) cap *= 2;
-                char *nb = realloc(buf, cap);
-                if (!nb) { free(buf); pclose(f); buf = NULL; break; }
-                buf = nb;
-            }
-            memcpy(buf + total, tmp, n);
-            total += n;
-        }
-        int rc = pclose(f);
-        if (rc == 0 && total > 0 && buf) {
-            buf[total] = '\0';
-            if (len) *len = (int)total;
-            return buf;
-        }
-        free(buf);
-    }
-    /* Fall back to Scintilla internal clipboard */
     if (!focused_view) { if (len) *len = 0; return NULL; }
     return scintilla_get_clipboard(focused_view, len);
 }
