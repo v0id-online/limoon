@@ -50,10 +50,19 @@ if has_clipboard_env() then
 	if LINUX or BSD then
 		if command_exists('xsel -b -o') then
 			M.paste_command = 'xsel -b -o'
-			M.copy_command = 'xsel -n -b -i'
+			-- No -n/--nodetach: xsel needs to fork into the background and
+			-- keep running to actually OWN and serve the X CLIPBOARD
+			-- selection. With -n it stays attached to our process and the
+			-- selection is abandoned the instant we close/kill it below —
+			-- copy silently does nothing for any other app, and even our
+			-- own next paste finds no selection owner.
+			M.copy_command = 'xsel -b -i'
 		elseif command_exists('wl-paste -n') then
 			M.paste_command = 'wl-paste -n'
-			M.copy_command = 'wl-copy -f'
+			-- Same reasoning as xsel above: -f/--foreground stops wl-copy
+			-- from forking to the background, so it can't persist the
+			-- Wayland clipboard past our own process closing/killing it.
+			M.copy_command = 'wl-copy'
 		end
 	elseif OSX then
 		M.paste_command = 'pbpaste'
