@@ -93,6 +93,7 @@ static int iconv_lua(lua_State *L) {
 	// Ensure the minimum buffer size can hold a potential output BOM and one multibyte character.
 	size_t bufsiz = 4 + fmax(inbytesleft, MB_LEN_MAX), outbytesleft = bufsiz;
 	char *outbuf = malloc(bufsiz + 1), *p = outbuf;
+	if (!outbuf) return (iconv_close(cd), luaL_error(L, "out of memory"));
 	while (iconv(cd, &inbuf, &inbytesleft, &p, &outbytesleft) == (size_t)-1) {
 		if (errno != E2BIG) return (free(outbuf), iconv_close(cd), luaL_error(L, "conversion failed"));
 		luaL_addlstring(&buf, outbuf, p - outbuf), p = outbuf, outbytesleft = bufsiz;
@@ -542,6 +543,7 @@ static int call_scintilla(
 	if (params_needed > 1) lparam = luaL_checkscintilla(L, &arg, ltype);
 	if (string_return) { // create a buffer for the return string
 		lparam = (sptr_t)(text = malloc((len = SS(view, msg, wparam, 0)) + 1));
+		if (!text) return luaL_error(L, "out of memory");
 		if (wtype == SLEN) wparam = len;
 	}
 
@@ -795,6 +797,7 @@ static int quit_lua(lua_State *L) {
 static bool run_file(const char *filename) {
 	size_t file_size = strlen(limoon_home) + 1 + strlen(filename) + 1;
 	char *file = malloc(file_size);
+	if (!file) return false;
 	snprintf(file, file_size, "%s/%s", limoon_home, filename);
 	bool ok = luaL_dofile(lua, file) == LUA_OK;
 	if (!ok) show_error("Initialization Error", lua_tostring(lua, -1)), lua_settop(lua, 0);
@@ -845,6 +848,7 @@ static int add_timeout_lua(lua_State *L) {
 	double interval = luaL_checknumber(L, 1);
 	luaL_argcheck(L, interval > 0, 1, "interval must be > 0"), luaL_checktype(L, 2, LUA_TFUNCTION);
 	int n = lua_gettop(L), *refs = calloc(n, sizeof(int));
+	if (!refs) return luaL_error(L, "out of memory");
 	for (int i = 2; i <= n; i++) lua_pushvalue(L, i), refs[i - 2] = luaL_ref(L, LUA_REGISTRYINDEX);
 	return (add_timeout(interval, call_timeout_function, refs), 0);
 }
@@ -1308,10 +1312,45 @@ bool init_limoon(int argc, char **argv) {
 	os = "WIN32";
 #elif __APPLE__
 	uint32_t size = FILENAME_MAX + 1;
-	_NSGetExecutablePath(limoon_home, &size);
+	// _NSGetExecutablePath returns 0 on success, -1 if the buffer is too small.
+	if (_NSGetExecutablePath(limoon_home, &size) != 0) {
+		free(limoon_home), limoon_home = NULL; return false;
+	}
 	char *p = limoon_home;
 	limoon_home = realpath(limoon_home, NULL), free(p);
-	p = strstr(limoon_home, "MacOS"), strcpy(p, "Resources\0");
+	// realpath(path, NULL) mallocs a buffer sized EXACTLY to the resolved
+	// path (no slack), and returns NULL on failure (e.g. a broken symlink).
+	if (!limoon_home) return false;
+	// Match "/MacOS/" (with slashes), not just "MacOS" anywhere in the
+	// path — a bare substring match could hit an unrelated ancestor
+	// directory whose name happens to contain "MacOS" (e.g.
+	// /Users/MacOSDev/App.app/Contents/MacOS/li), truncating at the wrong
+	// point and producing a Resources path that doesn't exist.
+	p = strstr(limoon_home, "/MacOS/");
+	if (p) {
+		// Inside an app bundle: replace ".../Contents/MacOS/<executable>"
+		// with ".../Contents/Resources". An in-place strcpy() here
+		// previously overflowed realpath()'s exactly-sized allocation
+		// whenever "/Resources" needed more room than "/MacOS" + the
+		// discarded executable-name suffix provided — e.g. this project's
+		// own binary is named "li", just 3 chars after the slash.
+		size_t prefix_len = (size_t)(p - limoon_home);
+		char *resources = malloc(prefix_len + sizeof("/Resources"));
+		if (resources) {
+			memcpy(resources, limoon_home, prefix_len);
+			memcpy(resources + prefix_len, "/Resources", sizeof("/Resources"));
+			free(limoon_home);
+			limoon_home = resources;
+		}
+	} else if ((last_slash = strrchr(limoon_home, '/'))) {
+		// Not inside an app bundle (e.g. running the raw binary from a
+		// terminal) — fall back to the executable's containing directory,
+		// matching every other platform branch below. Without this,
+		// limoon_home stayed pointed at the executable FILE itself, and
+		// every "%s/%s" path built from it (core Lua files, etc.) resolved
+		// to a nonexistent path one level too deep.
+		*last_slash = '\0';
+	}
 	os = "OSX";
 #elif (__FreeBSD__ || __NetBSD__ || __DragonFly__)
 #if (__FreeBSD__ || __DragonFly__)
@@ -1320,9 +1359,12 @@ bool init_limoon(int argc, char **argv) {
 	int mib[4] = {CTL_KERN, KERN_PROC_ARGS, -1, KERN_PROC_PATHNAME};
 #endif
 	size_t cb = FILENAME_MAX + 1;
-	sysctl(mib, 4, limoon_home, &cb, NULL, 0);
+	if (sysctl(mib, 4, limoon_home, &cb, NULL, 0) != 0) {
+		free(limoon_home), limoon_home = NULL; return false;
+	}
 	char *p = limoon_home;
 	limoon_home = realpath(limoon_home, NULL), free(p);
+	if (!limoon_home) return false; // realpath() failed, e.g. a broken symlink
 	if ((last_slash = strrchr(limoon_home, '/'))) *last_slash = '\0';
 	os = "BSD";
 	// TODO: OpenBSD uses {CTL_KERN, KERN_PROC_ARGS, getpid(), KERN_PROC_ARGV}, but the result is
