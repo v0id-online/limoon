@@ -45,6 +45,12 @@ M.paste_command = nil
 -- - Linux/BSD: `xsel -n -b -i` or `wl-copy -f` if available.
 M.copy_command = nil
 
+--- The command to retrieve the X11/Wayland PRIMARY selection's contents
+-- (the text currently selected in any app, not the explicitly-copied
+-- CLIPBOARD selection). Used for middle-click paste. nil on platforms
+-- without a PRIMARY selection concept (Windows, macOS).
+M.primary_paste_command = nil
+
 -- Detect available clipboard commands
 if has_clipboard_env() then
 	if LINUX or BSD then
@@ -57,12 +63,14 @@ if has_clipboard_env() then
 			-- copy silently does nothing for any other app, and even our
 			-- own next paste finds no selection owner.
 			M.copy_command = 'xsel -b -i'
+			M.primary_paste_command = 'xsel -p -o'
 		elseif command_exists('wl-paste -n') then
 			M.paste_command = 'wl-paste -n'
 			-- Same reasoning as xsel above: -f/--foreground stops wl-copy
 			-- from forking to the background, so it can't persist the
 			-- Wayland clipboard past our own process closing/killing it.
 			M.copy_command = 'wl-copy'
+			M.primary_paste_command = 'wl-paste -p -n'
 		end
 	elseif OSX then
 		M.paste_command = 'pbpaste'
@@ -94,21 +102,27 @@ local orig_copy_text       = buffer.copy_text
 local orig_copy_allow_line = buffer.copy_allow_line
 local orig_cut_allow_line  = buffer.cut_allow_line
 
--- Get text from system clipboard
-local function get_system_clipboard()
-	if not M.paste_command then return nil end
-	
-	local proc = os.spawn(M.paste_command)
+-- Run `cmd` and return its stdout, or nil if it produced nothing.
+local function read_from_command(cmd)
+	if not cmd then return nil end
+
+	local proc = os.spawn(cmd)
 	if not proc then return nil end
-	
+
 	local text = proc:read('a')
 	if not text or text == '' then return nil end
-	
+
 	-- Remove trailing newline from powershell
 	if WIN32 then text = text:gsub('\r?\n$', '') end
-	
+
 	return text
 end
+
+-- Get text from system (CLIPBOARD) clipboard
+local function get_system_clipboard() return read_from_command(M.paste_command) end
+
+-- Get text from the X11/Wayland PRIMARY selection (see M.primary_paste_command)
+local function get_primary_selection() return read_from_command(M.primary_paste_command) end
 
 -- Copy text to system clipboard
 local function set_system_clipboard(text)
@@ -133,6 +147,31 @@ local function set_system_clipboard(text)
 		timeout(1, function() proc:kill(9) end)
 	end
 end
+
+-- Insert `text` at `target`'s caret, replacing the selection if one exists
+-- (add_text() alone only inserts, so pasting over a selection would leave
+-- the old selected text in place with the new text appended after it). On
+-- failure (or if `text` is empty), calls `fallback()` if given.
+local function insert_at_caret(target, text, fallback)
+	if text and text ~= '' then
+		local ok
+		if target.selection_empty then
+			ok = pcall(function() target:add_text(text) end)
+		else
+			ok = pcall(function() target:replace_sel(text) end)
+		end
+		if not ok and fallback then fallback() end
+	elseif fallback then
+		fallback()
+	end
+end
+
+-- Middle click: paste the PRIMARY selection at the (already positioned,
+-- see src/n_limoon.c) caret, matching standard X11 middle-click-paste UX.
+events.connect(events.MIDDLE_CLICK, function()
+	if not M.primary_paste_command then return end
+	insert_at_caret(buffer, get_primary_selection())
+end)
 
 local get_scintilla_clipboard = ui.get_clipboard_text
 
@@ -220,20 +259,7 @@ local function enable_system_clipboard()
 			internal_clipboard = text
 		end
 
-		if text and text ~= '' then
-			-- Insert if there's no selection; otherwise replace it — add_text
-			-- alone only inserts, so pasting over a selection used to leave
-			-- the old selected text in place with the paste appended after it.
-			local ok
-			if target.selection_empty then
-				ok = pcall(function() target:add_text(text) end)
-			else
-				ok = pcall(function() target:replace_sel(text) end)
-			end
-			if not ok then orig_paste(target) end
-		else
-			orig_paste(target)
-		end
+		insert_at_caret(target, text, function() orig_paste(target) end)
 	end
 end
 

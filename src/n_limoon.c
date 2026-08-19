@@ -1480,6 +1480,12 @@ int main(int argc, char **argv) {
                     if (button <= 3) mouse_pressed_button = button;
                     scintilla_send_mouse(mouse_view, SCM_PRESS, button,
                         nc_to_sci_mods(ni.modifiers), ni.y, ni.x);
+                    /* Middle click: SCM_PRESS above already positioned the
+                     * caret at the click location (Scintilla's
+                     * ButtonDownWithModifiers doesn't distinguish button
+                     * identity). Let Lua paste the X11/Wayland PRIMARY
+                     * selection there, matching standard X11 UX. */
+                    if (button == 2) emit("middle_click", -1);
                 }
             } else {
                 if (ni.evtype != NCTYPE_RELEASE) {

@@ -100,7 +100,7 @@ end)
 -- Set event constants (events are numeric ID keys).
 for k, v in pairs(_SCINTILLA) do if type(k) == 'number' then M[v[1]:upper()] = v[1] end end
 -- LuaFormatter off
-local limoon_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
+local limoon_events = {'appleevent_odoc','buffer_after_replace_text','buffer_after_switch','buffer_before_replace_text','buffer_before_switch','buffer_deleted','buffer_new','csi','command_text_changed','error','find','find_pane_show','find_pane_hide','find_text_changed','focus','initialized','keypress','menu_clicked','middle_click','mode_changed','mouse','quit','replace','replace_all','reset_after','reset_before','resume','suspend', 'tab_clicked','tab_close_clicked','unfocus','view_after_switch','view_before_switch','view_new'}
 -- LuaFormatter on
 for _, v in pairs(limoon_events) do M[v:upper()] = v end
 
@@ -204,6 +204,12 @@ return M
 --	`view.rectangular_selection_modifier` to `view.MOD_CTRL`, the "Control" modifier is
 --	reported as *both* "Control" and "Alt" due to a Scintilla limitation in the GTK version.
 -- @field DOUBLE_CLICK
+
+--- Emitted when the terminal version receives a middle mouse button click.
+-- The caret has already been positioned at the click location by the time
+-- this fires. Used by limoon.clipboard to paste the X11/Wayland PRIMARY
+-- selection there, matching standard X11 middle-click-paste UX.
+-- @field MIDDLE_CLICK
 
 --- Emitted when the terminal version receives an unrecognized CSI sequence.
 -- Arguments:
