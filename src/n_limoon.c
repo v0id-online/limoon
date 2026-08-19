@@ -3130,6 +3130,10 @@ int message_dialog(DialogOptions opts, lua_State *L) {
         total_btn_w += btn_widths[i] + (i < num_btn - 1 ? 2 : 0); /* gap */
     }
 
+    /* A very narrow terminal (cols small) can make w tiny or even <= 0;
+     * ncplane_options.cols is unsigned, so a negative w would wrap into a
+     * huge allocation request. Floor it to fit at least a border + "OK". */
+    if (w < 20) w = 20;
     int btn_y = h - 3;
     int btn_x = (w - total_btn_w) / 2;
     if (btn_x < 1) btn_x = 1;
@@ -3316,6 +3320,7 @@ int input_dialog(DialogOptions opts, lua_State *L) {
         int tx = (w - utf8_visual_width(opts.title)) / 2;
         if (tx < 0) tx = 0;
         TH_FG(dplane, T->dlg_title); ncplane_set_styles(dplane, NCSTYLE_BOLD);
+    if (w < 20) w = 20; /* see message_dialog() for why this floor is needed */
         ncplane_putstr_yx(dplane, 1, tx, opts.title);
         ncplane_set_styles(dplane, NCSTYLE_NONE);
     }
@@ -3924,6 +3929,7 @@ int progress_dialog(DialogOptions opts, lua_State *L,
     bool cancelled = false;
     struct ncinput ni;
 
+    if (w < 20) w = 20; /* see message_dialog() for why this floor is needed */
     void update(double percent, const char *text, void *udata) {
         (void)udata;
         int filled = (int)((bar_w - 2) * percent / 100.0);
@@ -4015,6 +4021,7 @@ int list_dialog(DialogOptions opts, lua_State *L) {
     int list_bot = dh - 3; /* exclusive */
     int list_h = list_bot - list_top;
     if (list_h < 1) list_h = 1;
+    if (dw < 20) dw = 20; /* see message_dialog() for why this floor is needed */
 
     /* Column widths */
     int *col_w = calloc(num_cols, sizeof(int));
