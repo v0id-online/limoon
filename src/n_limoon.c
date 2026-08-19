@@ -1374,9 +1374,33 @@ static void handle_keypress(struct ncinput *ni) {
 /* Main event loop                                                       */
 
 int main(int argc, char **argv) {
-    /* Select UI color theme via LIMOON_THEME env var.
+    /* Select UI color theme.
+     * Priority: LIMOON_THEME env var (documented override), then
+     * $HOME/.limoon/theme_color (written by the "Set UI Color" command and
+     * the setcolor() command-entry alias — see modules/commands/bootstrap.lua
+     * and modules/aliases.lua; this file was never actually read anywhere
+     * before, so picking a color there silently did nothing), then the
+     * THEME_GREEN default.
      * Valid values: green (default), blue, bw */
     const char *th = getenv("LIMOON_THEME");
+    char theme_file_buf[16] = {0};
+    if (!th) {
+        const char *home = getenv("HOME");
+        if (home) {
+            char path[4096];
+            snprintf(path, sizeof(path), "%s/.limoon/theme_color", home);
+            FILE *f = fopen(path, "r");
+            if (f) {
+                size_t n = fread(theme_file_buf, 1, sizeof(theme_file_buf) - 1, f);
+                fclose(f);
+                theme_file_buf[n] = '\0';
+                while (n > 0 && (theme_file_buf[n - 1] == '\n' || theme_file_buf[n - 1] == '\r' ||
+                                 theme_file_buf[n - 1] == ' '))
+                    theme_file_buf[--n] = '\0';
+                if (theme_file_buf[0]) th = theme_file_buf;
+            }
+        }
+    }
     if (th) {
         if      (strcmp(th, "blue") == 0) T = &THEME_BLUE;
         else if (strcmp(th, "bw")   == 0) T = &THEME_BW;
