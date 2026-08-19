@@ -695,6 +695,17 @@ static bool ft_handle_key(int key, int mods) {
 }
 
 static void ft_toggle(void) {
+    if (ft_visible && !ft_focused) {
+        /* Visible but focus moved elsewhere (e.g. opening a file from the
+         * tree focuses the editor) — bring focus back to the tree instead
+         * of closing it. Only closes when Ctrl+K is pressed while the tree
+         * itself already has focus. Inlines ft_focus()'s own logic since
+         * that function isn't declared yet at this point in the file. */
+        ft_focused = true;
+        if (focused_view) scintilla_set_focus(focused_view, false);
+        needs_render = true;
+        return;
+    }
     if (ft_visible) {
         ft_visible = false;
         ft_focused = false;
