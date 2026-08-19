@@ -168,9 +168,15 @@ end
 
 -- Middle click: paste the PRIMARY selection at the (already positioned,
 -- see src/n_limoon.c) caret, matching standard X11 middle-click-paste UX.
+-- The global `buffer` resolves to focused_view in C, which is NOT the
+-- command entry while it's active (see is_command_entry_active()/
+-- ui.command_entry.active) — middle-clicking inside the find bar or the
+-- Lua command entry would otherwise paste into the background editor
+-- buffer instead of the field actually under the cursor.
 events.connect(events.MIDDLE_CLICK, function()
 	if not M.primary_paste_command then return end
-	insert_at_caret(buffer, get_primary_selection())
+	local target = ui.command_entry.active and ui.command_entry or buffer
+	insert_at_caret(target, get_primary_selection())
 end)
 
 local get_scintilla_clipboard = ui.get_clipboard_text
