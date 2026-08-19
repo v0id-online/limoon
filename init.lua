@@ -100,6 +100,7 @@ if CURSES then
   -- commands into it (see plugins/git_status.lua etc.).
   limoon.commands = require('commands.registry')
   require('commands.bootstrap') -- registers all default menu commands once events.INITIALIZED fires
+  require('commands.language') -- registers the "Select Language" command (force English vs $LANG)
 
   limoon.plugins.load_all()
 
