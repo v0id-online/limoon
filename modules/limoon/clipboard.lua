@@ -81,10 +81,18 @@ local internal_clipboard = nil
 -- runs on every events.BUFFER_NEW, and it had already replaced those fields on
 -- the first call, each new buffer wrapped the PREVIOUS wrapper instead of the
 -- true original — stacking N nested calls after N buffers were opened.
-local orig_paste     = buffer.paste
-local orig_copy      = buffer.copy
-local orig_cut       = buffer.cut
-local orig_copy_text = buffer.copy_text
+--
+-- keys.lua and menu.lua both bind Ctrl+C/Ctrl+X (and the Edit menu's Cut/Copy)
+-- to buffer.copy_allow_line/cut_allow_line, NOT plain buffer.copy/cut — so
+-- those (not copy/cut) are what actually needs wrapping for the normal
+-- keyboard/menu path to reach the system clipboard at all. copy/cut are kept
+-- wrapped too, for any other code that calls them directly by name.
+local orig_paste           = buffer.paste
+local orig_copy            = buffer.copy
+local orig_cut             = buffer.cut
+local orig_copy_text       = buffer.copy_text
+local orig_copy_allow_line = buffer.copy_allow_line
+local orig_cut_allow_line  = buffer.cut_allow_line
 
 -- Get text from system clipboard
 local function get_system_clipboard()
@@ -145,52 +153,86 @@ end
 -- Replaces buffer clipboard functions with functions that use the system clipboard.
 -- Installs onto the shared `buffer` table, so it applies to all buffers without
 -- needing to run again per-buffer (see orig_* capture above).
+--
+-- keys.lua binds these bare (e.g. `keys['ctrl+v'] = buffer.paste`, called as
+-- `key()` with NO arguments — see core/keys.lua's key_command()), so `self`
+-- is nil whenever invoked that way. The native SCI-backed methods tolerate a
+-- nil self just fine (call_scintilla_lua in src/limoon.c falls back to the
+-- global `focused_view` when no buffer/view argument is given) — but plain
+-- Lua indexing like `self.selection_empty` on a nil self throws immediately.
+-- Every function below uses `self or buffer` (the global buffer proxy, which
+-- itself resolves to focused_view) so they work both bare and when called
+-- with an explicit target via colon syntax (e.g. command_entry.lua's
+-- `M:copy_allow_line()`).
 local function enable_system_clipboard()
 	-- Copy: save to both internal and system clipboard
 	buffer.copy = function(self)
-		orig_copy(self)
+		local target = self or buffer
+		orig_copy(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
 	end
-	
+
 	-- Cut: same as copy
 	buffer.cut = function(self)
-		orig_cut(self)
+		local target = self or buffer
+		orig_cut(target)
 		internal_clipboard = ui.get_clipboard_text(true)
 		set_system_clipboard(internal_clipboard)
 	end
-	
+
+	-- Copy-allow-line: same as copy, but this is what Ctrl+C and the Edit
+	-- menu's "Copy" actually invoke (see keys.lua/menu.lua) — copy/cut above
+	-- are never reached through the normal keyboard/menu path at all.
+	buffer.copy_allow_line = function(self)
+		local target = self or buffer
+		orig_copy_allow_line(target)
+		internal_clipboard = ui.get_clipboard_text(true)
+		set_system_clipboard(internal_clipboard)
+	end
+
+	-- Cut-allow-line: same as cut, but this is what Ctrl+X and the Edit
+	-- menu's "Cut" actually invoke.
+	buffer.cut_allow_line = function(self)
+		local target = self or buffer
+		orig_cut_allow_line(target)
+		internal_clipboard = ui.get_clipboard_text(true)
+		set_system_clipboard(internal_clipboard)
+	end
+
 	-- Copy text directly
 	buffer.copy_text = function(self, text)
-		orig_copy_text(self, text)
+		local target = self or buffer
+		orig_copy_text(target, text)
 		internal_clipboard = text
 		set_system_clipboard(text)
 	end
-	
+
 	-- Paste: try system clipboard first, fall back to internal
 	buffer.paste = function(self)
+		local target = self or buffer
 		local text = get_system_clipboard()
-		
+
 		if not text or text == '' then
 			text = internal_clipboard
 		else
 			-- Update internal for cross-buffer paste
 			internal_clipboard = text
 		end
-		
+
 		if text and text ~= '' then
 			-- Insert if there's no selection; otherwise replace it — add_text
 			-- alone only inserts, so pasting over a selection used to leave
 			-- the old selected text in place with the paste appended after it.
 			local ok
-			if self.selection_empty then
-				ok = pcall(function() self:add_text(text) end)
+			if target.selection_empty then
+				ok = pcall(function() target:add_text(text) end)
 			else
-				ok = pcall(function() self:replace_sel(text) end)
+				ok = pcall(function() target:replace_sel(text) end)
 			end
-			if not ok then orig_paste(self) end
+			if not ok then orig_paste(target) end
 		else
-			orig_paste(self)
+			orig_paste(target)
 		end
 	end
 end
