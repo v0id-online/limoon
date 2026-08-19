@@ -209,8 +209,8 @@ main() {
   
   printf '\n  Available themes: dark, light, gruvbox-dark, gruvbox-light,\n'
   printf '                    neon-cyberpunk, neon-purple, neon-blue,\n'
-  printf '                    neon-amber, matrix, vaporwave, and 23 more!\n'
-  printf '  Set theme: view:set_theme(\"neon-cyberpunk\") in ~/.limoon/init.lua\n\n'
+  printf '                    neon-amber, matrix, vaporwave, and 22 more!\n'
+  printf '  Set theme: type Ctrl+P, "Select Theme" (or limoon.themes.set(\"neon-cyberpunk\") in ~/.limoon/init.lua)\n\n'
   
   path_hint
 }

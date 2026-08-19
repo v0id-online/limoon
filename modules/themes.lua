@@ -23,6 +23,9 @@ M.available = {
   'ayu-dark', 'ayu-mirage',
   'tomorrow-night', 'everforest-dark',
   'rose-pine', 'kanagawa',
+  -- Neon / novelty
+  'neon-amber', 'neon-blue', 'neon-cyberpunk', 'neon-purple',
+  'matrix', 'vaporwave',
 }
 
 local pref_file = _USERHOME .. '/theme'
