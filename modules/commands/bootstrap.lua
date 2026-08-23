@@ -10,6 +10,7 @@
 -- does not modify modules/limoon/menu.lua's tables in any way.
 
 local commands = require('commands.registry')
+local glow_preview = require('buffer.glow_preview')
 
 -- Menu section title -> registry category. The registry's fixed category
 -- set (File/Edit/View/Buffer/Window/Git/LSP/DAP) has no slot for every
@@ -112,6 +113,20 @@ events.connect(events.INITIALIZED, function()
       if f then f:write(c); f:close() end
       ui.statusbar_text = 'UI color: ' .. c .. ' (restart to apply)'
     end,
+  }
+
+  -- accelerator_letter: no other registered command sets this field (see
+  -- the walk()-driven loop above — auto-registered commands always leave
+  -- it nil), so 'G' has no collision to resolve against in the Buffer
+  -- category or anywhere else. Palette-only: no default keybinding.
+  commands.register{
+    id = 'buffer.preview_markdown_glow',
+    name = 'Preview Markdown (glow)',
+    description = 'Render current .md buffer with glow in a new tab',
+    category = 'Buffer',
+    keybinding = nil,
+    accelerator_letter = 'G',
+    action = function() glow_preview.run(buffer) end,
   }
 end)
 

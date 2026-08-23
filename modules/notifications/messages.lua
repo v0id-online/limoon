@@ -59,6 +59,11 @@ M.catalog = {
   buffer_unpinned         = {level = 'info',    template = 'Unpinned %s'},
   all_buffers_saved       = {level = 'success', template = 'All buffers saved (%d)'},
 
+  -- Buffer / glow preview
+  glow_preview_invalid_buffer = {level = 'warning', template = 'glow preview: current buffer is not a markdown file'},
+  glow_not_found              = {level = 'error', template = "glow preview: 'glow' not found on PATH"},
+  glow_render_failed          = {level = 'error', template = 'glow preview: render failed (%s)'},
+
   -- Session / Config (no matching command-registry category)
   session_saved      = {level = 'success', template = 'Session saved'},
   session_restored   = {level = 'success', template = 'Session restored'},
